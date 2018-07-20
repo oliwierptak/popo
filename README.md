@@ -65,19 +65,27 @@ With composer:
 
 
 ## Usage
-If you define your own `.popo` file, you can just call `vendor/bin/popo` to generate / regenerate your POPO files.
+If you define your own `.popo` file, you can just call `vendor/bin/popo popo` or `vendor/bin/popo dto` to generate / regenerate your POPO files.
 
 ### Configuration with .popo file
 Create `.popo` file in project directory, for example:
 ```
+[popo]
 schema = popo/
-template = vendor/popo/generator/templates/
+template = templates/
 output = src/Generated/Popo/
-namespace = App\Popo
+namespace = Generated\Popo
 extension = .php
-type = popo ;[popo, dto]
-path = ./
+
+[dto]
+schema = dto/
+template = templates/
+output = src/Generated/Dto/
+namespace = Generated\Dto
+extension = .php
 ```
+
+See `popo.dist`.
 
 ## Schema Directory Structure
 Root directory for all schema files is stored i n BuilderConfigurator's `schemaDirectory`.

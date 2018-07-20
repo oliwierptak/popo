@@ -10,5 +10,5 @@ extension = .php
 schema = tests/fixtures/dto/bundles/
 template = templates/
 output = src/Generated/Dto/
-namespace = Generated\Popo
+namespace = Generated\Dto
 extension = .php
