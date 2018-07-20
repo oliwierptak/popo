@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Buzz",
+    "schema": [
+      {
+        "name": "buzz",
+        "type": "string"
+      }
+    ]
+  }
+]

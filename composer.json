@@ -1,0 +1,53 @@
+{
+  "name": "popo/generator",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Oliwier Ptak"
+    }
+  ],
+  "description": "Plain Old PHP Object (POPO) / Data Transfer Object (TDO) Generator. Convert JSON to PHP class.",
+  "require": {
+    "php": "^7.1",
+    "symfony/finder": "^4.0",
+    "symfony/console": "^4.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.0",
+    "everon/coding-standard": "^1.0",
+    "symfony/var-dumper": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Popo\\": "src/Popo"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\App\\": "tests/App/",
+      "Tests\\Popo\\": "tests/Popo/",
+      "Tests\\Buzz\\": "tests/fixtures/bundles/buzz/src/Buzz/",
+      "Tests\\Foo\\": "tests/fixtures/bundles/foo/src/Foo/",
+      "Tests\\FooBar\\": "tests/fixtures/bundles/foo-bar/src/FooBar/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "vendor/bin/cs-setup"
+    ]
+  },
+  "scripts-descriptions": {
+    "popo": "Generate POPO files"
+  },
+  "bin": [
+    "bin/popo"
+  ],
+  "pre-install-cmd": [
+    "chmod +x bin/*"
+  ],
+  "pre-update-cmd": [
+    "chmod +x bin/*"
+  ]
+}

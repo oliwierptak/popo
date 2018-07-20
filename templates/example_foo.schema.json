@@ -1,0 +1,28 @@
+[{
+  "name": "Popo\\Foo",
+  "schema": [
+    {
+      "name": "fooId",
+      "type": "int"
+    },
+    {
+      "name": "foo",
+      "type": "string"
+    },{
+      "name": "isLoggedIn",
+      "type": "bool"
+    }
+  ]
+},{
+  "name": "Popo\\Bar",
+  "schema": [
+    {
+      "name": "barId",
+      "type": "int"
+    },
+    {
+      "name": "bar",
+      "type": "string"
+    }
+  ]
+}]

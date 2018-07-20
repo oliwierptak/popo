@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "fooId",
+        "type": "int"
+      },
+      {
+        "name": "username",
+        "type": "string"
+      },
+      {
+        "name": "password",
+        "type": "string"
+      },
+      {
+        "name": "isLoggedIn",
+        "type": "bool"
+      },
+      {
+        "name": "resetPassword",
+        "type": "bool"
+      },      {
+        "name": "optionalData",
+        "type": "array",
+        "default": []
+      }
+    ]
+  },
+  {
+    "name": "AnotherFoo",
+    "schema": [
+      {
+        "name": "id",
+        "type": "int"
+      },
+      {
+        "name": "anotherFoo",
+        "type": "string",
+        "default": "another foo"
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "name": "<string>",
+  "schema":
+    {
+      "name": "<string>",
+      "type": "<array|bool|float|int|string|popo|mixed>",
+      "docblock": "[string]",
+      "default": "mixed",
+      "sourceBundle": "<<runtime only>>"
+    }
+}

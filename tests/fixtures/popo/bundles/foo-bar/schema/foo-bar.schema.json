@@ -1,0 +1,16 @@
+[
+  {
+    "name": "FooBar",
+    "schema": [
+      {
+        "name": "fooBarId",
+        "type": "int"
+      },
+      {
+        "name": "fooBarStringValue",
+        "type": "string",
+        "default": "Lorem Ipsum"
+      }
+    ]
+  }
+]
