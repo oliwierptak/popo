@@ -19,7 +19,8 @@ class GeneratorFactory implements GeneratorFactoryInterface
         $this->readerFactory = $readerFactory;
     }
 
-    public function createSchemaGenerator(BuilderContainer $container): GeneratorInterface {
+    public function createSchemaGenerator(BuilderContainer $container): GeneratorInterface
+    {
         return new SchemaGenerator(
             $container->getSchemaTemplateString(),
             $this->createPropertyGenerator($container),

@@ -83,7 +83,7 @@ class FileWriterTest extends TestCase
             ],[
                 'name' => 'isLoggedIn',
                 'type' => 'bool',
-                'default' => false
+                'default' => false,
             ],[
                 'name' => 'resetPassword',
                 'type' => 'bool',
@@ -97,8 +97,8 @@ class FileWriterTest extends TestCase
                 'name' => 'bars',
                 'type' => 'array',
                 'collectionItem' => '\Tests\App\Generated\Dto\BarStub',
-                'singular' => 'bar'
-            ]],
+                'singular' => 'bar',
+                ]],
         ];
 
         $this->writePopoInterface('Tests\App\Generated\Dto\BarStub', $this->barStubFilename . 'Interface.php');
@@ -114,7 +114,7 @@ class FileWriterTest extends TestCase
             'barStub' => ['username' => 'bar'],
             'bars' => [
                 ['username' => 'fooBaroo', 'password' => 'md5zxx1' , 'isLoggedIn' => true],
-                ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false]
+                ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false],
             ],
         ];
 

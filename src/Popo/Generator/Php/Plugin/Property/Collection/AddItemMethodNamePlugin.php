@@ -16,7 +16,7 @@ class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements Propert
     {
         $name = $property->getName();
 
-        $singular = trim($property->getSingular());
+        $singular = \trim($property->getSingular());
         if ($singular !== '') {
             $name = $singular;
         }

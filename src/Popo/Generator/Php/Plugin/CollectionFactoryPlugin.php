@@ -5,10 +5,10 @@ declare(strict_types = 1);
 namespace Popo\Generator\Php\Plugin;
 
 use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodNamePlugin;
+use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\DocblockTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\PropertyNameGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorPlugin;
 

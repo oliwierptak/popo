@@ -14,7 +14,7 @@ interface PluginContainerInterface
      *
      * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $pluginCollection
      *
-     * @return PluginContainerInterface
+     * @return \Popo\Builder\PluginContainerInterface
      */
     public function registerPropertyClassPlugins(array $pluginCollection): PluginContainerInterface;
 
@@ -26,7 +26,7 @@ interface PluginContainerInterface
      *
      * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $pluginCollection
      *
-     * @return PluginContainerInterface
+     * @return \Popo\Builder\PluginContainerInterface
      */
     public function registerCollectionClassPlugins(array $pluginCollection): PluginContainerInterface;
 
@@ -38,7 +38,7 @@ interface PluginContainerInterface
      *
      * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $pluginCollection
      *
-     * @return PluginContainerInterface
+     * @return \Popo\Builder\PluginContainerInterface
      */
     public function registerSchemaClassPlugins(array $pluginCollection): PluginContainerInterface;
 

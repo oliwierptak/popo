@@ -26,7 +26,7 @@ abstract class AbstractCommand extends Command
     const OPTION_TYPE = 'type';
 
     /**
-     * @var PopoFacadeInterfaces
+     * @var \Popo\PopoFacadeInterfaces
      */
     protected $facade;
 
@@ -123,7 +123,7 @@ abstract class AbstractCommand extends Command
         $dotPath = \rtrim(\getcwd(), \DIRECTORY_SEPARATOR) . \DIRECTORY_SEPARATOR;
         $configFile = $dotPath . '.popo';
         if (\is_file($configFile)) {
-            $config = \parse_ini_file($configFile, true) ?: $default;
+            $config = \parse_ini_file($configFile, true) ?? $default;
         }
 
         return $config[static::COMMAND_NAME];

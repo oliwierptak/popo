@@ -34,7 +34,7 @@ class SchemaGenerator implements GeneratorInterface
     /**
      * @param string $templateString
      * @param \Popo\Generator\GeneratorInterface $propertyGenerator
-     * @param GeneratorInterface $collectionGenerator
+     * @param \Popo\Generator\GeneratorInterface $collectionGenerator
      * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $generatorPlugins
      */
     public function __construct(

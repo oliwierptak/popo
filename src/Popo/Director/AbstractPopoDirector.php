@@ -51,7 +51,7 @@ abstract class AbstractPopoDirector
     }
 
     /**
-     * @param BuilderConfigurator $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @throws \InvalidArgumentException
      *
@@ -71,9 +71,10 @@ abstract class AbstractPopoDirector
 
         foreach ($requiredPaths as $type => $path) {
             if (!\is_dir($path)) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Required %s directory does not exist under path: %s',
-                    $type, $path
+                    $type,
+                    $path
                 ));
             }
         }

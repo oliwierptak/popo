@@ -80,5 +80,4 @@ class CollectionGenerator implements GeneratorInterface
 
         return $methodString;
     }
-
 }

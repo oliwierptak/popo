@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
-use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\SchemaConfigurator;
 use Popo\Schema\SchemaConfiguratorInterface;
 
@@ -145,7 +143,7 @@ class BuilderConfigurator
      *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
      *  ]
      *
-     * @param SchemaGeneratorPluginInterface[] $schemaPluginClasses
+     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $schemaPluginClasses
      *
      * @return \Popo\Builder\BuilderConfigurator
      */
@@ -168,7 +166,7 @@ class BuilderConfigurator
      *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
      *  ]
      *
-     * @param PropertyGeneratorPluginInterface[] $propertyPluginClasses
+     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginClasses
      *
      * @return \Popo\Builder\BuilderConfigurator
      */
@@ -191,7 +189,7 @@ class BuilderConfigurator
      *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
      *  ]
      *
-     * @param PropertyGeneratorPluginInterface[] $collectionPluginClasses
+     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $collectionPluginClasses
      *
      * @return \Popo\Builder\BuilderConfigurator
      */

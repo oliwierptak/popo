@@ -60,7 +60,7 @@ class GeneratorBuilder implements GeneratorBuilderInterface
         $collectionTemplateFilename = $configurator->getSchemaConfigurator()->getCollectionTemplateFilename();
         $propertyExplorer = $this->schemaFactory->createPropertyExplorer();
 
-        $container = (new BuilderContainer)
+        $container = (new BuilderContainer())
             ->setSchemaTemplateString(
                 $this->getTemplateString($templateDirectory, $schemaTemplateFilename)
             )
