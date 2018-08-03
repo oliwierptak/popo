@@ -17,6 +17,12 @@ interface PropertyInterface
 
     public function getType(): string;
 
+    public function getCollectionItem(): string;
+
+    public function getSingular(): string;
+
+    public function hasCollectionItem(): bool;
+
     public function hasDefault(): bool;
 
     public function getSchema(): SchemaInterface;

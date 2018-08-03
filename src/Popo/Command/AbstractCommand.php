@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Command;
 
 use Popo\Builder\BuilderConfigurator;
-use Popo\Builder\BuilderConfiguratorInterface;
 use Popo\PopoFacade;
 use Popo\PopoFacadeInterfaces;
 use Popo\Schema\SchemaConfigurator;
@@ -80,7 +79,7 @@ abstract class AbstractCommand extends Command
         return $this->executeCommand($input, $output);
     }
 
-    protected function buildConfigurator(InputInterface $input): BuilderConfiguratorInterface
+    protected function buildConfigurator(InputInterface $input): BuilderConfigurator
     {
         $arguments = $this->getDotData($input);
 

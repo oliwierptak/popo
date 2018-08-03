@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Director;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin as DtoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnTypeGeneratorPlugin as PopoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
@@ -14,31 +14,32 @@ use Popo\Generator\Php\Plugin\Schema\Popo\ReturnTypeGeneratorPlugin as PopoRetur
 
 class PopoDirector extends AbstractPopoDirector implements PopoDirectorInterface
 {
-    public function generateDto(BuilderConfiguratorInterface $configurator): void
+    public function generateDto(BuilderConfigurator $configurator): void
     {
         $configurator = $this->configureDtoPlugins($configurator);
         $this->generate($configurator);
         $this->generateDtoInterfaces($configurator);
     }
 
-    protected function generateDtoInterfaces(BuilderConfiguratorInterface $configurator): void
+    protected function generateDtoInterfaces(BuilderConfigurator $configurator): void
     {
         $configurator
             ->setExtension('Interface' . $configurator->getExtension())
             ->getSchemaConfigurator()
                 ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
-                ->setPropertyTemplateFilename('interface/php.interface.property.tpl');
+                ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
+                ->setCollectionTemplateFilename('interface/php.interface.collection.tpl');
 
         $this->generate($configurator);
     }
 
-    public function generatePopo(BuilderConfiguratorInterface $configurator): void
+    public function generatePopo(BuilderConfigurator $configurator): void
     {
         $configurator = $this->configurePopoPlugins($configurator);
         $this->generate($configurator);
     }
 
-    protected function configureDtoPlugins(BuilderConfiguratorInterface $configurator): BuilderConfiguratorInterface
+    protected function configureDtoPlugins(BuilderConfigurator $configurator): BuilderConfigurator
     {
         $configurator
             ->setSchemaPluginClasses([
@@ -47,12 +48,15 @@ class PopoDirector extends AbstractPopoDirector implements PopoDirectorInterface
             ])
             ->setPropertyPluginClasses([
                 DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ])
+            ->setCollectionPluginClasses([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
             ]);
 
         return $configurator;
     }
 
-    protected function configurePopoPlugins(BuilderConfiguratorInterface $configurator): BuilderConfiguratorInterface
+    protected function configurePopoPlugins(BuilderConfigurator $configurator): BuilderConfigurator
     {
         $configurator
             ->setSchemaPluginClasses([
@@ -60,6 +64,9 @@ class PopoDirector extends AbstractPopoDirector implements PopoDirectorInterface
                 PopoReturnTypeGeneratorPlugin::PATTERN => PopoReturnTypeGeneratorPlugin::class,
             ])
             ->setPropertyPluginClasses([
+                PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
+            ])
+            ->setCollectionPluginClasses([
                 PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
             ]);
 

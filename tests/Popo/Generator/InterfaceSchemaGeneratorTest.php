@@ -13,7 +13,8 @@ class InterfaceSchemaGeneratorTest extends SchemaGeneratorTest
     {
         $schemaBuilderConfigurator = (new SchemaConfigurator())
             ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
-            ->setPropertyTemplateFilename('interface/php.interface.property.tpl');
+            ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
+            ->setCollectionTemplateFilename('interface/php.interface.collection.tpl');
 
         $configurator = (new BuilderConfigurator())
             ->setSchemaConfigurator($schemaBuilderConfigurator)
@@ -141,6 +142,15 @@ interface FooStubInterface
      * @return \Popo\Tests\BarStubInterface
      */
     public function requireBar(): \Popo\Tests\BarStubInterface;
+
+
+    
+    /**
+     * @param string $optionalDataItem
+     *
+     * @return self
+     */
+    public function addOptionalDataItem(?string $optionalDataItem): \Popo\Tests\FooStubInterface;
 
 }
         ';

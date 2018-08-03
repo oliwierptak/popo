@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Director;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 use Popo\Builder\BuilderFactoryInterface;
 use Popo\Generator\GeneratorInterface;
 use Popo\Schema\SchemaFactoryInterface;
@@ -27,7 +27,7 @@ abstract class AbstractPopoDirector
         $this->schemaFactory = $schemaFactory;
     }
 
-    protected function write(BuilderConfiguratorInterface $configurator, GeneratorInterface $generator): void
+    protected function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void
     {
         $this->assertConfiguration($configurator);
 
@@ -37,7 +37,7 @@ abstract class AbstractPopoDirector
         $builderWriter->write($configurator, $generator);
     }
 
-    protected function generate(BuilderConfiguratorInterface $configurator): void
+    protected function generate(BuilderConfigurator $configurator): void
     {
         $this->assertConfiguration($configurator);
 
@@ -51,13 +51,13 @@ abstract class AbstractPopoDirector
     }
 
     /**
-     * @param BuilderConfiguratorInterface $configurator
+     * @param BuilderConfigurator $configurator
      *
      * @throws \InvalidArgumentException
      *
      * @return void
      */
-    protected function assertConfiguration(BuilderConfiguratorInterface $configurator): void
+    protected function assertConfiguration(BuilderConfigurator $configurator): void
     {
         $schemaDirectory = $configurator->getSchemaDirectory();
         $outputDirectory = $configurator->getOutputDirectory();

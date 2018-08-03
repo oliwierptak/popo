@@ -26,6 +26,11 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
      */
     protected $propertyTemplateFilename = 'php.property.tpl';
 
+    /**
+     * @var string
+     */
+    protected $collectionTemplateFilename = 'php.collection.tpl';
+
     public function getSchemaPath(): string
     {
         return $this->schemaPath;
@@ -77,6 +82,18 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
     public function setPropertyTemplateFilename(string $propertyTemplateFilename): SchemaConfiguratorInterface
     {
         $this->propertyTemplateFilename = $propertyTemplateFilename;
+
+        return $this;
+    }
+
+    public function getCollectionTemplateFilename(): string
+    {
+        return $this->collectionTemplateFilename;
+    }
+
+    public function setCollectionTemplateFilename(string $collectionTemplateFilename): SchemaConfiguratorInterface
+    {
+        $this->collectionTemplateFilename = $collectionTemplateFilename;
 
         return $this;
     }

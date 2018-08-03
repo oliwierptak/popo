@@ -33,7 +33,7 @@ class BuilderWriter implements BuilderWriterInterface
         $this->writerFactory = $writerFactory;
     }
 
-    public function write(BuilderConfiguratorInterface $configurator, GeneratorInterface $generator): void
+    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void
     {
         $schemaFiles = $this->schemaBuilder->build(
             $configurator->getSchemaDirectory(),

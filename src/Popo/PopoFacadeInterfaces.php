@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 use Popo\Schema\Reader\SchemaInterface;
 
 interface PopoFacadeInterfaces
@@ -20,22 +20,22 @@ interface PopoFacadeInterfaces
      * - Generates Data Transfer Object files according to $configurator specification
      * - Generates Data Transfer Object Interface files according to $configurator specification
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @return void
      */
-    public function generateDto(BuilderConfiguratorInterface $configurator): void;
+    public function generateDto(BuilderConfigurator $configurator): void;
 
     /**
      * Specification:
      * - Configures POPO plugins in $configurator
      * - Generates Plain Old Php Object files according to $configurator specification
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @return void
      */
-    public function generatePopo(BuilderConfiguratorInterface $configurator): void;
+    public function generatePopo(BuilderConfigurator $configurator): void;
 
     /**
      * Specification:
@@ -44,14 +44,14 @@ interface PopoFacadeInterfaces
      * - Generates string based on $schema
      * - Returns generated string
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      * @param \Popo\Schema\Reader\SchemaInterface $schema
      *
      * @return string
      */
-    public function generatePopoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string;
+    public function generatePopoString(BuilderConfigurator $configurator, SchemaInterface $schema): string;
 
-    public function generateDtoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string;
+    public function generateDtoString(BuilderConfigurator $configurator, SchemaInterface $schema): string;
 
-    public function generateDtoInterfaceString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string;
+    public function generateDtoInterfaceString(BuilderConfigurator $configurator, SchemaInterface $schema): string;
 }

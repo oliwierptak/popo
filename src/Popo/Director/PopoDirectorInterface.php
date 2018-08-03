@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Director;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 
 interface PopoDirectorInterface
 {
@@ -15,20 +15,20 @@ interface PopoDirectorInterface
      * - Generates Data Transfer Object Interface files
      * - Generates Data Transfer Object files according to $configurator specification
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @return void
      */
-    public function generateDto(BuilderConfiguratorInterface $configurator): void;
+    public function generateDto(BuilderConfigurator $configurator): void;
 
     /**
      * Specification:
-     * - Configures Plain Old Php Object specific plugins in $configurator
-     * - Generates Plain Old Php Object files according to $configurator specification
+     * - Configures Value Object specific plugins in $configurator
+     * - Generates Value Object files according to $configurator specification
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @return void
      */
-    public function generatePopo(BuilderConfiguratorInterface $configurator): void;
+    public function generatePopo(BuilderConfigurator $configurator): void;
 }

@@ -19,4 +19,6 @@ interface <<CLASSNAME>>Interface
     public function fromArray(array $data): \<<NAMESPACE>>\<<CLASSNAME>>Interface;
 
     <<METHODS>>
+
+    <<COLLECTION>>
 }

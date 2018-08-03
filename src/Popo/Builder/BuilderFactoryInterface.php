@@ -10,5 +10,5 @@ interface BuilderFactoryInterface
 
     public function createBuilderWriter(): BuilderWriterInterface;
 
-    public function createPluginContainer(BuilderConfiguratorInterface $configurator): PluginContainerInterface;
+    public function createPluginContainer(BuilderConfigurator $configurator): PluginContainerInterface;
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Generator;
 
+use Popo\Builder\BuilderContainer;
 use Popo\Schema\Reader\ReaderFactoryInterface;
 
 class GeneratorFactory implements GeneratorFactoryInterface
@@ -18,39 +19,30 @@ class GeneratorFactory implements GeneratorFactoryInterface
         $this->readerFactory = $readerFactory;
     }
 
-    /**
-     * @param string $schemaTemplateString
-     * @param string $propertyTemplateString
-     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $schemaPluginCollection
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginCollection
-     *
-     * @return \Popo\Generator\GeneratorInterface
-     */
-    public function createSchemaGenerator(
-        string $schemaTemplateString,
-        string $propertyTemplateString,
-        array $schemaPluginCollection,
-        array $propertyPluginCollection
-    ): GeneratorInterface {
+    public function createSchemaGenerator(BuilderContainer $container): GeneratorInterface {
         return new SchemaGenerator(
-            $schemaTemplateString,
-            $this->createPropertyGenerator($propertyTemplateString, $propertyPluginCollection),
-            $schemaPluginCollection
+            $container->getSchemaTemplateString(),
+            $this->createPropertyGenerator($container),
+            $this->createCollectionGenerator($container),
+            $container->getSchemaPluginCollection()
         );
     }
 
-    /**
-     * @param string $propertyTemplateString
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginCollection
-     *
-     * @return \Popo\Generator\GeneratorInterface
-     */
-    public function createPropertyGenerator(string $propertyTemplateString, array $propertyPluginCollection): GeneratorInterface
+    public function createPropertyGenerator(BuilderContainer $container): GeneratorInterface
     {
         return new PropertyGenerator(
-            $propertyTemplateString,
+            $container->getPropertyTemplateString(),
             $this->readerFactory,
-            $propertyPluginCollection
+            $container->getPropertyPluginCollection()
+        );
+    }
+
+    public function createCollectionGenerator(BuilderContainer $container): GeneratorInterface
+    {
+        return new CollectionGenerator(
+            $container->getCollectionTemplateString(),
+            $this->readerFactory,
+            $container->getCollectionPluginCollection()
         );
     }
 }

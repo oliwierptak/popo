@@ -17,10 +17,10 @@ interface GeneratorBuilderInterface
      * - Creates Schema generator
      * - Returns created SchemaGenerator instance
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      * @param \Popo\Builder\PluginContainerInterface $pluginContainer
      *
      * @return \Popo\Generator\GeneratorInterface
      */
-    public function build(BuilderConfiguratorInterface $configurator, PluginContainerInterface $pluginContainer): GeneratorInterface;
+    public function build(BuilderConfigurator $configurator, PluginContainerInterface $pluginContainer): GeneratorInterface;
 }

@@ -36,7 +36,8 @@ class BuilderFactory implements BuilderFactoryInterface
         GeneratorFactoryInterface $generatorFactory,
         SchemaFactoryInterface $schemaFactory,
         WriterFactoryInterface $writerFactory
-    ) {
+    )
+    {
         $this->loaderFactory = $loaderFactory;
         $this->generatorFactory = $generatorFactory;
         $this->schemaFactory = $schemaFactory;
@@ -63,14 +64,33 @@ class BuilderFactory implements BuilderFactoryInterface
         );
     }
 
-    public function createPluginContainer(BuilderConfiguratorInterface $configurator): PluginContainerInterface
+    public function createPluginContainer(BuilderConfigurator $configurator): PluginContainerInterface
     {
         $pluginContainer = new PluginContainer(
             $this->schemaFactory->createPropertyExplorer()
         );
 
-        $pluginContainer->registerSchemaClassPlugins($configurator->getSchemaPluginClasses());
-        $pluginContainer->registerPropertyClassPlugins($configurator->getPropertyPluginClasses());
+        $pluginContainer = $this->registerPlugins($pluginContainer, $configurator);
+
+        return $pluginContainer;
+    }
+
+    protected function registerPlugins(
+        PluginContainerInterface $pluginContainer,
+        BuilderConfigurator $configurator
+    ): PluginContainerInterface
+    {
+        $pluginContainer->registerSchemaClassPlugins(
+            $configurator->getSchemaPluginClasses()
+        );
+
+        $pluginContainer->registerPropertyClassPlugins(
+            $configurator->getPropertyPluginClasses()
+        );
+
+        $pluginContainer->registerCollectionClassPlugins(
+            $configurator->getCollectionPluginClasses()
+        );
 
         return $pluginContainer;
     }

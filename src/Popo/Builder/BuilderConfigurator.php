@@ -4,10 +4,12 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
+use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
+use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\SchemaConfigurator;
 use Popo\Schema\SchemaConfiguratorInterface;
 
-class BuilderConfigurator implements BuilderConfiguratorInterface
+class BuilderConfigurator
 {
     /**
      * @var string
@@ -49,6 +51,11 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
      */
     protected $propertyPluginClasses = [];
 
+    /**
+     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     */
+    protected $collectionPluginClasses = [];
+
     public function __construct()
     {
         $this->schemaConfigurator = new SchemaConfigurator();
@@ -59,7 +66,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->schemaDirectory;
     }
 
-    public function setSchemaDirectory(string $schemaDirectory): BuilderConfiguratorInterface
+    public function setSchemaDirectory(string $schemaDirectory): self
     {
         $this->schemaDirectory = $schemaDirectory;
 
@@ -71,7 +78,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->templateDirectory;
     }
 
-    public function setTemplateDirectory(string $templateDirectory): BuilderConfiguratorInterface
+    public function setTemplateDirectory(string $templateDirectory): self
     {
         $this->templateDirectory = $templateDirectory;
 
@@ -83,7 +90,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->outputDirectory;
     }
 
-    public function setOutputDirectory(string $outputDirectory): BuilderConfiguratorInterface
+    public function setOutputDirectory(string $outputDirectory): self
     {
         $this->outputDirectory = $outputDirectory;
 
@@ -95,7 +102,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->namespace;
     }
 
-    public function setNamespace(string $namespace): BuilderConfiguratorInterface
+    public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
 
@@ -107,7 +114,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->extension;
     }
 
-    public function setExtension(string $extension): BuilderConfiguratorInterface
+    public function setExtension(string $extension): self
     {
         $this->extension = $extension;
 
@@ -119,7 +126,7 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->schemaConfigurator;
     }
 
-    public function setSchemaConfigurator(SchemaConfiguratorInterface $schemaConfigurator): BuilderConfiguratorInterface
+    public function setSchemaConfigurator(SchemaConfiguratorInterface $schemaConfigurator): self
     {
         $this->schemaConfigurator = $schemaConfigurator;
 
@@ -131,7 +138,18 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->schemaPluginClasses;
     }
 
-    public function setSchemaPluginClasses(array $schemaPluginClasses): BuilderConfiguratorInterface
+    /**
+     * Format of $schemaPlugins:
+     *
+     * [
+     *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
+     *  ]
+     *
+     * @param SchemaGeneratorPluginInterface[] $schemaPluginClasses
+     *
+     * @return \Popo\Builder\BuilderConfigurator
+     */
+    public function setSchemaPluginClasses(array $schemaPluginClasses): self
     {
         $this->schemaPluginClasses = $schemaPluginClasses;
 
@@ -143,9 +161,43 @@ class BuilderConfigurator implements BuilderConfiguratorInterface
         return $this->propertyPluginClasses;
     }
 
-    public function setPropertyPluginClasses(array $propertyPluginClasses): BuilderConfiguratorInterface
+    /**
+     * Format of $propertyPlugins:
+     *
+     * [
+     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
+     *  ]
+     *
+     * @param PropertyGeneratorPluginInterface[] $propertyPluginClasses
+     *
+     * @return \Popo\Builder\BuilderConfigurator
+     */
+    public function setPropertyPluginClasses(array $propertyPluginClasses): self
     {
         $this->propertyPluginClasses = $propertyPluginClasses;
+
+        return $this;
+    }
+
+    public function getCollectionPluginClasses(): array
+    {
+        return $this->collectionPluginClasses;
+    }
+
+    /**
+     * Format of $propertyPlugins:
+     *
+     * [
+     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
+     *  ]
+     *
+     * @param PropertyGeneratorPluginInterface[] $collectionPluginClasses
+     *
+     * @return \Popo\Builder\BuilderConfigurator
+     */
+    public function setCollectionPluginClasses(array $collectionPluginClasses): self
+    {
+        $this->collectionPluginClasses = $collectionPluginClasses;
 
         return $this;
     }

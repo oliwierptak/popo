@@ -21,6 +21,11 @@ class PluginContainer implements PluginContainerInterface
     protected $propertyPlugins = [];
 
     /**
+     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     */
+    protected $collectionPlugins = [];
+
+    /**
      * @var \Popo\Schema\Reader\PropertyExplorerInterface
      */
     protected $propertyExplorer;
@@ -30,7 +35,7 @@ class PluginContainer implements PluginContainerInterface
         $this->propertyExplorer = $propertyExplorer;
     }
 
-    public function registerPropertyClassPlugins(array $pluginClassCollection): void
+    public function registerPropertyClassPlugins(array $pluginClassCollection): PluginContainerInterface
     {
         foreach ($pluginClassCollection as $pattern => $pluginClass) {
             $plugin = new $pluginClass(
@@ -43,9 +48,28 @@ class PluginContainer implements PluginContainerInterface
 
             $this->propertyPlugins[$pattern] = $plugin;
         }
+
+        return $this;
     }
 
-    public function registerSchemaClassPlugins(array $pluginClassCollection): void
+    public function registerCollectionClassPlugins(array $pluginClassCollection): PluginContainerInterface
+    {
+        foreach ($pluginClassCollection as $pattern => $pluginClass) {
+            $plugin = new $pluginClass(
+                $this->propertyExplorer
+            );
+
+            if (!($plugin instanceof PropertyGeneratorPluginInterface)) {
+                continue;
+            }
+
+            $this->collectionPlugins[$pattern] = $plugin;
+        }
+
+        return $this;
+    }
+
+    public function registerSchemaClassPlugins(array $pluginClassCollection): PluginContainerInterface
     {
         foreach ($pluginClassCollection as $pattern => $pluginClass) {
             $plugin = new $pluginClass(
@@ -58,6 +82,8 @@ class PluginContainer implements PluginContainerInterface
 
             $this->schemaPlugins[$pattern] = $plugin;
         }
+
+        return $this;
     }
 
     public function getPropertyPlugins(): array
@@ -68,5 +94,10 @@ class PluginContainer implements PluginContainerInterface
     public function getSchemaPlugins(): array
     {
         return $this->schemaPlugins;
+    }
+
+    public function getCollectionPlugins(): array
+    {
+        return $this->collectionPlugins;
     }
 }

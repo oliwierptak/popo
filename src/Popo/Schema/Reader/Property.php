@@ -10,6 +10,8 @@ class Property implements PropertyInterface
     const TYPE = 'type';
     const DEFAULT = 'default';
     const DOCBLOCK = 'docblock';
+    const COLLECTION_ITEM = 'collectionItem';
+    const SINGULAR = 'singular';
 
     /**
      * @var array
@@ -19,6 +21,8 @@ class Property implements PropertyInterface
         self::TYPE => '',
         self::DEFAULT => null,
         self::DOCBLOCK => '',
+        self::COLLECTION_ITEM => '',
+        self::SINGULAR => '',
     ];
 
     /**
@@ -88,6 +92,21 @@ class Property implements PropertyInterface
     public function getType(): string
     {
         return $this->data[static::TYPE];
+    }
+
+    public function getCollectionItem(): string
+    {
+        return $this->data[static::COLLECTION_ITEM];
+    }
+
+    public function getSingular(): string
+    {
+        return $this->data[static::SINGULAR];
+    }
+
+    public function hasCollectionItem(): bool
+    {
+        return \array_key_exists(static::COLLECTION_ITEM, $this->getSchemaDefinition());
     }
 
     public function hasDefault(): bool

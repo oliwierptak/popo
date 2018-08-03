@@ -4,6 +4,8 @@
     {
       "name": "<string>",
       "type": "<array|bool|float|int|string|popo|mixed>",
+      "collectionItem": "[<type>]",
+      "singular": "[string]",
       "docblock": "[string]",
       "default": "mixed",
       "sourceBundle": "<<runtime only>>"

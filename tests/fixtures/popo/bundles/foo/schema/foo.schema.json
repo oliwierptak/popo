@@ -25,6 +25,7 @@
       },      {
         "name": "optionalData",
         "type": "array",
+        "collectionItem": "\\Tests\\App\\Generated\\Popo\\AnotherFoo",
         "default": []
       }
     ]

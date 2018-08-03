@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Director;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin as DtoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnTypeGeneratorPlugin as PopoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
@@ -25,7 +25,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
      */
     protected $generatedString;
 
-    public function generateDtoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generateDtoString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         $this->generatedString = '';
         $this->schema = clone $schema;
@@ -40,7 +40,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         return $this->generatedString;
     }
 
-    public function generateDtoInterfaceString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generateDtoInterfaceString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         $this->generatedString = '';
         $this->schema = clone $schema;
@@ -49,10 +49,10 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
             $configurator->getNamespace() . '\\' . \ltrim($this->schema->getName(), '\\')
         );
 
-        $configurator
-            ->getSchemaConfigurator()
-                ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
-                ->setPropertyTemplateFilename('interface/php.interface.property.tpl');
+        $configurator->getSchemaConfigurator()
+            ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
+            ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
+            ->setCollectionTemplateFilename('interface/php.interface.collection.tpl');
 
         $configurator = $this->configureDtoPlugins($configurator);
         $this->generate($configurator);
@@ -60,7 +60,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         return $this->generatedString;
     }
 
-    public function generatePopoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generatePopoString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         $this->generatedString = '';
         $this->schema = clone $schema;
@@ -75,7 +75,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         return $this->generatedString;
     }
 
-    protected function generate(BuilderConfiguratorInterface $configurator): void
+    protected function generate(BuilderConfigurator $configurator): void
     {
         $generatorBuilder = $this->builderFactory
             ->createBuilder();
@@ -88,7 +88,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         $this->generatedString = $generator->generate($this->schema);
     }
 
-    protected function configureDtoPlugins(BuilderConfiguratorInterface $configurator): BuilderConfiguratorInterface
+    protected function configureDtoPlugins(BuilderConfigurator $configurator): BuilderConfigurator
     {
         $configurator
             ->setSchemaPluginClasses([
@@ -102,7 +102,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         return $configurator;
     }
 
-    protected function configurePopoPlugins(BuilderConfiguratorInterface $configurator): BuilderConfiguratorInterface
+    protected function configurePopoPlugins(BuilderConfigurator $configurator): BuilderConfigurator
     {
         $configurator
             ->setSchemaPluginClasses([

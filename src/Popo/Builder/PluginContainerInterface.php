@@ -14,9 +14,21 @@ interface PluginContainerInterface
      *
      * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $pluginCollection
      *
-     * @return void
+     * @return PluginContainerInterface
      */
-    public function registerPropertyClassPlugins(array $pluginCollection): void;
+    public function registerPropertyClassPlugins(array $pluginCollection): PluginContainerInterface;
+
+    /**
+     * Specification:
+     * - Requires list of classes implementing \Popo\Plugin\Generator\PropertyGeneratorPluginInterface.
+     * - Creates instances of plugin classes.
+     * - Plugin class won't be instantiated when it does not implement PropertyGeneratorPluginInterface.
+     *
+     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $pluginCollection
+     *
+     * @return PluginContainerInterface
+     */
+    public function registerCollectionClassPlugins(array $pluginCollection): PluginContainerInterface;
 
     /**
      * Specification:
@@ -26,9 +38,9 @@ interface PluginContainerInterface
      *
      * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $pluginCollection
      *
-     * @return void
+     * @return PluginContainerInterface
      */
-    public function registerSchemaClassPlugins(array $pluginCollection): void;
+    public function registerSchemaClassPlugins(array $pluginCollection): PluginContainerInterface;
 
     /**
      * Specification:
@@ -39,6 +51,16 @@ interface PluginContainerInterface
      * @see PluginContainerInterface::registerPropertyClassPlugins()
      */
     public function getPropertyPlugins(): array;
+
+    /**
+     * Specification:
+     * - Returns plugin classes instantiated with registerCollectionClassPlugins()
+     *
+     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     *
+     * @see PluginContainerInterface::registerPropertyClassPlugins()
+     */
+    public function getCollectionPlugins(): array;
 
     /**
      * Specification:

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Generator\Php\Plugin;
 
 use Popo\Generator\Php\Plugin\Schema\ClassNameGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Schema\CollectionItemsGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\NamespaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\PropertyMappingGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\SchemaDataGeneratorPlugin;
@@ -33,7 +34,8 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
             ClassNameGeneratorPlugin::PATTERN => $this->createClassNameGeneratorPlugin(),
             NamespaceGeneratorPlugin::PATTERN => $this->createNamespaceGeneratorPlugin(),
             SchemaDataGeneratorPlugin::PATTERN => $this->createSchemaDataGeneratorPlugin(),
-            PropertyMappingGeneratorPlugin::PATTERN => $this->createSchemaKeysGeneratorPlugin(),
+            PropertyMappingGeneratorPlugin::PATTERN => $this->createPropertyMappingGeneratorPlugin(),
+            CollectionItemsGeneratorPlugin::PATTERN => $this->createCollectionItemsGeneratorPlugin(),
         ];
     }
 
@@ -51,16 +53,23 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         );
     }
 
-    protected function createSchemaKeysGeneratorPlugin(): SchemaGeneratorPluginInterface
+    protected function createSchemaDataGeneratorPlugin(): SchemaGeneratorPluginInterface
+    {
+        return new SchemaDataGeneratorPlugin(
+            $this->getPropertyExplorer()
+        );
+    }
+
+    protected function createPropertyMappingGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
         return new PropertyMappingGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }
 
-    protected function createSchemaDataGeneratorPlugin(): SchemaGeneratorPluginInterface
+    protected function createCollectionItemsGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
-        return new SchemaDataGeneratorPlugin(
+        return new CollectionItemsGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }

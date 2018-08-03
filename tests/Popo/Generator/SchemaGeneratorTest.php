@@ -6,7 +6,6 @@ namespace Tests\Popo\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Builder\BuilderConfigurator;
-use Popo\Builder\BuilderConfiguratorInterface;
 use Popo\Builder\GeneratorBuilder;
 use Popo\Builder\GeneratorBuilderInterface;
 use Popo\Builder\PluginContainer;
@@ -63,6 +62,7 @@ class SchemaGeneratorTest extends TestCase
                 'type' => 'string',
             ],[
                 'name' => 'optionalData',
+                'collectionItem' => 'string',
                 'type' => 'array',
                 'default' => [],
             ],[
@@ -100,24 +100,28 @@ class SchemaGeneratorTest extends TestCase
         return $schema;
     }
 
-    protected function buildPluginContainer(PropertyExplorerInterface $propertyExplorer): PluginContainerInterface
+    protected function buildPluginContainer(): PluginContainerInterface
     {
-        $pluginContainer = new PluginContainer($propertyExplorer);
-        $pluginContainer->registerSchemaClassPlugins([
-            DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
-            DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
-        ]);
-        $pluginContainer->registerPropertyClassPlugins([
-            DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
-        ]);
+        $propertyExplorer = $this->buildPropertyExplorer();
+
+        $pluginContainer = (new PluginContainer($propertyExplorer))
+            ->registerSchemaClassPlugins([
+                DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
+                DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerPropertyClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerCollectionClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ]);
 
         return $pluginContainer;
     }
 
-    protected function buildGenerator(BuilderConfiguratorInterface $configurator): GeneratorInterface
+    protected function buildGenerator(BuilderConfigurator $configurator): GeneratorInterface
     {
-        $propertyExplorer = $this->buildPropertyExplorer();
-        $pluginContainer = $this->buildPluginContainer($propertyExplorer);
+        $pluginContainer = $this->buildPluginContainer();
         $generatorBuilder = $this->buildGeneratorBuilder();
 
         $generator = $generatorBuilder->build($configurator, $pluginContainer);
@@ -179,6 +183,17 @@ class FooStub implements \Popo\Tests\FooStubInterface
 );
 
     /**
+    * @var array
+    */
+    protected $collectionItems = array (
+  \'id\' => \'\',
+  \'username\' => \'\',
+  \'password\' => \'\',
+  \'optionalData\' => \'string\',
+  \'bar\' => \'\',
+);
+
+    /**
      * @param string $property
      *
      * @return mixed|null
@@ -224,7 +239,18 @@ class FooStub implements \Popo\Tests\FooStubInterface
 
             if (isset($this->data[$key])) {
                 $value = $this->data[$key];
-                $data[$key] = $value;
+
+                if ($this->collectionItems[$key] !== \'\') {
+                    if (\is_array($value) && \class_exists($this->collectionItems[$key])) {
+                        foreach ($value as $popo) {
+                            if (\method_exists($popo, \'toArray\')) {
+                                $data[$key][] = $popo->toArray();
+                            }
+                        }
+                    }
+                } else {
+                    $data[$key] = $value;
+                }
 
                 if (\is_object($value) && \method_exists($value, \'toArray\')) {
                     $data[$key] = $value->toArray();
@@ -249,7 +275,19 @@ class FooStub implements \Popo\Tests\FooStubInterface
                 $result[$key] = $this->default[$key];
             }
             if (\array_key_exists($key, $data)) {
-                $result[$key] = $data[$key];
+                if ($this->collectionItems[$key] !== \'\') {
+                    if (\is_array($data[$key]) && \class_exists($this->collectionItems[$key])) {
+                        foreach ($data[$key] as $popoData) {
+                            $popo = new $this->collectionItems[$key]();
+                            if (\method_exists($popo, \'fromArray\')) {
+                                $popo->fromArray($popoData);
+                            }
+                            $result[$key][] = $popo;
+                        }
+                    }
+                } else {
+                    $result[$key] = $data[$key];
+                }
             }
 
             if (\is_array($result[$key]) && \class_exists($type)) {
@@ -280,6 +318,26 @@ class FooStub implements \Popo\Tests\FooStubInterface
                 $property
             ));
         }
+    }
+
+    /**
+     * @param string $propertyName
+     * @param mixed $value
+     *
+     * @return void
+     */
+    protected function addCollectionItem(string $propertyName, $value): void
+    {
+        $type = \trim(\strtolower($this->propertyMapping[$propertyName]->getType()));
+        $collection = $this->popoGetValue($propertyName) ?? [];
+
+        if (!\is_array($collection) || $type !== \'array\') {
+            throw new \InvalidArgumentException(\'Cannot add item to non array type: \' . $propertyName);
+        }
+
+        $collection[] = $value;
+
+        $this->popoSetValue($propertyName, $collection);
     }
 
     
@@ -441,6 +499,20 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'bar\');
 
         return $this->popoGetValue(\'bar\');
+    }
+
+
+    
+    /**
+     * @param string $optionalDataItem
+     *
+     * @return self
+     */
+    public function addOptionalDataItem(?string $optionalDataItem): \Popo\Tests\FooStubInterface
+    {
+        $this->addCollectionItem(\'optionalData\', $optionalDataItem);
+
+        return $this;
     }
 
 }

@@ -23,4 +23,8 @@ interface SchemaConfiguratorInterface
     public function getPropertyTemplateFilename(): string;
 
     public function setPropertyTemplateFilename(string $propertyTemplateFilename): SchemaConfiguratorInterface;
+
+    public function getCollectionTemplateFilename(): string;
+
+    public function setCollectionTemplateFilename(string $collectionTemplateFilename): SchemaConfiguratorInterface;
 }

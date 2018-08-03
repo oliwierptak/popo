@@ -4,28 +4,13 @@ declare(strict_types = 1);
 
 namespace Popo\Generator;
 
+use Popo\Builder\BuilderContainer;
+
 interface GeneratorFactoryInterface
 {
-    /**
-     * @param string $schemaTemplateString
-     * @param string $propertyTemplateString
-     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $schemaPluginCollection
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginCollection
-     *
-     * @return \Popo\Generator\GeneratorInterface
-     */
-    public function createSchemaGenerator(
-        string $schemaTemplateString,
-        string $propertyTemplateString,
-        array $schemaPluginCollection,
-        array $propertyPluginCollection
-    ): GeneratorInterface;
+    public function createSchemaGenerator(BuilderContainer $container): GeneratorInterface;
 
-    /**
-     * @param string $propertyTemplateString
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginCollection
-     *
-     * @return \Popo\Generator\GeneratorInterface
-     */
-    public function createPropertyGenerator(string $propertyTemplateString, array $propertyPluginCollection): GeneratorInterface;
+    public function createPropertyGenerator(BuilderContainer $container): GeneratorInterface;
+
+    public function createCollectionGenerator(BuilderContainer $container): GeneratorInterface;
 }

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Popo\Builder\BuilderConfigurator;
 use Popo\Builder\GeneratorBuilder;
 use Popo\Builder\PluginContainer;
-use Popo\Generator\Php\Plugin\Property\Getter\GetMethodReturnTypeGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin as DtoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ReturnTypeGeneratorPlugin as DtoReturnTypeGeneratorPlugin;
 use Popo\PopoFactory;
@@ -83,6 +83,7 @@ class FileWriterTest extends TestCase
             ],[
                 'name' => 'isLoggedIn',
                 'type' => 'bool',
+                'default' => false
             ],[
                 'name' => 'resetPassword',
                 'type' => 'bool',
@@ -92,7 +93,12 @@ class FileWriterTest extends TestCase
                 ],[
                 'name' => 'barStub',
                 'type' => '\Tests\App\Generated\Dto\BarStub',
-                ]],
+                ],[
+                'name' => 'bars',
+                'type' => 'array',
+                'collectionItem' => '\Tests\App\Generated\Dto\BarStub',
+                'singular' => 'bar'
+            ]],
         ];
 
         $this->writePopoInterface('Tests\App\Generated\Dto\BarStub', $this->barStubFilename . 'Interface.php');
@@ -106,6 +112,10 @@ class FileWriterTest extends TestCase
             'resetPassword' => true,
             'context' => null,
             'barStub' => ['username' => 'bar'],
+            'bars' => [
+                ['username' => 'fooBaroo', 'password' => 'md5zxx1' , 'isLoggedIn' => true],
+                ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false]
+            ],
         ];
 
         $this->expectedData = [
@@ -119,11 +129,31 @@ class FileWriterTest extends TestCase
                 'id' => null,
                 'username' => 'bar',
                 'password' => null,
-                'isLoggedIn' => null,
+                'isLoggedIn' => false,
                 'resetPassword' => null,
                 'context' => null,
                 'barStub' => null,
+                'bars' => null,
             ],
+            'bars' => [[
+                'id' => null,
+                'username' => 'fooBaroo',
+                'password' => 'md5zxx1',
+                'isLoggedIn' => true,
+                'resetPassword' => null,
+                'context' => null,
+                'barStub' => null,
+                'bars' => null,
+            ],[
+                'id' => null,
+                'username' => 'kangaroo',
+                'password' => 'md5yyy2',
+                'isLoggedIn' => false,
+                'resetPassword' => null,
+                'context' => null,
+                'barStub' => null,
+                'bars' => null,
+            ]],
         ];
     }
 
@@ -135,7 +165,8 @@ class FileWriterTest extends TestCase
 
         $schemaBuilderConfigurator = (new SchemaConfigurator())
             ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
-            ->setPropertyTemplateFilename('interface/php.interface.property.tpl');
+            ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
+            ->setCollectionTemplateFilename('interface/php.interface.collection.tpl');
 
         $configurator = (new BuilderConfigurator())
             ->setSchemaConfigurator($schemaBuilderConfigurator)
@@ -151,14 +182,17 @@ class FileWriterTest extends TestCase
         $propertyExplorer = $popoFactory->createSchemaFactory()
             ->createPropertyExplorer();
 
-        $pluginContainer = new PluginContainer($propertyExplorer);
-        $pluginContainer->registerSchemaClassPlugins([
-            DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
-            DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
-        ]);
-        $pluginContainer->registerPropertyClassPlugins([
-            GetMethodReturnTypeGeneratorPlugin::PATTERN => GetMethodReturnTypeGeneratorPlugin::class,
-        ]);
+        $pluginContainer = (new PluginContainer($propertyExplorer))
+            ->registerSchemaClassPlugins([
+                DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
+                DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerPropertyClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerCollectionClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ]);
 
         $generator = $generatorBuilder->build($configurator, $pluginContainer);
         $fileWriter = new FileWriter($generator);
@@ -186,14 +220,17 @@ class FileWriterTest extends TestCase
         $propertyExplorer = $popoFactory->createSchemaFactory()
             ->createPropertyExplorer();
 
-        $pluginContainer = new PluginContainer($propertyExplorer);
-        $pluginContainer->registerSchemaClassPlugins([
-            DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
-            DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
-        ]);
-        $pluginContainer->registerPropertyClassPlugins([
-            GetMethodReturnTypeGeneratorPlugin::PATTERN => GetMethodReturnTypeGeneratorPlugin::class,
-        ]);
+        $pluginContainer = (new PluginContainer($propertyExplorer))
+            ->registerSchemaClassPlugins([
+                DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
+                DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerPropertyClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ])
+            ->registerCollectionClassPlugins([
+                DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+            ]);
 
         $schemaGenerator = $generatorBuilder->build($configurator, $pluginContainer);
         $fileWriter = new FileWriter($schemaGenerator);
@@ -231,7 +268,7 @@ class FileWriterTest extends TestCase
 
         $data = $popo->toArray();
 
-        $this->assertSame($this->expectedData, $data);
+        $this->assertEquals($this->expectedData, $data);
     }
 
     public function testToArrayShouldConvertPopo(): void
@@ -242,7 +279,7 @@ class FileWriterTest extends TestCase
 
         $data = $popo->toArray();
 
-        $this->assertSame($this->expectedData, $data);
+        $this->assertEquals($this->expectedData, $data);
     }
 
     public function testFromArray(): void
@@ -251,7 +288,7 @@ class FileWriterTest extends TestCase
 
         $popo->fromArray($this->data);
 
-        $this->assertSame($this->expectedData, $popo->toArray());
+        $this->assertEquals($this->expectedData, $popo->toArray());
     }
 
     public function testFromArrayShouldConvertPopo(): void
@@ -263,7 +300,7 @@ class FileWriterTest extends TestCase
 
         $popo->fromArray($this->data);
 
-        $this->assertSame($this->expectedData, $popo->toArray());
+        $this->assertEquals($this->expectedData, $popo->toArray());
     }
 
     public function testGetNullValue(): void

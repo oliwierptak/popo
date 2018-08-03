@@ -6,22 +6,11 @@ namespace Popo\Schema\Reader;
 
 class ReaderFactory implements ReaderFactoryInterface
 {
-    /**
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
-     * @param array $propertySchema
-     *
-     * @return \Popo\Schema\Reader\PropertyInterface
-     */
     public function createProperty(SchemaInterface $schema, array $propertySchema): PropertyInterface
     {
         return new Property($schema, $propertySchema);
     }
 
-    /**
-     * @param array $schema
-     *
-     * @return \Popo\Schema\Reader\SchemaInterface
-     */
     public function createSchema(array $schema = []): SchemaInterface
     {
         return new Schema($schema);
@@ -41,5 +30,10 @@ class ReaderFactory implements ReaderFactoryInterface
         }
 
         return $propertyCollection;
+    }
+
+    public function createPropertyExplorer(): PropertyExplorerInterface
+    {
+        return new PropertyExplorer();
     }
 }

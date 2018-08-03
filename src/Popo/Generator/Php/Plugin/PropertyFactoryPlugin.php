@@ -13,7 +13,6 @@ use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodNameGeneratorPlugi
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeCastPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersGeneratorPlugin;
@@ -46,9 +45,6 @@ class PropertyFactoryPlugin implements PropertyFactoryPluginInterface
                 $this->getPropertyExplorer()
             ),
             GetMethodReturnDockblockGeneratorPlugin::PATTERN => new GetMethodReturnDockblockGeneratorPlugin(
-                $this->getPropertyExplorer()
-            ),
-            SetMethodReturnTypeGeneratorPlugin::PATTERN => new SetMethodReturnTypeGeneratorPlugin(
                 $this->getPropertyExplorer()
             ),
             SetMethodNameGeneratorPlugin::PATTERN => new SetMethodNameGeneratorPlugin(

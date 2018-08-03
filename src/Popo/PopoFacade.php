@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use Popo\Builder\BuilderConfiguratorInterface;
+use Popo\Builder\BuilderConfigurator;
 use Popo\Schema\Reader\SchemaInterface;
 
 class PopoFacade implements PopoFacadeInterfaces
@@ -28,35 +28,35 @@ class PopoFacade implements PopoFacadeInterfaces
         return $this->factory;
     }
 
-    public function generateDto(BuilderConfiguratorInterface $configurator): void
+    public function generateDto(BuilderConfigurator $configurator): void
     {
         $this->getFactory()
             ->createPopoDirector()
             ->generateDto($configurator);
     }
 
-    public function generatePopo(BuilderConfiguratorInterface $configurator): void
+    public function generatePopo(BuilderConfigurator $configurator): void
     {
         $this->getFactory()
             ->createPopoDirector()
             ->generatePopo($configurator);
     }
 
-    public function generatePopoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generatePopoString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         return $this->getFactory()
             ->createStringDirector()
             ->generatePopoString($configurator, $schema);
     }
 
-    public function generateDtoString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generateDtoString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         return $this->getFactory()
             ->createStringDirector()
             ->generateDtoString($configurator, $schema);
     }
 
-    public function generateDtoInterfaceString(BuilderConfiguratorInterface $configurator, SchemaInterface $schema): string
+    public function generateDtoInterfaceString(BuilderConfigurator $configurator, SchemaInterface $schema): string
     {
         return $this->getFactory()
             ->createStringDirector()

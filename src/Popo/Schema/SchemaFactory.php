@@ -7,7 +7,6 @@ namespace Popo\Schema;
 use Popo\Finder\FinderFactoryInterface;
 use Popo\Schema\Bundle\BundleSchemaFactoryInterface;
 use Popo\Schema\Loader\LoaderFactoryInterface;
-use Popo\Schema\Reader\PropertyExplorer;
 use Popo\Schema\Reader\PropertyExplorerInterface;
 use Popo\Schema\Reader\ReaderFactoryInterface;
 use Popo\Schema\Validator\SchemaValidator;
@@ -72,6 +71,6 @@ class SchemaFactory implements SchemaFactoryInterface
 
     public function createPropertyExplorer(): PropertyExplorerInterface
     {
-        return new PropertyExplorer();
+        return $this->readerFactory->createPropertyExplorer();
     }
 }

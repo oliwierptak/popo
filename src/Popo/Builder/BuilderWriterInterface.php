@@ -15,10 +15,10 @@ interface BuilderWriterInterface
      * - Creates BundleWriter using WriterFactory
      * - Writes merged schema files to specified output directory
      *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      * @param \Popo\Generator\GeneratorInterface $generator
      *
      * @return void
      */
-    public function write(BuilderConfiguratorInterface $configurator, GeneratorInterface $generator): void;
+    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void;
 }
