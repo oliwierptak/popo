@@ -2,7 +2,6 @@
 <?php
 
 require_once getcwd().'/vendor/autoload.php';
-require_once getcwd().'/bootstrap.php';
 
 use Popo\Command\GenerateDtoCommand;
 use Popo\Command\GeneratePopoCommand;
