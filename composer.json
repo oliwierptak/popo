@@ -35,6 +35,7 @@
   "prefer-stable": true,
   "scripts": {
     "post-autoload-dump": [
+      "chmod +x bin/popo",
       "vendor/bin/cs-setup"
     ]
   },
@@ -43,11 +44,5 @@
   },
   "bin": [
     "bin/popo"
-  ],
-  "pre-install-cmd": [
-    "chmod +x bin/*"
-  ],
-  "pre-update-cmd": [
-    "chmod +x bin/*"
   ]
 }
