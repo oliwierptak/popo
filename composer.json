@@ -1,12 +1,12 @@
 {
   "name": "popo/generator",
+  "description": "Plain Old PHP Object (POPO) / Data Transfer Object (TDO) Generator. Convert JSON to PHP class.",
   "license": "MIT",
   "authors": [
     {
       "name": "Oliwier Ptak"
     }
   ],
-  "description": "Plain Old PHP Object (POPO) / Data Transfer Object (TDO) Generator. Convert JSON to PHP class.",
   "require": {
     "php": "^7.1",
     "symfony/finder": "^4.0",
