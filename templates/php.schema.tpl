@@ -97,12 +97,7 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return <<RETURN_TYPE>>
-     */
-    public function fromArray(array $data): <<RETURN_TYPE>>
+    public function fromArray(array $data): \Datalator\Popo\DatabaseConfigurator
     {
         $result = [];
         foreach ($this->propertyMapping as $key => $type) {
@@ -111,15 +106,13 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
                 $result[$key] = $this->default[$key];
             }
             if (\array_key_exists($key, $data)) {
-                if ($this->collectionItems[$key] !== '') {
-                    if (\is_array($data[$key]) && \class_exists($this->collectionItems[$key])) {
-                        foreach ($data[$key] as $popoData) {
-                            $popo = new $this->collectionItems[$key]();
-                            if (\method_exists($popo, 'fromArray')) {
-                                $popo->fromArray($popoData);
-                            }
-                            $result[$key][] = $popo;
+                if ($this->isCollectionItem($key, $data)) {
+                    foreach ($data[$key] as $popoData) {
+                        $popo = new $this->collectionItems[$key]();
+                        if (\method_exists($popo, 'fromArray')) {
+                            $popo->fromArray($popoData);
                         }
+                        $result[$key][] = $popo;
                     }
                 } else {
                     $result[$key] = $data[$key];
@@ -138,6 +131,13 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
         $this->data = $result;
 
         return $this;
+    }
+
+    protected function isCollectionItem(string $key, array $data): bool
+    {
+        return $this->collectionItems[$key] !== '' &&
+            \is_array($data[$key]) &&
+            \class_exists($this->collectionItems[$key]);
     }
 
     /**
