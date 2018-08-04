@@ -160,6 +160,7 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
      * @param string $propertyName
      * @param mixed $value
      *
+     * @throws \InvalidArgumentException
      * @return void
      */
     protected function addCollectionItem(string $propertyName, $value): void
