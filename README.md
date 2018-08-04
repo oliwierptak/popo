@@ -268,8 +268,11 @@ The schema is very simple JSON file. The `name` and `type` fields are mandatory.
     {
       "name": "<string>",
       "type": "<array|bool|float|int|string|popo|mixed>",
+      "collectionItem": "[<type>]",
+      "singular": "[string]",
       "docblock": "[string]",
-      "default": "[mixed]"
+      "default": "mixed",
+      "sourceBundle": "<<runtime only>>"
     }
 }
 ```
@@ -304,6 +307,60 @@ For `bool` property type, the following methods will be generated:
 
 Check `tests/fixtures` directory to see more schema examples.
 
+
+### Collection support
+Besides `array` type, there are two keywords for supporting collections: `collectionItem` and `singular` that can be used to improve array handling.
+```
+...
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "foo",
+        "type": "string"
+      },
+      {
+        "name": "bars",
+        "type": "array"
+      },
+      {
+        "name": "buzzBars",
+        "type": "array"
+        "collectionItem" : "\\Popo\\Bar",
+        "singular": "buzzBar"
+      },
+    ]
+  },
+...  
+``` 
+
+Collection example.
+```
+$popo = (new App\Generated\Foo())
+    ->fromArray([
+        'foo' => 'Foo'
+        'bars' => ['xxx', 'yyy'],
+        'buzzBars' => [
+            ['value' => 'Lorem ipsum 1']
+            ['value' => 'Lorem ipsum 2']
+        ]
+    ]);
+```
+
+Only type was defined as `array`.
+```
+$popo = (new App\Generated\Foo());
+$popo->addBarsItem('xxx');
+$popo->addBarsItem('yyy');
+```
+
+Example of `collectionItem` and `singular`.
+```
+$barPopo = (new App\Generated\Bar())
+    ->fromArray(['value' => 'Lorem ipsum 1']);
+
+$popo->addBuzzBar($barPopo);
+```
 
 ### Schema inheritance
 To extend schema, just define extra schema file with the same name in another bundle/package/directory.
