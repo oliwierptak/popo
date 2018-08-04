@@ -414,8 +414,9 @@ class FileWriterTest extends TestCase
 
         $popo->addFoosItem('bar');
         $popo->addFoosItem('buzz');
+        $popo->addFoosItem('xxx');
 
-        $this->assertCount(3, $popo->getFoos());
+        $this->assertCount(5, $popo->getFoos());
     }
 
     public function testDefaultValue(): void

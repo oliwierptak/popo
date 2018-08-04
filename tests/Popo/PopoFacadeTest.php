@@ -239,11 +239,6 @@ class FooGenerated
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return \Popo\Tests\FooGenerated
-     */
     public function fromArray(array $data): \Popo\Tests\FooGenerated
     {
         $result = [];
@@ -253,15 +248,13 @@ class FooGenerated
                 $result[$key] = $this->default[$key];
             }
             if (\array_key_exists($key, $data)) {
-                if ($this->collectionItems[$key] !== \'\') {
-                    if (\is_array($data[$key]) && \class_exists($this->collectionItems[$key])) {
-                        foreach ($data[$key] as $popoData) {
-                            $popo = new $this->collectionItems[$key]();
-                            if (\method_exists($popo, \'fromArray\')) {
-                                $popo->fromArray($popoData);
-                            }
-                            $result[$key][] = $popo;
+                if ($this->isCollectionItem($key, $data)) {
+                    foreach ($data[$key] as $popoData) {
+                        $popo = new $this->collectionItems[$key]();
+                        if (\method_exists($popo, \'fromArray\')) {
+                            $popo->fromArray($popoData);
                         }
+                        $result[$key][] = $popo;
                     }
                 } else {
                     $result[$key] = $data[$key];
@@ -280,6 +273,13 @@ class FooGenerated
         $this->data = $result;
 
         return $this;
+    }
+
+    protected function isCollectionItem(string $key, array $data): bool
+    {
+        return $this->collectionItems[$key] !== \'\' &&
+            \is_array($data[$key]) &&
+            \class_exists($this->collectionItems[$key]);
     }
 
     /**
@@ -302,6 +302,7 @@ class FooGenerated
      * @param string $propertyName
      * @param mixed $value
      *
+     * @throws \InvalidArgumentException
      * @return void
      */
     protected function addCollectionItem(string $propertyName, $value): void
@@ -483,11 +484,6 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return \Popo\Tests\FooGeneratedInterface
-     */
     public function fromArray(array $data): \Popo\Tests\FooGeneratedInterface
     {
         $result = [];
@@ -497,15 +493,13 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
                 $result[$key] = $this->default[$key];
             }
             if (\array_key_exists($key, $data)) {
-                if ($this->collectionItems[$key] !== \'\') {
-                    if (\is_array($data[$key]) && \class_exists($this->collectionItems[$key])) {
-                        foreach ($data[$key] as $popoData) {
-                            $popo = new $this->collectionItems[$key]();
-                            if (\method_exists($popo, \'fromArray\')) {
-                                $popo->fromArray($popoData);
-                            }
-                            $result[$key][] = $popo;
+                if ($this->isCollectionItem($key, $data)) {
+                    foreach ($data[$key] as $popoData) {
+                        $popo = new $this->collectionItems[$key]();
+                        if (\method_exists($popo, \'fromArray\')) {
+                            $popo->fromArray($popoData);
                         }
+                        $result[$key][] = $popo;
                     }
                 } else {
                     $result[$key] = $data[$key];
@@ -524,6 +518,13 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
         $this->data = $result;
 
         return $this;
+    }
+
+    protected function isCollectionItem(string $key, array $data): bool
+    {
+        return $this->collectionItems[$key] !== \'\' &&
+            \is_array($data[$key]) &&
+            \class_exists($this->collectionItems[$key]);
     }
 
     /**
@@ -546,6 +547,7 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
      * @param string $propertyName
      * @param mixed $value
      *
+     * @throws \InvalidArgumentException
      * @return void
      */
     protected function addCollectionItem(string $propertyName, $value): void
