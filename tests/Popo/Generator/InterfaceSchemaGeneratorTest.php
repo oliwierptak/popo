@@ -150,7 +150,7 @@ interface FooStubInterface
      *
      * @return self
      */
-    public function addOptionalDataItem(string $optionalDataItem): \Popo\Tests\FooStubInterface;
+    public function addOptionalDataItem(string $item): \Popo\Tests\FooStubInterface;
 
 }
         ';

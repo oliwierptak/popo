@@ -508,9 +508,9 @@ class FooStub implements \Popo\Tests\FooStubInterface
      *
      * @return self
      */
-    public function addOptionalDataItem(string $optionalDataItem): \Popo\Tests\FooStubInterface
+    public function addOptionalDataItem(string $item): \Popo\Tests\FooStubInterface
     {
-        $this->addCollectionItem(\'optionalData\', $optionalDataItem);
+        $this->addCollectionItem(\'optionalData\', $item);
 
         return $this;
     }

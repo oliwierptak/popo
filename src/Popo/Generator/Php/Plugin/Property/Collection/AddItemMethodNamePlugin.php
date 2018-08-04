@@ -19,8 +19,10 @@ class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements Propert
         $singular = \trim($property->getSingular());
         if ($singular !== '') {
             $name = $singular;
+        } else {
+            $name .= 'Item';
         }
 
-        return 'add' . \ucfirst($name) . 'Item';
+        return 'add' . \ucfirst($name);
     }
 }

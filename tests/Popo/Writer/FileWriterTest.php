@@ -119,7 +119,7 @@ class FileWriterTest extends TestCase
                 ['username' => 'fooBaroo', 'password' => 'md5zxx1' , 'isLoggedIn' => true],
                 ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false],
             ],
-            'foos' => ['test' => 'foo'],
+            'foos' => ['test', 'foo'],
         ];
 
         $this->expectedData = [
@@ -161,7 +161,7 @@ class FileWriterTest extends TestCase
                     'bars' => null,
                     'foos' => null,
                 ]],
-            'foos' => ['test' => 'foo'],
+            'foos' => ['test', 'foo'],
         ];
     }
 
@@ -395,16 +395,27 @@ class FileWriterTest extends TestCase
         $popo->requireId();
     }
 
-    public function testCollectionAddItem(): void
+    public function testCollectionAdd(): void
     {
         $popo = new FooStub();
         $popo->fromArray($this->data);
 
         $barStub = new BarStub();
-        $popo->addBarItem($barStub);
-        $popo->addBarItem($barStub);
+        $popo->addBar($barStub);
+        $popo->addBar($barStub);
 
         $this->assertCount(4, $popo->getBars());
+    }
+
+    public function testCollectionAddItem(): void
+    {
+        $popo = new FooStub();
+        $popo->fromArray($this->data);
+
+        $popo->addFoosItem('bar');
+        $popo->addFoosItem('buzz');
+
+        $this->assertCount(3, $popo->getFoos());
     }
 
     public function testDefaultValue(): void
