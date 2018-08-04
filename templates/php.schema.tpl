@@ -164,7 +164,7 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
      */
     protected function addCollectionItem(string $propertyName, $value): void
     {
-        $type = \trim(\strtolower($this->propertyMapping[$propertyName]->getType()));
+        $type = \trim(\strtolower($this->propertyMapping[$propertyName]));
         $collection = $this->popoGetValue($propertyName) ?? [];
 
         if (!\is_array($collection) || $type !== 'array') {

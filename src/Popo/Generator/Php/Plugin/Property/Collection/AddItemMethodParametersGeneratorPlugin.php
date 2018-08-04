@@ -15,14 +15,22 @@ class AddItemMethodParametersGeneratorPlugin extends AbstractGeneratorPlugin imp
     public function generate(PropertyInterface $property): string
     {
         $string = \sprintf(
-            '?%s $%sItem',
-            $property->getCollectionItem(),
+            '%s $%s',
+            $property->getType(),
             $property->getName()
         );
 
-        if (!$property->hasCollectionItem()) {
+        if ($property->isCollectionItem()) {
             $string = \sprintf(
-                '?$%sItem',
+                '%s $%sItem',
+                $property->getCollectionItem(),
+                $property->getName()
+            );
+        }
+
+        if ($this->propertyExplorer->isMixed($property->getType())) {
+            $string = \sprintf(
+                '$%s',
                 $property->getName()
             );
         }

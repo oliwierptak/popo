@@ -104,7 +104,7 @@ class Property implements PropertyInterface
         return $this->data[static::SINGULAR];
     }
 
-    public function hasCollectionItem(): bool
+    public function isCollectionItem(): bool
     {
         return \array_key_exists(static::COLLECTION_ITEM, $this->getSchemaDefinition());
     }

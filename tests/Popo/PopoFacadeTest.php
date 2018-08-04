@@ -306,7 +306,7 @@ class FooGenerated
      */
     protected function addCollectionItem(string $propertyName, $value): void
     {
-        $type = \trim(\strtolower($this->propertyMapping[$propertyName]->getType()));
+        $type = \trim(\strtolower($this->propertyMapping[$propertyName]));
         $collection = $this->popoGetValue($propertyName) ?? [];
 
         if (!\is_array($collection) || $type !== \'array\') {
@@ -550,7 +550,7 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
      */
     protected function addCollectionItem(string $propertyName, $value): void
     {
-        $type = \trim(\strtolower($this->propertyMapping[$propertyName]->getType()));
+        $type = \trim(\strtolower($this->propertyMapping[$propertyName]));
         $collection = $this->popoGetValue($propertyName) ?? [];
 
         if (!\is_array($collection) || $type !== \'array\') {

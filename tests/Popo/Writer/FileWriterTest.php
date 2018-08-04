@@ -87,18 +87,21 @@ class FileWriterTest extends TestCase
             ],[
                 'name' => 'resetPassword',
                 'type' => 'bool',
-                ],[
+            ],[
                 'name' => 'context',
                 'type' => 'mixed',
-                ],[
+            ],[
                 'name' => 'barStub',
                 'type' => '\Tests\App\Generated\Dto\BarStub',
-                ],[
+            ],[
                 'name' => 'bars',
                 'type' => 'array',
                 'collectionItem' => '\Tests\App\Generated\Dto\BarStub',
                 'singular' => 'bar',
-                ]],
+            ],[
+                'name' => 'foos',
+                'type' => 'array',
+            ]],
         ];
 
         $this->writePopoInterface('Tests\App\Generated\Dto\BarStub', $this->barStubFilename . 'Interface.php');
@@ -116,6 +119,7 @@ class FileWriterTest extends TestCase
                 ['username' => 'fooBaroo', 'password' => 'md5zxx1' , 'isLoggedIn' => true],
                 ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false],
             ],
+            'foos' => ['test' => 'foo']
         ];
 
         $this->expectedData = [
@@ -134,26 +138,30 @@ class FileWriterTest extends TestCase
                 'context' => null,
                 'barStub' => null,
                 'bars' => null,
+                'foos' => null,
             ],
             'bars' => [[
-                'id' => null,
-                'username' => 'fooBaroo',
-                'password' => 'md5zxx1',
-                'isLoggedIn' => true,
-                'resetPassword' => null,
-                'context' => null,
-                'barStub' => null,
-                'bars' => null,
-            ],[
-                'id' => null,
-                'username' => 'kangaroo',
-                'password' => 'md5yyy2',
-                'isLoggedIn' => false,
-                'resetPassword' => null,
-                'context' => null,
-                'barStub' => null,
-                'bars' => null,
-            ]],
+                    'id' => null,
+                    'username' => 'fooBaroo',
+                    'password' => 'md5zxx1',
+                    'isLoggedIn' => true,
+                    'resetPassword' => null,
+                    'context' => null,
+                    'barStub' => null,
+                    'bars' => null,
+                    'foos' => null,
+                ],[
+                    'id' => null,
+                    'username' => 'kangaroo',
+                    'password' => 'md5yyy2',
+                    'isLoggedIn' => false,
+                    'resetPassword' => null,
+                    'context' => null,
+                    'barStub' => null,
+                    'bars' => null,
+                    'foos' => null,
+                ]],
+            'foos' => ['test' => 'foo']
         ];
     }
 
@@ -251,6 +259,7 @@ class FileWriterTest extends TestCase
         $this->assertSame($this->data['password'], $generatedClass->getPassword());
         $this->assertSame($this->data['isLoggedIn'], $generatedClass->isLoggedIn());
         $this->assertSame($this->data['resetPassword'], $generatedClass->resetPassword());
+        $this->assertSame($this->expectedData['foos'], $generatedClass->getFoos());
         $this->assertSame($this->expectedData['barStub'], $generatedClass->getBarStub()->toArray());
 
         $this->assertSame($this->data['id'], $generatedClass->getId());
@@ -258,6 +267,7 @@ class FileWriterTest extends TestCase
         $this->assertSame($this->data['password'], $generatedClass->requirePassword());
         $this->assertSame($this->data['isLoggedIn'], $generatedClass->requireIsLoggedIn());
         $this->assertSame($this->data['resetPassword'], $generatedClass->requireResetPassword());
+        $this->assertSame($this->expectedData['foos'], $generatedClass->requireFoos());
         $this->assertSame($this->expectedData['barStub'], $generatedClass->requireBarStub()->toArray());
     }
 
@@ -383,6 +393,18 @@ class FileWriterTest extends TestCase
         $popo->fromArray($data);
 
         $popo->requireId();
+    }
+
+    public function testCollectionAddItem()
+    {
+        $popo = new FooStub();
+        $popo->fromArray($this->data);
+
+        $barStub = new BarStub();
+        $popo->addBarItem($barStub);
+        $popo->addBarItem($barStub);
+
+        $this->assertCount(4, $popo->getBars());
     }
 
     public function testDefaultValue(): void

@@ -328,7 +328,7 @@ class FooStub implements \Popo\Tests\FooStubInterface
      */
     protected function addCollectionItem(string $propertyName, $value): void
     {
-        $type = \trim(\strtolower($this->propertyMapping[$propertyName]->getType()));
+        $type = \trim(\strtolower($this->propertyMapping[$propertyName]));
         $collection = $this->popoGetValue($propertyName) ?? [];
 
         if (!\is_array($collection) || $type !== \'array\') {
@@ -508,7 +508,7 @@ class FooStub implements \Popo\Tests\FooStubInterface
      *
      * @return self
      */
-    public function addOptionalDataItem(?string $optionalDataItem): \Popo\Tests\FooStubInterface
+    public function addOptionalDataItem(string $optionalDataItem): \Popo\Tests\FooStubInterface
     {
         $this->addCollectionItem(\'optionalData\', $optionalDataItem);
 

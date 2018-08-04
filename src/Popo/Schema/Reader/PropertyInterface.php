@@ -21,7 +21,7 @@ interface PropertyInterface
 
     public function getSingular(): string;
 
-    public function hasCollectionItem(): bool;
+    public function isCollectionItem(): bool;
 
     public function hasDefault(): bool;
 
