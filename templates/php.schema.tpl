@@ -97,7 +97,7 @@ class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
         return $data;
     }
 
-    public function fromArray(array $data): \Datalator\Popo\DatabaseConfigurator
+    public function fromArray(array $data): <<RETURN_TYPE>>
     {
         $result = [];
         foreach ($this->propertyMapping as $key => $type) {
