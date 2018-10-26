@@ -425,4 +425,22 @@ class FileWriterTest extends TestCase
 
         $this->assertSame('JohnDoe', $popo->getUsername());
     }
+
+    public function testDefaultValueToArray(): void
+    {
+        $popo = new FooStub();
+
+        $result = $popo->toArray();
+
+        $this->assertSame('JohnDoe', $result['username']);
+    }
+
+    public function testDefaultValueFromArray(): void
+    {
+        $popo = (new FooStub())
+            ->fromArray(['id' => 1]);
+
+        $this->assertSame(1, $popo->getId());
+        $this->assertSame('JohnDoe', $popo->getUsername());
+    }
 }
