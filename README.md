@@ -72,16 +72,16 @@ Create `.popo` file in project directory, for example:
 ```
 [popo]
 schema = popo/
-template = templates/
-output = src/Generated/Popo/
-namespace = Generated\Popo
+template = vendor/popo/generator/templates/
+output = src/YourProject/Popo/
+namespace = YourProject\Popo
 extension = .php
 
 [dto]
-schema = dto/
-template = templates/
-output = src/Generated/Dto/
-namespace = Generated\Dto
+schema = dto
+template = vendor/popo/generator/templates/
+output = src/YourProject/Popo/
+namespace = YourProject\Popo
 extension = .php
 ```
 
