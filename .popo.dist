@@ -1,14 +1,14 @@
-; configure, copy this file under .popo and run vendor/bin/popo popo|dto
+; configure and rename this file to .popo and run vendor/bin/popo
 [popo]
-schema = tests/fixtures/popo/bundles/
-template = templates/
-output = src/Generated/Popo/
-namespace = Generated\Popo
+schema = popo/
+template = vendor/popo/generator/templates/
+output = src/YourProject/Popo/
+namespace = YourProject\Popo
 extension = .php
 
 [dto]
-schema = tests/fixtures/dto/bundles/
-template = templates/
-output = src/Generated/Dto/
-namespace = Generated\Dto
+schema = dto
+template = vendor/popo/generator/templates/
+output = src/YourProject/Popo/
+namespace = YourProject\Popo
 extension = .php
