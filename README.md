@@ -448,12 +448,13 @@ To convert to `array` recursively.
 print_r($popo->toArray());
 ``` 
 
-Result: ```php
+Result: 
+```php
 [
      'foo' => 'Foo lorem ipsum'
      'bar' => ['bar' => 'Bar lorem ipsum']
  ]
-`
+```
 
 
 #### `public function require<<property name>>(): array`
