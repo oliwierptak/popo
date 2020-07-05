@@ -12,7 +12,7 @@ That is by default, because everything can be configured.
 
 #### Example Schema
 A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is using `Bar`.
-```
+```json
 ...
   {
     "name": "Foo",
@@ -38,8 +38,9 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
   }
 ...  
 ```
+
 #### Generated Code Usage
-```
+```php
 $popo = (new App\Generated\Foo())
     ->fromArray([
         'foo' => 'Foo'
@@ -69,7 +70,7 @@ If you define your own `.popo` file, you can just call `vendor/bin/popo popo` or
 
 ### Configuration with .popo file
 Create `.popo` file in project directory, for example:
-```
+```ini
 [popo]
 schema = popo/
 template = vendor/popo/generator/templates/
@@ -123,7 +124,7 @@ It uses `BuilderConfigurator` in order to configure the Builder classes.
 
 To generate simple Popo object, use `generatePopo` method of `PopoFacade`.
 
-```
+```php
 $facade = new PopoFacade();
 $configurator = new BuilderConfigurator();
 
@@ -133,7 +134,7 @@ $facade->generatePopo($configurator);
 
 To generate Data Transfer Objects and their interfaces, use `generateDto` method.
 
-```
+```php
 $facade = new PopoFacade();
 $configurator = new BuilderConfigurator();
 
@@ -142,7 +143,7 @@ $facade->generateDto($configurator);
 
 To generate string, use `generatePopoString()`, `generateDtoString()` or `generateDtoInterfaceString()` methods.
 
-```
+```php
 $facade = new PopoFacade();
 
 $configurator = (new BuilderConfigurator())
@@ -167,7 +168,7 @@ Check `tests/Popo/PopoFacadeTest.php` for more details.
 #### BuilderConfigurator
 Use it to configure parameters of source code generator.
 
-```
+```php
 $configurator = (new BuilderConfigurator())
     ->setSchemaConfigurator(new SchemaConfigurator())
     ->setSchemaDirectory('project/schema/')
@@ -235,7 +236,7 @@ $configurator = (new BuilderConfigurator())
 #### SchemaConfigurator
 Use it to configure schema specific parameters.
 
-```
+```php
 $schemaConfigurator = (new SchemaConfigurator())
     ->setSchemaPath('@^(.*)project/schema/(.*)$@')
     ->setSchemaFilename('*.schema.json')
@@ -268,7 +269,7 @@ Check `BuilderConfigurator` and `SchemaConfigurator` for default values.
 
 ## Schema
 The schema is very simple JSON file. The `name` and `type` fields are mandatory.
-```
+```json
 {
   "name": "<string>",
   "abstract": "[<bool>]",
@@ -318,7 +319,7 @@ Check `tests/fixtures` directory to see more schema examples.
 
 ### Collection support
 Besides `array` type, there are two keywords for supporting collections: `collectionItem` and `singular` that can be used to improve array handling.
-```
+```json
 ...
   {
     "name": "Foo",
@@ -343,7 +344,7 @@ Besides `array` type, there are two keywords for supporting collections: `collec
 ``` 
 
 Collection example.
-```
+```php
 $popo = (new App\Generated\Foo())
     ->fromArray([
         'foo' => 'Foo'
@@ -356,14 +357,14 @@ $popo = (new App\Generated\Foo())
 ```
 
 Only type was defined as `array`.
-```
+```php
 $popo = (new App\Generated\Foo());
 $popo->addBarsItem('xxx');
 $popo->addBarsItem('yyy');
 ```
 
 Example of `collectionItem` and `singular`.
-```
+```php
 $barPopo = (new App\Generated\Bar())
     ->fromArray(['value' => 'Lorem ipsum 1']);
 
@@ -394,7 +395,7 @@ Besides getters and setters, there are some helper methods implemented, but if y
 you can just customize the templates, and remove them. However they tend to be useful.
 
 Sample schema:
-```
+```json
 [
   {
     "name": "Foo",
@@ -422,7 +423,7 @@ Sample schema:
 ```
 
 Sample Popo:
-```
+```php
 $popo = (new App\Generated\Foo())
     ->fromArray([
         'foo' => 'Foo lorem ipsum'
@@ -434,7 +435,7 @@ $popo = (new App\Generated\Foo())
 To populate with data.
     
 
-```
+```php
 echo $popo->getBar()->getBar();
 ```
 
@@ -444,7 +445,7 @@ Result: `Bar lorem ipsum`
 #### `public function toArray(): array`
 To convert to `array` recursively.
 
-```
+```php
 print_r($popo->toArray());
 ``` 
 
@@ -460,7 +461,7 @@ Result:
 #### `public function require<<property name>>(): array`
 To throw exception if requested property value is null or return it otherwise.
 
-```
+```php
 $popo = new App\Generated\Foo();
 echo $popo->requireFoo();
 ``` 
@@ -468,7 +469,7 @@ echo $popo->requireFoo();
 Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
 
 
-```
+```php
 $popo = (new App\Generated\Foo())->setFoo('Foo Lorem Ipsum');
 echo $popo->requireFoo();
 ``` 
@@ -494,7 +495,7 @@ There are two types.
 
 #### Schema Generator Plugins
 Generator plugins that implement `SchemaGeneratorPluginInterface` are responsible for whole source code file.
-```
+```php
 interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
@@ -514,7 +515,7 @@ interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 
 #### Property Generator Plugins
 Generator plugins that implement `PropertyGeneratorPluginInterface` are responsible for property methods source code.
-```
+```php
 interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
@@ -535,7 +536,7 @@ interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
 ### Registering Plugins
 You can register your own plugins with `GeneratorBuilderInterface` during the building of generator by
 providing custom instance of `PluginContainerInterface`.
-```
+```php
 interface GeneratorBuilderInterface
 {
     /**
@@ -559,7 +560,7 @@ Use `registerSchemaClassPlugins(..)` to register your own schema plugins.
  
 Use `registerPropertyClassPlugins(...)` to register your own property plugins.
 
-```
+```php
 $pluginContainer = new PluginContainer(
     new PropertyExplorer()
 );
@@ -575,7 +576,7 @@ See `PluginContainerInterface` for more details.
 
 #### FooSchemaGeneratorPlugin example
 `FooSchemaGeneratorPlugin` plugin replaces value of placeholder `<<PROPERTY_NAME>>` with actual property name. 
-```
+```php
 class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
     const PATTERN = '<<PROPERTY_NAME>>';
