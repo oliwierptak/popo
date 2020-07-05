@@ -11,7 +11,7 @@ That is by default, because everything can be configured.
 
 
 #### Example Schema
-Simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is using `Bar`.
+A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is using `Bar`.
 ```
 ...
   {
@@ -90,7 +90,7 @@ abstract = false
 See `popo.dist`.
 
 ## Schema Directory Structure
-Root directory for all schema files is stored i n BuilderConfigurator's `schemaDirectory`.
+Root directory for all schema files is stored in BuilderConfigurator's `schemaDirectory`.
 The GLOB pattern used to scan this directory is stored in SchemaConfigurator's `schemaPath`.
 You can always change the default structure and the pattern via `SchemaConfigurator`.
 
@@ -448,7 +448,7 @@ To convert to `array` recursively.
 print_r($popo->toArray());
 ``` 
 
-Result: `
+Result: ```php
 [
      'foo' => 'Foo lorem ipsum'
      'bar' => ['bar' => 'Bar lorem ipsum']
@@ -477,7 +477,7 @@ Result: `Foo Lorem Ipsum`
 
 ## Developing custom plugins
 Due to default configuration, POPO will produce PHP source code. 
-But it could be easily extended to generate any type of code, as long as it follows the schema.
+It could be easily extended to generate any type of code, as long as it follows the schema.
 
 ### Generators
 There are two generator types. 
