@@ -1,8 +1,8 @@
 # About
 POPO - Plain Old Php Object is a PHP implementation of "a Plain Old Java Object (POJO)".
 
-POPO will scan, load, validate, merge schema and generate source code files.
-The schema supports inheritance and encapsulation of other POPO objects.
+POPO can scan, load, validate, merge schema (JSON files) and generate source code files (PHP).
+The schema supports inheritance, collections and encapsulation of other POPO objects.
 
 POPO generated classes are not bound by any special restriction and not requiring any class path. 
 They have a no-argument constructor, and allow access to properties using getter and setter methods,
@@ -77,7 +77,7 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
-abstract = false
+abstract = 0
 
 [dto]
 schema = dto
@@ -85,7 +85,7 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
-abstract = false
+abstract = 1
 ```
 
 See `popo.dist`.
@@ -97,9 +97,9 @@ You can always change the default structure and the pattern via `SchemaConfigura
 
 #### Example Schema Configuration for project directory
 ```
-popo/foo/schema/foo.json.schema
-popo/bar/schema/bar.json.schema
-popo/buzz/schema/buzz.json.schema
+project/popo/foo/schema/foo.json.schema
+project/popo/bar/schema/bar.json.schema
+project/popo/buzz/schema/buzz.json.schema
 ```
 
 The root directory for all schema files would be `project/schema/`,

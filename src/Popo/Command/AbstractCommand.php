@@ -73,13 +73,13 @@ abstract class AbstractCommand extends Command
         $configurator = $this->buildConfigurator($input);
 
         $info = sprintf(
-            "Generating POPO files...\n  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%s\n",
+            "Generating POPO files...\n  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n",
             $configurator->getSchemaDirectory(),
             $configurator->getTemplateDirectory(),
             $configurator->getOutputDirectory(),
             $configurator->getNamespace(),
             $configurator->getExtension(),
-            $configurator->getIsAbstract()
+            (int)$configurator->getIsAbstract()
         );
 
         $output->write($info);
@@ -98,7 +98,7 @@ abstract class AbstractCommand extends Command
             ->setOutputDirectory($arguments['output'])
             ->setNamespace($arguments['namespace'])
             ->setExtension($arguments['extension'])
-            ->setIsAbstract($arguments['abstract']);
+            ->setIsAbstract(((bool)$arguments['abstract']) ?? null);
 
         return $configurator;
     }
