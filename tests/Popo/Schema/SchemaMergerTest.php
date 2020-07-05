@@ -10,6 +10,11 @@ use Popo\Schema\Reader\Property;
 use Popo\Schema\SchemaConfigurator;
 use Popo\Schema\Validator\Exception\NotBundleSchemaException;
 use Popo\Schema\Validator\Exception\NotUniquePropertyException;
+use function array_pop;
+use function array_shift;
+use function current;
+use const Popo\APPLICATION_DIR;
+use const Popo\TESTS_DIR;
 
 class SchemaMergerTest extends TestCase
 {
@@ -25,8 +30,8 @@ class SchemaMergerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->schemaDirectory = \Popo\TESTS_DIR . 'fixtures/dto/bundles/';
-        $this->templateDirectory = \Popo\APPLICATION_DIR . 'templates/';
+        $this->schemaDirectory = TESTS_DIR . 'fixtures/dto/bundles/';
+        $this->templateDirectory = APPLICATION_DIR . 'templates/';
     }
 
     public function testMerge(): void
@@ -41,12 +46,12 @@ class SchemaMergerTest extends TestCase
         $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
         $mergedSchema = $schemaMerger->merge($schemaFiles);
 
-        $this->assertCount(4, $mergedSchema);
+        $this->assertCount(5, $mergedSchema);
 
         /**
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $fooSchemaFile
          */
-        $fooSchemaFile = \current($mergedSchema);
+        $fooSchemaFile = current($mergedSchema);
         $this->assertCount(7, $fooSchemaFile->getSchema()->getSchema());
     }
 
@@ -64,11 +69,13 @@ class SchemaMergerTest extends TestCase
 
         $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
 
-        $last = \array_pop($schemaFiles);
+        //pop twice for buzz
+        $last = array_pop($schemaFiles);
+        $last = array_pop($schemaFiles);
         /**
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchemaFile
          */
-        $bundleSchemaFile = $last['buzz/schema']['Buzz'];
+        $bundleSchemaFile = $last['buzz/schema']['Lorem\\Ipsum\\Buzz'];
         $bundleSchemaFile->getSchema()->setName('Foo');
         $bundleSchemaFile->getschema()->setSchema([[
             Property::NAME => 'fooId',
@@ -94,7 +101,7 @@ class SchemaMergerTest extends TestCase
 
         $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
 
-        $first = \array_shift($schemaFiles);
+        $first = array_shift($schemaFiles);
         /**
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchemaFile
          */

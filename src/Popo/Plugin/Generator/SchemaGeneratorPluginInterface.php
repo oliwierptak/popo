@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace Popo\Plugin\Generator;
 
+use Popo\Plugin\AcceptPatternInterface;
 use Popo\Schema\Reader\SchemaInterface;
 
-interface SchemaGeneratorPluginInterface
+interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:

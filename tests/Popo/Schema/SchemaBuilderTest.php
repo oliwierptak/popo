@@ -7,6 +7,9 @@ namespace Tests\Popo\Schema;
 use PHPUnit\Framework\TestCase;
 use Popo\PopoFactory;
 use Popo\Schema\SchemaConfigurator;
+use function current;
+use const Popo\APPLICATION_DIR;
+use const Popo\TESTS_DIR;
 
 class SchemaBuilderTest extends TestCase
 {
@@ -22,8 +25,8 @@ class SchemaBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->schemaDirectory = \Popo\TESTS_DIR . 'fixtures/dto/bundles/';
-        $this->templateDirectory = \Popo\APPLICATION_DIR . 'templates/';
+        $this->schemaDirectory = TESTS_DIR . 'fixtures/dto/bundles/';
+        $this->templateDirectory = APPLICATION_DIR . 'templates/';
     }
 
     public function testBuild(): void
@@ -35,12 +38,12 @@ class SchemaBuilderTest extends TestCase
 
         $configurator = new SchemaConfigurator();
         $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
-        $this->assertCount(3, $schemaFiles);
+        $this->assertCount(4, $schemaFiles);
 
         /**
-         * @var \Popo\Schema\Bundle\BundleSchemaInterface $fooSchemaFile
+         * @var \Popo\Schema\Bundle\BundleSchemaInterface[] $fooSchemaFiles
          */
-        $fooSchemaFiles = \current($schemaFiles);
+        $fooSchemaFiles = current($schemaFiles);
         $this->assertCount(2, $fooSchemaFiles);
     }
 }

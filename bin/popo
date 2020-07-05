@@ -7,7 +7,7 @@ use Popo\Command\GenerateDtoCommand;
 use Popo\Command\GeneratePopoCommand;
 use Symfony\Component\Console\Application;
 
-$console = new Application('datalator', 'v1.0.0');
+$console = new Application('popo', 'v2.x');
 $console->add(new GeneratePopoCommand());
 $console->add(new GenerateDtoCommand());
 

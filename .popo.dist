@@ -5,6 +5,7 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
+; abstract = false|true
 
 [dto]
 schema = dto
@@ -12,3 +13,4 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
+; abstract = false|true

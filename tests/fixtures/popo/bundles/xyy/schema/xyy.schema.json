@@ -1,9 +1,10 @@
 [
   {
-    "name": "Lorem\\Ipsum\\Buzz",
+    "name": "Xyy",
+    "abstract": "true",
     "schema": [
       {
-        "name": "buzz",
+        "name": "x",
         "type": "string"
       }
     ]

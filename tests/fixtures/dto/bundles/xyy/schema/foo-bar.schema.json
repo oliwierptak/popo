@@ -1,9 +1,9 @@
 [
   {
-    "name": "Lorem\\Ipsum\\Buzz",
+    "name": "FooBar",
     "schema": [
       {
-        "name": "buzz",
+        "name": "xyyPropertyInFooBar",
         "type": "string"
       }
     ]
