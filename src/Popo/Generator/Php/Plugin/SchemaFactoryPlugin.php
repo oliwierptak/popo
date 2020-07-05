@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin;
 
+use Popo\Generator\Php\Plugin\Schema\AbstractClassGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\ClassNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\CollectionItemsGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\NamespaceGeneratorPlugin;
@@ -31,8 +32,9 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
     public function createPluginCollection(): array
     {
         return [
-            ClassNameGeneratorPlugin::PATTERN => $this->createClassNameGeneratorPlugin(),
             NamespaceGeneratorPlugin::PATTERN => $this->createNamespaceGeneratorPlugin(),
+            ClassNameGeneratorPlugin::PATTERN => $this->createClassNameGeneratorPlugin(),
+            AbstractClassGeneratorPlugin::PATTERN => $this->createAbstractClassGeneratorPlugin(),
             SchemaDataGeneratorPlugin::PATTERN => $this->createSchemaDataGeneratorPlugin(),
             PropertyMappingGeneratorPlugin::PATTERN => $this->createPropertyMappingGeneratorPlugin(),
             CollectionItemsGeneratorPlugin::PATTERN => $this->createCollectionItemsGeneratorPlugin(),
@@ -42,6 +44,13 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
     protected function createClassNameGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
         return new ClassNameGeneratorPlugin(
+            $this->getPropertyExplorer()
+        );
+    }
+
+    protected function createAbstractClassGeneratorPlugin(): SchemaGeneratorPluginInterface
+    {
+        return new AbstractClassGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }

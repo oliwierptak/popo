@@ -12,6 +12,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function array_merge;
+use function getcwd;
+use function is_file;
+use function parse_ini_file;
+use function rtrim;
+use function sprintf;
+use const DIRECTORY_SEPARATOR;
 
 abstract class AbstractCommand extends Command
 {
@@ -23,7 +30,7 @@ abstract class AbstractCommand extends Command
     const OPTION_OUTPUT = 'output';
     const OPTION_NAMESPACE = 'namespace';
     const OPTION_EXTENSION = 'extension';
-    const OPTION_TYPE = 'type';
+    const OPTION_IS_ABSTRACT = 'abstract';
 
     /**
      * @var \Popo\PopoFacadeInterfaces
@@ -57,7 +64,7 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Directory for generated files', 'src/Popo/'),
                 new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated files', 'Popo'),
                 new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
-                new InputOption(static::OPTION_TYPE, 'y', InputOption::VALUE_OPTIONAL, 'Extension of generated files', 'popo'),
+                new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
             ]);
     }
 
@@ -65,13 +72,14 @@ abstract class AbstractCommand extends Command
     {
         $configurator = $this->buildConfigurator($input);
 
-        $info = \sprintf(
-            "Generating POPO files...\n  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n",
+        $info = sprintf(
+            "Generating POPO files...\n  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%s\n",
             $configurator->getSchemaDirectory(),
             $configurator->getTemplateDirectory(),
             $configurator->getOutputDirectory(),
             $configurator->getNamespace(),
-            $configurator->getExtension()
+            $configurator->getExtension(),
+            $configurator->getIsAbstract()
         );
 
         $output->write($info);
@@ -89,7 +97,8 @@ abstract class AbstractCommand extends Command
             ->setTemplateDirectory($arguments['template'])
             ->setOutputDirectory($arguments['output'])
             ->setNamespace($arguments['namespace'])
-            ->setExtension($arguments['extension']);
+            ->setExtension($arguments['extension'])
+            ->setIsAbstract($arguments['abstract']);
 
         return $configurator;
     }
@@ -104,10 +113,10 @@ abstract class AbstractCommand extends Command
             static::OPTION_OUTPUT => $input->getOption(static::OPTION_OUTPUT),
             static::OPTION_NAMESPACE => $input->getOption(static::OPTION_NAMESPACE),
             static::OPTION_EXTENSION => $input->getOption(static::OPTION_EXTENSION),
-            static::OPTION_TYPE => $input->getOption(static::OPTION_TYPE),
+            static::OPTION_IS_ABSTRACT => $input->getOption(static::OPTION_IS_ABSTRACT),
         ];
 
-        $result = \array_merge($arguments, $config);
+        $result = array_merge($arguments, $config);
 
         return $result;
     }
@@ -120,10 +129,10 @@ abstract class AbstractCommand extends Command
             GenerateDtoCommand::COMMAND_NAME => [],
         ];
 
-        $dotPath = \rtrim(\getcwd(), \DIRECTORY_SEPARATOR) . \DIRECTORY_SEPARATOR;
+        $dotPath = rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $configFile = $dotPath . '.popo';
-        if (\is_file($configFile)) {
-            $config = \parse_ini_file($configFile, true) ?? $default;
+        if (is_file($configFile)) {
+            $config = parse_ini_file($configFile, true) ?? $default;
         }
 
         return $config[static::COMMAND_NAME];

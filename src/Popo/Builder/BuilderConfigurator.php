@@ -35,6 +35,11 @@ class BuilderConfigurator
     protected $extension = '.php';
 
     /**
+     * @var bool|null if set, will overwrite the abstract value from schema file
+     */
+    protected $isAbstract = null;
+
+    /**
      * @var \Popo\Schema\SchemaConfiguratorInterface
      */
     protected $schemaConfigurator;
@@ -115,6 +120,18 @@ class BuilderConfigurator
     public function setExtension(string $extension): self
     {
         $this->extension = $extension;
+
+        return $this;
+    }
+
+    public function getIsAbstract(): ?bool
+    {
+        return $this->isAbstract;
+    }
+
+    public function setIsAbstract(?bool $isAbstract): self
+    {
+        $this->isAbstract = $isAbstract;
 
         return $this;
     }

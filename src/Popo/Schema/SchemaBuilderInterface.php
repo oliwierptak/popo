@@ -12,10 +12,11 @@ interface SchemaBuilderInterface
     /**
      * @param string $schemaDirectory
      * @param \Popo\Schema\SchemaConfiguratorInterface $configurator
+     * @param bool|null $isAbstract If set, will overwrite value from schema file
      *
      * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
      */
-    public function build(string $schemaDirectory, SchemaConfiguratorInterface $configurator): array;
+    public function build(string $schemaDirectory, SchemaConfiguratorInterface $configurator, ?bool $isAbstract = null): array;
 
     /**
      * @param \Popo\Schema\Reader\SchemaInterface $schema

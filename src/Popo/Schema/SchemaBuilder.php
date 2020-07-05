@@ -11,6 +11,9 @@ use Popo\Schema\Loader\JsonLoaderInterface;
 use Popo\Schema\Reader\ReaderFactoryInterface;
 use Popo\Schema\Reader\SchemaInterface;
 use Symfony\Component\Finder\SplFileInfo;
+use function explode;
+use function strcasecmp;
+use const DIRECTORY_SEPARATOR;
 
 class SchemaBuilder implements SchemaBuilderInterface
 {
@@ -39,7 +42,8 @@ class SchemaBuilder implements SchemaBuilderInterface
         JsonLoaderInterface $jsonLoader,
         ReaderFactoryInterface $readerFactory,
         BundleSchemaFactoryInterface $bundleSchemaFactory
-    ) {
+    )
+    {
         $this->fileLoader = $fileLoader;
         $this->jsonLoader = $jsonLoader;
         $this->readerFactory = $readerFactory;
@@ -49,10 +53,11 @@ class SchemaBuilder implements SchemaBuilderInterface
     /**
      * @param string $schemaDirectory
      * @param \Popo\Schema\SchemaConfiguratorInterface $configurator
+     * @param bool|null $isAbstract
      *
      * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
      */
-    public function build(string $schemaDirectory, SchemaConfiguratorInterface $configurator): array
+    public function build(string $schemaDirectory, SchemaConfiguratorInterface $configurator, ?bool $isAbstract = null): array
     {
         $schemaFiles = $this->fileLoader->load(
             $schemaDirectory,
@@ -67,8 +72,7 @@ class SchemaBuilder implements SchemaBuilderInterface
             foreach ($bundleSchemaFileCollection as $bundleSchemaFile) {
                 /** @var \Symfony\Component\Finder\SplFileInfo $bundleSchemaFile */
                 $data[$schemaFilename][$bundleSchemaFile->getRelativePath()] = $this->buildBundleSchemaFiles(
-                    $bundleSchemaFile,
-                    $configurator
+                    $bundleSchemaFile, $configurator, $isAbstract
                 );
             }
         }
@@ -95,14 +99,15 @@ class SchemaBuilder implements SchemaBuilderInterface
     protected function markBundleSchema(
         BundleSchemaInterface $bundleSchema,
         SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface {
+    ): BundleSchemaInterface
+    {
         $bundleNameFromFilename = $configurator->resolveBundleName(
             $bundleSchema->getSchemaFilename()->getFilename()
         );
 
         $bundleNameFromPath = $configurator->resolveBundleName(
             $bundleSchema->getSchemaFilename()->getRelativePath(),
-            \DIRECTORY_SEPARATOR
+            DIRECTORY_SEPARATOR
         );
 
         $isBundleSchema = $this->isBundleSchema($bundleNameFromFilename, $bundleNameFromPath);
@@ -113,7 +118,7 @@ class SchemaBuilder implements SchemaBuilderInterface
 
     protected function isBundleSchema(string $bundleNameFromFilename, string $bundleNameFromPath): bool
     {
-        return \strcasecmp($bundleNameFromFilename, $bundleNameFromPath) === 0;
+        return strcasecmp($bundleNameFromFilename, $bundleNameFromPath) === 0;
     }
 
     /**
@@ -137,7 +142,8 @@ class SchemaBuilder implements SchemaBuilderInterface
     public function buildBundleSchemaWithProperties(
         BundleSchemaInterface $sourceBundleSchema,
         array $propertyCollection
-    ): BundleSchemaInterface {
+    ): BundleSchemaInterface
+    {
         $schemaData = [];
         foreach ($propertyCollection as $property) {
             $schemaData[] = $property->toArray();
@@ -145,7 +151,8 @@ class SchemaBuilder implements SchemaBuilderInterface
 
         $schema = $this->readerFactory->createSchema()
             ->setName($sourceBundleSchema->getSchema()->getName())
-            ->setSchema($schemaData);
+            ->setSchema($schemaData)
+            ->setIsAbstract($sourceBundleSchema->getSchema()->isAbstract());
 
         $bundleSchema = $this->bundleSchemaFactory->createBundleSchema(
             $schema,
@@ -169,25 +176,39 @@ class SchemaBuilder implements SchemaBuilderInterface
 
     protected function buildBundleSchemaFiles(
         SplFileInfo $bundleSchemaFile,
-        SchemaConfiguratorInterface $configurator
-    ): array {
-        /** @var \Symfony\Component\Finder\SplFileInfo $bundleSchemaFile */
+        SchemaConfiguratorInterface $configurator,
+        ?bool $isAbstract
+    ): array
+    {
         $schemaDataCollection = $this->loadSchemaData($bundleSchemaFile);
 
         $bundleSchemaFiles = [];
         foreach ($schemaDataCollection as $schemaData) {
-            $schema = $this->buildSchema($schemaData);
+            $schema = $this->buildSchema($schemaData, $isAbstract);
             $bundleSchema = $this->buildBundleSchema($schema, $bundleSchemaFile, $configurator);
-
             $bundleSchemaFiles[$schema->getName()] = $bundleSchema;
         }
 
         return $bundleSchemaFiles;
     }
 
-    protected function buildSchema(array $schemaData): SchemaInterface
+    protected function buildSchema(array $schemaData, ?bool $isAbstract): SchemaInterface
     {
         $schema = $this->readerFactory->createSchema($schemaData);
+
+        if ($isAbstract === null) {
+            $isAbstract = $schema->isAbstract();
+        }
+        $schema->setIsAbstract($isAbstract);
+
+        if ($schema->isAbstract()) {
+            $namespaceTokens = explode('\\', $schema->getName());
+            if (count($namespaceTokens) > 1) {
+                $schema->setName($schema->getNamespaceName() . '\\' . 'Abstract' . $schema->getClassName());
+            } else {
+                $schema->setName('Abstract' . $schema->getName());
+            }
+        }
 
         return $schema;
     }
@@ -196,7 +217,8 @@ class SchemaBuilder implements SchemaBuilderInterface
         SchemaInterface $schema,
         SplFileInfo $bundleSchemaFile,
         SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface {
+    ): BundleSchemaInterface
+    {
         $bundleSchema = $this->bundleSchemaFactory->createBundleSchema($schema, $bundleSchemaFile);
         $bundleSchema = $this->markBundleSchema($bundleSchema, $configurator);
 

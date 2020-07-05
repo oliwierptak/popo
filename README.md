@@ -76,6 +76,7 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
+abstract = false
 
 [dto]
 schema = dto
@@ -83,6 +84,7 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
+abstract = false
 ```
 
 See `popo.dist`.
@@ -175,6 +177,7 @@ $configurator = (new BuilderConfigurator())
     ->setExtension('.php');
     ->setSchemaPluginClasses([...])
     ->setPropertyPluginClasses([...])
+    ->setIsAbstract(true|false)
     
 ```
 
@@ -200,7 +203,11 @@ $configurator = (new BuilderConfigurator())
     
 - `Extension`
 
-    File extension of generated files. 
+    File extension of generated files.  
+       
+- `Abstract`
+
+    Generate abstract popo classes. 
     
 - `Schema Plugin Classes`
 
@@ -264,14 +271,15 @@ The schema is very simple JSON file. The `name` and `type` fields are mandatory.
 ```
 {
   "name": "<string>",
+  "abstract": "[<bool>]",
   "schema":
     {
       "name": "<string>",
       "type": "<array|bool|float|int|string|popo|mixed>",
       "collectionItem": "[<type>]",
-      "singular": "[string]",
-      "docblock": "[string]",
-      "default": "mixed",
+      "singular": "[<string>]",
+      "docblock": "[<string>]",
+      "default": "[<mixed>]",
       "sourceBundle": "<<runtime only>>"
     }
 }
@@ -486,7 +494,7 @@ There are two types.
 #### Schema Generator Plugins
 Generator plugins that implement `SchemaGeneratorPluginInterface` are responsible for whole source code file.
 ```
-interface SchemaGeneratorPluginInterface
+interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:
@@ -506,7 +514,7 @@ interface SchemaGeneratorPluginInterface
 #### Property Generator Plugins
 Generator plugins that implement `PropertyGeneratorPluginInterface` are responsible for property methods source code.
 ```
-interface PropertyGeneratorPluginInterface
+interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:
@@ -596,7 +604,7 @@ Default filename: `php.schema.tpl`.
 
 namespace <<NAMESPACE>>;
 
-class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
+<<ABSTRACT>>class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
 {
     /**
      * @var array

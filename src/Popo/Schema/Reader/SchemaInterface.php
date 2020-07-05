@@ -14,6 +14,10 @@ interface SchemaInterface
 
     public function setSchema(array $schema): SchemaInterface;
 
+    public function isAbstract(): bool;
+
+    public function setIsAbstract(bool $isAbstract): SchemaInterface;
+
     public function getClassName(): string;
 
     public function getNamespaceName(): string;

@@ -4,10 +4,16 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
+use function array_merge;
+use function array_pop;
+use function explode;
+use function implode;
+
 class Schema implements SchemaInterface
 {
     const NAME = 'name';
     const SCHEMA = 'schema';
+    const IS_ABSTRACT = 'abstract';
 
     /**
      * @var array
@@ -19,15 +25,13 @@ class Schema implements SchemaInterface
      */
     protected $defaults = [
         self::NAME => '',
-        self::SCHEMA => '',
+        self::SCHEMA => [],
+        self::IS_ABSTRACT => false,
     ];
 
-    /**
-     * @param array $data
-     */
     public function __construct(array $data = [])
     {
-        $data = \array_merge($this->defaults, $data);
+        $data = array_merge($this->defaults, $data);
         $this->data = $data;
     }
 
@@ -43,19 +47,11 @@ class Schema implements SchemaInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getSchema(): array
     {
         return $this->data[static::SCHEMA];
     }
 
-    /**
-     * @param array $schema
-     *
-     * @return \Popo\Schema\Reader\SchemaInterface
-     */
     public function setSchema(array $schema): SchemaInterface
     {
         $this->data[static::SCHEMA] = $schema;
@@ -63,28 +59,37 @@ class Schema implements SchemaInterface
         return $this;
     }
 
+    public function isAbstract(): bool
+    {
+        return (bool) $this->data[static::IS_ABSTRACT];
+    }
+
+    public function setIsAbstract(bool $isAbstract): SchemaInterface
+    {
+        $this->data[static::IS_ABSTRACT] = $isAbstract;
+
+        return $this;
+    }
+
     public function getClassName(): string
     {
-        $nameTokens = \explode('\\', $this->getName());
+        $nameTokens = explode('\\', $this->getName());
 
-        $name = \array_pop($nameTokens);
+        $name = array_pop($nameTokens);
 
         return $name;
     }
 
     public function getNamespaceName(): string
     {
-        $nameTokens = \explode('\\', $this->getName());
+        $nameTokens = explode('\\', $this->getName());
 
-        \array_pop($nameTokens);
-        $namespace = \implode('\\', $nameTokens);
+        array_pop($nameTokens);
+        $namespace = implode('\\', $nameTokens);
 
         return $namespace;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return $this->data;

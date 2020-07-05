@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace Popo\Plugin\Generator;
 
+use Popo\Plugin\AcceptPatternInterface;
 use Popo\Schema\Reader\PropertyInterface;
 
-interface PropertyGeneratorPluginInterface
+interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:
