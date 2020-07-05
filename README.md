@@ -451,7 +451,7 @@ print_r($popo->toArray());
 Result: 
 ```php
 [
-     'foo' => 'Foo lorem ipsum'
+     'foo' => 'Foo lorem ipsum',
      'bar' => ['bar' => 'Bar lorem ipsum']
  ]
 ```
