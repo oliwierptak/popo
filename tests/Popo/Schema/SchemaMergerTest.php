@@ -58,7 +58,7 @@ class SchemaMergerTest extends TestCase
     public function testMergeShouldCheckForUniquePropertyNames(): void
     {
         $this->expectException(NotUniquePropertyException::class);
-        $this->expectExceptionMessageRegExp('/^The property: "fooId" is already defined in(.*)$/');
+        $this->expectExceptionMessageMatches('/^The property: "fooId" is already defined in(.*)$/');
 
         $popoFactory = new PopoFactory();
 
@@ -90,7 +90,7 @@ class SchemaMergerTest extends TestCase
     public function testMergeShouldCheckForMainBundleSchema(): void
     {
         $this->expectException(NotBundleSchemaException::class);
-        $this->expectExceptionMessageRegExp('/^Schema: "(.*)foo.schema.json" is not bundle schema$/');
+        $this->expectExceptionMessageMatches('/^Schema: "(.*)foo.schema.json" is not bundle schema$/');
 
         $popoFactory = new PopoFactory();
 
