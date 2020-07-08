@@ -9,6 +9,8 @@ use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\PropertyInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function preg_replace_callback;
+use function var_export;
 
 class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
@@ -17,6 +19,7 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
     public function generate(SchemaInterface $schema): string
     {
         $defaults = [];
+        $constants = [];
 
         foreach ($schema->getSchema() as $propertyData) {
             $property = $this->buildProperty($schema, $propertyData);
@@ -25,15 +28,39 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
             }
 
             $defaults[$property->getName()] = $property->getDefault();
+            if (!$property->isCollectionItem() && $property->hasConstantValue()) {
+                $constants[$property->getName()] = $property->getDefault();
+            }
         }
 
-        return \var_export($defaults, true);
+        $result = var_export($defaults, true);
+        $result = (string)$this->fixConstantValuesEscaping($constants, $result);
+
+        return $result;
     }
 
     protected function buildProperty(SchemaInterface $schema, array $propertyData): PropertyInterface
     {
-        $property = new Property($schema, $propertyData);
+        return new Property($schema, $propertyData);
+    }
 
-        return $property;
+    protected function fixConstantValuesEscaping(array $constants, ?string $result): ?string
+    {
+        if (empty($constants) || $result === null) {
+            return $result;
+        }
+
+        foreach ($constants as $name => $defaultValue) {
+            $pattern = "@('${name}') => '([^']*)',@i";
+
+            $replacement = function (array $matches) {
+                $matches[2] = str_replace('\\\\', '\\', $matches[2]);
+                return "${matches[1]} => ${matches[2]},";
+            };
+
+            $result = preg_replace_callback($pattern, $replacement, $result);
+        }
+
+        return $result;
     }
 }

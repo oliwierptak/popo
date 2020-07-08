@@ -25,6 +25,8 @@ interface PropertyInterface
 
     public function hasDefault(): bool;
 
+    public function hasConstantValue(): bool;
+
     public function getSchema(): SchemaInterface;
 
     public function toArray(): array;
