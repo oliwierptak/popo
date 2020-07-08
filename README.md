@@ -280,7 +280,7 @@ The schema is very simple JSON file. The `name` and `type` fields are mandatory.
       "collectionItem": "[<type>]",
       "singular": "[<string>]",
       "docblock": "[<string>]",
-      "default": "[<mixed>]",
+      "default": "[<mixed>|\\Php\\Const::VALUE]",
       "sourceBundle": "<<runtime only>>"
     }
 }
