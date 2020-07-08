@@ -6,6 +6,7 @@ namespace Tests\Popo\Generator;
 
 use Popo\Builder\BuilderConfigurator;
 use Popo\Schema\SchemaConfigurator;
+use function trim;
 
 class InterfaceSchemaGeneratorTest extends SchemaGeneratorTest
 {
@@ -146,7 +147,7 @@ interface FooStubInterface
 
     
     /**
-     * @param string $optionalDataItem
+     * @param string $item
      *
      * @return self
      */
@@ -155,6 +156,6 @@ interface FooStubInterface
 }
         ';
 
-        $this->assertEquals(\trim($expectedString), \trim($schemaString));
+        $this->assertEquals(trim($expectedString), trim($schemaString));
     }
 }
