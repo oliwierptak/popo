@@ -509,7 +509,7 @@ class FooStub implements \Popo\Tests\FooStubInterface
 
     
     /**
-     * @param string $optionalDataItem
+     * @param string $item
      *
      * @return self
      */

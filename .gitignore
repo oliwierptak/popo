@@ -3,3 +3,4 @@ vendor
 .php_cs.cache
 !.gitignore
 .DS_Store
+phpunit.xml

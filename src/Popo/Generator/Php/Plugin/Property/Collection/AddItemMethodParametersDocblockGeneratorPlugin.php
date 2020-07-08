@@ -7,6 +7,8 @@ namespace Popo\Generator\Php\Plugin\Property\Collection;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyInterface;
+use function sprintf;
+use function trim;
 
 class AddItemMethodParametersDocblockGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -14,17 +16,17 @@ class AddItemMethodParametersDocblockGeneratorPlugin extends AbstractGeneratorPl
 
     public function generate(PropertyInterface $property): string
     {
-        $docblock = \trim($property->getDocblock());
+        $docblock = trim($property->getDocblock());
         if ($docblock !== '') {
             $docblock = ' ' . $docblock;
         }
 
-        $name = '$' . $property->getName() . 'Item';
+        $name = '$item';
         if ($property->isCollectionItem()) {
             $name = ' ' . $name;
         }
 
-        $string = \sprintf(
+        $string = sprintf(
             '%s%s%s',
             $docblock,
             $property->getCollectionItem(),
