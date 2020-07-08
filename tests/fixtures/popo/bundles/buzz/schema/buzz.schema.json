@@ -1,10 +1,11 @@
 [
   {
-    "name": "Lorem\\Ipsum\\Buzz",
+    "name": "Buzz",
     "schema": [
       {
         "name": "buzz",
-        "type": "string"
+        "type": "string",
+        "default": "\\Tests\\App\\TestAppDefinesInterface::LOREM_ISPUM"
       }
     ]
   }

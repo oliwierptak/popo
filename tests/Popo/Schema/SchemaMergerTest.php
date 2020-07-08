@@ -70,12 +70,12 @@ class SchemaMergerTest extends TestCase
         $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
 
         //pop twice for buzz
-        $last = array_pop($schemaFiles);
+        array_pop($schemaFiles);
         $last = array_pop($schemaFiles);
         /**
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchemaFile
          */
-        $bundleSchemaFile = $last['buzz/schema']['Lorem\\Ipsum\\Buzz'];
+        $bundleSchemaFile = $last['buzz/schema']['Buzz'];
         $bundleSchemaFile->getSchema()->setName('Foo');
         $bundleSchemaFile->getschema()->setSchema([[
             Property::NAME => 'fooId',

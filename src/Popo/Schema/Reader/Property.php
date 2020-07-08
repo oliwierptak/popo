@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
+use function array_key_exists;
+use function array_merge;
+
 class Property implements PropertyInterface
 {
     const NAME = 'name';
@@ -47,7 +50,7 @@ class Property implements PropertyInterface
     public function __construct(SchemaInterface $schema, array $propertySchema)
     {
         $this->schema = $schema;
-        $this->data = \array_merge($this->defaults, $propertySchema);
+        $this->data = array_merge($this->defaults, $propertySchema);
     }
 
     protected function getSchemaDefinition(): array
@@ -106,12 +109,22 @@ class Property implements PropertyInterface
 
     public function isCollectionItem(): bool
     {
-        return \array_key_exists(static::COLLECTION_ITEM, $this->getSchemaDefinition());
+        $definitions = $this->getSchemaDefinition();
+        if (!array_key_exists(static::COLLECTION_ITEM, $definitions)) {
+            return false;
+        }
+
+        return trim($definitions[static::COLLECTION_ITEM]) !== '';
     }
 
     public function hasDefault(): bool
     {
-        return \array_key_exists(static::DEFAULT, $this->getSchemaDefinition());
+        return array_key_exists(static::DEFAULT, $this->getSchemaDefinition());
+    }
+
+    public function hasConstantValue(): bool
+    {
+        return trim($this->getDefault()[0] ?? '') === '\\';
     }
 
     /**
