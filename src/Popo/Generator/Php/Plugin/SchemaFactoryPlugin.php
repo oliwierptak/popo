@@ -7,6 +7,7 @@ namespace Popo\Generator\Php\Plugin;
 use Popo\Generator\Php\Plugin\Schema\AbstractClassGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\ClassNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\CollectionItemsGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Schema\ExtendGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\NamespaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\PropertyMappingGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\SchemaDataGeneratorPlugin;
@@ -34,6 +35,7 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         return [
             NamespaceGeneratorPlugin::PATTERN => $this->createNamespaceGeneratorPlugin(),
             ClassNameGeneratorPlugin::PATTERN => $this->createClassNameGeneratorPlugin(),
+            ExtendGeneratorPlugin::PATTERN => $this->createExtendsGeneratorPlugin(),
             AbstractClassGeneratorPlugin::PATTERN => $this->createAbstractClassGeneratorPlugin(),
             SchemaDataGeneratorPlugin::PATTERN => $this->createSchemaDataGeneratorPlugin(),
             PropertyMappingGeneratorPlugin::PATTERN => $this->createPropertyMappingGeneratorPlugin(),
@@ -79,6 +81,13 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
     protected function createCollectionItemsGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
         return new CollectionItemsGeneratorPlugin(
+            $this->getPropertyExplorer()
+        );
+    }
+
+    protected function createExtendsGeneratorPlugin(): SchemaGeneratorPluginInterface
+    {
+        return new ExtendGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }

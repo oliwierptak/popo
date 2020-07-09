@@ -7,6 +7,7 @@ namespace Popo\Generator\Php\Plugin\Property\Setter\Popo;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyInterface;
+use function sprintf;
 
 class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -14,11 +15,9 @@ class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
     public function generate(PropertyInterface $property): string
     {
-        $returnType = \sprintf(
+        return sprintf(
             ': \%s',
             $property->getSchema()->getName()
         );
-
-        return $returnType;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Tests\Popo\Schema;
 
 use PHPUnit\Framework\TestCase;
+use Popo\Builder\BuilderConfigurator;
 use Popo\PopoFactory;
 use Popo\Schema\SchemaConfigurator;
 use function current;
@@ -36,8 +37,11 @@ class SchemaBuilderTest extends TestCase
         $schemaFactory = $popoFactory->createSchemaFactory();
         $schemaBuilder = $schemaFactory->createSchemaBuilder();
 
-        $configurator = new SchemaConfigurator();
-        $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
+        $configurator = (new BuilderConfigurator())
+            ->setSchemaConfigurator(new SchemaConfigurator())
+            ->setSchemaDirectory($this->schemaDirectory);
+
+        $schemaFiles = $schemaBuilder->build($configurator);
         $this->assertCount(4, $schemaFiles);
 
         /**

@@ -14,6 +14,7 @@ class Schema implements SchemaInterface
     const NAME = 'name';
     const SCHEMA = 'schema';
     const IS_ABSTRACT = 'abstract';
+    const EXTENDS = 'extends';
 
     /**
      * @var array
@@ -27,12 +28,12 @@ class Schema implements SchemaInterface
         self::NAME => '',
         self::SCHEMA => [],
         self::IS_ABSTRACT => false,
+        self::EXTENDS => '',
     ];
 
     public function __construct(array $data = [])
     {
-        $data = array_merge($this->defaults, $data);
-        $this->data = $data;
+        $this->data = array_merge($this->defaults, $data);
     }
 
     public function getName(): string
@@ -67,6 +68,18 @@ class Schema implements SchemaInterface
     public function setIsAbstract(bool $isAbstract): SchemaInterface
     {
         $this->data[static::IS_ABSTRACT] = $isAbstract;
+
+        return $this;
+    }
+
+    public function getExtends(): string
+    {
+        return $this->data[static::EXTENDS];
+    }
+
+    public function setExtends(string $extends): SchemaInterface
+    {
+        $this->data[static::EXTENDS] = $extends;
 
         return $this;
     }

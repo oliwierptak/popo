@@ -7,6 +7,8 @@ namespace Popo\Generator\Php\Plugin\Property\Collection;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyInterface;
+use function trim;
+use function ucfirst;
 
 class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -16,13 +18,14 @@ class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements Propert
     {
         $name = $property->getName();
 
-        $singular = \trim($property->getSingular());
+        $singular = trim($property->getSingular());
+
         if ($singular !== '') {
             $name = $singular;
         } else {
             $name .= 'Item';
         }
 
-        return 'add' . \ucfirst($name);
+        return 'add' . ucfirst($name);
     }
 }

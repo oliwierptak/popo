@@ -22,6 +22,7 @@ class AddItemMethodParametersDocblockGeneratorPlugin extends AbstractGeneratorPl
         }
 
         $name = '$item';
+
         if ($property->isCollectionItem()) {
             $name = ' ' . $name;
         }

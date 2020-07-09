@@ -35,9 +35,7 @@ class BuilderWriter implements BuilderWriterInterface
 
     public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void
     {
-        $schemaFiles = $this->schemaBuilder->build(
-            $configurator->getSchemaDirectory(), $configurator->getSchemaConfigurator(), $configurator->getIsAbstract()
-        );
+        $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
         $bundleWriter = $this->writerFactory->createBundleProjectWriter($generator, $configurator->getNamespace());
 

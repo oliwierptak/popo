@@ -10,6 +10,7 @@ use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\PropertyInterface;
 use Popo\Schema\Reader\SchemaInterface;
 use function preg_replace_callback;
+use function str_replace;
 use function var_export;
 
 class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
@@ -23,14 +24,18 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
         foreach ($schema->getSchema() as $propertyData) {
             $property = $this->buildProperty($schema, $propertyData);
+
             if (!$property->hasDefault()) {
                 continue;
             }
 
             $defaults[$property->getName()] = $property->getDefault();
-            if (!$property->isCollectionItem() && $property->hasConstantValue()) {
-                $constants[$property->getName()] = $property->getDefault();
+
+            if ($property->isCollectionItem() || !$property->hasConstantValue()) {
+                continue;
             }
+
+            $constants[$property->getName()] = $property->getDefault();
         }
 
         $result = var_export($defaults, true);
@@ -53,8 +58,9 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
         foreach ($constants as $name => $defaultValue) {
             $pattern = "@('${name}') => '([^']*)',@i";
 
-            $replacement = function (array $matches) {
+            $replacement = static function (array $matches) {
                 $matches[2] = str_replace('\\\\', '\\', $matches[2]);
+
                 return "${matches[1]} => ${matches[2]},";
             };
 

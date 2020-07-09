@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Tests\Popo\Schema;
 
 use PHPUnit\Framework\TestCase;
+use Popo\Builder\BuilderConfigurator;
 use Popo\PopoFactory;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\SchemaConfigurator;
@@ -41,9 +42,11 @@ class SchemaMergerTest extends TestCase
         $schemaFactory = $popoFactory->createSchemaFactory();
         $schemaBuilder = $schemaFactory->createSchemaBuilder();
         $schemaMerger = $schemaFactory->createSchemaMerger();
-        $configurator = new SchemaConfigurator();
+        $configurator = (new BuilderConfigurator())
+            ->setSchemaConfigurator(new SchemaConfigurator())
+            ->setSchemaDirectory($this->schemaDirectory);
 
-        $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
+        $schemaFiles = $schemaBuilder->build($configurator);
         $mergedSchema = $schemaMerger->merge($schemaFiles);
 
         $this->assertCount(5, $mergedSchema);
@@ -52,7 +55,7 @@ class SchemaMergerTest extends TestCase
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $fooSchemaFile
          */
         $fooSchemaFile = current($mergedSchema);
-        $this->assertCount(7, $fooSchemaFile->getSchema()->getSchema());
+        $this->assertCount(6, $fooSchemaFile->getSchema()->getSchema());
     }
 
     public function testMergeShouldCheckForUniquePropertyNames(): void
@@ -65,9 +68,11 @@ class SchemaMergerTest extends TestCase
         $schemaFactory = $popoFactory->createSchemaFactory();
         $schemaBuilder = $schemaFactory->createSchemaBuilder();
         $schemaMerger = $schemaFactory->createSchemaMerger();
-        $configurator = new SchemaConfigurator();
+        $configurator = (new BuilderConfigurator())
+            ->setSchemaConfigurator(new SchemaConfigurator())
+            ->setSchemaDirectory($this->schemaDirectory);
 
-        $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
+        $schemaFiles = $schemaBuilder->build($configurator);
 
         //pop twice for buzz
         array_pop($schemaFiles);
@@ -97,9 +102,11 @@ class SchemaMergerTest extends TestCase
         $schemaFactory = $popoFactory->createSchemaFactory();
         $schemaBuilder = $schemaFactory->createSchemaBuilder();
         $schemaMerger = $schemaFactory->createSchemaMerger();
-        $configurator = new SchemaConfigurator();
+        $configurator = (new BuilderConfigurator())
+            ->setSchemaConfigurator(new SchemaConfigurator())
+            ->setSchemaDirectory($this->schemaDirectory);
 
-        $schemaFiles = $schemaBuilder->build($this->schemaDirectory, $configurator);
+        $schemaFiles = $schemaBuilder->build($configurator);
 
         $first = array_shift($schemaFiles);
         /**

@@ -9,6 +9,7 @@ use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\PropertyInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function var_export;
 
 class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
@@ -23,13 +24,11 @@ class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements 
             $schemaKeys[$property->getName()] = $property->getType();
         }
 
-        return \var_export($schemaKeys, true);
+        return var_export($schemaKeys, true);
     }
 
     protected function buildProperty(SchemaInterface $schema, array $propertyData): PropertyInterface
     {
-        $property = new Property($schema, $propertyData);
-
-        return $property;
+        return new Property($schema, $propertyData);
     }
 }

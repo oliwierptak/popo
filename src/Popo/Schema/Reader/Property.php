@@ -62,6 +62,7 @@ class Property implements PropertyInterface
         foreach ($this->schema->getSchema() as $schemaItem) {
             if ($schemaItem[static::NAME] === $this->getName()) {
                 $this->schemaDefinition = $schemaItem;
+
                 break;
             }
         }

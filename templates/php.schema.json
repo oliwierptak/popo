@@ -1,6 +1,7 @@
 {
   "name": "<string>",
   "abstract": "[<bool>]",
+  "extends": "[<string>]",
   "schema":
     {
       "name": "<string>",

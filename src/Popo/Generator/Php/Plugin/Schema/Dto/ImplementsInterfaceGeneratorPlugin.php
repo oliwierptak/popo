@@ -7,6 +7,7 @@ namespace Popo\Generator\Php\Plugin\Schema\Dto;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function sprintf;
 
 class ImplementsInterfaceGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
@@ -14,12 +15,10 @@ class ImplementsInterfaceGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
     public function generate(SchemaInterface $schema): string
     {
-        $implements = \sprintf(
+        return sprintf(
             'implements \%s\%sInterface',
             $schema->getNamespaceName(),
             $schema->getClassName()
         );
-
-        return $implements;
     }
 }

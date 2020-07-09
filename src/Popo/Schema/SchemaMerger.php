@@ -6,6 +6,10 @@ namespace Popo\Schema;
 
 use Popo\Schema\Bundle\BundleSchemaInterface;
 use Popo\Schema\Validator\SchemaValidatorInterface;
+use function array_merge;
+use function array_shift;
+use function array_values;
+use function uksort;
 
 class SchemaMerger implements SchemaMergerInterface
 {
@@ -45,7 +49,7 @@ class SchemaMerger implements SchemaMergerInterface
 
         foreach ($collectionToMerge as $name => $data) {
             $schemaFiles = $this->sortByBundleSchema($data);
-            $bundleSchema = \array_shift($schemaFiles);
+            $bundleSchema = array_shift($schemaFiles);
             $this->schemaValidator->assertIsBundleSchema($bundleSchema);
 
             $mergedProperties = $this->mergeProperties($bundleSchema, $schemaFiles);
@@ -68,6 +72,7 @@ class SchemaMerger implements SchemaMergerInterface
         $bundleSchemaProperties = $this->schemaBuilder->buildProperties($bundleSchema->getSchema());
 
         $propertiesToMerge = [];
+
         foreach ($additionalBundleSchemaCollection as $additionalBundleSchema) {
             $additionalProperties = $this->schemaBuilder->buildProperties(
                 $additionalBundleSchema->getSchema()
@@ -80,13 +85,13 @@ class SchemaMerger implements SchemaMergerInterface
                 $additionalProperties
             );
 
-            $propertiesToMerge = \array_merge(
+            $propertiesToMerge = array_merge(
                 $propertiesToMerge,
                 $additionalProperties
             );
         }
 
-        $bundleSchemaProperties = \array_merge($bundleSchemaProperties, $propertiesToMerge);
+        $bundleSchemaProperties = array_merge($bundleSchemaProperties, $propertiesToMerge);
 
         return $bundleSchemaProperties;
     }
@@ -99,13 +104,13 @@ class SchemaMerger implements SchemaMergerInterface
      */
     protected function sortByBundleSchema(array $schemaFiles): array
     {
-        \uksort($schemaFiles, function ($a, $b) use ($schemaFiles) {
+        uksort($schemaFiles, static function ($a, $b) use ($schemaFiles) {
             $aSchema = $schemaFiles[$a];
             $bSchema = $schemaFiles[$b];
 
             return $aSchema->isBundleSchema() < $bSchema->isBundleSchema();
         });
 
-        return \array_values($schemaFiles);
+        return array_values($schemaFiles);
     }
 }

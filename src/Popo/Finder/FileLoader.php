@@ -32,6 +32,7 @@ class FileLoader implements FileLoaderInterface
             ->files();
 
         $fileInfoCollection = [];
+
         foreach ($finder as $fileInfo) {
             /** @var \Symfony\Component\Finder\SplFileInfo $fileInfo */
             $fileInfoCollection[] = $fileInfo;

@@ -25,9 +25,7 @@ class DocblockTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Pro
 
     public function generate(PropertyInterface $property): string
     {
-        $docblockType = $this->typeToDocblockType($property->getType());
-
-        return $docblockType;
+        return $this->typeToDocblockType($property->getType());
     }
 
     protected function typeToDocblockType(string $type): string
