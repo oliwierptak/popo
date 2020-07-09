@@ -1,13 +1,38 @@
 # About
 POPO - Plain Old Php Object is a PHP implementation of "a Plain Old Java Object (POJO)".
 
-POPO can scan, load, validate, merge schema (JSON files) and generate source code files (PHP).
-The schema supports inheritance, collections and encapsulation of other POPO objects.
+```php
+$popo = (new App\Popo\Foo)
+    ->fromArray([
+        'foo' => 'Foo',
+        'bar' => [
+            'value' => 'Bar lorem ipsum'
+        ]
+    ]);
+
+$popo->setFoo('Buzz');
+    
+echo $popo->getFoo();
+echo $popo->getBar()->getValue();
+```
+
+```
+Buzz
+Bar lorem ipsum
+```
 
 POPO generated classes are not bound by any special restriction and not requiring any class path. 
 They have a no-argument constructor, and allow access to properties using getter and setter methods,
 that follow simple naming convention.
 That is by default, because everything can be configured.
+
+### Schema: Easy Library <-> Project Integration
+
+On top of that, POPO can also be used to merge schemas (POPO's metadata in JSON format) from different libraries, 
+creating single schema definition for given project. 
+
+POPO can scan, load, validate, and combine schemas to generate PHP source code files.
+The schema supports inheritance, collections and encapsulation of other POPO objects.
 
 
 #### Example Schema
@@ -41,9 +66,9 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
 
 #### Generated Code Usage
 ```php
-$popo = (new App\Generated\Foo())
+$popo = (new App\Generated\Foo)
     ->fromArray([
-        'foo' => 'Foo'
+        'foo' => 'Foo',
         'bar' => [
             'value' => 'Bar lorem ipsum'
         ]
@@ -148,7 +173,7 @@ To generate string, use `generatePopoString()`, `generateDtoString()` or `genera
 ```php
 $facade = new PopoFacade();
 
-$configurator = (new BuilderConfigurator())
+$configurator = (new BuilderConfigurator)
     ->setTemplateDirectory('templates/')
     ->setNamespace('App\Generated');
 
@@ -171,8 +196,8 @@ Check `tests/Popo/PopoFacadeTest.php` for more details.
 Use it to configure parameters of source code generator.
 
 ```php
-$configurator = (new BuilderConfigurator())
-    ->setSchemaConfigurator(new SchemaConfigurator())
+$configurator = (new BuilderConfigurator)
+    ->setSchemaConfigurator(new SchemaConfigurator)
     ->setSchemaDirectory('project/schema/')
     ->setTemplateDirectory('templates/')
     ->setOutputDirectory('src/Generated/')
@@ -239,7 +264,7 @@ $configurator = (new BuilderConfigurator())
 Use it to configure schema specific parameters.
 
 ```php
-$schemaConfigurator = (new SchemaConfigurator())
+$schemaConfigurator = (new SchemaConfigurator)
     ->setSchemaPath('@^(.*)project/schema/(.*)$@')
     ->setSchemaFilename('*.schema.json')
     ->setPropertyTemplateFilename('php.property.tpl')
@@ -339,7 +364,7 @@ Besides `array` type, there are two keywords for supporting collections: `collec
       {
         "name": "buzzBars",
         "type": "array"
-        "collectionItem" : "\\Popo\\Bar",
+        "collectionItem" : "\\App\Generated\\Bar",
         "singular": "buzzBar"
       },
     ]
@@ -349,9 +374,9 @@ Besides `array` type, there are two keywords for supporting collections: `collec
 
 Collection example.
 ```php
-$popo = (new App\Generated\Foo())
+$popo = (new App\Generated\Foo)
     ->fromArray([
-        'foo' => 'Foo'
+        'foo' => 'Foo',
         'bars' => ['xxx', 'yyy'],
         'buzzBars' => [
             ['value' => 'Lorem ipsum 1']
@@ -362,14 +387,14 @@ $popo = (new App\Generated\Foo())
 
 Only type was defined as `array`.
 ```php
-$popo = (new App\Generated\Foo());
+$popo = (new App\Generated\Foo);
 $popo->addBarsItem('xxx');
 $popo->addBarsItem('yyy');
 ```
 
 Example of `collectionItem` and `singular`.
 ```php
-$barPopo = (new App\Generated\Bar())
+$barPopo = (new App\Generated\Bar)
     ->fromArray(['value' => 'Lorem ipsum 1']);
 
 $popo->addBuzzBar($barPopo);
@@ -428,9 +453,9 @@ Sample schema:
 
 Sample Popo:
 ```php
-$popo = (new App\Generated\Foo())
+$popo = (new App\Generated\Foo)
     ->fromArray([
-        'foo' => 'Foo lorem ipsum'
+        'foo' => 'Foo lorem ipsum',
         'bar' => ['bar' => 'Bar lorem ipsum']
     ]);
 ```
