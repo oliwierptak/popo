@@ -99,8 +99,8 @@ Create `.popo` file in project directory, for example:
 [popo]
 schema = popo/
 template = vendor/popo/generator/templates/
-output = src/YourProject/Popo/
-namespace = YourProject\Popo
+output = src/Popo/
+namespace = App\Popo
 extension = .php
 ; abstract = 0|1
 ; extends = \\Class\\Name
@@ -108,8 +108,8 @@ extension = .php
 [dto]
 schema = dto
 template = vendor/popo/generator/templates/
-output = src/YourProject/Popo/
-namespace = YourProject\Popo
+output = src/Popo/
+namespace = App\Popo
 extension = .php
 ; abstract = 0|1
 ; extends = \\Class\\Name
