@@ -91,7 +91,17 @@ With composer:
 
 
 ## Usage
-If you define your own `.popo` file, you can just call `vendor/bin/popo popo` or `vendor/bin/popo dto` to generate / regenerate your POPO files.
+If you define your own `.popo` file, you can just call 
+
+```
+vendor/bin/popo popo
+``` 
+
+or
+ 
+```vendor/bin/popo dto```
+ 
+to generate / regenerate your POPO files.
 
 ### Configuration with .popo file
 Create `.popo` file in project directory, for example:
