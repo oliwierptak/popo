@@ -77,7 +77,8 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
-abstract = 0
+; abstract = 0|1
+; extends = \\Class\\Name
 
 [dto]
 schema = dto
@@ -85,7 +86,8 @@ template = vendor/popo/generator/templates/
 output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
-abstract = 1
+; abstract = 0|1
+; extends = \\Class\\Name
 ```
 
 See `popo.dist`.
@@ -297,6 +299,7 @@ Only primitive data types, with addition of other Popo objects are supported (ou
 - integer
 - string
 - mixed
+- PHP constant
 - Popo object
 
 
