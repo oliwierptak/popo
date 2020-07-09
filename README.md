@@ -48,7 +48,7 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
       },
       {
         "name": "bar",
-        "type": "Bar"
+        "type": "\\App\\Generated\\Bar"
       },
     ]
   },
