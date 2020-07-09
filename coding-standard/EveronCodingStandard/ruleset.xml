@@ -6,12 +6,16 @@
     <rule ref="Everon.Files.TypeNameMatchesFileName">
         <properties>
             <property name="rootNamespaces" type="array"
-                      value="src/Popo=>Popo,tests/Popo=>Tests\Popo"/>
+                      value="src/Popo=>Popo,tests/Popo=>Tests\Popo,tests/App=>Tests\App"/>
             <property name="ignoredNamespaces" type="array"
                       value="Tests\App\Generated"/>
             <property name="extensions" type="array"
                       value="php"/>
         </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard">
+        <exclude name="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForContants.DisallowedLateStaticBindingForConstant"/>
     </rule>
 
 </ruleset>
