@@ -99,7 +99,9 @@ vendor/bin/popo popo
 
 or
  
-```vendor/bin/popo dto```
+```
+vendor/bin/popo dto
+```
  
 to generate / regenerate your POPO files.
 
