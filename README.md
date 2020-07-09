@@ -102,8 +102,6 @@ or
 ```
 vendor/bin/popo dto
 ```
- 
-to generate / regenerate your POPO files.
 
 ### Configuration with .popo file
 Create `.popo` file in project directory, for example:
