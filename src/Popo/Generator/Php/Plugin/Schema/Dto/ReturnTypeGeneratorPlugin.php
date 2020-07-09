@@ -15,6 +15,11 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
     public function generate(SchemaInterface $schema): string
     {
+        $extends = trim((string)$schema->getExtends());
+        if ($extends !== '') {
+            return $extends;
+        }
+        
         return sprintf(
             '\%sInterface',
             $schema->getName()

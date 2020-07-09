@@ -14,9 +14,9 @@ interface <<CLASSNAME>>Interface
     /**
     * @param array $data
     *
-    * @return \<<NAMESPACE>>\<<CLASSNAME>>Interface
+    * @return <<RETURN_TYPE>>
     */
-    public function fromArray(array $data): \<<NAMESPACE>>\<<CLASSNAME>>Interface;
+    public function fromArray(array $data): <<RETURN_TYPE>>;
 
     <<METHODS>>
 
