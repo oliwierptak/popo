@@ -40,6 +40,11 @@ class BuilderConfigurator
     protected $isAbstract = null;
 
     /**
+     * @var string|null if set, the generated classes will be extended with this class
+     */
+    protected $extends = null;
+
+    /**
      * @var \Popo\Schema\SchemaConfiguratorInterface
      */
     protected $schemaConfigurator;
@@ -132,6 +137,18 @@ class BuilderConfigurator
     public function setIsAbstract(?bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
+
+        return $this;
+    }
+
+    public function getExtends(): ?string
+    {
+        return $this->extends;
+    }
+
+    public function setExtends(?string $extends): self
+    {
+        $this->extends = $extends;
 
         return $this;
     }

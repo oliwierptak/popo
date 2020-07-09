@@ -7,6 +7,8 @@ namespace Popo\Generator\Php\Plugin\Property\Requester;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyInterface;
+use function sprintf;
+use function trim;
 
 class RequireMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -14,12 +16,13 @@ class RequireMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugi
 
     public function generate(PropertyInterface $property): string
     {
-        $docblock = \trim($property->getDocblock());
+        $docblock = trim($property->getDocblock());
+
         if ($docblock !== '') {
             $docblock = ' ' . $docblock;
         }
 
-        $string = \sprintf(
+        $string = sprintf(
             '<<DOCBLOCK_TYPE>>%s',
             $docblock
         );

@@ -4,19 +4,18 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
+use Popo\Builder\BuilderConfigurator;
 use Popo\Schema\Bundle\BundleSchemaInterface;
 use Popo\Schema\Reader\SchemaInterface;
 
 interface SchemaBuilderInterface
 {
     /**
-     * @param string $schemaDirectory
-     * @param \Popo\Schema\SchemaConfiguratorInterface $configurator
-     * @param bool|null $isAbstract If set, will overwrite value from schema file
+     * @param \Popo\Builder\BuilderConfigurator $configurator
      *
      * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
      */
-    public function build(string $schemaDirectory, SchemaConfiguratorInterface $configurator, ?bool $isAbstract = null): array;
+    public function build(BuilderConfigurator $configurator): array;
 
     /**
      * @param \Popo\Schema\Reader\SchemaInterface $schema

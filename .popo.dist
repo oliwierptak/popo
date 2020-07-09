@@ -6,6 +6,7 @@ output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
 ; abstract = 0|1
+; extends = \Class\Name
 
 [dto]
 schema = dto
@@ -14,3 +15,4 @@ output = src/YourProject/Popo/
 namespace = YourProject\Popo
 extension = .php
 ; abstract = 0|1
+; extends = \Class\Name

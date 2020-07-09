@@ -45,13 +45,11 @@ class BuilderFactory implements BuilderFactoryInterface
 
     public function createBuilder(): GeneratorBuilderInterface
     {
-        $generatorBuilder = new GeneratorBuilder(
+        return new GeneratorBuilder(
             $this->loaderFactory->createContentLoader(),
             $this->generatorFactory,
             $this->schemaFactory
         );
-
-        return $generatorBuilder;
     }
 
     public function createBuilderWriter(): BuilderWriterInterface

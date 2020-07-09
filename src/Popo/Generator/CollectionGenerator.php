@@ -7,6 +7,7 @@ namespace Popo\Generator;
 use Popo\Schema\Reader\PropertyInterface;
 use Popo\Schema\Reader\ReaderFactoryInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function str_replace;
 
 class CollectionGenerator implements GeneratorInterface
 {
@@ -50,6 +51,7 @@ class CollectionGenerator implements GeneratorInterface
         $generated = '';
 
         $propertyCollection = $this->readerFactory->createPropertyCollection($schema);
+
         foreach ($propertyCollection as $property) {
             if (!$propertyExplorer->isArray($property->getType())) {
                 continue;
@@ -73,7 +75,7 @@ class CollectionGenerator implements GeneratorInterface
             }
 
             $expression = $plugin->generate($property);
-            $methodString = \str_replace($pattern, $expression, $methodString);
+            $methodString = str_replace($pattern, $expression, $methodString);
 
             $this->processed = true;
         }

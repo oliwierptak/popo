@@ -8,6 +8,11 @@ use Popo\Schema\Bundle\BundleSchemaInterface;
 use Popo\Writer\File\FileWriterInterface;
 use Popo\Writer\WriterInterface;
 use SplFileInfo;
+use function array_pop;
+use function explode;
+use function str_replace;
+use function trim;
+use const DIRECTORY_SEPARATOR;
 
 class BundleProjectWriter implements WriterInterface
 {
@@ -50,9 +55,7 @@ class BundleProjectWriter implements WriterInterface
         $filename = $this->getOutputFilename($bundleSchema, $extension);
         $dir = $this->getOutputDirectory($bundleSchema, $outputDirectory);
 
-        $file = new SplFileInfo($dir . $filename);
-
-        return $file;
+        return new SplFileInfo($dir . $filename);
     }
 
     /**
@@ -65,16 +68,16 @@ class BundleProjectWriter implements WriterInterface
      */
     protected function getOutputDirectory(BundleSchemaInterface $bundleSchema, string $outputDirectory): string
     {
-        $outputDirectory = \trim($outputDirectory);
-        $outputDirectory = \str_replace('\\', \DIRECTORY_SEPARATOR, $outputDirectory);
+        $outputDirectory = trim($outputDirectory);
+        $outputDirectory = str_replace('\\', DIRECTORY_SEPARATOR, $outputDirectory);
 
         return $outputDirectory;
     }
 
     protected function getOutputFilename(BundleSchemaInterface $bundleSchema, string $extension): string
     {
-        $nameTokens = \explode('\\', $bundleSchema->getSchema()->getName());
-        $name = \array_pop($nameTokens);
+        $nameTokens = explode('\\', $bundleSchema->getSchema()->getName());
+        $name = array_pop($nameTokens);
         $name .= $extension;
 
         return $name;
@@ -93,8 +96,8 @@ class BundleProjectWriter implements WriterInterface
 
     protected function generateProjectSchemaName(BundleSchemaInterface $bundleSchema): string
     {
-        $nameTokens = \explode('\\', $bundleSchema->getSchema()->getName());
-        $name = \array_pop($nameTokens);
+        $nameTokens = explode('\\', $bundleSchema->getSchema()->getName());
+        $name = array_pop($nameTokens);
 
         return $this->namespace . '\\' . $name;
     }

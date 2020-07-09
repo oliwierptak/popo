@@ -7,6 +7,7 @@ namespace Popo\Generator\Php\Plugin\Schema\Popo;
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function sprintf;
 
 class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
@@ -14,11 +15,9 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
     public function generate(SchemaInterface $schema): string
     {
-        $returnType = \sprintf(
+        return sprintf(
             '\%s',
             $schema->getName()
         );
-
-        return $returnType;
     }
 }

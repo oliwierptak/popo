@@ -273,6 +273,7 @@ The schema is very simple JSON file. The `name` and `type` fields are mandatory.
 {
   "name": "<string>",
   "abstract": "[<bool>]",
+  "extends": "[<string>]",
   "schema":
     {
       "name": "<string>",
@@ -606,7 +607,7 @@ Default filename: `php.schema.tpl`.
 
 namespace <<NAMESPACE>>;
 
-<<ABSTRACT>>class <<CLASSNAME>> <<IMPLEMENTS_INTERFACE>>
+<<ABSTRACT>>class <<CLASSNAME>><<EXTENDS>> <<IMPLEMENTS_INTERFACE>>
 {
     /**
      * @var array

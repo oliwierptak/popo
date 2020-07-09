@@ -18,6 +18,10 @@ interface SchemaInterface
 
     public function setIsAbstract(bool $isAbstract): SchemaInterface;
 
+    public function getExtends(): string;
+
+    public function setExtends(string $extends): SchemaInterface;
+
     public function getClassName(): string;
 
     public function getNamespaceName(): string;

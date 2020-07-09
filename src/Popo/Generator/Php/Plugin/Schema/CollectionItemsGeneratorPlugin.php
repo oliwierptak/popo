@@ -9,6 +9,7 @@ use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\PropertyInterface;
 use Popo\Schema\Reader\SchemaInterface;
+use function var_export;
 
 class CollectionItemsGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
@@ -23,13 +24,11 @@ class CollectionItemsGeneratorPlugin extends AbstractGeneratorPlugin implements 
             $items[$property->getName()] = $property->getCollectionItem();
         }
 
-        return \var_export($items, true);
+        return var_export($items, true);
     }
 
     protected function buildProperty(SchemaInterface $schema, array $propertyData): PropertyInterface
     {
-        $property = new Property($schema, $propertyData);
-
-        return $property;
+        return new Property($schema, $propertyData);
     }
 }

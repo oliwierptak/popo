@@ -8,8 +8,8 @@ interface FileLoaderInterface
 {
     /**
      * @param string $schemaDirectory
-     * @param null|string $schemaPath
-     * @param null|string $schemaFilename
+     * @param string|null $schemaPath
+     * @param string|null $schemaFilename
      *
      * @return \Symfony\Component\Finder\SplFileInfo[]
      */

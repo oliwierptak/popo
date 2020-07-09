@@ -5,6 +5,7 @@ template = templates/
 output = src/Generated/Popo/
 namespace = Generated\Popo
 extension = .php
+extends = \Generated\AbstractConfigurator
 
 [dto]
 schema = tests/fixtures/dto/bundles/
@@ -12,3 +13,4 @@ template = templates/
 output = src/Generated/Dto/
 namespace = Generated\Popo
 extension = .php
+extends = \Generated\AbstractConfigurator

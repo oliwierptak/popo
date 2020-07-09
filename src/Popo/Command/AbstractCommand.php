@@ -31,6 +31,7 @@ abstract class AbstractCommand extends Command
     const OPTION_NAMESPACE = 'namespace';
     const OPTION_EXTENSION = 'extension';
     const OPTION_IS_ABSTRACT = 'abstract';
+    const OPTION_EXTENDS = 'extends';
 
     /**
      * @var \Popo\PopoFacadeInterfaces
@@ -65,6 +66,7 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated files', 'Popo'),
                 new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
                 new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
+                new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
             ]);
     }
 
@@ -72,16 +74,17 @@ abstract class AbstractCommand extends Command
     {
         $configurator = $this->buildConfigurator($input);
 
+        $output->writeln('Generating POPO files...');
         $info = sprintf(
-            "Generating POPO files...\n  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n",
+            "  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n  extends:\t%s\n",
             $configurator->getSchemaDirectory(),
             $configurator->getTemplateDirectory(),
             $configurator->getOutputDirectory(),
             $configurator->getNamespace(),
             $configurator->getExtension(),
-            (int)$configurator->getIsAbstract()
+            (int)$configurator->getIsAbstract(),
+            $configurator->getExtends()
         );
-
         $output->write($info);
 
         return $this->executeCommand($input, $output);
@@ -98,7 +101,8 @@ abstract class AbstractCommand extends Command
             ->setOutputDirectory($arguments['output'])
             ->setNamespace($arguments['namespace'])
             ->setExtension($arguments['extension'])
-            ->setIsAbstract(((bool)$arguments['abstract']) ?? null);
+            ->setIsAbstract(((bool)$arguments['abstract']) ?? null)
+            ->setExtends($arguments['extends']);
 
         return $configurator;
     }
@@ -114,6 +118,7 @@ abstract class AbstractCommand extends Command
             static::OPTION_NAMESPACE => $input->getOption(static::OPTION_NAMESPACE),
             static::OPTION_EXTENSION => $input->getOption(static::OPTION_EXTENSION),
             static::OPTION_IS_ABSTRACT => $input->getOption(static::OPTION_IS_ABSTRACT),
+            static::OPTION_EXTENDS => $input->getOption(static::OPTION_EXTENDS),
         ];
 
         $result = array_merge($arguments, $config);
