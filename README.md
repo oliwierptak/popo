@@ -48,7 +48,7 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
       },
       {
         "name": "bar",
-        "type": "\\App\\Generated\\Bar"
+        "type": "\\App\\Popo\\Bar"
       },
     ]
   },
@@ -66,7 +66,7 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
 
 #### Generated Code Usage
 ```php
-$popo = (new App\Generated\Foo)
+$popo = (new App\Popo\Foo)
     ->fromArray([
         'foo' => 'Foo',
         'bar' => [
@@ -175,7 +175,7 @@ $facade = new PopoFacade();
 
 $configurator = (new BuilderConfigurator)
     ->setTemplateDirectory('templates/')
-    ->setNamespace('App\Generated');
+    ->setNamespace('App\Popo');
 
 $schemaData = [
     'name' => 'Foo',
@@ -364,7 +364,7 @@ Besides `array` type, there are two keywords for supporting collections: `collec
       {
         "name": "buzzBars",
         "type": "array"
-        "collectionItem" : "\\App\Generated\\Bar",
+        "collectionItem" : "\\App\Popo\\Bar",
         "singular": "buzzBar"
       },
     ]
@@ -374,7 +374,7 @@ Besides `array` type, there are two keywords for supporting collections: `collec
 
 Collection example.
 ```php
-$popo = (new App\Generated\Foo)
+$popo = (new App\Popo\Foo)
     ->fromArray([
         'foo' => 'Foo',
         'bars' => ['xxx', 'yyy'],
@@ -387,14 +387,14 @@ $popo = (new App\Generated\Foo)
 
 Only type was defined as `array`.
 ```php
-$popo = (new App\Generated\Foo);
+$popo = (new App\Popo\Foo);
 $popo->addBarsItem('xxx');
 $popo->addBarsItem('yyy');
 ```
 
 Example of `collectionItem` and `singular`.
 ```php
-$barPopo = (new App\Generated\Bar)
+$barPopo = (new App\Popo\Bar)
     ->fromArray(['value' => 'Lorem ipsum 1']);
 
 $popo->addBuzzBar($barPopo);
@@ -453,7 +453,7 @@ Sample schema:
 
 Sample Popo:
 ```php
-$popo = (new App\Generated\Foo)
+$popo = (new App\Popo\Foo)
     ->fromArray([
         'foo' => 'Foo lorem ipsum',
         'bar' => ['bar' => 'Bar lorem ipsum']
@@ -491,7 +491,7 @@ Result:
 To throw exception if requested property value is null or return it otherwise.
 
 ```php
-$popo = new App\Generated\Foo();
+$popo = new App\Popo\Foo();
 echo $popo->requireFoo();
 ``` 
 
@@ -499,7 +499,7 @@ Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
 
 
 ```php
-$popo = (new App\Generated\Foo())->setFoo('Foo Lorem Ipsum');
+$popo = (new App\Popo\Foo())->setFoo('Foo Lorem Ipsum');
 echo $popo->requireFoo();
 ``` 
 
