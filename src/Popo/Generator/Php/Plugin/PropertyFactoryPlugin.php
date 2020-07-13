@@ -9,6 +9,7 @@ use Popo\Generator\Php\Plugin\Property\Getter\GetMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Getter\GetMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Getter\GetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\PropertyNameGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Requester\HasMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeCastPlugin;
@@ -69,6 +70,9 @@ class PropertyFactoryPlugin implements PropertyFactoryPluginInterface
                 $this->getPropertyExplorer()
             ),
             RequireMethodReturnTypeCastPlugin::PATTERN => new RequireMethodReturnTypeCastPlugin(
+                $this->getPropertyExplorer()
+            ),
+            HasMethodNameGeneratorPlugin::PATTERN => new HasMethodNameGeneratorPlugin(
                 $this->getPropertyExplorer()
             ),
             //run last

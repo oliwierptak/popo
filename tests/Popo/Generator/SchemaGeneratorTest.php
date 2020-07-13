@@ -176,8 +176,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $propertyMapping = array (
   \'id\' => \'int\',
   \'username\' => \'string\',
@@ -187,8 +187,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $collectionItems = array (
   \'id\' => \'\',
   \'username\' => \'\',
@@ -198,6 +198,11 @@ class FooStub implements \Popo\Tests\FooStubInterface
 );
 
     /**
+     * @var array
+     */
+    protected $updateMap = [];
+
+    /**
      * @param string $property
      *
      * @return mixed|null
@@ -205,7 +210,12 @@ class FooStub implements \Popo\Tests\FooStubInterface
     protected function popoGetValue(string $property)
     {
         if (!isset($this->data[$property])) {
-            return null;
+            $className = trim($this->propertyMapping[$property]);
+            if ($className !== \'\'  && class_exists($className)) {
+                $this->data[$property] = new $className();
+            } else {
+                return null;
+            }
         }
 
         return $this->data[$property];
@@ -220,6 +230,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     protected function popoSetValue(string $property, $value): void
     {
         $this->data[$property] = $value;
+
+        $this->updateMap[$property] = true;
     }
 
     /**
@@ -367,6 +379,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return integer Lorem Ipsum
@@ -376,6 +390,16 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'id\');
 
         return (int)$this->popoGetValue(\'id\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasId(): bool
+    {
+        return $this->updateMap[\'id\'] ?? false;
     }
 
     /**
@@ -399,6 +423,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return string
@@ -408,6 +434,16 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'username\');
 
         return (string)$this->popoGetValue(\'username\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasUsername(): bool
+    {
+        return $this->updateMap[\'username\'] ?? false;
     }
 
     /**
@@ -431,6 +467,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return string
@@ -440,6 +478,16 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'password\');
 
         return (string)$this->popoGetValue(\'password\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasPassword(): bool
+    {
+        return $this->updateMap[\'password\'] ?? false;
     }
 
     /**
@@ -463,6 +511,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return array
@@ -472,6 +522,16 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'optionalData\');
 
         return (array)$this->popoGetValue(\'optionalData\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasOptionalData(): bool
+    {
+        return $this->updateMap[\'optionalData\'] ?? false;
     }
 
     /**
@@ -495,6 +555,8 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return \Popo\Tests\BarStubInterface
@@ -504,6 +566,16 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->assertPropertyValue(\'bar\');
 
         return $this->popoGetValue(\'bar\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasBar(): bool
+    {
+        return $this->updateMap[\'bar\'] ?? false;
     }
 
 

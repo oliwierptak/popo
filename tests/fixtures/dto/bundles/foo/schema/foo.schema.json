@@ -27,6 +27,10 @@
         "type": "array",
         "collectionItem": "\\Tests\\App\\Generated\\Popo\\AnotherFoo",
         "default": []
+      },
+      {
+        "name": "buzz",
+        "type": "\\Tests\\App\\Generated\\Popo\\Buzz"
       }
     ]
   },
