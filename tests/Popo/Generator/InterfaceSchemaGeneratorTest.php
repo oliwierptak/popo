@@ -62,11 +62,20 @@ interface FooStubInterface
     public function setId(?int $id): \Popo\Tests\FooStubInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return integer Lorem Ipsum
      */
     public function requireId(): int;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasId(): bool;
 
     /**
      * @return string|null
@@ -81,11 +90,20 @@ interface FooStubInterface
     public function setUsername(?string $username): \Popo\Tests\FooStubInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return string
      */
     public function requireUsername(): string;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasUsername(): bool;
 
     /**
      * @return string|null
@@ -100,11 +118,20 @@ interface FooStubInterface
     public function setPassword(?string $password): \Popo\Tests\FooStubInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return string
      */
     public function requirePassword(): string;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasPassword(): bool;
 
     /**
      * @return array|null
@@ -119,11 +146,20 @@ interface FooStubInterface
     public function setOptionalData(?array $optionalData): \Popo\Tests\FooStubInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return array
      */
     public function requireOptionalData(): array;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasOptionalData(): bool;
 
     /**
      * @return \Popo\Tests\BarStubInterface|null
@@ -138,11 +174,20 @@ interface FooStubInterface
     public function setBar(?\Popo\Tests\BarStubInterface $bar): \Popo\Tests\FooStubInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return \Popo\Tests\BarStubInterface
      */
     public function requireBar(): \Popo\Tests\BarStubInterface;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasBar(): bool;
 
 
     

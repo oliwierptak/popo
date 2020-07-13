@@ -55,7 +55,7 @@ class SchemaMergerTest extends TestCase
          * @var \Popo\Schema\Bundle\BundleSchemaInterface $fooSchemaFile
          */
         $fooSchemaFile = current($mergedSchema);
-        $this->assertCount(6, $fooSchemaFile->getSchema()->getSchema());
+        $this->assertCount(7, $fooSchemaFile->getSchema()->getSchema());
     }
 
     public function testMergeShouldCheckForUniquePropertyNames(): void

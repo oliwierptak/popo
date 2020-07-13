@@ -11,6 +11,7 @@ use Popo\PopoFacade;
 use Popo\PopoFactory;
 use Popo\Schema\Reader\SchemaInterface;
 use Popo\Schema\SchemaConfigurator;
+use Tests\App\Generated\Popo\Buzz;
 use function trim;
 use const Popo\APPLICATION_DIR;
 use const Popo\TESTS_DIR;
@@ -87,12 +88,15 @@ class PopoFacadeTest extends TestCase
         $facade->generatePopo($configurator);
 
         new \Tests\App\Generated\Popo\Buzz();
-        new \Tests\App\Generated\Popo\Foo();
+        $fooPopo = new \Tests\App\Generated\Popo\Foo();
         new \Tests\App\Generated\Popo\FooBar();
 
         $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/BuzzInterface.php');
         $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/FooInterface.php');
         $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/FooBarInterface.php');
+
+        $this->assertInstanceOf(Buzz::class, $fooPopo->getBuzz());
+        $this->assertFalse($fooPopo->hasBuzz());
     }
 
     public function testGenerateDto(): void
@@ -116,6 +120,9 @@ class PopoFacadeTest extends TestCase
         $this->assertInstanceOf(\Tests\App\Generated\Dto\BuzzInterface::class, $buzzPopo);
         $this->assertInstanceOf(\Tests\App\Generated\Dto\FooInterface::class, $fooPopo);
         $this->assertInstanceOf(\Tests\App\Generated\Dto\FooBarInterface::class, $fooBarPopo);
+
+        $this->assertInstanceOf(Buzz::class, $fooPopo->getBuzz());
+        $this->assertFalse($fooPopo->hasBuzz());
     }
 
     public function testGeneratePopoString(): void
@@ -163,18 +170,23 @@ class FooGenerated
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $propertyMapping = array (
   \'fooId\' => \'int\',
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $collectionItems = array (
   \'fooId\' => \'\',
 );
+
+    /**
+     * @var array
+     */
+    protected $updateMap = [];
 
     /**
      * @param string $property
@@ -184,7 +196,12 @@ class FooGenerated
     protected function popoGetValue(string $property)
     {
         if (!isset($this->data[$property])) {
-            return null;
+            $className = trim($this->propertyMapping[$property]);
+            if ($className !== \'\'  && class_exists($className)) {
+                $this->data[$property] = new $className();
+            } else {
+                return null;
+            }
         }
 
         return $this->data[$property];
@@ -199,6 +216,8 @@ class FooGenerated
     protected function popoSetValue(string $property, $value): void
     {
         $this->data[$property] = $value;
+
+        $this->updateMap[$property] = true;
     }
 
     /**
@@ -346,6 +365,8 @@ class FooGenerated
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return integer
@@ -355,6 +376,16 @@ class FooGenerated
         $this->assertPropertyValue(\'fooId\');
 
         return (int)$this->popoGetValue(\'fooId\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasFooId(): bool
+    {
+        return $this->updateMap[\'fooId\'] ?? false;
     }
 
 
@@ -409,18 +440,23 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $propertyMapping = array (
   \'fooId\' => \'int\',
 );
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $collectionItems = array (
   \'fooId\' => \'\',
 );
+
+    /**
+     * @var array
+     */
+    protected $updateMap = [];
 
     /**
      * @param string $property
@@ -430,7 +466,12 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
     protected function popoGetValue(string $property)
     {
         if (!isset($this->data[$property])) {
-            return null;
+            $className = trim($this->propertyMapping[$property]);
+            if ($className !== \'\'  && class_exists($className)) {
+                $this->data[$property] = new $className();
+            } else {
+                return null;
+            }
         }
 
         return $this->data[$property];
@@ -445,6 +486,8 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
     protected function popoSetValue(string $property, $value): void
     {
         $this->data[$property] = $value;
+
+        $this->updateMap[$property] = true;
     }
 
     /**
@@ -592,6 +635,8 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return integer
@@ -601,6 +646,16 @@ class FooGenerated implements \Popo\Tests\FooGeneratedInterface
         $this->assertPropertyValue(\'fooId\');
 
         return (int)$this->popoGetValue(\'fooId\');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasFooId(): bool
+    {
+        return $this->updateMap[\'fooId\'] ?? false;
     }
 
 
@@ -665,11 +720,20 @@ interface FooGeneratedInterface
     public function setFooId(?int $fooId): \Popo\Tests\FooGeneratedInterface;
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return integer
      */
     public function requireFooId(): int;
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function hasFooId(): bool;
 
 
     

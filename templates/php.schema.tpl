@@ -21,14 +21,19 @@ namespace <<NAMESPACE>>;
     protected $default = <<SCHEMA_DATA>>;
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $propertyMapping = <<PROPERTY_MAPPING>>;
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $collectionItems = <<COLLECTION_ITEMS>>;
+
+    /**
+     * @var array
+     */
+    protected $updateMap = [];
 
     /**
      * @param string $property
@@ -38,7 +43,12 @@ namespace <<NAMESPACE>>;
     protected function popoGetValue(string $property)
     {
         if (!isset($this->data[$property])) {
-            return null;
+            $className = trim($this->propertyMapping[$property]);
+            if ($className !== ''  && class_exists($className)) {
+                $this->data[$property] = new $className();
+            } else {
+                return null;
+            }
         }
 
         return $this->data[$property];
@@ -53,6 +63,8 @@ namespace <<NAMESPACE>>;
     protected function popoSetValue(string $property, $value): void
     {
         $this->data[$property] = $value;
+
+        $this->updateMap[$property] = true;
     }
 
     /**

@@ -20,6 +20,8 @@
     }
 
     /**
+     * Throws exception if value is null.
+     *
      * @throws \UnexpectedValueException
      *
      * @return <<REQUIRE_METHOD_RETURN_DOCKBLOCK>>
@@ -29,4 +31,14 @@
         $this->assertPropertyValue('<<PROPERTY_NAME>>');
 
         return <<REQUIRE_METHOD_RETURN_TYPE_CAST>>$this->popoGetValue('<<PROPERTY_NAME>>');
+    }
+
+    /**
+     * Returns true if value was set to any value, ignores defaults.
+     *
+     * @return bool
+     */
+    public function <<HAS_METHOD_NAME>>(): bool
+    {
+        return $this->updateMap['<<PROPERTY_NAME>>'] ?? false;
     }
