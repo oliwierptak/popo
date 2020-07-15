@@ -28,10 +28,10 @@ That is by default, because everything can be configured.
 
 ### Schema: Easy Library <-> Project Integration
 
-On top of that, POPO can also be used to merge schemas (POPO's metadata in JSON format) from different libraries, 
+On top of that, POPO can also be used to merge [schema](tests/fixtures/dto/bundles/foo/schema/foo.schema.json) (POPO's metadata in JSON format) from different libraries, 
 creating single schema definition for given project. 
 
-POPO can scan, load, validate, and combine schemas to generate PHP source code files.
+POPO can locate, load, validate, and combine schemas to generate PHP source code files.
 The schema supports inheritance, collections and encapsulation of other POPO objects.
 
 
