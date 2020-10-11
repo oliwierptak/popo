@@ -4,7 +4,7 @@ POPO - Plain Old Php Object is a PHP implementation of "a Plain Old Java Object 
 ```php
 $popo = (new App\Popo\Foo)
     ->fromArray([
-        'foo' => 'Foo',
+        'title' => 'Foo',
         'bar' => [
             'value' => 'Bar lorem ipsum'
         ]
@@ -12,12 +12,12 @@ $popo = (new App\Popo\Foo)
 
 $popo->setFoo('Buzz');
     
-echo $popo->getFoo();
+echo $popo->getTitle();
 echo $popo->getBar()->getValue();
 ```
 
 ```
-Buzz
+Foo
 Bar lorem ipsum
 ```
 
@@ -43,7 +43,7 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
     "name": "Foo",
     "schema": [
       {
-        "name": "foo",
+        "name": "title",
         "type": "string"
       },
       {
@@ -68,13 +68,13 @@ A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is 
 ```php
 $popo = (new App\Popo\Foo)
     ->fromArray([
-        'foo' => 'Foo',
+        'title' => 'Foo',
         'bar' => [
             'value' => 'Bar lorem ipsum'
         ]
     ]);
     
-echo $popo->getFoo();
+echo $popo->getTitle();
 echo $popo->getBar()->getValue();
 ```
 
@@ -349,7 +349,7 @@ Besides `array` type, there are two keywords for supporting collections: `collec
     "name": "Foo",
     "schema": [
       {
-        "name": "foo",
+        "title": "foo",
         "type": "string"
       },
       {
@@ -371,7 +371,7 @@ Collection example.
 ```php
 $popo = (new App\Popo\Foo)
     ->fromArray([
-        'foo' => 'Foo',
+        'title' => 'Foo',
         'bars' => ['xxx', 'yyy'],
         'buzzBars' => [
             ['value' => 'Lorem ipsum 1']
@@ -425,7 +425,7 @@ Sample schema:
     "name": "Foo",
     "schema": [
       {
-        "name": "foo",
+        "name": "title",
         "type": "string"
       },
       {
@@ -450,7 +450,7 @@ Sample Popo:
 ```php
 $popo = (new App\Popo\Foo)
     ->fromArray([
-        'foo' => 'Foo lorem ipsum',
+        'title' => 'Foo lorem ipsum',
         'bar' => ['bar' => 'Bar lorem ipsum']
     ]);
 ```
@@ -476,7 +476,7 @@ print_r($popo->toArray());
 Result: 
 ```php
 [
-     'foo' => 'Foo lorem ipsum',
+     'title' => 'Foo lorem ipsum',
      'bar' => ['bar' => 'Bar lorem ipsum']
  ]
 ```
@@ -487,7 +487,7 @@ To throw exception if requested property value is null or return it otherwise.
 
 ```php
 $popo = new App\Popo\Foo();
-echo $popo->requireFoo();
+echo $popo->requireTitle();
 ``` 
 
 Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
@@ -508,8 +508,8 @@ $result = $popo->hasTitle(); // true
 
 
 ```php
-$popo = (new App\Popo\Foo())->setFoo('Foo Lorem Ipsum');
-echo $popo->requireFoo();
+$popo = (new App\Popo\Foo())->setTitle('Foo Lorem Ipsum');
+echo $popo->requireTitle();
 ``` 
 
 Result: `Foo Lorem Ipsum`
