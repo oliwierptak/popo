@@ -527,7 +527,7 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
-     * @return array|null
+     * @return string[]|null
      */
     public function getOptionalData(): ?array
     {
@@ -535,7 +535,7 @@ class FooStub implements \Popo\Tests\FooStubInterface
     }
 
     /**
-     * @param array|null $optionalData
+     * @param string[]|null $optionalData
      *
      * @return self
      */

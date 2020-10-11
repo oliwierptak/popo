@@ -18,13 +18,18 @@ class GetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin im
     public function generate(SchemaInterface $schema, PropertyInterface $property): string
     {
         $docblock = trim($property->getDocblock());
+        $docblockType = '<<DOCBLOCK_TYPE>>';
+
+        if ($property->isCollectionItem()) {
+            $docblockType = sprintf('%s[]', $property->getCollectionItem());
+        }
 
         if ($docblock !== '') {
             $docblock = ' ' . $docblock;
         }
 
         $string = sprintf(
-            '<<DOCBLOCK_TYPE>>|null%s',
+            $docblockType . '|null%s',
             $docblock
         );
 

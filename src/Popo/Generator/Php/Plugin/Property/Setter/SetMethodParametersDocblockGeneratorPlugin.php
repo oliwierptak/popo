@@ -18,13 +18,19 @@ class SetMethodParametersDocblockGeneratorPlugin extends AbstractGeneratorPlugin
     public function generate(SchemaInterface $schema, PropertyInterface $property): string
     {
         $docblock = trim($property->getDocblock());
+        $docblockType = '<<DOCBLOCK_TYPE>>';
+
+        if ($property->isCollectionItem()) {
+            $docblockType = sprintf('%s[]', $property->getCollectionItem());
+        }
 
         if ($docblock !== '') {
             $docblock = ' ' . $docblock;
         }
 
         $string = sprintf(
-            '<<DOCBLOCK_TYPE>>|null $<<PROPERTY_NAME>>%s',
+            '%s|null $<<PROPERTY_NAME>>%s',
+            $docblockType,
             $docblock
         );
 

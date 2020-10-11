@@ -134,12 +134,12 @@ interface FooStubInterface
     public function hasPassword(): bool;
 
     /**
-     * @return array|null
+     * @return string[]|null
      */
     public function getOptionalData(): ?array;
 
     /**
-     * @param array|null $optionalData
+     * @param string[]|null $optionalData
      *
      * @return self
      */
