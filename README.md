@@ -493,6 +493,21 @@ echo $popo->requireFoo();
 Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
 
 
+#### `public function has<<property name>>(): bool`
+Checks if property has been set, either using setter or via to / from array calls.
+
+_Note_: The default value from schema definition is ignored.
+
+```php
+$popo = new App\Popo\Foo();
+if ($popo->hasFoo()) {
+   //...
+}
+``` 
+
+Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
+
+
 ```php
 $popo = (new App\Popo\Foo())->setFoo('Foo Lorem Ipsum');
 echo $popo->requireFoo();
