@@ -1,7 +1,7 @@
 [
   {
     "name": "Buzz",
-    "extends": "\\Tests\\App\\Generated\\Popo\\AbstractXyy",
+    "extends": "\\Tests\\App\\Generated\\Dto\\AbstractXyy",
     "schema": [
       {
         "name": "buzz",

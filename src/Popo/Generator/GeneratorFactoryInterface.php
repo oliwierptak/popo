@@ -12,5 +12,7 @@ interface GeneratorFactoryInterface
 
     public function createPropertyGenerator(BuilderContainer $container): GeneratorInterface;
 
+    public function createArrayableGenerator(BuilderContainer $container): GeneratorInterface;
+
     public function createCollectionGenerator(BuilderContainer $container): GeneratorInterface;
 }

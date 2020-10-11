@@ -24,7 +24,6 @@ abstract class AbstractCommand extends Command
 {
     const COMMAND_NAME = 'unknown';
     const COMMAND_DESCRIPTION = 'unknown';
-
     const OPTION_SCHEMA = 'schema';
     const OPTION_TEMPLATE = 'template';
     const OPTION_OUTPUT = 'output';
@@ -32,6 +31,7 @@ abstract class AbstractCommand extends Command
     const OPTION_EXTENSION = 'extension';
     const OPTION_IS_ABSTRACT = 'abstract';
     const OPTION_EXTENDS = 'extends';
+    const OPTION_RETURN_TYPE = 'returnType';
 
     /**
      * @var \Popo\PopoFacadeInterfaces
@@ -67,6 +67,7 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
                 new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
                 new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
+                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', 'array'),
             ]);
     }
 
@@ -76,14 +77,15 @@ abstract class AbstractCommand extends Command
 
         $output->writeln('Generating POPO files...');
         $info = sprintf(
-            "  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n  extends:\t%s\n",
+            "  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n  extends:\t%s\n   returnType:\t%s\n",
             $configurator->getSchemaDirectory(),
             $configurator->getTemplateDirectory(),
             $configurator->getOutputDirectory(),
             $configurator->getNamespace(),
             $configurator->getExtension(),
             (int)$configurator->getIsAbstract(),
-            $configurator->getExtends()
+            $configurator->getExtends(),
+            $configurator->getReturnType()
         );
         $output->write($info);
 
@@ -102,7 +104,8 @@ abstract class AbstractCommand extends Command
             ->setNamespace($arguments['namespace'])
             ->setExtension($arguments['extension'])
             ->setIsAbstract(((bool)$arguments['abstract']) ?? null)
-            ->setExtends($arguments['extends']);
+            ->setExtends($arguments['extends'])
+            ->setReturnType($arguments['returnType']);
 
         return $configurator;
     }
@@ -119,6 +122,7 @@ abstract class AbstractCommand extends Command
             static::OPTION_EXTENSION => $input->getOption(static::OPTION_EXTENSION),
             static::OPTION_IS_ABSTRACT => $input->getOption(static::OPTION_IS_ABSTRACT),
             static::OPTION_EXTENDS => $input->getOption(static::OPTION_EXTENDS),
+            static::OPTION_RETURN_TYPE => $input->getOption(static::OPTION_RETURN_TYPE),
         ];
 
         $result = array_merge($arguments, $config);
@@ -134,12 +138,16 @@ abstract class AbstractCommand extends Command
             GenerateDtoCommand::COMMAND_NAME => [],
         ];
 
-        $dotPath = rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $configFile = $dotPath . '.popo';
+        $configFile = $this->getPopoFilename();
         if (is_file($configFile)) {
             $config = parse_ini_file($configFile, true) ?? $default;
         }
 
         return $config[static::COMMAND_NAME];
+    }
+
+    protected function getPopoFilename(): string
+    {
+        return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.popo';
     }
 }

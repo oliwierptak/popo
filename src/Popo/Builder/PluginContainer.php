@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
+use Popo\Plugin\Generator\GeneratorPluginInterface;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyExplorerInterface;
 
@@ -16,12 +16,17 @@ class PluginContainer implements PluginContainerInterface
     protected $schemaPlugins = [];
 
     /**
-     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
+     */
+    protected $arrayablePlugins = [];
+
+    /**
+     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $propertyPlugins = [];
 
     /**
-     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $collectionPlugins = [];
 
@@ -35,14 +40,14 @@ class PluginContainer implements PluginContainerInterface
         $this->propertyExplorer = $propertyExplorer;
     }
 
-    public function registerPropertyClassPlugins(array $pluginClassCollection): PluginContainerInterface
+    public function registerPropertyClassPlugins(array $pluginCollection): PluginContainerInterface
     {
-        foreach ($pluginClassCollection as $pattern => $pluginClass) {
+        foreach ($pluginCollection as $pattern => $pluginClass) {
             $plugin = new $pluginClass(
                 $this->propertyExplorer
             );
 
-            if (!($plugin instanceof PropertyGeneratorPluginInterface)) {
+            if (!($plugin instanceof GeneratorPluginInterface)) {
                 continue;
             }
 
@@ -52,14 +57,14 @@ class PluginContainer implements PluginContainerInterface
         return $this;
     }
 
-    public function registerCollectionClassPlugins(array $pluginClassCollection): PluginContainerInterface
+    public function registerCollectionClassPlugins(array $pluginCollection): PluginContainerInterface
     {
-        foreach ($pluginClassCollection as $pattern => $pluginClass) {
+        foreach ($pluginCollection as $pattern => $pluginClass) {
             $plugin = new $pluginClass(
                 $this->propertyExplorer
             );
 
-            if (!($plugin instanceof PropertyGeneratorPluginInterface)) {
+            if (!($plugin instanceof GeneratorPluginInterface)) {
                 continue;
             }
 
@@ -69,9 +74,9 @@ class PluginContainer implements PluginContainerInterface
         return $this;
     }
 
-    public function registerSchemaClassPlugins(array $pluginClassCollection): PluginContainerInterface
+    public function registerSchemaClassPlugins(array $pluginCollection): PluginContainerInterface
     {
-        foreach ($pluginClassCollection as $pattern => $pluginClass) {
+        foreach ($pluginCollection as $pattern => $pluginClass) {
             $plugin = new $pluginClass(
                 $this->propertyExplorer
             );
@@ -81,6 +86,23 @@ class PluginContainer implements PluginContainerInterface
             }
 
             $this->schemaPlugins[$pattern] = $plugin;
+        }
+
+        return $this;
+    }
+
+    public function registerArrayableClassPlugins(array $pluginCollection): PluginContainerInterface
+    {
+        foreach ($pluginCollection as $pattern => $pluginClass) {
+            $plugin = new $pluginClass(
+                $this->propertyExplorer
+            );
+
+            if (!($plugin instanceof SchemaGeneratorPluginInterface)) {
+                continue;
+            }
+
+            $this->arrayablePlugins[$pattern] = $plugin;
         }
 
         return $this;
@@ -99,5 +121,10 @@ class PluginContainer implements PluginContainerInterface
     public function getCollectionPlugins(): array
     {
         return $this->collectionPlugins;
+    }
+
+    public function getArrayablePlugins(): array
+    {
+        return $this->arrayablePlugins;
     }
 }

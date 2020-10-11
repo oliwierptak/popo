@@ -15,7 +15,7 @@ use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorP
 class CollectionFactoryPlugin extends PropertyFactoryPlugin
 {
     /**
-     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     public function createPluginCollection(): array
     {

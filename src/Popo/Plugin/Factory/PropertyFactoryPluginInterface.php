@@ -7,7 +7,7 @@ namespace Popo\Plugin\Factory;
 interface PropertyFactoryPluginInterface
 {
     /**
-     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     public function createPluginCollection(): array;
 }

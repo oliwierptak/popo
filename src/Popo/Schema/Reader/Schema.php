@@ -11,10 +11,11 @@ use function implode;
 
 class Schema implements SchemaInterface
 {
-    const NAME = 'name';
-    const SCHEMA = 'schema';
-    const IS_ABSTRACT = 'abstract';
-    const EXTENDS = 'extends';
+    protected const NAME = 'name';
+    protected const SCHEMA = 'schema';
+    protected const IS_ABSTRACT = 'abstract';
+    protected const EXTENDS = 'extends';
+    protected const RETURN_TYPE = 'returnType';
 
     /**
      * @var array
@@ -29,6 +30,7 @@ class Schema implements SchemaInterface
         self::SCHEMA => [],
         self::IS_ABSTRACT => false,
         self::EXTENDS => '',
+        self::RETURN_TYPE => '',
     ];
 
     public function __construct(array $data = [])
@@ -80,6 +82,18 @@ class Schema implements SchemaInterface
     public function setExtends(string $extends): SchemaInterface
     {
         $this->data[static::EXTENDS] = $extends;
+
+        return $this;
+    }
+
+    public function getReturnType(): string
+    {
+        return $this->data[static::RETURN_TYPE];
+    }
+
+    public function setReturnType(string $returnType): SchemaInterface
+    {
+        $this->data[static::RETURN_TYPE] = $returnType;
 
         return $this;
     }

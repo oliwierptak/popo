@@ -2,13 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Schema;
+namespace Tests\Functional\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Builder\BuilderConfigurator;
 use Popo\PopoFactory;
 use Popo\Schema\SchemaConfigurator;
-use function current;
 use const Popo\APPLICATION_DIR;
 use const Popo\TESTS_DIR;
 
@@ -44,10 +43,6 @@ class SchemaBuilderTest extends TestCase
         $schemaFiles = $schemaBuilder->build($configurator);
         $this->assertCount(4, $schemaFiles);
 
-        /**
-         * @var \Popo\Schema\Bundle\BundleSchemaInterface[] $fooSchemaFiles
-         */
-        $fooSchemaFiles = current($schemaFiles);
-        $this->assertCount(2, $fooSchemaFiles);
+        $this->assertCount(3, $schemaFiles['foo-bar.schema.json']);
     }
 }

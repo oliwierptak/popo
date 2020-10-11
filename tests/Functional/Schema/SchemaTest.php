@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Schema;
+namespace Tests\Functional\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Schema\Reader\Schema;
@@ -40,7 +40,7 @@ class SchemaTest extends TestCase
     {
         $schema = new Schema($this->schema);
 
-        $this->assertSame($this->schema[Schema::NAME], $schema->getName());
-        $this->assertSame($this->schema[Schema::SCHEMA], $schema->getSchema());
+        $this->assertSame($this->schema['name'], $schema->getName());
+        $this->assertSame($this->schema['schema'], $schema->getSchema());
     }
 }

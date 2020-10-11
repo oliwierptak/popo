@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Schema;
+namespace Tests\Functional\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Builder\BuilderConfigurator;
@@ -11,9 +11,6 @@ use Popo\Schema\Reader\Property;
 use Popo\Schema\SchemaConfigurator;
 use Popo\Schema\Validator\Exception\NotBundleSchemaException;
 use Popo\Schema\Validator\Exception\NotUniquePropertyException;
-use function array_pop;
-use function array_shift;
-use function current;
 use const Popo\APPLICATION_DIR;
 use const Popo\TESTS_DIR;
 
@@ -50,12 +47,7 @@ class SchemaMergerTest extends TestCase
         $mergedSchema = $schemaMerger->merge($schemaFiles);
 
         $this->assertCount(5, $mergedSchema);
-
-        /**
-         * @var \Popo\Schema\Bundle\BundleSchemaInterface $fooSchemaFile
-         */
-        $fooSchemaFile = current($mergedSchema);
-        $this->assertCount(7, $fooSchemaFile->getSchema()->getSchema());
+        $this->assertCount(7, $mergedSchema['Foo']->getSchema()->getSchema());
     }
 
     public function testMergeShouldCheckForUniquePropertyNames(): void
@@ -74,13 +66,7 @@ class SchemaMergerTest extends TestCase
 
         $schemaFiles = $schemaBuilder->build($configurator);
 
-        //pop twice for buzz
-        array_pop($schemaFiles);
-        $last = array_pop($schemaFiles);
-        /**
-         * @var \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchemaFile
-         */
-        $bundleSchemaFile = $last['buzz/schema']['Buzz'];
+        $bundleSchemaFile = $schemaFiles['buzz.schema.json']['buzz/schema']['Buzz'];
         $bundleSchemaFile->getSchema()->setName('Foo');
         $bundleSchemaFile->getschema()->setSchema([[
             Property::NAME => 'fooId',
@@ -108,11 +94,7 @@ class SchemaMergerTest extends TestCase
 
         $schemaFiles = $schemaBuilder->build($configurator);
 
-        $first = array_shift($schemaFiles);
-        /**
-         * @var \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchemaFile
-         */
-        $bundleSchemaFile = $first['foo/schema']['Foo'];
+        $bundleSchemaFile = $schemaFiles['foo.schema.json']['foo/schema']['Foo'];
         $bundleSchemaFile->setIsBundleSchema(false);
         $schemaFiles['foo.schema.json']['foo/schema']['Foo'] = $bundleSchemaFile;
 

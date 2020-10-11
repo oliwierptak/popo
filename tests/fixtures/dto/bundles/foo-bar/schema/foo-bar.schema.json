@@ -8,7 +8,8 @@
       },
       {
         "name": "fooBarStringValue",
-        "type": "string"
+        "type": "string",
+        "default": "Lorem Ipsum"
       }
     ]
   }

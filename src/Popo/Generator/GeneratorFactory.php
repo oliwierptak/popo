@@ -24,6 +24,7 @@ class GeneratorFactory implements GeneratorFactoryInterface
         return new SchemaGenerator(
             $container->getSchemaTemplateString(),
             $this->createPropertyGenerator($container),
+            $this->createArrayableGenerator($container),
             $this->createCollectionGenerator($container),
             $container->getSchemaPluginCollection()
         );
@@ -38,6 +39,15 @@ class GeneratorFactory implements GeneratorFactoryInterface
         );
     }
 
+    public function createArrayableGenerator(BuilderContainer $container): GeneratorInterface
+    {
+        return new ArrayableGenerator(
+            $container->getArrayableTemplateString(),
+            $this->readerFactory,
+            $container->getArrayablePluginCollection()
+        );
+    }
+
     public function createCollectionGenerator(BuilderContainer $container): GeneratorInterface
     {
         return new CollectionGenerator(
@@ -46,4 +56,5 @@ class GeneratorFactory implements GeneratorFactoryInterface
             $container->getCollectionPluginCollection()
         );
     }
+
 }

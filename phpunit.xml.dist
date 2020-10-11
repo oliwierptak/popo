@@ -14,8 +14,8 @@
     bootstrap="tests/bootstrap.php">
 
     <testsuites>
-        <testsuite name="PopoTestSuit">
-            <directory>./tests/Popo</directory>
+        <testsuite name="PopoFunctionalTestSuit">
+            <directory>./tests/Functional</directory>
         </testsuite>
     </testsuites>
 

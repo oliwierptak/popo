@@ -8,7 +8,8 @@
       },
       {
         "name": "username",
-        "type": "string"
+        "type": "string",
+        "default": "JohnDoe"
       },
       {
         "name": "password",
@@ -21,30 +22,29 @@
       {
         "name": "resetPassword",
         "type": "bool"
-      },
-      {
+      },      {
         "name": "optionalData",
         "type": "array",
-        "collectionItem": "\\Tests\\App\\Generated\\Popo\\AnotherFoo",
+        "collectionItem": "\\Tests\\App\\Generated\\Dto\\OptionalDataFoo",
         "default": []
       },
       {
         "name": "buzz",
-        "type": "\\Tests\\App\\Generated\\Popo\\Buzz"
+        "type": "\\Tests\\App\\Generated\\Dto\\Buzz"
       }
     ]
   },
   {
-    "name": "AnotherFoo",
+    "name": "OptionalDataFoo",
     "schema": [
       {
         "name": "id",
         "type": "int"
       },
       {
-        "name": "anotherFoo",
+        "name": "anOption",
         "type": "string",
-        "default": "another foo"
+        "default": "Lorem Option"
       }
     ]
   }

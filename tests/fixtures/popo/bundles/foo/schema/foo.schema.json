@@ -25,7 +25,7 @@
       },      {
         "name": "optionalData",
         "type": "array",
-        "collectionItem": "\\Tests\\App\\Generated\\Popo\\AnotherFoo",
+        "collectionItem": "\\Tests\\App\\Generated\\Popo\\OptionalDataFoo",
         "default": []
       },
       {
@@ -35,16 +35,16 @@
     ]
   },
   {
-    "name": "AnotherFoo",
+    "name": "OptionalDataFoo",
     "schema": [
       {
         "name": "id",
         "type": "int"
       },
       {
-        "name": "anotherFoo",
+        "name": "anOption",
         "type": "string",
-        "default": "another foo"
+        "default": "Lorem Option"
       }
     ]
   }

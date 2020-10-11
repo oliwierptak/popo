@@ -24,6 +24,11 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
     /**
      * @var string
      */
+    protected $arrayableTemplateFilename = 'php.arrayable.tpl';
+
+    /**
+     * @var string
+     */
     protected $propertyTemplateFilename = 'php.property.tpl';
 
     /**
@@ -65,6 +70,11 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
     public function getSchemaTemplateFilename(): string
     {
         return $this->schemaTemplateFilename;
+    }
+
+    public function getArrayableTemplateFilename(): string
+    {
+        return $this->arrayableTemplateFilename;
     }
 
     public function setSchemaTemplateFilename(string $schemaTemplateFilename): SchemaConfiguratorInterface

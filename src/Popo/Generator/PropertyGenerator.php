@@ -22,14 +22,14 @@ class PropertyGenerator implements GeneratorInterface
     protected $readerFactory;
 
     /**
-     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $generatorPlugins = [];
 
     /**
      * @param string $templateString
      * @param \Popo\Schema\Reader\ReaderFactoryInterface $readerFactory
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $generatorPlugins
+     * @param \Popo\Plugin\Generator\GeneratorPluginInterface[] $generatorPlugins
      */
     public function __construct(string $templateString, ReaderFactoryInterface $readerFactory, array $generatorPlugins)
     {
@@ -45,20 +45,20 @@ class PropertyGenerator implements GeneratorInterface
         $propertyCollection = $this->readerFactory->createPropertyCollection($schema);
 
         foreach ($propertyCollection as $property) {
-            $generated .= $this->generateMethodSignature($property, $this->templateString);
+            $generated .= $this->generateMethodSignature($schema, $property, $this->templateString);
         }
 
         return $generated;
     }
 
-    protected function generateMethodSignature(PropertyInterface $property, string $methodString): string
+    protected function generateMethodSignature(SchemaInterface $schema, PropertyInterface $property, string $methodString): string
     {
         foreach ($this->generatorPlugins as $pattern => $plugin) {
             if (!$plugin->acceptPattern($pattern)) {
                 continue;
             }
 
-            $expression = $plugin->generate($property);
+            $expression = $plugin->generate($schema, $property);
             $methodString = str_replace($pattern, $expression, $methodString);
         }
 

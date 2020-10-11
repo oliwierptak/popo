@@ -26,5 +26,9 @@ interface SchemaInterface
 
     public function getNamespaceName(): string;
 
+    public function getReturnType(): string;
+
+    public function setReturnType(string $returnType): SchemaInterface;
+
     public function toArray(): array;
 }

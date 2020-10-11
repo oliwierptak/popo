@@ -19,7 +19,7 @@ class ExtendGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGen
         $extends = trim((string)$schema->getExtends());
 
         if ($extends !== '') {
-            $extends = sprintf(' extends %s', $schema->getExtends());
+            $extends = sprintf(' extends %s', $extends);
         }
 
         return $extends;

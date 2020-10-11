@@ -19,10 +19,24 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
         if ($extends !== '') {
             return $extends;
         }
-        
-        return sprintf(
+
+        $returnValue = sprintf(
             '\%sInterface',
             $schema->getName()
         );
+
+        if ($schema->isAbstract()) {
+            $returnValue = sprintf(
+                '\%s',
+                $schema->getName()
+            );
+        }
+
+        if (trim($schema->getReturnType()) !== '') {
+            $returnValue = trim($schema->getReturnType());
+        }
+
+        return $returnValue;
     }
+
 }

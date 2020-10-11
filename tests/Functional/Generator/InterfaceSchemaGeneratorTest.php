@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Generator;
+namespace Tests\Functional\Generator;
 
 use Popo\Builder\BuilderConfigurator;
 use Popo\Schema\SchemaConfigurator;
@@ -199,7 +199,7 @@ interface FooStubInterface
     public function addOptionalDataItem(string $item): \Popo\Tests\FooStubInterface;
 
 }
-        ';
+';
 
         $this->assertEquals(trim($expectedString), trim($schemaString));
     }

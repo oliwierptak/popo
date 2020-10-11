@@ -89,6 +89,13 @@ With composer:
 
 `composer require popo/generator`
 
+## Configuration
+
+Run:
+```
+vendor/bin/popo configure
+``` 
+
 
 ## Usage
 If you define your own `.popo` file, you can just call 
@@ -101,28 +108,6 @@ or
  
 ```
 vendor/bin/popo dto
-```
-
-### Configuration with .popo file
-Create `.popo` file in project directory, for example:
-```ini
-[popo]
-schema = popo/
-template = vendor/popo/generator/templates/
-output = src/Popo/
-namespace = App\Popo
-extension = .php
-; abstract = 0|1
-; extends = \\Class\\Name
-
-[dto]
-schema = dto
-template = vendor/popo/generator/templates/
-output = src/Popo/
-namespace = App\Popo
-extension = .php
-; abstract = 0|1
-; extends = \\Class\\Name
 ```
 
 See `popo.dist`.
@@ -260,12 +245,12 @@ $configurator = (new BuilderConfigurator)
     
 - `Property Plugin Classes`
 
-    Collection of class names implementing `PropertyGeneratorPluginInterface`.
+    Collection of class names implementing `GeneratorPluginInterface`.
     
     Format:
     ``` 
      [
-        PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
+        GeneratorPluginInterface::PATTERN => GeneratorPluginInterface::class,
      ]
     ```
 
@@ -553,21 +538,22 @@ interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 
 
 #### Property Generator Plugins
-Generator plugins that implement `PropertyGeneratorPluginInterface` are responsible for property methods source code.
+Generator plugins that implement `GeneratorPluginInterface` are responsible for property methods source code.
 ```php
-interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
+interface GeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:
-     * - Uses property for which the content of <<php.property.tpl>> will be generated.
-     * - Generates string according to schema and configured plugins represented by <<php.property.tpl>> template.
+     * - Uses property for which the content of string template will be generated.
+     * - Generates string according to schema and configured plugins represented by string template.
      * - Returns generated string.
      *
+     * @param \Popo\Schema\Reader\SchemaInterface $schema
      * @param \Popo\Schema\Reader\PropertyInterface $property
      *
      * @return string
      */
-    public function generate(PropertyInterface $property): string;
+    public function generate(SchemaInterface $schema, PropertyInterface $property): string;
 }
 ```
 
@@ -616,11 +602,11 @@ See `PluginContainerInterface` for more details.
 #### FooSchemaGeneratorPlugin example
 `FooSchemaGeneratorPlugin` plugin replaces value of placeholder `<<PROPERTY_NAME>>` with actual property name. 
 ```php
-class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
+class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements GeneratorPluginInterface
 {
     const PATTERN = '<<PROPERTY_NAME>>';
 
-    public function generate(PropertyInterface $property): string
+    public function generate(SchemaInterface $schema, PropertyInterface $property): string
     {
         return $property->getName();
     }

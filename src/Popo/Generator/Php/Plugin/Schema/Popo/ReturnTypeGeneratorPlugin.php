@@ -20,9 +20,14 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
             return $extends;
         }
 
+        $returnValue = '\\' . $schema->getName();
+        if (trim($schema->getReturnType()) !== '') {
+            $returnValue = trim($schema->getReturnType());
+        }
+
         return sprintf(
-            '\%s',
-            $schema->getName()
+            '%s',
+            $returnValue
         );
     }
 }

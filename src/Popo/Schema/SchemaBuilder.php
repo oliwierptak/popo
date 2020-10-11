@@ -45,7 +45,8 @@ class SchemaBuilder implements SchemaBuilderInterface
         JsonLoaderInterface $jsonLoader,
         ReaderFactoryInterface $readerFactory,
         BundleSchemaFactoryInterface $bundleSchemaFactory
-    ) {
+    )
+    {
         $this->fileLoader = $fileLoader;
         $this->jsonLoader = $jsonLoader;
         $this->readerFactory = $readerFactory;
@@ -102,7 +103,8 @@ class SchemaBuilder implements SchemaBuilderInterface
     protected function markBundleSchema(
         BundleSchemaInterface $bundleSchema,
         SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface {
+    ): BundleSchemaInterface
+    {
         $bundleNameFromFilename = $configurator->resolveBundleName(
             $bundleSchema->getSchemaFilename()->getFilename()
         );
@@ -142,7 +144,8 @@ class SchemaBuilder implements SchemaBuilderInterface
     public function buildBundleSchemaWithProperties(
         BundleSchemaInterface $sourceBundleSchema,
         array $propertyCollection
-    ): BundleSchemaInterface {
+    ): BundleSchemaInterface
+    {
         $schemaData = [];
 
         foreach ($propertyCollection as $property) {
@@ -172,7 +175,8 @@ class SchemaBuilder implements SchemaBuilderInterface
     protected function buildBundleSchemaFiles(
         SplFileInfo $bundleSchemaFile,
         BuilderConfigurator $configurator
-    ): array {
+    ): array
+    {
         $schemaDataCollection = $this->loadSchemaData($bundleSchemaFile);
 
         $bundleSchemaFiles = [];
@@ -186,23 +190,34 @@ class SchemaBuilder implements SchemaBuilderInterface
         return $bundleSchemaFiles;
     }
 
+    protected function buildBundleSchema(
+        SchemaInterface $schema,
+        SplFileInfo $bundleSchemaFile,
+        SchemaConfiguratorInterface $configurator
+    ): BundleSchemaInterface
+    {
+        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema($schema, $bundleSchemaFile);
+        $bundleSchema = $this->markBundleSchema($bundleSchema, $configurator);
+
+        return $bundleSchema;
+    }
+
     protected function buildSchema(array $schemaData, BuilderConfigurator $configurator): SchemaInterface
     {
         $schema = $this->readerFactory->createSchema($schemaData);
-        $isAbstract = $configurator->getIsAbstract();
-        $extends = $configurator->getExtends();
+        $schema = $this->updateAbstractFlag($schema, $configurator);
+        $schema = $this->updateExtendsFlag($schema, $configurator);
 
-        if ($isAbstract === null) {
-            $isAbstract = $schema->isAbstract();
+        return $schema;
+    }
+
+    protected function updateAbstractFlag(SchemaInterface $schema, BuilderConfigurator $configurator): SchemaInterface
+    {
+        $isAbstract = $schema->isAbstract();
+        if ($configurator->getIsAbstract() === true) {
+            $isAbstract = true;
         }
-
         $schema->setIsAbstract($isAbstract);
-
-        if ($extends === null) {
-            $extends = trim((string)$schema->getExtends());
-        }
-
-        $schema->setExtends($extends);
 
         if ($schema->isAbstract()) {
             $namespaceTokens = explode('\\', $schema->getName());
@@ -217,14 +232,14 @@ class SchemaBuilder implements SchemaBuilderInterface
         return $schema;
     }
 
-    protected function buildBundleSchema(
-        SchemaInterface $schema,
-        SplFileInfo $bundleSchemaFile,
-        SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface {
-        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema($schema, $bundleSchemaFile);
-        $bundleSchema = $this->markBundleSchema($bundleSchema, $configurator);
+    protected function updateExtendsFlag(SchemaInterface $schema, BuilderConfigurator $configurator): SchemaInterface
+    {
+        $extends = $configurator->getExtends();
+        if ($extends === null) {
+            $extends = trim((string)$schema->getExtends());
+        }
+        $schema->setExtends($extends);
 
-        return $bundleSchema;
+        return $schema;
     }
 }

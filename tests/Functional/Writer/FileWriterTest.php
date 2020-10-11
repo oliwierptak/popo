@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Writer;
+namespace Tests\Functional\Writer;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Builder\BuilderConfigurator;
@@ -11,11 +11,13 @@ use Popo\Builder\PluginContainer;
 use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin as DtoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ReturnTypeGeneratorPlugin as DtoReturnTypeGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Schema\FromArrayResultPlugin;
+use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 use Popo\PopoFactory;
 use Popo\Schema\SchemaConfigurator;
 use Popo\Writer\File\FileWriter;
-use Tests\App\Generated\Dto\BarStub;
-use Tests\App\Generated\Dto\FooStub;
+use Tests\App\Generated\BarStub;
+use Tests\App\Generated\FooStub;
 
 class FileWriterTest extends TestCase
 {
@@ -27,7 +29,12 @@ class FileWriterTest extends TestCase
     /**
      * @var array
      */
-    protected $schemaData;
+    protected $schemaDataFoo;
+
+    /**
+     * @var array
+     */
+    protected $schemaDataBar;
 
     /**
      * @var string
@@ -62,114 +69,83 @@ class FileWriterTest extends TestCase
     protected function setUp(): void
     {
         $this->schemaDirectory = \Popo\TESTS_DIR . 'fixtures/dto/bundles/';
-        $this->outputDirectory = \Popo\TESTS_DIR . 'App/Generated/Dto/';
+        $this->outputDirectory = \Popo\TESTS_DIR . 'App/Generated/';
         $this->templateDirectory = \Popo\APPLICATION_DIR . 'templates/';
         $this->fooStubFilename = $this->outputDirectory . 'FooStub';
         $this->barStubFilename = $this->outputDirectory . 'BarStub';
 
-        $this->schemaData = [
-            'name' => 'Tests\App\Generated\Dto\PopoStub',
+        $this->schemaDataFoo = [
+            'name' => 'Tests\App\Generated\FooStub',
             'schema' => [[
                 'name' => 'id',
                 'type' => 'int',
-                'docblock' => 'Lorem Ipsum',
-            ],[
+                'docblock' => 'Lorem Ipsum ID',
+            ], [
                 'name' => 'username',
                 'type' => 'string',
-                'default' => 'JohnDoe',
-            ],[
-                'name' => 'password',
-                'type' => 'string',
-            ],[
-                'name' => 'isLoggedIn',
-                'type' => 'bool',
-                'default' => false,
-            ],[
-                'name' => 'resetPassword',
-                'type' => 'bool',
-            ],[
-                'name' => 'context',
-                'type' => 'mixed',
-            ],[
-                'name' => 'barStub',
-                'type' => '\Tests\App\Generated\Dto\BarStub',
-            ],[
-                'name' => 'bars',
+                'default' => 'JohnDoe'
+            ], [
+                'name' => 'bar',
+                'type' => '\Tests\App\Generated\BarStub'
+            ], [
+                'name' => 'barItems',
                 'type' => 'array',
-                'collectionItem' => '\Tests\App\Generated\Dto\BarStub',
-                'singular' => 'bar',
-            ],[
-                'name' => 'foos',
-                'type' => 'array',
-            ]],
+                'collectionItem' => '\Tests\App\Generated\BarStub',
+                'singular' => 'barItem',
+            ]]
         ];
 
-        $this->writePopoInterface('Tests\App\Generated\Dto\BarStub', $this->barStubFilename . 'Interface.php');
-        $this->writePopo('Tests\App\Generated\Dto\BarStub', $this->barStubFilename . '.php');
+        $this->schemaDataBar = [
+            'name' => 'Tests\App\Generated\BarStub',
+            'schema' => [[
+                'name' => 'title',
+                'type' => 'string',
+                'default' => 'A Title',
+                'docblock' => 'Lorem Ipsum Title',
+            ], [
+                'name' => 'price',
+                'type' => 'int',
+                'docblock' => 'Lorem Ipsum Price',
+            ]]
+        ];
 
         $this->data = [
             'id' => 123,
-            'username' => 'foo',
-            'password' => 'bar',
-            'isLoggedIn' => false,
-            'resetPassword' => true,
-            'context' => null,
-            'barStub' => ['username' => 'bar'],
-            'bars' => [
-                ['username' => 'fooBaroo', 'password' => 'md5zxx1' , 'isLoggedIn' => true],
-                ['username' => 'kangaroo', 'password' => 'md5yyy2', 'isLoggedIn' => false],
+            'username' => 'FooBarBuzz',
+            'bar' => ['price' => 999],
+            'barItems' => [
+                ['title' => 'Lorem Ipsum 1', 'price' => 2999],
+                ['title' => 'Lorem Ipsum 2', 'price' => 7899],
             ],
-            'foos' => ['test', 'foo'],
         ];
 
         $this->expectedData = [
             'id' => 123,
-            'username' => 'foo',
-            'password' => 'bar',
-            'isLoggedIn' => false,
-            'resetPassword' => true,
-            'context' => null,
-            'barStub' => [
-                'id' => null,
-                'username' => 'bar',
-                'password' => null,
-                'isLoggedIn' => false,
-                'resetPassword' => null,
-                'context' => null,
-                'barStub' => null,
-                'bars' => null,
-                'foos' => null,
+            'username' => 'FooBarBuzz',
+            'bar' => [
+                'title' => 'A Title',
+                'price' => 999,
             ],
-            'bars' => [[
-                    'id' => null,
-                    'username' => 'fooBaroo',
-                    'password' => 'md5zxx1',
-                    'isLoggedIn' => true,
-                    'resetPassword' => null,
-                    'context' => null,
-                    'barStub' => null,
-                    'bars' => null,
-                    'foos' => null,
-                ],[
-                    'id' => null,
-                    'username' => 'kangaroo',
-                    'password' => 'md5yyy2',
-                    'isLoggedIn' => false,
-                    'resetPassword' => null,
-                    'context' => null,
-                    'barStub' => null,
-                    'bars' => null,
-                    'foos' => null,
-                ]],
-            'foos' => ['test', 'foo'],
+            'barItems' => [[
+                'title' => 'Lorem Ipsum 1',
+                'price' => 2999,
+            ], [
+                'title' => 'Lorem Ipsum 2',
+                'price' => 7899,
+            ]],
         ];
+
+        $this->writePopoInterface($this->schemaDataFoo, $this->fooStubFilename . 'Interface.php');
+        $this->writePopo($this->schemaDataFoo, $this->fooStubFilename . '.php');
+
+        $this->writePopoInterface($this->schemaDataBar, $this->barStubFilename . 'Interface.php');
+        $this->writePopo($this->schemaDataBar, $this->barStubFilename . '.php');
     }
 
-    protected function writePopoInterface(string $name, string $filename): void
+    protected function writePopoInterface(array $schemaData, string $filename): void
     {
         $popoFactory = new PopoFactory();
-        $schema = $popoFactory->createReaderFactory()->createSchema($this->schemaData);
-        $schema->setName($name);
+        $schema = $popoFactory->createReaderFactory()->createSchema($schemaData);
 
         $schemaBuilderConfigurator = (new SchemaConfigurator())
             ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
@@ -195,6 +171,11 @@ class FileWriterTest extends TestCase
                 DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
                 DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
             ])
+            ->registerArrayableClassPlugins([
+                FromArrayResultPlugin::PATTERN => FromArrayResultPlugin::class,
+                ToArrayResultPlugin::PATTERN => ToArrayResultPlugin::class,
+                DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
+            ])
             ->registerPropertyClassPlugins([
                 DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
             ])
@@ -208,11 +189,10 @@ class FileWriterTest extends TestCase
         $fileWriter->write($filename, $schema);
     }
 
-    protected function writePopo(string $name, string $filename): void
+    protected function writePopo(array $schemaData, string $filename): void
     {
         $popoFactory = new PopoFactory();
-        $schema = $popoFactory->createReaderFactory()->createSchema($this->schemaData);
-        $schema->setName($name);
+        $schema = $popoFactory->createReaderFactory()->createSchema($schemaData);
 
         $configurator = (new BuilderConfigurator())
             ->setSchemaConfigurator((new SchemaConfigurator()))
@@ -233,6 +213,11 @@ class FileWriterTest extends TestCase
                 DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
                 DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
             ])
+            ->registerArrayableClassPlugins([
+                FromArrayResultPlugin::PATTERN => FromArrayResultPlugin::class,
+                ToArrayResultPlugin::PATTERN => ToArrayResultPlugin::class,
+                DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
+            ])
             ->registerPropertyClassPlugins([
                 DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
             ])
@@ -248,27 +233,16 @@ class FileWriterTest extends TestCase
 
     public function testWritePopo(): void
     {
-        $this->writePopoInterface('Tests\App\Generated\Dto\FooStub', $this->fooStubFilename . 'Interface.php');
-        $this->writePopo('Tests\App\Generated\Dto\FooStub', $this->fooStubFilename . '.php');
+        $foo = new FooStub();
+        $foo->fromArray($this->data);
 
-        $generatedClass = new FooStub();
-        $generatedClass->fromArray($this->data);
+        $this->assertSame($this->data['id'], $foo->getId());
+        $this->assertSame($this->data['username'], $foo->getUsername());
+        $this->assertSame($this->expectedData['barItems'][0], $foo->getBarItems()[0]->toArray());
 
-        $this->assertSame($this->data['id'], $generatedClass->getId());
-        $this->assertSame($this->data['username'], $generatedClass->getUsername());
-        $this->assertSame($this->data['password'], $generatedClass->getPassword());
-        $this->assertSame($this->data['isLoggedIn'], $generatedClass->isLoggedIn());
-        $this->assertSame($this->data['resetPassword'], $generatedClass->resetPassword());
-        $this->assertSame($this->expectedData['foos'], $generatedClass->getFoos());
-        $this->assertSame($this->expectedData['barStub'], $generatedClass->getBarStub()->toArray());
-
-        $this->assertSame($this->data['id'], $generatedClass->getId());
-        $this->assertSame($this->data['username'], $generatedClass->requireUsername());
-        $this->assertSame($this->data['password'], $generatedClass->requirePassword());
-        $this->assertSame($this->data['isLoggedIn'], $generatedClass->requireIsLoggedIn());
-        $this->assertSame($this->data['resetPassword'], $generatedClass->requireResetPassword());
-        $this->assertSame($this->expectedData['foos'], $generatedClass->requireFoos());
-        $this->assertSame($this->expectedData['barStub'], $generatedClass->requireBarStub()->toArray());
+        $this->assertSame($this->data['id'], $foo->requireId());
+        $this->assertSame($this->data['username'], $foo->requireUsername());
+        $this->assertSame($this->expectedData['bar'], $foo->requireBar()->toArray());
     }
 
     public function testToArray(): void
@@ -284,12 +258,15 @@ class FileWriterTest extends TestCase
     public function testToArrayShouldConvertPopo(): void
     {
         $data = $this->data;
-        $data['barStub'] = (new BarStub())->fromArray($this->data['barStub']);
+        $data['bar'] = (new BarStub())->fromArray($data['bar']);
+
         $popo = (new FooStub())->fromArray($data);
+        $result = $popo->toArray();
 
-        $data = $popo->toArray();
+        $expectedData = $this->expectedData;
+        $expectedData['bar']['price'] = null;
 
-        $this->assertEquals($this->expectedData, $data);
+        $this->assertEquals($expectedData, $result);
     }
 
     public function testFromArray(): void
@@ -304,7 +281,7 @@ class FileWriterTest extends TestCase
     public function testFromArrayShouldConvertPopo(): void
     {
         $data = $this->data;
-        $data['barStub'] = (new BarStub())->fromArray($this->data['barStub']);
+        $data['bar'] = (new BarStub())->fromArray($this->data['bar']);
 
         $popo = new FooStub();
 
@@ -356,9 +333,9 @@ class FileWriterTest extends TestCase
         $popo->fromArray($this->data);
 
         $barStub = new BarStub();
-        $popo->setBarStub($barStub);
+        $popo->setBar($barStub);
 
-        $this->assertSame($barStub, $popo->getBarStub());
+        $this->assertSame($barStub, $popo->getbar());
     }
 
     public function testRequirePopoAsProperty(): void
@@ -367,9 +344,9 @@ class FileWriterTest extends TestCase
         $popo->fromArray($this->data);
 
         $barStub = new BarStub();
-        $popo->setBarStub($barStub);
+        $popo->setBar($barStub);
 
-        $this->assertSame($barStub, $popo->requireBarStub());
+        $this->assertSame($barStub, $popo->requireBar());
     }
 
     public function testRequirePropertyShouldReturnItsValue(): void
@@ -401,22 +378,10 @@ class FileWriterTest extends TestCase
         $popo->fromArray($this->data);
 
         $barStub = new BarStub();
-        $popo->addBar($barStub);
-        $popo->addBar($barStub);
+        $popo->addBarItem($barStub);
+        $popo->addBarItem($barStub);
 
-        $this->assertCount(4, $popo->getBars());
-    }
-
-    public function testCollectionAddItem(): void
-    {
-        $popo = new FooStub();
-        $popo->fromArray($this->data);
-
-        $popo->addFoosItem('bar');
-        $popo->addFoosItem('buzz');
-        $popo->addFoosItem('xxx');
-
-        $this->assertCount(5, $popo->getFoos());
+        $this->assertCount(4, $popo->getBarItems());
     }
 
     public function testDefaultValue(): void

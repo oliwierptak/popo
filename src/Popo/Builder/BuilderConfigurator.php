@@ -45,9 +45,19 @@ class BuilderConfigurator
     protected $extends = null;
 
     /**
+     * @var bool
+     */
+    protected $asInterface = false;
+
+    /**
      * @var \Popo\Schema\SchemaConfiguratorInterface
      */
     protected $schemaConfigurator;
+
+    /**
+     * @var string
+     */
+    protected $returnType = 'self';
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
@@ -55,12 +65,17 @@ class BuilderConfigurator
     protected $schemaPluginClasses = [];
 
     /**
-     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
+     */
+    protected $arrayablePluginClasses = [];
+
+    /**
+     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $propertyPluginClasses = [];
 
     /**
-     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $collectionPluginClasses = [];
 
@@ -153,6 +168,18 @@ class BuilderConfigurator
         return $this;
     }
 
+    public function getReturnType(): string
+    {
+        return $this->returnType;
+    }
+
+    public function setReturnType(string $returnType): self
+    {
+        $this->returnType = $returnType;
+
+        return $this;
+    }
+
     public function getSchemaConfigurator(): SchemaConfiguratorInterface
     {
         return $this->schemaConfigurator;
@@ -170,8 +197,31 @@ class BuilderConfigurator
         return $this->schemaPluginClasses;
     }
 
+    public function getArrayablePluginClasses(): array
+    {
+        return $this->arrayablePluginClasses;
+    }
+
     /**
-     * Format of $schemaPlugins:
+     * Format:
+     *
+     * [
+     *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
+     *  ]
+     *
+     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $schemaPluginClasses
+     *
+     * @return \Popo\Builder\BuilderConfigurator
+     */
+    public function setArrayablePluginClasses(array $arrayablePluginClasses): self
+    {
+        $this->arrayablePluginClasses = $arrayablePluginClasses;
+
+        return $this;
+    }
+
+    /**
+     * Format:
      *
      * [
      *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
@@ -194,13 +244,13 @@ class BuilderConfigurator
     }
 
     /**
-     * Format of $propertyPlugins:
+     * Format:
      *
      * [
-     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
+     *  GeneratorPluginInterface::PATTERN => GeneratorPluginInterface::class,
      *  ]
      *
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginClasses
+     * @param \Popo\Plugin\Generator\GeneratorPluginInterface[] $propertyPluginClasses
      *
      * @return \Popo\Builder\BuilderConfigurator
      */
@@ -220,16 +270,28 @@ class BuilderConfigurator
      * Format of $propertyPlugins:
      *
      * [
-     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
+     *  GeneratorPluginInterface::PATTERN => GeneratorPluginInterface::class,
      *  ]
      *
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $collectionPluginClasses
+     * @param \Popo\Plugin\Generator\GeneratorPluginInterface[] $collectionPluginClasses
      *
      * @return \Popo\Builder\BuilderConfigurator
      */
     public function setCollectionPluginClasses(array $collectionPluginClasses): self
     {
         $this->collectionPluginClasses = $collectionPluginClasses;
+
+        return $this;
+    }
+
+    public function asInterface(): bool
+    {
+        return $this->asInterface;
+    }
+
+    public function setAsInterface(bool $asInterface): self
+    {
+        $this->asInterface = $asInterface;
 
         return $this;
     }

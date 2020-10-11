@@ -18,6 +18,8 @@ interface SchemaConfiguratorInterface
 
     public function getSchemaTemplateFilename(): string;
 
+    public function getArrayableTemplateFilename(): string;
+
     public function setSchemaTemplateFilename(string $schemaTemplateFilename): SchemaConfiguratorInterface;
 
     public function getPropertyTemplateFilename(): string;

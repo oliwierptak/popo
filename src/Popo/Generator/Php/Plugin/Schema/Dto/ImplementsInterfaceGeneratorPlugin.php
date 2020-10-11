@@ -15,6 +15,10 @@ class ImplementsInterfaceGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
     public function generate(SchemaInterface $schema): string
     {
+        if ($schema->isAbstract()) {
+            return '';
+        }
+
         return sprintf(
             'implements \%s\%sInterface',
             $schema->getNamespaceName(),

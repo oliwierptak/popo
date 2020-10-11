@@ -28,10 +28,11 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\App\\": "tests/App/",
-      "Tests\\Popo\\": "tests/Popo/"
+      "Tests\\Functional\\": "tests/Functional/"
     }
   },
   "scripts": {
+    "popo" : "bin/popo popo",
     "post-autoload-dump": [
       "chmod +x bin/popo",
       "vendor/bin/cs-setup"

@@ -39,6 +39,6 @@ class BuilderWriter implements BuilderWriterInterface
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
         $bundleWriter = $this->writerFactory->createBundleProjectWriter($generator, $configurator->getNamespace());
 
-        $bundleWriter->write($mergedSchemaFiles, $configurator->getExtension(), $configurator->getOutputDirectory());
+        $bundleWriter->write($mergedSchemaFiles, $configurator->getExtension(), $configurator->getOutputDirectory(), $configurator->asInterface());
     }
 }

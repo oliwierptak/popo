@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Popo\Stub;
+namespace Tests\Functional\Stub;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;

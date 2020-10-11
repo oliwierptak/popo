@@ -36,13 +36,23 @@ class BundleProjectWriter implements WriterInterface
      * @param \Popo\Schema\Bundle\BundleSchemaInterface[] $schemaFiles
      * @param string $extension
      * @param string $outputDirectory
+     * @param bool $asInterface
      *
      * @return void
      */
-    public function write(array $schemaFiles, string $extension, string $outputDirectory): void
+    public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): void
     {
+        $fileExtension = $extension;
         foreach ($schemaFiles as $schemaFilename => $bundleSchema) {
-            $filename = $this->generateFilename($bundleSchema, $extension, $outputDirectory);
+            if ($this->shouldGenerateInterface($bundleSchema, $asInterface)) {
+                continue;
+            }
+
+            if ($asInterface) {
+                $fileExtension = 'Interface' . $extension;
+            }
+            $filename = $this->generateFilename($bundleSchema, $fileExtension, $outputDirectory);
+
             $this->writePopo($bundleSchema, $filename);
         }
     }
@@ -51,7 +61,8 @@ class BundleProjectWriter implements WriterInterface
         BundleSchemaInterface $bundleSchema,
         string $extension,
         string $outputDirectory
-    ): SplFileInfo {
+    ): SplFileInfo
+    {
         $filename = $this->getOutputFilename($bundleSchema, $extension);
         $dir = $this->getOutputDirectory($bundleSchema, $outputDirectory);
 
@@ -100,5 +111,10 @@ class BundleProjectWriter implements WriterInterface
         $name = array_pop($nameTokens);
 
         return $this->namespace . '\\' . $name;
+    }
+
+    protected function shouldGenerateInterface(BundleSchemaInterface $bundleSchema, bool $asInterface): bool
+    {
+        return $bundleSchema->getSchema()->isAbstract() && $asInterface;
     }
 }
