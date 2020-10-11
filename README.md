@@ -500,12 +500,11 @@ _Note_: The default value from schema definition is ignored.
 
 ```php
 $popo = new App\Popo\Foo();
-if ($popo->hasFoo()) {
-   //...
-}
-``` 
+$result = $popo->hasTitle(); // false
 
-Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
+$popo->setTitle('Buzz');
+$result = $popo->hasTitle(); // true
+``` 
 
 
 ```php
