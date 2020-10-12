@@ -51,8 +51,6 @@
                 } else {
                     $result[$key] = $data[$key];
                 }
-
-                $this->updateMap[$key] = true;
             }
 
             if (\class_exists($type)) {
@@ -61,14 +59,15 @@
                     $popo->fromArray($result[$key]);
                 }
                 $result[$key] = $popo;
-
-                if (\array_key_exists($key, $data)) {
-                    $this->updateMap[$key] = true;
-                }
             }
         }
 
         $this->data = $result;
+
+        foreach ($data as $key => $value) {
+            $value = $result[$key];
+            $this->popoSetValue($key, $value);
+        }
 
         return $this;
     }
