@@ -355,7 +355,12 @@ class FooStub implements \Popo\Tests\FooStubInterface
         $this->data = $result;
 
         foreach ($data as $key => $value) {
-            $value = $result[$key];
+            if (!\array_key_exists($key, $result)) {
+                continue;
+            }
+
+            $type = $this->propertyMapping[$key] ?? \'string\';
+            $value = $this->typecastValue($type, $result[$key]);
             $this->popoSetValue($key, $value);
         }
 
@@ -379,16 +384,42 @@ class FooStub implements \Popo\Tests\FooStubInterface
 
     protected function prepareFromArrayData(array $data): array
     {
+        $result = [];
         $parents = \class_parents($this, false);
+
         if (count($parents) === 1 && \current($parents) === \get_class($this)) {
-            $data = [];
+            $result = $data;
         } else if (count($parents) > 1) {
             $parent = \get_parent_class($this);
             if (method_exists($parent, \'fromArray\')) {
-                $data = parent::fromArray();
+                $result = parent::fromArray($data);
             }
         }
-        return $data;
+        return $result;
+    }
+
+    protected function typecastValue(string $type, $value)
+    {
+        if ($value === null) {
+            return $value;
+        }
+
+        switch ($type) {
+            case \'int\':
+                $value = (int)$value;
+                break;
+            case \'string\':
+                $value = (string)$value;
+                break;
+            case \'bool\':
+                $value = (bool)$value;
+                break;
+            case \'array\':
+                $value = (array)$value;
+                break;
+        }
+
+        return $value;
     }
 
 

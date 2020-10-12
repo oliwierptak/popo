@@ -52,7 +52,7 @@ class DtoGeneratedTest extends TestCase
     public function test_fromArrayToArray_defaults(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'optionalData' => [
                 ['id' => 123],
                 ['id' => 456],
@@ -62,7 +62,7 @@ class DtoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -84,7 +84,7 @@ class DtoGeneratedTest extends TestCase
     public function test_fromArrayToArray_deep_values(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'optionalData' => [
                 ['id' => 123, 'anOption' => 'Lorem Option 1'],
@@ -98,7 +98,7 @@ class DtoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -120,7 +120,7 @@ class DtoGeneratedTest extends TestCase
     public function test_has_fromArrayToArray_defaults(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'optionalData' => [
                 ['id' => 123],
                 ['id' => 456],
@@ -130,7 +130,7 @@ class DtoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -161,7 +161,7 @@ class DtoGeneratedTest extends TestCase
     public function test_has_fromArrayToArray_deep_values(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -178,7 +178,7 @@ class DtoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -208,7 +208,7 @@ class DtoGeneratedTest extends TestCase
     public function test_deep_popo(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123345',
             'username' => 'JohnDoe',
             'optionalData' => [
                 ['id' => 123],
@@ -222,5 +222,17 @@ class DtoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $this->assertEquals('lorem buzz 1', $foo->getBuzz()->getBuzz());
+    }
+
+    public function test_fromArray_typecast(): void
+    {
+        $value = [
+            'fooId' => 'abc123345',
+        ];
+
+        $foo = (new Foo())->fromArray($value);
+
+        $this->assertEquals(0, $foo->getFooId());
+        $this->assertTrue($foo->hasFooId());
     }
 }

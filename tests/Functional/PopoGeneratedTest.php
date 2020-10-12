@@ -51,7 +51,7 @@ class PopoGeneratedTest extends TestCase
     public function test_fromArrayToArray_defaults(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'optionalData' => [
                 ['id' => 123],
                 ['id' => 456],
@@ -61,7 +61,7 @@ class PopoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -83,7 +83,7 @@ class PopoGeneratedTest extends TestCase
     public function test_fromArrayToArray_deep_values(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'optionalData' => [
                 ['id' => 123, 'anOption' => 'Lorem Option 1'],
@@ -97,7 +97,7 @@ class PopoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -119,7 +119,7 @@ class PopoGeneratedTest extends TestCase
     public function test_has_fromArrayToArray_defaults(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'optionalData' => [
                 ['id' => 123],
                 ['id' => 456],
@@ -129,7 +129,7 @@ class PopoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -160,7 +160,7 @@ class PopoGeneratedTest extends TestCase
     public function test_has_fromArrayToArray_deep_values(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -177,7 +177,7 @@ class PopoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
@@ -207,7 +207,7 @@ class PopoGeneratedTest extends TestCase
     public function test_deep_popo(): void
     {
         $value = [
-            'fooId' => 'abc123',
+            'fooId' => '123',
             'username' => 'JohnDoe',
             'optionalData' => [
                 ['id' => 123],

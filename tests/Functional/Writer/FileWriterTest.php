@@ -357,7 +357,22 @@ class FileWriterTest extends TestCase
         $this->assertSame($this->data['id'], $popo->requireId());
     }
 
-    public function testRequirePropertyShouldThrowException(): void
+    public function testRequirePropertyShouldThrowExceptionWithSetter(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Required value of "id" has not been set');
+
+        $popo = new FooStub();
+        $data = $this->data;
+
+        $data['id'] = null;
+
+        $popo->setId(null);
+
+        $popo->requireId();
+    }
+
+    public function testRequirePropertyShouldThrowExceptionWithToArray(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('Required value of "id" has not been set');
