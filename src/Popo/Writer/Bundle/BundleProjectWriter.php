@@ -8,6 +8,8 @@ use Popo\Schema\Bundle\BundleSchemaInterface;
 use Popo\Writer\File\FileWriterInterface;
 use Popo\Writer\WriterInterface;
 use SplFileInfo;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 use function array_pop;
 use function explode;
 use function str_replace;
@@ -26,16 +28,28 @@ class BundleProjectWriter implements WriterInterface
      */
     protected $namespace;
 
-    public function __construct(FileWriterInterface $fileWriter, string $namespace)
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
+
+    public function __construct(FileWriterInterface $fileWriter, string $namespace, ?OutputInterface $output = null)
     {
         $this->fileWriter = $fileWriter;
         $this->namespace = $namespace;
+        $this->output = $output;
     }
 
     public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): int
     {
         $numberOfGeneratedFiles = 0;
         $fileExtension = $extension;
+        $progressBar = null;
+
+        if ($this->output) {
+            $progressBar = new ProgressBar($this->output, count($schemaFiles));
+            $progressBar->start();
+        }
 
         foreach ($schemaFiles as $schemaFilename => $bundleSchema) {
             if ($this->shouldGenerateInterface($bundleSchema, $asInterface)) {
@@ -49,6 +63,14 @@ class BundleProjectWriter implements WriterInterface
 
             $this->writePopo($bundleSchema, $filename);
             $numberOfGeneratedFiles++;
+
+            if ($progressBar) {
+                $progressBar->advance();
+            }
+        }
+
+        if ($progressBar) {
+            $progressBar->finish();
         }
 
         return $numberOfGeneratedFiles;

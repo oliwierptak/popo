@@ -56,8 +56,6 @@ class BuilderFactory implements BuilderFactoryInterface
     public function createBuilderWriter(): BuilderWriterInterface
     {
         return new BuilderWriter(
-            $this->schemaFactory->createSchemaBuilder(),
-            $this->schemaFactory->createSchemaMerger(),
             $this->writerFactory
         );
     }

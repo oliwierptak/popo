@@ -14,11 +14,13 @@ interface BuilderWriterInterface
      * - Merges schema files using SchemaMerger
      * - Creates BundleWriter using WriterFactory
      * - Writes merged schema files to specified output directory
+     * - Return number of written files
      *
-     * @param \Popo\Builder\BuilderConfigurator $configurator
-     * @param \Popo\Generator\GeneratorInterface $generator
+     * @param BuilderConfigurator $configurator
+     * @param GeneratorInterface $generator
+     * @param \Popo\Schema\Bundle\BundleSchemaInterface[] $schemaFiles
      *
-     * @return int Number of files generated
+     * @return int
      */
-    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): int;
+    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator, array $schemaFiles): int;
 }

@@ -9,6 +9,8 @@ use Popo\Schema\Reader\SchemaInterface;
 
 interface PopoFacadeInterfaces
 {
+    public const VERSION = '3.0.0';
+
     public function setFactory(PopoFactoryInterface $factory): void;
 
     /**

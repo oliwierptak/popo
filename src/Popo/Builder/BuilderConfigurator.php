@@ -6,6 +6,7 @@ namespace Popo\Builder;
 
 use Popo\Schema\SchemaConfigurator;
 use Popo\Schema\SchemaConfiguratorInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class BuilderConfigurator
 {
@@ -78,6 +79,11 @@ class BuilderConfigurator
      * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
      */
     protected $collectionPluginClasses = [];
+
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
 
     public function __construct()
     {
@@ -292,6 +298,18 @@ class BuilderConfigurator
     public function setCollectionPluginClasses(array $collectionPluginClasses): self
     {
         $this->collectionPluginClasses = $collectionPluginClasses;
+
+        return $this;
+    }
+
+    public function getOutput(): ?OutputInterface
+    {
+        return $this->output;
+    }
+
+    public function setOutput(?OutputInterface $output): self
+    {
+        $this->output = $output;
 
         return $this;
     }

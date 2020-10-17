@@ -34,7 +34,10 @@ abstract class AbstractPopoDirector
         $builderWriter = $this->builderFactory
             ->createBuilderWriter();
 
-        return $builderWriter->write($configurator, $generator);
+        $schemaFiles = $this->schemaFactory->createSchemaBuilder()->build($configurator);
+        $mergedSchemaFiles = $this->schemaFactory->createSchemaMerger()->merge($schemaFiles);
+
+        return $builderWriter->write($configurator, $generator, $mergedSchemaFiles);
     }
 
     protected function generate(BuilderConfigurator $configurator): int
@@ -54,9 +57,9 @@ abstract class AbstractPopoDirector
     /**
      * @param \Popo\Builder\BuilderConfigurator $configurator
      *
+     * @return void
      * @throws \InvalidArgumentException
      *
-     * @return void
      */
     protected function assertConfiguration(BuilderConfigurator $configurator): void
     {

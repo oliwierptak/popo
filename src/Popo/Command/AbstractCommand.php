@@ -76,43 +76,43 @@ abstract class AbstractCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $configurator = $this->buildConfigurator($input);
+        $configurator = $this->buildConfigurator($input, $output);
 
-        $output->writeln('<fg=green>POPO configuration</>');
+        $output->writeln('');
+        $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoFacadeInterfaces::VERSION));
+        $output->writeln('');
 
         $table = new Table($output);
-        $table->setStyle('compact');
+        $table->setStyle('default');
 
         $table
             ->setRows([
                 ['schema', $configurator->getSchemaDirectory()],
-                new TableSeparator(),
                 ['template', $configurator->getTemplateDirectory()],
-                new TableSeparator(),
                 ['output', $configurator->getOutputDirectory()],
-                new TableSeparator(),
                 ['namespace', $configurator->getNamespace()],
-                new TableSeparator(),
                 ['extension', $configurator->getExtension()],
                 new TableSeparator(),
                 ['abstract', (int)$configurator->getIsAbstract()],
+                ['withInterface', (int)$configurator->getWithInterface()],
                 new TableSeparator(),
                 ['extends', $configurator->getExtends()],
-                new TableSeparator(),
                 ['returnType', $configurator->getReturnType()],
-                new TableSeparator(),
-                ['withInterface', (int)$configurator->getWithInterface()],
             ]);
+
         $table->render();
+
+        $output->writeln('');
 
         return $this->executeCommand($input, $output);
     }
 
-    protected function buildConfigurator(InputInterface $input): BuilderConfigurator
+    protected function buildConfigurator(InputInterface $input, OutputInterface $output): BuilderConfigurator
     {
         $arguments = $this->getDotData($input);
 
         $configurator = (new BuilderConfigurator())
+            ->setOutput($output)
             ->setSchemaConfigurator(new SchemaConfigurator())
             ->setSchemaDirectory($arguments['schema'])
             ->setTemplateDirectory($arguments['template'])

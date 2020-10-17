@@ -14,7 +14,7 @@ class GenerateDtoCommand extends AbstractCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): ?int
     {
-        $configurator = $this->buildConfigurator($input);
+        $configurator = $this->buildConfigurator($input, $output);
         $this->getFacade()->generateDto($configurator);
 
         return 0;
