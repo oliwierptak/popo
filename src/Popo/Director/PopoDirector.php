@@ -26,7 +26,6 @@ class PopoDirector extends AbstractPopoDirector implements PopoDirectorInterface
     protected function generateDtoInterfaces(BuilderConfigurator $configurator): void
     {
         $configurator
-            ->setAsInterface(true)
             ->getSchemaConfigurator()
             ->setSchemaTemplateFilename('interface/php.interface.schema.tpl')
             ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
@@ -35,10 +34,11 @@ class PopoDirector extends AbstractPopoDirector implements PopoDirectorInterface
         $this->generate($configurator);
     }
 
-    public function generatePopo(BuilderConfigurator $configurator): void
+    public function generatePopo(BuilderConfigurator $configurator): int
     {
         $configurator = $this->configurePopoPlugins($configurator);
-        $this->generate($configurator);
+
+        return $this->generate($configurator);
     }
 
     protected function configureDtoPlugins(BuilderConfigurator $configurator): BuilderConfigurator

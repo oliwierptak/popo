@@ -14,8 +14,13 @@ class GeneratePopoCommand extends AbstractCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): ?int
     {
+        $output->write('<fg=green>Generating POPO... </>');
+
         $configurator = $this->buildConfigurator($input);
-        $this->getFacade()->generatePopo($configurator);
+
+        $numberOfFilesGenerated = $this->getFacade()->generatePopo($configurator);
+
+        $output->writeln(sprintf('<fg=green> %d files were generated' , $numberOfFilesGenerated));
 
         return 0;
     }

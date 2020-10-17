@@ -30,12 +30,13 @@ interface PopoFacadeInterfaces
      * Specification:
      * - Configures POPO plugins in $configurator
      * - Generates Plain Old Php Object files according to $configurator specification
+     * - Returns number of files generated
      *
      * @param \Popo\Builder\BuilderConfigurator $configurator
      *
-     * @return void
+     * @return int
      */
-    public function generatePopo(BuilderConfigurator $configurator): void;
+    public function generatePopo(BuilderConfigurator $configurator): int;
 
     /**
      * Specification:

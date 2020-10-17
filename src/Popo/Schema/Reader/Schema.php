@@ -16,6 +16,7 @@ class Schema implements SchemaInterface
     protected const IS_ABSTRACT = 'abstract';
     protected const EXTENDS = 'extends';
     protected const RETURN_TYPE = 'returnType';
+    protected const WITH_INTERFACE = 'withInterface';
 
     /**
      * @var array
@@ -31,6 +32,7 @@ class Schema implements SchemaInterface
         self::IS_ABSTRACT => false,
         self::EXTENDS => '',
         self::RETURN_TYPE => '',
+        self::WITH_INTERFACE => false,
     ];
 
     public function __construct(array $data = [])
@@ -94,6 +96,18 @@ class Schema implements SchemaInterface
     public function setReturnType(string $returnType): SchemaInterface
     {
         $this->data[static::RETURN_TYPE] = $returnType;
+
+        return $this;
+    }
+
+    public function getWithInterface(): string
+    {
+        return $this->data[static::WITH_INTERFACE];
+    }
+
+    public function setWithInterface(bool $withInterface): SchemaInterface
+    {
+        $this->data[static::WITH_INTERFACE] = $withInterface;
 
         return $this;
     }

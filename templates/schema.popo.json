@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "name": "<string>",
+    "abstract": "[<bool>]",
+    "extends": "[<string>]",
+    "withInterface": "[<bool>]",
+    "properties": "<propertySchema>,<propertySchema>,...",
+    "sourceBundle": "<<runtime only>>"
+  }
+}

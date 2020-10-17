@@ -35,9 +35,9 @@ class PopoFacade implements PopoFacadeInterfaces
             ->generateDto($configurator);
     }
 
-    public function generatePopo(BuilderConfigurator $configurator): void
+    public function generatePopo(BuilderConfigurator $configurator): int
     {
-        $this->getFactory()
+        return $this->getFactory()
             ->createPopoDirector()
             ->generatePopo($configurator);
     }

@@ -27,17 +27,17 @@ abstract class AbstractPopoDirector
         $this->schemaFactory = $schemaFactory;
     }
 
-    protected function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void
+    protected function write(BuilderConfigurator $configurator, GeneratorInterface $generator): int
     {
         $this->assertConfiguration($configurator);
 
         $builderWriter = $this->builderFactory
             ->createBuilderWriter();
 
-        $builderWriter->write($configurator, $generator);
+        return $builderWriter->write($configurator, $generator);
     }
 
-    protected function generate(BuilderConfigurator $configurator): void
+    protected function generate(BuilderConfigurator $configurator): int
     {
         $this->assertConfiguration($configurator);
 
@@ -47,7 +47,8 @@ abstract class AbstractPopoDirector
             ->createPluginContainer($configurator);
 
         $generator = $generatorBuilder->build($configurator, $pluginContainer);
-        $this->write($configurator, $generator);
+
+        return $this->write($configurator, $generator);
     }
 
     /**

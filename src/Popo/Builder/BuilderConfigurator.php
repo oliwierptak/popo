@@ -40,14 +40,14 @@ class BuilderConfigurator
     protected $isAbstract = null;
 
     /**
+     * @var bool|null if set, will overwrite the withInterface value from schema file
+     */
+    protected $withInterface = null;
+
+    /**
      * @var string|null if set, the generated classes will be extended with this class
      */
     protected $extends = null;
-
-    /**
-     * @var bool
-     */
-    protected $asInterface = false;
 
     /**
      * @var \Popo\Schema\SchemaConfiguratorInterface
@@ -152,6 +152,18 @@ class BuilderConfigurator
     public function setIsAbstract(?bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
+
+        return $this;
+    }
+
+    public function getWithInterface(): ?bool
+    {
+        return $this->withInterface;
+    }
+
+    public function setWithInterface(?bool $withInterface): self
+    {
+        $this->withInterface = $withInterface;
 
         return $this;
     }
@@ -280,18 +292,6 @@ class BuilderConfigurator
     public function setCollectionPluginClasses(array $collectionPluginClasses): self
     {
         $this->collectionPluginClasses = $collectionPluginClasses;
-
-        return $this;
-    }
-
-    public function asInterface(): bool
-    {
-        return $this->asInterface;
-    }
-
-    public function setAsInterface(bool $asInterface): self
-    {
-        $this->asInterface = $asInterface;
 
         return $this;
     }

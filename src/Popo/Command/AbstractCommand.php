@@ -9,6 +9,8 @@ use Popo\PopoFacade;
 use Popo\PopoFacadeInterfaces;
 use Popo\Schema\SchemaConfigurator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,7 +19,6 @@ use function getcwd;
 use function is_file;
 use function parse_ini_file;
 use function rtrim;
-use function sprintf;
 use const DIRECTORY_SEPARATOR;
 
 abstract class AbstractCommand extends Command
@@ -32,6 +33,7 @@ abstract class AbstractCommand extends Command
     const OPTION_IS_ABSTRACT = 'abstract';
     const OPTION_EXTENDS = 'extends';
     const OPTION_RETURN_TYPE = 'returnType';
+    const OPTION_WITH_INTERFACE = 'withInterface';
 
     /**
      * @var \Popo\PopoFacadeInterfaces
@@ -67,7 +69,8 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
                 new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
                 new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
-                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', 'array'),
+                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', 'self'),
+                new InputOption(static::OPTION_WITH_INTERFACE, 'i', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', false),
             ]);
     }
 
@@ -75,19 +78,32 @@ abstract class AbstractCommand extends Command
     {
         $configurator = $this->buildConfigurator($input);
 
-        $output->writeln('Generating POPO files...');
-        $info = sprintf(
-            "  schema:\t%s\n  template:\t%s\n  output:\t%s\n  namespace:\t%s\n  extension:\t%s\n  abstract:\t%d\n  extends:\t%s\n   returnType:\t%s\n",
-            $configurator->getSchemaDirectory(),
-            $configurator->getTemplateDirectory(),
-            $configurator->getOutputDirectory(),
-            $configurator->getNamespace(),
-            $configurator->getExtension(),
-            (int)$configurator->getIsAbstract(),
-            $configurator->getExtends(),
-            $configurator->getReturnType()
-        );
-        $output->write($info);
+        $output->writeln('<fg=green>POPO configuration</>');
+
+        $table = new Table($output);
+        $table->setStyle('compact');
+
+        $table
+            ->setRows([
+                ['schema', $configurator->getSchemaDirectory()],
+                new TableSeparator(),
+                ['template', $configurator->getTemplateDirectory()],
+                new TableSeparator(),
+                ['output', $configurator->getOutputDirectory()],
+                new TableSeparator(),
+                ['namespace', $configurator->getNamespace()],
+                new TableSeparator(),
+                ['extension', $configurator->getExtension()],
+                new TableSeparator(),
+                ['abstract', (int)$configurator->getIsAbstract()],
+                new TableSeparator(),
+                ['extends', $configurator->getExtends()],
+                new TableSeparator(),
+                ['returnType', $configurator->getReturnType()],
+                new TableSeparator(),
+                ['withInterface', (int)$configurator->getWithInterface()],
+            ]);
+        $table->render();
 
         return $this->executeCommand($input, $output);
     }
@@ -105,14 +121,15 @@ abstract class AbstractCommand extends Command
             ->setExtension($arguments['extension'])
             ->setIsAbstract(((bool)$arguments['abstract']) ?? null)
             ->setExtends($arguments['extends'])
-            ->setReturnType($arguments['returnType']);
+            ->setReturnType($arguments['returnType'])
+            ->setWithInterface($arguments['withInterface']);
 
         return $configurator;
     }
 
     protected function getDotData(InputInterface $input): array
     {
-        $config = $this->getDotConfig($input);
+        $config = $this->getDotConfig();
 
         $arguments = [
             static::OPTION_SCHEMA => $input->getOption(static::OPTION_SCHEMA),
@@ -123,6 +140,7 @@ abstract class AbstractCommand extends Command
             static::OPTION_IS_ABSTRACT => $input->getOption(static::OPTION_IS_ABSTRACT),
             static::OPTION_EXTENDS => $input->getOption(static::OPTION_EXTENDS),
             static::OPTION_RETURN_TYPE => $input->getOption(static::OPTION_RETURN_TYPE),
+            static::OPTION_WITH_INTERFACE => $input->getOption(static::OPTION_WITH_INTERFACE),
         ];
 
         $result = array_merge($arguments, $config);
@@ -130,7 +148,7 @@ abstract class AbstractCommand extends Command
         return $result;
     }
 
-    protected function getDotConfig(InputInterface $input): array
+    protected function getDotConfig(): array
     {
         $config = [];
         $default = [

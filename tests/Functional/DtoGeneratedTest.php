@@ -35,6 +35,7 @@ class DtoGeneratedTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->markTestSkipped('Use withInterface');
         $this->popoFactory = new PopoFactory();
 
         $this->schemaDirectory = TESTS_DIR . 'fixtures/';

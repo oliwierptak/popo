@@ -12,7 +12,7 @@ interface WriterInterface
      * @param string $outputDirectory
      * @param bool $asInterface
      *
-     * @return void
+     * @return int Number of generated files
      */
-    public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): void;
+    public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): int;
 }

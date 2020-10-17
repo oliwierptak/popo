@@ -32,17 +32,11 @@ class BundleProjectWriter implements WriterInterface
         $this->namespace = $namespace;
     }
 
-    /**
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface[] $schemaFiles
-     * @param string $extension
-     * @param string $outputDirectory
-     * @param bool $asInterface
-     *
-     * @return void
-     */
-    public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): void
+    public function write(array $schemaFiles, string $extension, string $outputDirectory, bool $asInterface = false): int
     {
+        $numberOfGeneratedFiles = 0;
         $fileExtension = $extension;
+
         foreach ($schemaFiles as $schemaFilename => $bundleSchema) {
             if ($this->shouldGenerateInterface($bundleSchema, $asInterface)) {
                 continue;
@@ -54,7 +48,10 @@ class BundleProjectWriter implements WriterInterface
             $filename = $this->generateFilename($bundleSchema, $fileExtension, $outputDirectory);
 
             $this->writePopo($bundleSchema, $filename);
+            $numberOfGeneratedFiles++;
         }
+
+        return $numberOfGeneratedFiles;
     }
 
     protected function generateFilename(
@@ -64,20 +61,12 @@ class BundleProjectWriter implements WriterInterface
     ): SplFileInfo
     {
         $filename = $this->getOutputFilename($bundleSchema, $extension);
-        $dir = $this->getOutputDirectory($bundleSchema, $outputDirectory);
+        $dir = $this->getOutputDirectory($outputDirectory);
 
         return new SplFileInfo($dir . $filename);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchema
-     * @param string $outputDirectory
-     *
-     * @return string
-     */
-    protected function getOutputDirectory(BundleSchemaInterface $bundleSchema, string $outputDirectory): string
+    protected function getOutputDirectory(string $outputDirectory): string
     {
         $outputDirectory = trim($outputDirectory);
         $outputDirectory = str_replace('\\', DIRECTORY_SEPARATOR, $outputDirectory);

@@ -28,7 +28,7 @@ interface PopoDirectorInterface
      *
      * @param \Popo\Builder\BuilderConfigurator $configurator
      *
-     * @return void
+     * @return int Number of files generated
      */
-    public function generatePopo(BuilderConfigurator $configurator): void;
+    public function generatePopo(BuilderConfigurator $configurator): int;
 }

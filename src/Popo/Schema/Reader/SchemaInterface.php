@@ -30,5 +30,9 @@ interface SchemaInterface
 
     public function setReturnType(string $returnType): SchemaInterface;
 
+    public function getWithInterface(): string;
+
+    public function setWithInterface(bool $withInterface): SchemaInterface;
+
     public function toArray(): array;
 }

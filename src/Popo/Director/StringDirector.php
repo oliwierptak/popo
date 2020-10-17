@@ -75,7 +75,7 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         return $this->generatedString;
     }
 
-    protected function generate(BuilderConfigurator $configurator): void
+    protected function generate(BuilderConfigurator $configurator): int
     {
         $generatorBuilder = $this->builderFactory
             ->createBuilder();
@@ -86,6 +86,8 @@ class StringDirector extends AbstractPopoDirector implements StringDirectorInter
         $generator = $generatorBuilder->build($configurator, $pluginContainer);
 
         $this->generatedString = $generator->generate($this->schema);
+
+        return 0;
     }
 
     protected function configureDtoPlugins(BuilderConfigurator $configurator): BuilderConfigurator

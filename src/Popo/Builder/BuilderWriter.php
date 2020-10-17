@@ -33,12 +33,22 @@ class BuilderWriter implements BuilderWriterInterface
         $this->writerFactory = $writerFactory;
     }
 
-    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void
+    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): int
     {
         $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
         $bundleWriter = $this->writerFactory->createBundleProjectWriter($generator, $configurator->getNamespace());
 
-        $bundleWriter->write($mergedSchemaFiles, $configurator->getExtension(), $configurator->getOutputDirectory(), $configurator->asInterface());
+        $numberOfFilesGenerated = $bundleWriter->write(
+            $mergedSchemaFiles, $configurator->getExtension(), $configurator->getOutputDirectory(), false
+        );
+
+        if ($configurator->getWithInterface()) {
+            $numberOfFilesGenerated += $bundleWriter->write(
+                $mergedSchemaFiles, $configurator->getExtension(), $configurator->getOutputDirectory(), true
+            );
+        }
+
+        return $numberOfFilesGenerated;
     }
 }

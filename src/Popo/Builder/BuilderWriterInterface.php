@@ -18,7 +18,7 @@ interface BuilderWriterInterface
      * @param \Popo\Builder\BuilderConfigurator $configurator
      * @param \Popo\Generator\GeneratorInterface $generator
      *
-     * @return void
+     * @return int Number of files generated
      */
-    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): void;
+    public function write(BuilderConfigurator $configurator, GeneratorInterface $generator): int;
 }
