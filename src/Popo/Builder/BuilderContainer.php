@@ -6,45 +6,33 @@ namespace Popo\Builder;
 
 class BuilderContainer
 {
-    /**
-     * @var string
-     */
-    protected $schemaTemplateString;
+    protected string $schemaTemplateString;
 
-    /**
-     * @var string
-     */
-    protected $propertyTemplateString;
+    protected string $propertyTemplateString;
 
-    /**
-     * @var string
-     */
-    protected $arrayableTemplateString;
+    protected string $arrayableTemplateString;
 
-    /**
-     * @var string
-     */
-    protected $collectionTemplateString;
+    protected string $collectionTemplateString;
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
-    protected $schemaPluginCollection = [];
+    protected array $schemaPluginCollection = [];
 
     /**
-     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
-    protected $propertyPluginCollection = [];
+    protected array $propertyPluginCollection = [];
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
-    protected $arrayablePluginCollection;
+    protected array $arrayablePluginCollection = [];
 
     /**
-     * @var \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
-    protected $collectionPluginCollection = [];
+    protected array $collectionPluginCollection = [];
 
     public function getSchemaTemplateString(): string
     {
@@ -103,7 +91,7 @@ class BuilderContainer
     }
 
     /**
-     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     public function getPropertyPluginCollection(): array
     {
@@ -111,7 +99,7 @@ class BuilderContainer
     }
 
     /**
-     * @param \Popo\Plugin\Generator\GeneratorPluginInterface[] $propertyPluginCollection
+     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $propertyPluginCollection
      *
      * @return $this
      */
@@ -123,7 +111,7 @@ class BuilderContainer
     }
 
     /**
-     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     public function getCollectionPluginCollection(): array
     {
@@ -131,7 +119,7 @@ class BuilderContainer
     }
 
     /**
-     * @param \Popo\Plugin\Generator\GeneratorPluginInterface[] $collectionPluginCollection
+     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[] $collectionPluginCollection
      *
      * @return $this
      */

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
-class PropertyExplorer implements PropertyExplorerInterface
+class PropertyExplorer
 {
     public function isArray(string $type): bool
     {

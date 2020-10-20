@@ -15,16 +15,13 @@ use Popo\Generator\Php\Plugin\Schema\PropertyMappingGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\SchemaDataGeneratorPlugin;
 use Popo\Plugin\Factory\SchemaFactoryPluginInterface;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
-use Popo\Schema\Reader\PropertyExplorerInterface;
+use Popo\Schema\Reader\PropertyExplorer;
 
 class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
 {
-    /**
-     * @var \Popo\Schema\Reader\PropertyExplorerInterface
-     */
-    protected $propertyExplorer;
+    protected PropertyExplorer $propertyExplorer;
 
-    public function __construct(PropertyExplorerInterface $propertyExplorer)
+    public function __construct(PropertyExplorer $propertyExplorer)
     {
         $this->propertyExplorer = $propertyExplorer;
     }
@@ -110,7 +107,7 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         );
     }
 
-    protected function getPropertyExplorer(): PropertyExplorerInterface
+    protected function getPropertyExplorer(): PropertyExplorer
     {
         return $this->propertyExplorer;
     }

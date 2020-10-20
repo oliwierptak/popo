@@ -6,14 +6,14 @@ namespace Popo\Generator\Php\Plugin\Schema;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 use function trim;
 
 class ToArrayResultPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
     const PATTERN = '<<TO_ARRAY_RESULT>>';
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         $extends = trim((string)$schema->getExtends());
         $result = '[]';

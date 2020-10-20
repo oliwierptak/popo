@@ -4,17 +4,19 @@ declare(strict_types = 1);
 
 namespace Popo\Command;
 
-use Popo\Builder\BuilderConfigurator;
+use Popo\Command\Config\Config;
+use Popo\Command\Config\Item;
+use Popo\Configurator;
 use Popo\PopoFacade;
 use Popo\PopoFacadeInterfaces;
 use Popo\Schema\SchemaConfigurator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use function array_merge;
 use function getcwd;
 use function is_file;
 use function parse_ini_file;
@@ -34,13 +36,14 @@ abstract class AbstractCommand extends Command
     const OPTION_EXTENDS = 'extends';
     const OPTION_RETURN_TYPE = 'returnType';
     const OPTION_WITH_INTERFACE = 'withInterface';
+    const OPTION_CONFIG_FILENAME = 'configFile';
+    const ARGUMENT_CONFIG_SECTION_NAME = 'configSectionName';
 
-    /**
-     * @var \Popo\PopoFacadeInterfaces
-     */
-    protected $facade;
+    protected ?PopoFacadeInterfaces $facade;
 
-    abstract protected function executeCommand(InputInterface $input, OutputInterface $output): ?int;
+    protected Configurator $configurator;
+
+    abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
     public function setFacade(PopoFacadeInterfaces $facade): void
     {
@@ -49,7 +52,7 @@ abstract class AbstractCommand extends Command
 
     protected function getFacade(): PopoFacadeInterfaces
     {
-        if ($this->facade === null) {
+        if (empty($this->facade)) {
             $this->facade = new PopoFacade();
         }
 
@@ -62,6 +65,8 @@ abstract class AbstractCommand extends Command
             ->setName(static::COMMAND_NAME)
             ->setDescription(static::COMMAND_DESCRIPTION)
             ->setDefinition([
+                new InputArgument(static::ARGUMENT_CONFIG_SECTION_NAME, InputOption::VALUE_OPTIONAL, 'Config section name', []),
+                new InputOption(static::OPTION_CONFIG_FILENAME, 'c', InputOption::VALUE_OPTIONAL, 'Config filename', '.popo'),
                 new InputOption(static::OPTION_SCHEMA, 's', InputOption::VALUE_OPTIONAL, 'Schema directory', 'popo/'),
                 new InputOption(static::OPTION_TEMPLATE, 't', InputOption::VALUE_OPTIONAL, 'Template directory', 'vendor/popo/generator/templates/'),
                 new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Directory for generated files', 'src/Popo/'),
@@ -74,62 +79,68 @@ abstract class AbstractCommand extends Command
             ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $configurator = $this->buildConfigurator($input, $output);
-
         $output->writeln('');
         $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoFacadeInterfaces::VERSION));
-        $output->writeln('');
-
-        $table = new Table($output);
-        $table->setStyle('default');
-
-        $table
-            ->setRows([
-                ['schema', $configurator->getSchemaDirectory()],
-                ['template', $configurator->getTemplateDirectory()],
-                ['output', $configurator->getOutputDirectory()],
-                ['namespace', $configurator->getNamespace()],
-                ['extension', $configurator->getExtension()],
-                new TableSeparator(),
-                ['abstract', (int)$configurator->getIsAbstract()],
-                ['withInterface', (int)$configurator->getWithInterface()],
-                new TableSeparator(),
-                ['extends', $configurator->getExtends()],
-                ['returnType', $configurator->getReturnType()],
-            ]);
-
-        $table->render();
-
         $output->writeln('');
 
         return $this->executeCommand($input, $output);
     }
 
-    protected function buildConfigurator(InputInterface $input, OutputInterface $output): BuilderConfigurator
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return Config
+     */
+    protected function buildConfigurator(InputInterface $input, OutputInterface $output): Config
     {
-        $arguments = $this->getDotData($input);
+        $config = $this->buildConfig($input);
+        $configSections = $input->getArgument(static::ARGUMENT_CONFIG_SECTION_NAME);
 
-        $configurator = (new BuilderConfigurator())
-            ->setOutput($output)
-            ->setSchemaConfigurator(new SchemaConfigurator())
-            ->setSchemaDirectory($arguments['schema'])
-            ->setTemplateDirectory($arguments['template'])
-            ->setOutputDirectory($arguments['output'])
-            ->setNamespace($arguments['namespace'])
-            ->setExtension($arguments['extension'])
-            ->setIsAbstract(((bool)$arguments['abstract']) ?? null)
-            ->setExtends($arguments['extends'])
-            ->setReturnType($arguments['returnType'])
-            ->setWithInterface($arguments['withInterface']);
+        if (empty($configSections)) {
+            $configSections = array_keys($config->getConfigItems());
+        }
 
-        return $configurator;
+        $configItems = [];
+        foreach ($configSections as $name) {
+            $item = $config->getConfigByName($name);
+
+            if (!($item instanceof Item)) {
+                throw new \LogicException(sprintf('Unknown config section: "%s". Available sections: %s',
+                    $name,
+                    implode(', ', array_keys($config->getData()))
+                ));
+            }
+
+            $configurator = (new Configurator())
+                ->setConfigName($name)
+                ->setOutput($output)
+                ->setSchemaConfigurator(new SchemaConfigurator())
+                ->setSchemaDirectory($item->getSchema())
+                ->setTemplateDirectory($item->getTemplate())
+                ->setOutputDirectory($item->getOutput())
+                ->setNamespace($item->getNamespace())
+                ->setExtension($item->getExtension())
+                ->setIsAbstract($item->isAbstract())
+                ->setExtends($item->getExtends())
+                ->setReturnType($item->getReturnType())
+                ->setWithInterface($item->isWithInterface());
+
+            $item->setConfigurator($configurator);
+
+            $configItems[$name] = $item;
+        }
+
+        $config->setItemsToGenerate($configItems);
+
+        return $config;
     }
 
-    protected function getDotData(InputInterface $input): array
+    protected function buildConfig(InputInterface $input): Config
     {
-        $config = $this->getDotConfig();
+        $config = $this->loadConfig();
 
         $arguments = [
             static::OPTION_SCHEMA => $input->getOption(static::OPTION_SCHEMA),
@@ -143,29 +154,56 @@ abstract class AbstractCommand extends Command
             static::OPTION_WITH_INTERFACE => $input->getOption(static::OPTION_WITH_INTERFACE),
         ];
 
-        $result = array_merge($arguments, $config);
+        $config->setArguments($arguments);
 
-        return $result;
+        return $config;
     }
 
-    protected function getDotConfig(): array
+    protected function loadConfig(): Config
     {
-        $config = [];
-        $default = [
-            GeneratePopoCommand::COMMAND_NAME => [],
-            GenerateDtoCommand::COMMAND_NAME => [],
-        ];
+        $filename = $this->getPopoFilename();
 
-        $configFile = $this->getPopoFilename();
-        if (is_file($configFile)) {
-            $config = parse_ini_file($configFile, true) ?? $default;
+        if (!is_file($filename)) {
+            throw new \LogicException(sprintf(
+                'Config file: "%s" not found',
+                $filename
+            ));
         }
 
-        return $config[static::COMMAND_NAME];
+        $data = parse_ini_file($filename, true) ?? [];
+        $config = (new Config)->setData($data);
+
+        return $config;
     }
 
     protected function getPopoFilename(): string
     {
         return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.popo';
+    }
+
+    protected function showConfigurationTable(OutputInterface $output, Configurator $configurator): void
+    {
+        $table = new Table($output->section());
+        $table->setStyle('default');
+
+        $table
+            ->setRows([
+                ['name', sprintf('<options=bold>%s</>', $configurator->getConfigName())],
+                ['schema', $configurator->getSchemaDirectory()],
+                ['template', $configurator->getTemplateDirectory()],
+                ['output', $configurator->getOutputDirectory()],
+                ['namespace', $configurator->getNamespace()],
+                ['extends', $configurator->getExtends()],
+                new TableSeparator(),
+                ['extension', $configurator->getExtension()],
+                ['returnType', $configurator->getReturnType()],
+                new TableSeparator(),
+                ['abstract', (int)$configurator->getIsAbstract()],
+                ['withInterface', (int)$configurator->getWithInterface()],
+            ]);
+
+        $table->render();
+
+        $output->writeln('');
     }
 }

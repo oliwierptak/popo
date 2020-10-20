@@ -19,22 +19,19 @@ use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGenerat
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorPlugin;
 use Popo\Plugin\Factory\PropertyFactoryPluginInterface;
-use Popo\Schema\Reader\PropertyExplorerInterface;
+use Popo\Schema\Reader\PropertyExplorer;
 
 class PropertyFactoryPlugin implements PropertyFactoryPluginInterface
 {
-    /**
-     * @var \Popo\Schema\Reader\PropertyExplorerInterface
-     */
-    protected $propertyExplorer;
+    protected PropertyExplorer $propertyExplorer;
 
-    public function __construct(PropertyExplorerInterface $propertyExplorer)
+    public function __construct(PropertyExplorer $propertyExplorer)
     {
         $this->propertyExplorer = $propertyExplorer;
     }
 
     /**
-     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     public function createPluginCollection(): array
     {
@@ -85,7 +82,7 @@ class PropertyFactoryPlugin implements PropertyFactoryPluginInterface
         ];
     }
 
-    protected function getPropertyExplorer(): PropertyExplorerInterface
+    protected function getPropertyExplorer(): PropertyExplorer
     {
         return $this->propertyExplorer;
     }

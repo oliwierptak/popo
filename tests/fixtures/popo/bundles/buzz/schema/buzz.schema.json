@@ -1,12 +1,12 @@
 [
   {
     "name": "Buzz",
-    "extends": "\\Tests\\App\\Generated\\Popo\\AbstractXyy",
+    "extends": "\\TestsPopoApp\\App\\Generated\\Popo\\AbstractXyy",
     "schema": [
       {
         "name": "buzz",
         "type": "string",
-        "default": "\\Tests\\App\\TestAppDefinesInterface::LOREM_ISPUM"
+        "default": "\\TestsPopoApp\\App\\TestAppDefinesInterface::LOREM_ISPUM"
       }
     ]
   }

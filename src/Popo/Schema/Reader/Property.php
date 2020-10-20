@@ -7,7 +7,7 @@ namespace Popo\Schema\Reader;
 use function array_key_exists;
 use function array_merge;
 
-class Property implements PropertyInterface
+class Property
 {
     const NAME = 'name';
     const TYPE = 'type';
@@ -34,7 +34,7 @@ class Property implements PropertyInterface
     protected $data;
 
     /**
-     * @var \Popo\Schema\Reader\SchemaInterface
+     * @var \Popo\Schema\Reader\Schema
      */
     protected $schema;
 
@@ -44,10 +44,10 @@ class Property implements PropertyInterface
     protected $schemaDefinition;
 
     /**
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
+     * @param \Popo\Schema\Reader\Schema $schema
      * @param array $propertySchema
      */
-    public function __construct(SchemaInterface $schema, array $propertySchema)
+    public function __construct(Schema $schema, array $propertySchema)
     {
         $this->schema = $schema;
         $this->data = array_merge($this->defaults, $propertySchema);
@@ -70,7 +70,7 @@ class Property implements PropertyInterface
         return $this->schemaDefinition;
     }
 
-    public function getSchema(): SchemaInterface
+    public function getSchema(): Schema
     {
         return $this->schema;
     }

@@ -6,9 +6,9 @@ namespace Popo\Finder;
 
 use Symfony\Component\Finder\Finder;
 
-class FinderFactory implements FinderFactoryInterface
+class FinderFactory
 {
-    public function createFileLoader(): FileLoaderInterface
+    public function createFileLoader(): FileLoader
     {
         return new FileLoader(
             $this->createFinder()

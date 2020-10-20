@@ -4,39 +4,33 @@ declare(strict_types = 1);
 
 namespace Popo\Generator;
 
-use Popo\Schema\Reader\ReaderFactoryInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\ReaderFactory;
+use Popo\Schema\Reader\Schema;
 
 class ArrayableGenerator implements GeneratorInterface
 {
-    /**
-     * @var string
-     */
-    protected $templateString;
+    protected string $templateString;
 
-    /**
-     * @var \Popo\Schema\Reader\ReaderFactoryInterface
-     */
-    protected $readerFactory;
+    protected ReaderFactory $readerFactory;
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
-    protected $generatorPlugins = [];
+    protected array $generatorPlugins = [];
 
     /**
      * @param string $templateString
-     * @param \Popo\Schema\Reader\ReaderFactoryInterface $readerFactory
+     * @param \Popo\Schema\Reader\ReaderFactory $readerFactory
      * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $generatorPlugins
      */
-    public function __construct(string $templateString, ReaderFactoryInterface $readerFactory, array $generatorPlugins)
+    public function __construct(string $templateString, ReaderFactory $readerFactory, array $generatorPlugins)
     {
         $this->templateString = $templateString;
         $this->readerFactory = $readerFactory;
         $this->generatorPlugins = $generatorPlugins;
     }
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         $generated = $this->templateString;
 

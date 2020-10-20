@@ -2,16 +2,19 @@
 schema = tests/fixtures/popo/bundles/
 template = templates/
 output = tests/App/Generated/Popo/
-namespace = Tests\App\Generated\Popo
+namespace = TestsPopoApp\App\Generated\Popo
 extension = .php
 abstract =
-extends = \Tests\App\Generated\AbstractConfigurator
+extends = \TestsPopoApp\App\Generated\AbstractConfigurator
 
-[dto]
-schema = tests/fixtures/dto/bundles/
+
+[popo-with-interface]
+schema = tests/fixtures/popo/bundles/
 template = templates/
 output = tests/App/Generated/Dto/
-namespace = Tests\App\Generated\Dto
+namespace = TestsPopoApp\App\Generated\Dto
 extension = .php
 abstract =
-extends = \Tests\App\Generated\AbstractConfigurator
+extends = \TestsPopoApp\App\Generated\AbstractConfigurator
+withInterface = 1
+

@@ -1,6 +1,6 @@
 {
   "name": "popo/generator",
-  "description": "Plain Old PHP Object (POPO) / Data Transfer Object (TDO) Generator. Convert JSON to PHP class.",
+  "description": "Plain Old PHP Object (POPO) / Value Object (VO) / Data Transfer Object (DTO) Generator. Convert (JSON) schema to PHP class.",
   "license": "MIT",
   "type": "library",
   "authors": [
@@ -11,14 +11,15 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php": "^7.2",
-    "symfony/finder": "^4|^5",
-    "symfony/console": "^4|^5"
+    "php": "^7.4",
+    "ext-json": "*",
+    "symfony/finder": "^5",
+    "symfony/console": "^5"
   },
   "require-dev": {
     "phpunit/phpunit": "^8",
     "everon/coding-standard": "^1",
-    "symfony/var-dumper": "^4|^5"
+    "symfony/var-dumper": "^5"
   },
   "autoload": {
     "psr-4": {
@@ -27,12 +28,13 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\App\\": "tests/App/",
-      "Tests\\Functional\\": "tests/Functional/"
+      "TestsSuites\\Popo\\": "tests/suits",
+      "TestsStubs\\Popo\\": "tests/stubs",
+      "TestsPopoApp\\App\\": "tests/App"
     }
   },
   "scripts": {
-    "popo" : "bin/popo popo",
+    "popo": "bin/popo generate ",
     "post-autoload-dump": [
       "chmod +x bin/popo",
       "vendor/bin/cs-setup"

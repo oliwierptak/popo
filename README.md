@@ -184,7 +184,7 @@ $schema = new Schema($schemaData);
 $generatedString = $facade->generatePopoString($configurator, $schema);
 ```
 
-Check `tests/Popo/PopoFacadeTest.php` for more details.
+Check `tests/Popo/FacadeTest.php` for more details.
 
 
 #### BuilderConfigurator
@@ -245,12 +245,12 @@ $configurator = (new BuilderConfigurator)
     
 - `Property Plugin Classes`
 
-    Collection of class names implementing `GeneratorPluginInterface`.
+    Collection of class names implementing `PropertyGeneratorPluginInterface`.
     
     Format:
     ``` 
      [
-        GeneratorPluginInterface::PATTERN => GeneratorPluginInterface::class,
+        PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
      ]
     ```
 
@@ -525,14 +525,14 @@ There are two generator types.
 and `PropertyGenerator` which is used to generate property methods code. 
 They both implement `GeneratorInterface` and have their own template and plugins.
 
-See `tests/Popo/Generator/*` for more details.
+See `tests/Popo/Popo/*` for more details.
 
-#### Generator Plugins
+#### Popo Plugins
 Plugins are used to handle placeholders and their content. 
 There are two types.
 
-#### Schema Generator Plugins
-Generator plugins that implement `SchemaGeneratorPluginInterface` are responsible for whole source code file.
+#### Schema Popo Plugins
+Popo plugins that implement `SchemaGeneratorPluginInterface` are responsible for whole source code file.
 ```php
 interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 {
@@ -551,10 +551,10 @@ interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 ```
 
 
-#### Property Generator Plugins
-Generator plugins that implement `GeneratorPluginInterface` are responsible for property methods source code.
+#### Property Popo Plugins
+Popo plugins that implement `PropertyGeneratorPluginInterface` are responsible for property methods source code.
 ```php
-interface GeneratorPluginInterface extends AcceptPatternInterface
+interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
 {
     /**
      * Specification:
@@ -590,7 +590,7 @@ interface GeneratorBuilderInterface
      * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
      * @param \Popo\Builder\PluginContainerInterface $pluginContainer
      *
-     * @return \Popo\Generator\GeneratorInterface
+     * @return \Popo\Popo\GeneratorInterface
      */
     public function build(BuilderConfiguratorInterface $configurator, PluginContainerInterface $pluginContainer): GeneratorInterface;
 }
@@ -616,7 +616,7 @@ See `PluginContainerInterface` for more details.
 #### FooSchemaGeneratorPlugin example
 `FooSchemaGeneratorPlugin` plugin replaces value of placeholder `<<PROPERTY_NAME>>` with actual property name. 
 ```php
-class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements GeneratorPluginInterface
+class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
     const PATTERN = '<<PROPERTY_NAME>>';
 

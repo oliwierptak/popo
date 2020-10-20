@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Popo\Generator;
 
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 
 interface GeneratorInterface
 {
-    public function generate(SchemaInterface $schema): string;
+    public function generate(Schema $schema): string;
 }

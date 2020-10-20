@@ -6,13 +6,13 @@ namespace Popo\Generator\Php\Plugin\Schema;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 
 class AbstractClassGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
 {
     const PATTERN = '<<ABSTRACT>>';
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         if ($schema->isAbstract()) {
             return 'abstract ';

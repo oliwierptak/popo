@@ -4,26 +4,26 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use Popo\Schema\Bundle\BundleSchemaInterface;
-use Popo\Schema\Validator\SchemaValidatorInterface;
+use Popo\Schema\Bundle\BundleSchema;
+use Popo\Schema\Validator\SchemaValidator;
 use function array_merge;
 use function array_shift;
 use function array_values;
 use function uksort;
 
-class SchemaMerger implements SchemaMergerInterface
+class SchemaMerger
 {
     /**
-     * @var \Popo\Schema\Validator\SchemaValidatorInterface
+     * @var \Popo\Schema\Validator\SchemaValidator
      */
     protected $schemaValidator;
 
     /**
-     * @var \Popo\Schema\SchemaBuilderInterface
+     * @var \Popo\Schema\SchemaBuilder
      */
     protected $schemaBuilder;
 
-    public function __construct(SchemaValidatorInterface $schemaValidator, SchemaBuilderInterface $schemaBuilder)
+    public function __construct(SchemaValidator $schemaValidator, SchemaBuilder $schemaBuilder)
     {
         $this->schemaValidator = $schemaValidator;
         $this->schemaBuilder = $schemaBuilder;
@@ -32,7 +32,7 @@ class SchemaMerger implements SchemaMergerInterface
     /**
      * @param array $bundleSchemaCollection
      *
-     * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
+     * @return \Popo\Schema\Bundle\BundleSchema[]
      */
     public function merge(array $bundleSchemaCollection): array
     {
@@ -62,12 +62,12 @@ class SchemaMerger implements SchemaMergerInterface
     }
 
     /**
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchema
+     * @param \Popo\Schema\Bundle\BundleSchema $bundleSchema
      * @param array $additionalBundleSchemaCollection
      *
      * @return array
      */
-    protected function mergeProperties(BundleSchemaInterface $bundleSchema, array $additionalBundleSchemaCollection): array
+    protected function mergeProperties(BundleSchema $bundleSchema, array $additionalBundleSchemaCollection): array
     {
         $bundleSchemaProperties = $this->schemaBuilder->buildProperties($bundleSchema->getSchema());
 
@@ -98,9 +98,9 @@ class SchemaMerger implements SchemaMergerInterface
 
 
     /**
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface[] $schemaFiles
+     * @param \Popo\Schema\Bundle\BundleSchema[] $schemaFiles
      *
-     * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
+     * @return \Popo\Schema\Bundle\BundleSchema[]
      */
     protected function sortByBundleSchema(array $schemaFiles): array
     {

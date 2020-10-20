@@ -4,14 +4,14 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Validator;
 
-use Popo\Schema\Bundle\BundleSchemaInterface;
-use Popo\Schema\Reader\PropertyInterface;
+use Popo\Schema\Bundle\BundleSchema;
+use Popo\Schema\Reader\Property;
 use Popo\Schema\Validator\Exception\NotBundleSchemaException;
 use Popo\Schema\Validator\Exception\NotUniquePropertyException;
 
-class SchemaValidator implements SchemaValidatorInterface
+class SchemaValidator
 {
-    public function assertIsBundleSchema(BundleSchemaInterface $bundleSchema): void
+    public function assertIsBundleSchema(BundleSchema $bundleSchema): void
     {
         if (!$bundleSchema->isBundleSchema()) {
             throw new NotBundleSchemaException(\sprintf(
@@ -22,9 +22,9 @@ class SchemaValidator implements SchemaValidatorInterface
     }
 
     public function assertProperties(
-        BundleSchemaInterface $bundleSchema,
+        BundleSchema $bundleSchema,
         array $bundleSchemaProperties,
-        BundleSchemaInterface $additionalBundleSchema,
+        BundleSchema $additionalBundleSchema,
         array $additionalProperties
     ): void {
         foreach ($bundleSchemaProperties as $bundleSchemaProperty) {
@@ -38,9 +38,9 @@ class SchemaValidator implements SchemaValidatorInterface
     }
 
     /**
-     * @param \Popo\Schema\Reader\PropertyInterface $bundleSchemaProperty
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface $bundleSchema
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface $additionalBundleSchema
+     * @param \Popo\Schema\Reader\Property $bundleSchemaProperty
+     * @param \Popo\Schema\Bundle\BundleSchema $bundleSchema
+     * @param \Popo\Schema\Bundle\BundleSchema $additionalBundleSchema
      * @param array $additionalProperties
      *
      * @throws \Popo\Schema\Validator\Exception\NotUniquePropertyException
@@ -48,9 +48,9 @@ class SchemaValidator implements SchemaValidatorInterface
      * @return void
      */
     protected function assertUniqueProperties(
-        PropertyInterface $bundleSchemaProperty,
-        BundleSchemaInterface $bundleSchema,
-        BundleSchemaInterface $additionalBundleSchema,
+        Property $bundleSchemaProperty,
+        BundleSchema $bundleSchema,
+        BundleSchema $additionalBundleSchema,
         array $additionalProperties
     ): void {
         foreach ($additionalProperties as $additionalSchemaProperty) {

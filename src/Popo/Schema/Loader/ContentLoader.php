@@ -7,7 +7,7 @@ namespace Popo\Schema\Loader;
 use Popo\Schema\Exception\SchemaLoaderException;
 use SplFileInfo;
 
-class ContentLoader implements ContentLoaderInterface
+class ContentLoader
 {
     public function load(SplFileInfo $filename): string
     {

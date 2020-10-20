@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Plugin\Generator;
 
 use Popo\Plugin\AcceptPatternInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 
 interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
 {
@@ -15,9 +15,9 @@ interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
      * - Generates string according to schema and configured plugins represented by <<php.schema.tpl>> template.
      * - Returns generated string.
      *
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
+     * @param Schema $schema
      *
      * @return string
      */
-    public function generate(SchemaInterface $schema): string;
+    public function generate(Schema $schema): string;
 }

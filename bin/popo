@@ -4,13 +4,11 @@
 require_once getcwd().'/vendor/autoload.php';
 
 use Popo\Command\ConfigureCommand;
-use Popo\Command\GenerateDtoCommand;
-use Popo\Command\GeneratePopoCommand;
+use Popo\Command\GenerateCommand;
 use Symfony\Component\Console\Application;
 
 $console = new Application('popo', 'v2.x');
-$console->add(new GeneratePopoCommand());
-$console->add(new GenerateDtoCommand());
+$console->add(new GenerateCommand());
 $console->add(new ConfigureCommand());
 
 $console->run();

@@ -9,12 +9,13 @@ use function array_pop;
 use function explode;
 use function implode;
 
-class Schema implements SchemaInterface
+class Schema
 {
     protected const NAME = 'name';
     protected const SCHEMA = 'schema';
     protected const IS_ABSTRACT = 'abstract';
     protected const EXTENDS = 'extends';
+    protected const EXTENSION = 'extension';
     protected const RETURN_TYPE = 'returnType';
     protected const WITH_INTERFACE = 'withInterface';
 
@@ -31,7 +32,8 @@ class Schema implements SchemaInterface
         self::SCHEMA => [],
         self::IS_ABSTRACT => false,
         self::EXTENDS => '',
-        self::RETURN_TYPE => '',
+        self::EXTENSION => '.php',
+        self::RETURN_TYPE => 'self',
         self::WITH_INTERFACE => false,
     ];
 
@@ -45,7 +47,7 @@ class Schema implements SchemaInterface
         return $this->data[static::NAME];
     }
 
-    public function setName(string $name): SchemaInterface
+    public function setName(string $name): self
     {
         $this->data[static::NAME] = $name;
 
@@ -57,7 +59,7 @@ class Schema implements SchemaInterface
         return $this->data[static::SCHEMA];
     }
 
-    public function setSchema(array $schema): SchemaInterface
+    public function setSchema(array $schema): self
     {
         $this->data[static::SCHEMA] = $schema;
 
@@ -66,10 +68,10 @@ class Schema implements SchemaInterface
 
     public function isAbstract(): bool
     {
-        return (bool) $this->data[static::IS_ABSTRACT];
+        return (bool)$this->data[static::IS_ABSTRACT];
     }
 
-    public function setIsAbstract(bool $isAbstract): SchemaInterface
+    public function setIsAbstract(bool $isAbstract): self
     {
         $this->data[static::IS_ABSTRACT] = $isAbstract;
 
@@ -81,9 +83,21 @@ class Schema implements SchemaInterface
         return $this->data[static::EXTENDS];
     }
 
-    public function setExtends(string $extends): SchemaInterface
+    public function setExtends(string $extends): self
     {
         $this->data[static::EXTENDS] = $extends;
+
+        return $this;
+    }
+
+    public function getExtension(): string
+    {
+        return $this->data[static::EXTENSION];
+    }
+
+    public function setExtension(string $extension): self
+    {
+        $this->data[static::EXTENSION] = $extension;
 
         return $this;
     }
@@ -93,19 +107,19 @@ class Schema implements SchemaInterface
         return $this->data[static::RETURN_TYPE];
     }
 
-    public function setReturnType(string $returnType): SchemaInterface
+    public function setReturnType(string $returnType): self
     {
         $this->data[static::RETURN_TYPE] = $returnType;
 
         return $this;
     }
 
-    public function getWithInterface(): string
+    public function getWithInterface(): bool
     {
         return $this->data[static::WITH_INTERFACE];
     }
 
-    public function setWithInterface(bool $withInterface): SchemaInterface
+    public function setWithInterface(bool $withInterface): self
     {
         $this->data[static::WITH_INTERFACE] = $withInterface;
 

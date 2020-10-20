@@ -4,14 +4,14 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Loader;
 
-class LoaderFactory implements LoaderFactoryInterface
+class LoaderFactory
 {
-    public function createContentLoader(): ContentLoaderInterface
+    public function createContentLoader(): ContentLoader
     {
         return new ContentLoader();
     }
 
-    public function createJsonLoader(): JsonLoaderInterface
+    public function createJsonLoader(): JsonLoader
     {
         return new JsonLoader();
     }

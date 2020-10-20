@@ -1,7 +1,8 @@
 [
   {
     "name": "Xyy",
-    "abstract": "true",
+    "abstract": true,
+    "extends": "\\TestsPopoApp\\App\\Generated\\AbstractConfigurator",
     "schema": [
       {
         "name": "x",

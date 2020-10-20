@@ -6,7 +6,7 @@ namespace Popo\Generator\Php\Plugin\Schema;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 use function sprintf;
 use function trim;
 
@@ -14,7 +14,7 @@ class ExtendGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGen
 {
     const PATTERN = '<<EXTENDS>>';
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         $extends = trim((string)$schema->getExtends());
 

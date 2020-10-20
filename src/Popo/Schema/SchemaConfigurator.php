@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-class SchemaConfigurator implements SchemaConfiguratorInterface
+class SchemaConfigurator
 {
     /**
      * @var string
@@ -41,7 +41,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->schemaPath;
     }
 
-    public function setSchemaPath(string $schemaPath): SchemaConfiguratorInterface
+    public function setSchemaPath(string $schemaPath): self
     {
         $this->schemaPath = $schemaPath;
 
@@ -53,7 +53,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->schemaFilename;
     }
 
-    public function setSchemaFilename(string $schemaFilename): SchemaConfiguratorInterface
+    public function setSchemaFilename(string $schemaFilename): self
     {
         $this->schemaFilename = $schemaFilename;
 
@@ -77,7 +77,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->arrayableTemplateFilename;
     }
 
-    public function setSchemaTemplateFilename(string $schemaTemplateFilename): SchemaConfiguratorInterface
+    public function setSchemaTemplateFilename(string $schemaTemplateFilename): self
     {
         $this->schemaTemplateFilename = $schemaTemplateFilename;
 
@@ -89,7 +89,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->propertyTemplateFilename;
     }
 
-    public function setPropertyTemplateFilename(string $propertyTemplateFilename): SchemaConfiguratorInterface
+    public function setPropertyTemplateFilename(string $propertyTemplateFilename): self
     {
         $this->propertyTemplateFilename = $propertyTemplateFilename;
 
@@ -101,7 +101,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->collectionTemplateFilename;
     }
 
-    public function setCollectionTemplateFilename(string $collectionTemplateFilename): SchemaConfiguratorInterface
+    public function setCollectionTemplateFilename(string $collectionTemplateFilename): self
     {
         $this->collectionTemplateFilename = $collectionTemplateFilename;
 

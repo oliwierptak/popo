@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\App\Generated;
+namespace TestsPopoApp\App\Generated;
 
 abstract class AbstractConfigurator
 {
@@ -13,7 +13,7 @@ abstract class AbstractConfigurator
      *
      * @return $this
      */
-    public function fromArray(array $data): \Tests\App\Generated\AbstractConfigurator
+    public function fromArray(array $data): \TestsPopoApp\App\Generated\AbstractConfigurator
     {
         return $this;
     }

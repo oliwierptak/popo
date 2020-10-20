@@ -25,12 +25,12 @@
       },      {
         "name": "optionalData",
         "type": "array",
-        "collectionItem": "\\Tests\\App\\Generated\\Popo\\OptionalDataFoo",
+        "collectionItem": "\\TestsPopoApp\\App\\Generated\\Popo\\OptionalDataFoo",
         "default": []
       },
       {
         "name": "buzz",
-        "type": "\\Tests\\App\\Generated\\Popo\\Buzz"
+        "type": "\\TestsPopoApp\\App\\Generated\\Popo\\Buzz"
       }
     ]
   },

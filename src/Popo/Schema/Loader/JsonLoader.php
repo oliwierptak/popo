@@ -6,7 +6,7 @@ namespace Popo\Schema\Loader;
 
 use Popo\Schema\Exception\SchemaLoaderException;
 
-class JsonLoader implements JsonLoaderInterface
+class JsonLoader
 {
     /**
      * @param string $schemaFilename

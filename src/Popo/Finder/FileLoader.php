@@ -6,7 +6,7 @@ namespace Popo\Finder;
 
 use Symfony\Component\Finder\Finder;
 
-class FileLoader implements FileLoaderInterface
+class FileLoader
 {
     /**
      * @var \Symfony\Component\Finder\Finder
