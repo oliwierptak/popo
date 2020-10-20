@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use Popo\Model\Helper\ModelHelperConfigurator;
 use Popo\Schema\SchemaConfigurator;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -61,6 +62,8 @@ class Configurator
     protected array $collectionPluginClasses = [];
 
     protected ?OutputInterface $output;
+
+    protected ModelHelperConfigurator $modelHelperConfigurator;
 
     public function __construct()
     {
@@ -304,6 +307,18 @@ class Configurator
     public function setOutput(?OutputInterface $output): self
     {
         $this->output = $output;
+
+        return $this;
+    }
+
+    public function getModelHelperConfigurator(): ModelHelperConfigurator
+    {
+        return $this->modelHelperConfigurator;
+    }
+
+    public function setModelHelperConfigurator(ModelHelperConfigurator $modelHelperConfigurator): self
+    {
+        $this->modelHelperConfigurator = $modelHelperConfigurator;
 
         return $this;
     }

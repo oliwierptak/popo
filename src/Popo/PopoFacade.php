@@ -6,10 +6,7 @@ namespace Popo;
 
 class PopoFacade implements PopoFacadeInterfaces
 {
-    /**
-     * @var \Popo\PopoFactory
-     */
-    protected $factory;
+    protected ?PopoFactory $factory;
 
     public function setFactory(PopoFactory $factory): void
     {
@@ -18,7 +15,7 @@ class PopoFacade implements PopoFacadeInterfaces
 
     protected function getFactory(): PopoFactory
     {
-        if ($this->factory === null) {
+        if (empty($this->factory)) {
             $this->factory = new PopoFactory();
         }
 

@@ -7,12 +7,12 @@ namespace Popo\Command;
 use Popo\Command\Config\Config;
 use Popo\Command\Config\Item;
 use Popo\Configurator;
+use Popo\Model\Helper\ConfigurationTable;
+use Popo\Model\Helper\ModelHelperConfigurator;
 use Popo\PopoFacade;
 use Popo\PopoFacadeInterfaces;
 use Popo\Schema\SchemaConfigurator;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +27,7 @@ abstract class AbstractCommand extends Command
 {
     const COMMAND_NAME = 'unknown';
     const COMMAND_DESCRIPTION = 'unknown';
+    const ARGUMENT_CONFIG_SECTION_NAME = 'configSectionName';
     const OPTION_SCHEMA = 'schema';
     const OPTION_TEMPLATE = 'template';
     const OPTION_OUTPUT = 'output';
@@ -37,11 +38,17 @@ abstract class AbstractCommand extends Command
     const OPTION_RETURN_TYPE = 'returnType';
     const OPTION_WITH_INTERFACE = 'withInterface';
     const OPTION_CONFIG_FILENAME = 'configFile';
-    const ARGUMENT_CONFIG_SECTION_NAME = 'configSectionName';
+    const OPTION_SHOW_CONFIGURATION = 'showConfiguration';
+    const OPTION_SHOW_CONFIGURATION_BORDER = 'showConfigurationBorder';
+    const OPTION_SHOW_PROGRESS_BAR = 'showProgressBar';
 
     protected ?PopoFacadeInterfaces $facade;
 
+    protected ?ConfigurationTable $configurationTable;
+
     protected Configurator $configurator;
+
+    protected ModelHelperConfigurator$modelHelperConfigurator;
 
     abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
@@ -57,6 +64,16 @@ abstract class AbstractCommand extends Command
         }
 
         return $this->facade;
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->modelHelperConfigurator = (new ModelHelperConfigurator())
+            ->setShowConfiguration($input->getOption(static::OPTION_SHOW_CONFIGURATION))
+            ->setShowProgressBar($input->getOption(static::OPTION_SHOW_PROGRESS_BAR))
+            ->setShowBorder($input->getOption(static::OPTION_SHOW_CONFIGURATION_BORDER));
+
+        $this->configurationTable = new ConfigurationTable($output);
     }
 
     protected function configure(): void
@@ -76,14 +93,19 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
                 new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', 'self'),
                 new InputOption(static::OPTION_WITH_INTERFACE, 'i', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', false),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration table with settings defined in config file', true),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration table', true),
+                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', true),
             ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('');
-        $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoFacadeInterfaces::VERSION));
-        $output->writeln('');
+        if ($this->modelHelperConfigurator->isShowConfiguration() || $this->modelHelperConfigurator->isShowProgressBar()) {
+            $output->writeln('');
+            $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoFacadeInterfaces::VERSION));
+            $output->writeln('');
+        }
 
         return $this->executeCommand($input, $output);
     }
@@ -117,6 +139,7 @@ abstract class AbstractCommand extends Command
             $configurator = (new Configurator())
                 ->setConfigName($name)
                 ->setOutput($output)
+                ->setModelHelperConfigurator(new ModelHelperConfigurator())
                 ->setSchemaConfigurator(new SchemaConfigurator())
                 ->setSchemaDirectory($item->getSchema())
                 ->setTemplateDirectory($item->getTemplate())
@@ -140,7 +163,7 @@ abstract class AbstractCommand extends Command
 
     protected function buildConfig(InputInterface $input): Config
     {
-        $config = $this->loadConfig();
+        $config = $this->loadConfig($input->getOption(static::OPTION_CONFIG_FILENAME));
 
         $arguments = [
             static::OPTION_SCHEMA => $input->getOption(static::OPTION_SCHEMA),
@@ -159,9 +182,9 @@ abstract class AbstractCommand extends Command
         return $config;
     }
 
-    protected function loadConfig(): Config
+    protected function loadConfig(?string $configFilename = null): Config
     {
-        $filename = $this->getPopoFilename();
+        $filename = $this->getPopoFilename($configFilename);
 
         if (!is_file($filename)) {
             throw new \LogicException(sprintf(
@@ -176,34 +199,8 @@ abstract class AbstractCommand extends Command
         return $config;
     }
 
-    protected function getPopoFilename(): string
+    protected function getPopoFilename(?string $configFilename = null): string
     {
-        return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.popo';
-    }
-
-    protected function showConfigurationTable(OutputInterface $output, Configurator $configurator): void
-    {
-        $table = new Table($output->section());
-        $table->setStyle('default');
-
-        $table
-            ->setRows([
-                ['name', sprintf('<options=bold>%s</>', $configurator->getConfigName())],
-                ['schema', $configurator->getSchemaDirectory()],
-                ['template', $configurator->getTemplateDirectory()],
-                ['output', $configurator->getOutputDirectory()],
-                ['namespace', $configurator->getNamespace()],
-                ['extends', $configurator->getExtends()],
-                new TableSeparator(),
-                ['extension', $configurator->getExtension()],
-                ['returnType', $configurator->getReturnType()],
-                new TableSeparator(),
-                ['abstract', (int)$configurator->getIsAbstract()],
-                ['withInterface', (int)$configurator->getWithInterface()],
-            ]);
-
-        $table->render();
-
-        $output->writeln('');
+        return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $configFilename;
     }
 }

@@ -6,18 +6,21 @@ namespace Popo\Model;
 
 use Popo\Configurator;
 use Popo\GeneratorResult;
+use Popo\Model\Helper\ProgressIndicator;
 use Popo\Schema\Bundle\BundleSchema;
 use Popo\Schema\SchemaBuilder;
 use Popo\Schema\SchemaMerger;
 use Popo\Writer\FileWriter;
 use SplFileInfo;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 class Popo
 {
     protected SchemaBuilder $schemaBuilder;
+
     protected SchemaMerger $schemaMerger;
+
     protected FileWriter $popoWriter;
+
     protected FileWriter $dtoWriter;
 
     public function __construct(SchemaBuilder $schemaBuilder, SchemaMerger $schemaMerger, FileWriter $popoWriter, FileWriter $dtoWriter)
@@ -38,7 +41,8 @@ class Popo
         $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
 
-        $progressBar = new ProgressBar($configurator->getOutput()->section(), count($mergedSchemaFiles));
+        $progressIndicator = new ProgressIndicator($configurator->getOutput(), $configurator);
+        $progressIndicator->initProgressBar(count($mergedSchemaFiles));
 
         foreach ($mergedSchemaFiles as $schemaFilename => $bundleSchema) {
             $this->updateSchema($bundleSchema, $configurator);
@@ -52,14 +56,13 @@ class Popo
 
             $numberOfGeneratedFiles++;
 
-            $progressBar->advance();
+            $progressIndicator->advanceProgressBar();
+
         }
 
         $result->setFileCount(count($mergedSchemaFiles));
 
-        $progressBar->finish();
-
-        $configurator->getOutput()->writeln('');
+        $progressIndicator->finishProgressBar();
 
         return $result;
     }

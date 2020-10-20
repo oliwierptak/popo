@@ -18,8 +18,9 @@ class GenerateCommand extends AbstractCommand
         $items = $config->getItemsToGenerate();
 
         foreach ($items as $name => $configItem) {
-            $this->showConfigurationTable($output, $configItem->getConfigurator());
-            $result = $this->getFacade()->generate($configItem->getConfigurator());
+            $configItem->getConfigurator()->setModelHelperConfigurator($this->modelHelperConfigurator);
+            $this->configurationTable->showConfigurationTable($configItem->getConfigurator());
+            $this->getFacade()->generate($configItem->getConfigurator());
         }
 
         return 0;
