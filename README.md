@@ -135,7 +135,7 @@ A schema is a JSON file describing a POPO object.
 }
 ```
 
-### POPO objects definition
+## POPO objects definition
 
 Schema examples:
 
@@ -176,7 +176,7 @@ Schema examples:
 Running `generate` will produce two independent POPO objects `Foo` and `Bar`.
 
 
-### Relations and extending already defined schemas
+## Relations and extending already defined schemas
 
 At this point `Foo` has no idea about `Bar` and vice versa.
 However, it could be useful to be able to extend schemas that were already defined. 
@@ -184,7 +184,7 @@ However, it could be useful to be able to extend schemas that were already defin
 To achieve this, you can either `add` or `inject` property.
 
 
-#### Case 1: Single project / library
+### Case 1: Single project / library
 
 One schema file, no bundles.
 
@@ -227,7 +227,7 @@ Main schema: `Foo`.
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case1` to generate files from this example.
 
 
-#### Case 2: Extend Bar schema from within Foo bundle.
+### Case 2: Extend Bar schema from within Foo bundle.
   
 Main schema: `Foo`. 
 
@@ -260,7 +260,7 @@ Multiple schema files, multiple bundles.
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case2` to generate files from this example.
 
 
-#### Case 3: Extend Foo schema from within Bar bundle.
+### Case 3: Extend Foo schema from within Bar bundle.
 
 Multiple schema files, multiple bundles.
 
@@ -288,7 +288,7 @@ Main schema: `Bar`.
 
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case3` to generate files from this example.
 
-#### Result
+### Result
 
 POPO objects will be generated in the same way, regardless of direction of the dependencies. 
 
