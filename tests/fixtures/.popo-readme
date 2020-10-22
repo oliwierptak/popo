@@ -1,0 +1,17 @@
+[case1]
+schema = tests/fixtures/popo-readme/case1/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
+
+[case2]
+schema = tests/fixtures/popo-readme/case2/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
+
+[case3]
+schema = tests/fixtures/popo-readme/case3/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
