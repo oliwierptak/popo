@@ -173,7 +173,7 @@ Schema examples:
 ]
 ```
 
-After running `generate` there will be two POPO objects ready to be used `Foo` and `Bar`.
+Running `generate` will produce two independent POPO objects `Foo` and `Bar`.
 
 
 ### Relations and extending already defined schemas
