@@ -104,7 +104,7 @@ popo
 There can only be one `main schema` per bundle, produced from schema files under schema folder,
 because each of the schema definitions will be merged into one POPO object.
  
-The additional schema definitions will be merged together and added as properties to `main schema`.
+The additional schema definitions are merged together and added as properties to `main schema`.
 
 _Note_: There can be multiple schema folders, and each can be used as a parameter from a command line or as configuration option.
 
@@ -175,16 +175,15 @@ Schema examples:
 ]
 ```
 
-That's it, now there are two POPO objects ready to be used `Foo` and `Bar`.
+After running `generate` there will be two POPO objects ready to be used `Foo` and `Bar`.
 
 
-### Extending defined schema
+### Relations and extending already defined schemas
 
-At this point `Foo` has no idea about `Bar` yet and vice versa.
+At this point `Foo` has no idea about `Bar` and vice versa.
+However, it could be useful to be able to extend schemas that were already defined. 
 
-However, it's sometimes could be useful to be able to extend schemas that were already defined. 
-
-You can either add property `Bar` to `Foo` schema, or inject property `Bar` into `Foo` schema.
+To achieve this, you can either `add` or `inject` property.
 
 
 #### Case 1: Single project / library
@@ -192,6 +191,8 @@ You can either add property `Bar` to `Foo` schema, or inject property `Bar` into
 One schema file, no bundles.
 
 Main schema: `Foo`.
+
+`Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
 
 **`foo/schema/foo.schema.json`** schema:
 
@@ -234,7 +235,7 @@ Main schema: `Foo`.
 
 Multiple schema files, multiple bundles.
 
-`Foo Bundle` knows about `Bar Bundle` and adds it as its own property, while `Barr` has no idea what's up.
+`Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
 
 
 **`foo/schema/foo.schema.json`** schema:
@@ -263,11 +264,11 @@ _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case2` to generate files
 
 #### Case 3: Extend Foo schema from within Bar bundle.
 
-Main schema: `Bar`.
-
 Multiple schema files, multiple bundles.
 
-`Bar Bundle` knows about `Foo Bundle` and injects its own property into `Foo`, while `Foo Bundle` is unaffected.
+Main schema: `Bar`.
+
+`Bar` injects `bar` into `Foo`. `Foo` does not need to be modified. 
 
 
 **`bar/schema/foo.schema.json`** schema:
@@ -290,6 +291,7 @@ Multiple schema files, multiple bundles.
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case3` to generate files from this example.
 
 #### Result
+
 POPO objects will be generated in the same way, regardless of direction of the dependencies. 
 
 ```php
