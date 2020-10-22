@@ -32,7 +32,7 @@ echo $foo->getBar()->getValue();
 $foo->getBar()->setValue('new value');
 print_r($foo->toArray());
 
-$updateData = [
+[
     'title' => 'A title',
     'bar' => [
         'value' => 'new value'
