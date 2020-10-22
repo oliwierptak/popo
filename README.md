@@ -31,9 +31,7 @@ echo $foo->getBar()->getValue();
 ```php
 $foo->getBar()->setValue('new value');
 print_r($foo->toArray());
-```
 
-```php
 $updateData = [
     'title' => 'A title',
     'bar' => [
