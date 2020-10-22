@@ -23,7 +23,6 @@ echo $foo->getTitle();
 echo $foo->getBar()->getValue();
 ```
 
-Output:
 ```
 'A title'
 'Bar lorem ipsum'
@@ -34,7 +33,6 @@ $foo->getBar()->setValue('new value');
 print_r($foo->toArray());
 ```
 
-Output:
 ```php
 $updateData = [
     'title' => 'A title',
