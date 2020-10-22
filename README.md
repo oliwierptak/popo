@@ -3,6 +3,7 @@
 POPO - "Plain Old Php Object" was inspired by "Plain Old Java Object" (POJO) concept.
 
 POPO can also locate, load, validate, and combine JSON schemas to generate PHP source code files.
+
 The schema supports inheritance, collections and encapsulation of other POPO objects.
 
 ```php
@@ -26,10 +27,12 @@ print_r($foo->toArray());
 
 Output:
 
-```php
+```
 'A title'
 'Bar lorem ipsum'
+```
 
+```php
 $updateData = [
     'title' => 'A title',
     'bar' => [
