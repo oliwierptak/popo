@@ -23,18 +23,18 @@ echo $foo->getTitle();
 echo $foo->getBar()->getValue();
 ```
 
+Output:
+```
+'A title'
+'Bar lorem ipsum'
+```
+
 ```php
 $foo->getBar()->setValue('new value');
 print_r($foo->toArray());
 ```
 
 Output:
-
-```
-'A title'
-'Bar lorem ipsum'
-```
-
 ```php
 $updateData = [
     'title' => 'A title',
