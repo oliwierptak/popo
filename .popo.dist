@@ -1,20 +1,30 @@
 ; configure and rename this file to .popo and run vendor/bin/popo
 [popo]
-schema = popo/
-template = vendor/popo/generator/templates/
-output = src/YourProject/Popo/
-namespace = YourProject\Popo
+schema = tests/fixtures/popo/
+template = templates/
+output = tests/App/Configurator/
+namespace = App\Configurator
 extension = .php
-; abstract = 0|1
-; extends = \Class\Name
-; returnType =
+abstract =
+; extends = \App\AbstractConfigurator
+withInterface = 0
+withPopo = 1
+returnType =
 
-[dto]
-schema = dto
-template = vendor/popo/generator/templates/
-output = src/YourProject/Popo/
-namespace = YourProject\Popo
-extension = .php
-; abstract = 0|1
-; extends = \Class\Name
-; returnType =
+[case1]
+schema = tests/fixtures/popo-readme/case1/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
+
+[case2]
+schema = tests/fixtures/popo-readme/case2/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
+
+[case3]
+schema = tests/fixtures/popo-readme/case3/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo
