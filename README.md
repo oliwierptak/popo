@@ -21,7 +21,9 @@ $foo = (new Foo)->fromArray($data);
 
 echo $foo->getTitle();
 echo $foo->getBar()->getValue();
+```
 
+```php
 $foo->getBar()->setValue('new value');
 print_r($foo->toArray());
 ```
