@@ -30,9 +30,9 @@ echo $foo->getBar()->getValue();
 
 ```php
 $foo->getBar()->setValue('new value');
-print_r($foo->toArray());
+$data = $foo->toArray();
 
-[
+$data = [
     'title' => 'A title',
     'bar' => [
         'value' => 'new value'
