@@ -17,7 +17,9 @@ class Schema
     protected const EXTENDS = 'extends';
     protected const EXTENSION = 'extension';
     protected const RETURN_TYPE = 'returnType';
+    protected const WITH_POPO = 'withPopo';
     protected const WITH_INTERFACE = 'withInterface';
+    protected const NAMESPACE_WITH_INTERFACE = 'namespaceWithInterface';
 
     /**
      * @var array
@@ -34,7 +36,9 @@ class Schema
         self::EXTENDS => '',
         self::EXTENSION => '.php',
         self::RETURN_TYPE => 'self',
+        self::WITH_POPO => true,
         self::WITH_INTERFACE => false,
+        self::NAMESPACE_WITH_INTERFACE => null,
     ];
 
     public function __construct(array $data = [])
@@ -114,14 +118,26 @@ class Schema
         return $this;
     }
 
-    public function getWithInterface(): bool
+    public function isWithIPopo(): bool
+    {
+        return $this->data[static::WITH_POPO];
+    }
+
+    public function setIsWithPopo(bool $isWithPopo): self
+    {
+        $this->data[static::WITH_POPO] = $isWithPopo;
+
+        return $this;
+    }
+
+    public function isWithInterface(): bool
     {
         return $this->data[static::WITH_INTERFACE];
     }
 
-    public function setWithInterface(bool $withInterface): self
+    public function setIsWithInterface(bool $isWithInterface): self
     {
-        $this->data[static::WITH_INTERFACE] = $withInterface;
+        $this->data[static::WITH_INTERFACE] = $isWithInterface;
 
         return $this;
     }
@@ -143,6 +159,18 @@ class Schema
         $namespace = implode('\\', $nameTokens);
 
         return $namespace;
+    }
+
+    public function setNamespaceWithInterface(?string $name): self
+    {
+        $this->data[static::NAMESPACE_WITH_INTERFACE] = $name;
+
+        return $this;
+    }
+
+    public function getNamespaceWithInterface(): ?string
+    {
+        return $this->data[static::NAMESPACE_WITH_INTERFACE];
     }
 
     public function toArray(): array

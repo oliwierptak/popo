@@ -7,6 +7,8 @@ namespace Popo\Model;
 use Popo\Configurator;
 use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnTypeGeneratorPlugin as DtoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnTypeGeneratorPlugin as PopoSetMethodReturnTypeGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Dto\SetMethodReturnDockblockGeneratorPlugin as DtoSetMethodReturnDockblockGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin as PopoSetMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ReturnTypeGeneratorPlugin as DtoReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\FromArrayResultPlugin;
@@ -34,6 +36,16 @@ class ConfiguratorProvider
         return $configurator;
     }
 
+    public function configureAbstract(Configurator $configurator): Configurator
+    {
+        $configurator = $this->configurePopoPlugins($configurator);
+        $configurator
+            ->getSchemaConfigurator()
+            ->setSchemaTemplateFilename('php.schema-abstract.tpl');
+
+        return $configurator;
+    }
+
     protected function configureDtoPlugins(Configurator $configurator): Configurator
     {
         $configurator
@@ -48,9 +60,11 @@ class ConfiguratorProvider
             ])
             ->setPropertyPluginClasses([
                 DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+                DtoSetMethodReturnDockblockGeneratorPlugin::PATTERN => DtoSetMethodReturnDockblockGeneratorPlugin::class,
             ])
             ->setCollectionPluginClasses([
                 DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
+                DtoSetMethodReturnDockblockGeneratorPlugin::PATTERN => DtoSetMethodReturnDockblockGeneratorPlugin::class,
             ]);
 
         return $configurator;
@@ -70,9 +84,11 @@ class ConfiguratorProvider
             ])
             ->setPropertyPluginClasses([
                 PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
+                PopoSetMethodReturnDockblockGeneratorPlugin::PATTERN => PopoSetMethodReturnDockblockGeneratorPlugin::class,
             ])
             ->setCollectionPluginClasses([
                 PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
+                PopoSetMethodReturnDockblockGeneratorPlugin::PATTERN => PopoSetMethodReturnDockblockGeneratorPlugin::class,
             ]);
 
         return $configurator;

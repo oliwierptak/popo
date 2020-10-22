@@ -1,424 +1,141 @@
-# About
-POPO - Plain Old Php Object is a PHP implementation of "a Plain Old Java Object (POJO)".
+# POPO
+
+POPO - Plain Old Php Object is a PHP implementation of "a Plain Old Java Object (POJO)" concept.
 
 ```php
-$popo = (new App\Popo\Foo)
-    ->fromArray([
-        'title' => 'Foo',
-        'bar' => [
-            'value' => 'Bar lorem ipsum'
-        ]
-    ]);
+use App\Popo\Foo;
 
-$popo->setFoo('Buzz');
-    
-echo $popo->getTitle();
-echo $popo->getBar()->getValue();
-```
-
-```
-Foo
-Bar lorem ipsum
-```
-
-POPO generated classes are not bound by any special restriction and not requiring any class path. 
-They have a no-argument constructor, and allow access to properties using getter and setter methods,
-that follow simple naming convention.
-That is by default, because everything can be configured.
-
-### Schema: Easy Library <-> Project Integration
-
-On top of that, POPO can also be used to merge [schema](tests/fixtures/dto/bundles/foo/schema/foo.schema.json) (POPO's metadata in JSON format) from different libraries, 
-creating single schema definition for given project. 
-
-POPO can locate, load, validate, and combine schemas to generate PHP source code files.
-The schema supports inheritance, collections and encapsulation of other POPO objects.
-
-
-#### Example Schema
-A simple schema representing two value objects, `Foo` and `Bar`, where `Foo` is using `Bar`.
-```json
-...
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "name": "bar",
-        "type": "\\App\\Popo\\Bar"
-      },
+$data = [        
+    'title' => 'A title',
+    'bar' => [
+        'value' => 'Bar lorem ipsum'
     ]
-  },
-  {
-    "name": "Bar",
-    "schema": [
-      {
-        "name": "value",
-        "type": "string"
-      }
-    ]
-  }
-...  
+];
+
+$foo = (new Foo)->fromArray($data);
+
+echo $foo->getTitle();
+echo $foo->getBar()->getValue();
+
+$foo->getBar()->setValue('new value');
+print_r($foo->toArray());
 ```
 
-#### Generated Code Usage
+Output:
+
 ```php
-$popo = (new App\Popo\Foo)
-    ->fromArray([
-        'title' => 'Foo',
-        'bar' => [
-            'value' => 'Bar lorem ipsum'
-        ]
-    ]);
-    
-echo $popo->getTitle();
-echo $popo->getBar()->getValue();
-```
+'A title'
+'Bar lorem ipsum'
 
-The example will output 
-```
-Foo
-Bar lorem ipsum
+$updateData = [
+    'title' => 'A title',
+    'bar' => [
+        'value' => 'new value'
+    ]
+];
 ```
 
 ## Installation
-With composer:
 
-`composer require popo/generator`
-
-## Configuration
-
-Run:
+```sh
+composer require popo/generator` --dev
 ```
-vendor/bin/popo configure
-``` 
 
 
 ## Usage
-If you define your own `.popo` file, you can just call 
+Define schema, configure and save settings in `.popo` file and run:
+
+```sh
+vendor/bin/popo generate
+```
+
+See [popo.dist](.popo.dist) for examples.
+
+You can also skip the `.popo` file and provide all settings via the command line. See `--help` for details.
+
+
+## Schema directory structure
+Schema directory structure, each schema folder can contain multiple schema files:
 
 ```
-vendor/bin/popo popo
+<schema directory>
+    |
+    |-- <bundle_name>
+    |       |_ schema
+    |         |- <bundle_name>.schema.json   
+    |         |- ...   
+    |         |- ...   
+    |         ...    
+    |
+    |-- <another_bundle_name>
+    |       |_ schema
+    |         |- <another_bundle_name>.schema.json  
+    |         |- ...
+    |         |- ...
+    |         ...
+...
+```
+
+For example:
 ``` 
+popo
+    bar
+        schema
+            bar.schema.json
+            buzz.schema.json
+            foo.schema.json
+    buzz
+        schema
+            bar.schema.json
+            buzz.schema.json
 
-or
+    foo
+        schema
+            foo.schema.json
+```
+
+There can only be one `main schema` per bundle, produced from schema files under schema folder,
+because each of the schema definitions will be merged into one POPO object.
  
-```
-vendor/bin/popo dto
-```
+The additional schema definitions will be merged together and added as properties to `main schema`.
 
-See `popo.dist`.
-
-## Schema Directory Structure
-Root directory for all schema files is stored in BuilderConfigurator's `schemaDirectory`.
-The GLOB pattern used to scan this directory is stored in SchemaConfigurator's `schemaPath`.
-You can always change the default structure and the pattern via `SchemaConfigurator`.
-
-#### Example Schema Configuration for project directory
-```
-project/popo/foo/schema/foo.json.schema
-project/popo/bar/schema/bar.json.schema
-project/popo/buzz/schema/buzz.json.schema
-```
-
-The root directory for all schema files would be `project/schema/`,
-and GLOB patten would be `@^(.*)project/schema/(.*)$@`.
+_Note_: There can be multiple schema folders, and each can be used as a parameter from a command line or as configuration option.
 
 
-#### Example Schema Configuration for vendor directory
+## Schema definition
 
-```
-vendor/aVendorName/Foo/schema/foo.json.schema
-vendor/aVendorName/Bar/schema/bar.json.schema
-vendor/aVendorName/Buzz/schema/buzz.json.schema
-```
+A schema is a JSON file describing a POPO object.
 
-The root directory for all schema files would be `vendor/myVendorName/`,
-and GLOB patten would be `@^(.*)vendor/aVendorName/(.*)/schema/(.*)$@`.
-
-
-## PopoFacade
-POPO can generate Data Transfer Objects or simple Popo objects ouf of the box.
-It uses `BuilderConfigurator` in order to configure the Builder classes.
-
-To generate simple Popo object, use `generatePopo` method of `PopoFacade`.
-
-```php
-$facade = new PopoFacade();
-$configurator = new BuilderConfigurator();
-
-$facade->generatePopo($configurator);
-```
-
-
-To generate Data Transfer Objects and their interfaces, use `generateDto` method.
-
-```php
-$facade = new PopoFacade();
-$configurator = new BuilderConfigurator();
-
-$facade->generateDto($configurator);
-```
-
-To generate string, use `generatePopoString()`, `generateDtoString()` or `generateDtoInterfaceString()` methods.
-
-```php
-$facade = new PopoFacade();
-
-$configurator = (new BuilderConfigurator)
-    ->setTemplateDirectory('templates/')
-    ->setNamespace('App\Popo');
-
-$schemaData = [
-    'name' => 'Foo',
-    'schema' => [[
-        'name' => 'fooId',
-        'type' => 'int',
-    ]],
-];
-
-$schema = new Schema($schemaData);
-$generatedString = $facade->generatePopoString($configurator, $schema);
-```
-
-Check `tests/Popo/FacadeTest.php` for more details.
-
-
-#### BuilderConfigurator
-Use it to configure parameters of source code generator.
-
-```php
-$configurator = (new BuilderConfigurator)
-    ->setSchemaConfigurator(new SchemaConfigurator)
-    ->setSchemaDirectory('project/schema/')
-    ->setTemplateDirectory('templates/')
-    ->setOutputDirectory('src/Generated/')
-    ->setNamespace('\Generated')
-    ->setExtension('.php');
-    ->setSchemaPluginClasses([...])
-    ->setPropertyPluginClasses([...])
-    ->setIsAbstract(true|false)
-    
-```
-
-- `SchemaConfigurator`
-
-    Instance of `SchemaConfiguratorInterface`. See below.
-    
-- `Schema Directory`
-    
-    Root path where all schema files are located.
-    
-- `Template Directory`
-
-    Path where the template files are located. 
-   
-- `Output Directory`
-
-    Path where the generated files should be stored
-      
-- `Namespace`
-
-    Namespace of generated files.
-    
-- `Extension`
-
-    File extension of generated files.  
-       
-- `Abstract`
-
-    Generate abstract popo classes. 
-    
-- `Schema Plugin Classes`
-
-    Collection of class names implementing `SchemaGeneratorPluginInterface`.
-    
-    Format:
-    ``` 
-     [
-        SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
-     ]
-    ```
-    
-- `Property Plugin Classes`
-
-    Collection of class names implementing `PropertyGeneratorPluginInterface`.
-    
-    Format:
-    ``` 
-     [
-        PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
-     ]
-    ```
-
-
-#### SchemaConfigurator
-Use it to configure schema specific parameters.
-
-```php
-$schemaConfigurator = (new SchemaConfigurator)
-    ->setSchemaPath('@^(.*)project/schema/(.*)$@')
-    ->setSchemaFilename('*.schema.json')
-    ->setPropertyTemplateFilename('php.property.tpl')
-    ->setSchemaTemplateFilename('php.schema.tpl')    
-```
-    
-- `Schema Path`
-
-    GLOB pattern used to find and load all schema files located under schema root path. 
-
-- `Schema Filename`
-
-    GLOB pattern of schema filename.
-    
-- `Property Template Filename`
-
-    Filename containing contents of template used to generate source code of property related methods.
-    See `Templates` section below.
-    
-- `Schema Template Filename`
-
-    Filename containing contents of template used to generate source code of whole generated file.
-    See `Templates` section below. 
-
-### Mandatory options
-`Schema Directory`, `Template Directory`, `Output Directory` and `Schema Path`.
-
-Check `BuilderConfigurator` and `SchemaConfigurator` for default values.
-
-## Schema
-The schema is very simple JSON file. The `name` and `type` fields are mandatory.
 ```json
 {
-  "name": "<string>",
-  "abstract": "[<bool>]",
-  "extends": "[<string>]",
-  "schema":
-    {
-      "name": "<string>",
-      "type": "<array|bool|float|int|string|popo|mixed>",
-      "collectionItem": "[<type>]",
-      "singular": "[<string>]",
-      "docblock": "[<string>]",
-      "default": "[<mixed>|\\Php\\Const::VALUE]",
-      "sourceBundle": "<<runtime only>>"
-    }
+  "popoSchema": {
+    "name": "<string>",
+    "schema": "<propertySchema[]>",
+    "abstract": "[<bool>]",
+    "extends": "[<string>]",
+    "extension": "[<string>]",
+    "returnType": "[<string>]",
+    "withPopo": "[<bool>]",
+    "withInterface": "[<bool>]",
+    "namespaceWithInterface": "<string>"
+  },
+  "propertySchema": {
+    "name": "<string>",
+    "type": "<array|bool|float|int|string|popo|mixed>",
+    "collectionItem": "[<type>]",
+    "singular": "[<string>]",
+    "docblock": "[<string>]",
+    "default": "[<mixed>|\\Php\\Const::VALUE]"
+  }
 }
 ```
 
-### Supported data types
+### POPO objects definition
 
-Only primitive data types, with addition of other Popo objects are supported (out of the box).
+Schema examples:
 
-- array
-- boolean
-- float
-- integer
-- string
-- mixed
-- PHP constant
-- Popo object
+`foo/schema/foo.schema.json` schema:
 
-
-### Naming Conventions
-The property name will be used directly as method name (with exception to boolean properties).
- 
-For example, for property with name `fooBar` and type `string` the following methods will be generated:
-- `getFooBar(); ?string` 
-- `setFooBar(?string $fooBar): self` 
-- `requireFooBar(): string` 
-
-
-### Naming Conventions for booleans
-For `bool` property type, the following methods will be generated:
-- `isFooBar(); ?bool` 
-- `setIsFooBar(?bool $fooBar): self` 
-- `requireIsFooBar(): bool` 
-
-Check `tests/fixtures` directory to see more schema examples.
-
-
-### Collection support
-Besides `array` type, there are two keywords for supporting collections: `collectionItem` and `singular` that can be used to improve array handling.
-```json
-...
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "title": "foo",
-        "type": "string"
-      },
-      {
-        "name": "bars",
-        "type": "array"
-      },
-      {
-        "name": "buzzBars",
-        "type": "array"
-        "collectionItem" : "\\App\Popo\\Bar",
-        "singular": "buzzBar"
-      },
-    ]
-  },
-...  
-``` 
-
-Collection example.
-```php
-$popo = (new App\Popo\Foo)
-    ->fromArray([
-        'title' => 'Foo',
-        'bars' => ['xxx', 'yyy'],
-        'buzzBars' => [
-            ['value' => 'Lorem ipsum 1']
-            ['value' => 'Lorem ipsum 2']
-        ]
-    ]);
-```
-
-Only type was defined as `array`.
-```php
-$popo = (new App\Popo\Foo);
-$popo->addBarsItem('xxx');
-$popo->addBarsItem('yyy');
-```
-
-Example of `collectionItem` and `singular`.
-```php
-$barPopo = (new App\Popo\Bar)
-    ->fromArray(['value' => 'Lorem ipsum 1']);
-
-$popo->addBuzzBar($barPopo);
-```
-
-### Schema inheritance
-To extend schema, just define extra schema file with the same name in another bundle/package/directory.
-
-For example, the `Foo` package is the owner of `foo.schema.json` and `Bar` and `Buzz` packages extend its schema,
-by providing extra schema files with `foo.schema.json` filename, as a part of their package/bundle.
-
-```
-packages/foo/schema/
- - foo.schema.json
- 
-packages/bar/schema/
- - bar.schema.json
- - foo.schema.json
- 
-packages/buzz/schema/
- - buzz.schema.json
- - foo.schema.json
-```
-
-## POPO extra methods
-Besides getters and setters, there are some helper methods implemented, but if you don't need them,
-you can just customize the templates, and remove them. However they tend to be useful.
-
-Sample schema:
 ```json
 [
   {
@@ -426,19 +143,6 @@ Sample schema:
     "schema": [
       {
         "name": "title",
-        "type": "string"
-      },
-      {
-        "name": "bar",
-        "type": "Bar"
-      },
-    ]
-  },
-  {
-    "name": "Bar",
-    "schema": [
-      {
-        "name": "bar",
         "type": "string"
       }
     ]
@@ -446,278 +150,160 @@ Sample schema:
 ]
 ```
 
-Sample Popo:
-```php
-$popo = (new App\Popo\Foo)
-    ->fromArray([
-        'title' => 'Foo lorem ipsum',
-        'bar' => ['bar' => 'Bar lorem ipsum']
-    ]);
-```
 
-#### `public function fromArray(array $data): <self>`
-To populate with data.
-    
+`bar/schema/bar.schema.json` schema:
 
-```php
-echo $popo->getBar()->getBar();
-```
-
-Result: `Bar lorem ipsum`
-
-
-#### `public function toArray(): array`
-To convert to `array` recursively.
-
-```php
-print_r($popo->toArray());
-``` 
-
-Result: 
-```php
+```json
 [
-     'title' => 'Foo lorem ipsum',
-     'bar' => ['bar' => 'Bar lorem ipsum']
- ]
+  {
+    "name": "Bar",
+    "schema": [
+      {
+        "name": "value",
+        "type": "string",
+        "default": "Lorem Ipsum Default Bar Value"
+      }
+    ]
+  }
+]
 ```
 
+That's it, now there are two POPO objects ready to be used `Foo` and `Bar`.
 
-#### `public function require<<property name>>(): array`
-To throw exception if requested property value is null or return it otherwise.
+
+### Extending defined schema
+
+At this point `Foo` has no idea about `Bar` yet and vice versa.
+
+However, it's sometimes could be useful to be able to extend schemas that were already defined. 
+
+You can either add property `Bar` to `Foo` schema, or inject property `Bar` into `Foo` schema.
+
+
+#### Case 1: Single project / library
+
+One schema file, no bundles.
+
+Main schema: `Foo`.
+
+**`foo/schema/foo.schema.json`** schema:
+
+```json
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "bar",
+        "type": "Bar",
+        "docblock": "Adds Bar property to Foo from Foo bundle"
+      }
+    ]
+  },
+  {
+    "name": "Bar",
+    "schema": [
+      {
+        "name": "value",
+        "type": "string",
+        "default": "Lorem Ipsum Default Bar Value"
+      }
+    ]
+  }
+]
+
+```
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case1` to generate files from this example.
+
+
+#### Case 2: Extend Bar schema from within Foo bundle.
+  
+Main schema: `Foo`. 
+
+Multiple schema files, multiple bundles.
+
+`Foo Bundle` knows about `Bar Bundle` and adds it as its own property, while `Barr` has no idea what's up.
+
+
+**`foo/schema/foo.schema.json`** schema:
+
+```json
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "bar",
+        "type": "Bar",
+        "docblock": "Adds Bar property to Foo from Foo bundle"
+      }
+    ]
+  }
+]
+```
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case2` to generate files from this example.
+
+
+#### Case 3: Extend Foo schema from within Bar bundle.
+
+Main schema: `Bar`.
+
+Multiple schema files, multiple bundles.
+
+`Bar Bundle` knows about `Foo Bundle` and injects its own property into `Foo`, while `Foo Bundle` is unaffected.
+
+
+**`bar/schema/foo.schema.json`** schema:
+
+```json
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "bar",
+        "type": "Bar",
+        "docblock": "Adds Bar property to Foo from Bar bundle"
+      }
+    ]
+  }
+]
+```
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case3` to generate files from this example.
+
+#### Result
+POPO objects will be generated in the same way, regardless of direction of the dependencies. 
 
 ```php
-$popo = new App\Popo\Foo();
-echo $popo->requireTitle();
-``` 
+use App\Popo\Foo;
 
-Result: `\UnexpectedValueException('Required value of "Foo" has not been set')`
+$data = [        
+    'title' => 'A title',
+    'bar' => [
+        'value' => 'Bar lorem ipsum'
+    ]
+];
 
+$foo = (new Foo)->fromArray($data);
 
-#### `public function has<<property name>>(): bool`
-Checks if property has been set, either using setter or via to / from array calls.
-
-_Note_: The default value from schema definition is ignored.
-
-```php
-$popo = new App\Popo\Foo();
-$result = $popo->hasTitle(); // false
-
-$popo->setTitle('Buzz');
-$result = $popo->hasTitle(); // true
-``` 
-
-
-```php
-$popo = (new App\Popo\Foo())->setTitle('Foo Lorem Ipsum');
-echo $popo->requireTitle();
-``` 
-
-Result: `Foo Lorem Ipsum`
-
-
-## Developing custom plugins
-Due to default configuration, POPO will produce PHP source code. 
-It could be easily extended to generate any type of code, as long as it follows the schema.
-
-### Generators
-There are two generator types. 
-`SchemaGenerator` is used to generate the code of whole file, 
-and `PropertyGenerator` which is used to generate property methods code. 
-They both implement `GeneratorInterface` and have their own template and plugins.
-
-See `tests/Popo/Popo/*` for more details.
-
-#### Popo Plugins
-Plugins are used to handle placeholders and their content. 
-There are two types.
-
-#### Schema Popo Plugins
-Popo plugins that implement `SchemaGeneratorPluginInterface` are responsible for whole source code file.
-```php
-interface SchemaGeneratorPluginInterface extends AcceptPatternInterface
-{
-    /**
-     * Specification:
-     * - Uses schema for which the content of <<php.schema.tpl>> will be generated.
-     * - Generates string according to schema and configured plugins represented by <<php.schema.tpl>> template.
-     * - Returns generated string.
-     *
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
-     *
-     * @return string
-     */
-    public function generate(SchemaInterface $schema): string;
-}
+echo $foo->getTitle();
+echo $foo->getBar()->getValue();
 ```
 
-
-#### Property Popo Plugins
-Popo plugins that implement `PropertyGeneratorPluginInterface` are responsible for property methods source code.
-```php
-interface PropertyGeneratorPluginInterface extends AcceptPatternInterface
-{
-    /**
-     * Specification:
-     * - Uses property for which the content of string template will be generated.
-     * - Generates string according to schema and configured plugins represented by string template.
-     * - Returns generated string.
-     *
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
-     * @param \Popo\Schema\Reader\PropertyInterface $property
-     *
-     * @return string
-     */
-    public function generate(SchemaInterface $schema, PropertyInterface $property): string;
-}
+```
+A title
+Bar lorem ipsum
 ```
 
-
-### Registering Plugins
-You can register your own plugins with `GeneratorBuilderInterface` during the building of generator by
-providing custom instance of `PluginContainerInterface`.
-```php
-interface GeneratorBuilderInterface
-{
-    /**
-     * Specification:
-     * - Loads content of <<php.schema.tpl>> using template directory of configurator
-     * - Loads content of <<php.property.tpl>> using template directory of configurator
-     * - Creates default property plugin collection and merges it with plugin container
-     * - Creates default schema plugin collection and merges it with plugin container
-     * - Creates Schema generator
-     * - Returns created SchemaGenerator instance
-     *
-     * @param \Popo\Builder\BuilderConfiguratorInterface $configurator
-     * @param \Popo\Builder\PluginContainerInterface $pluginContainer
-     *
-     * @return \Popo\Popo\GeneratorInterface
-     */
-    public function build(BuilderConfiguratorInterface $configurator, PluginContainerInterface $pluginContainer): GeneratorInterface;
-}
-```
-Use `registerSchemaClassPlugins(..)` to register your own schema plugins.
- 
-Use `registerPropertyClassPlugins(...)` to register your own property plugins.
-
-```php
-$pluginContainer = new PluginContainer(
-    new PropertyExplorer()
-);
-$pluginContainer->registerSchemaClassPlugins([
-    FooSchemaGeneratorPlugin::PATTERN => FooSchemaGeneratorPlugin::class,
-    BarSchemaGeneratorPlugin::PATTERN => BarSchemaGeneratorPlugin::class,
-]);
-$pluginContainer->registerPropertyClassPlugins([
-    BuzzPropertyGeneratorPlugin::PATTERN => BuzzPropertyGeneratorPlugin::class,
-]);
-```
-See `PluginContainerInterface` for more details.
-
-#### FooSchemaGeneratorPlugin example
-`FooSchemaGeneratorPlugin` plugin replaces value of placeholder `<<PROPERTY_NAME>>` with actual property name. 
-```php
-class FooSchemaGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
-{
-    const PATTERN = '<<PROPERTY_NAME>>';
-
-    public function generate(SchemaInterface $schema, PropertyInterface $property): string
-    {
-        return $property->getName();
-    }
-}
-``` 
-
-
-## Templates
-The templates are located by default in `templates/` directory and only two of them are required. 
-
-One is used to generate whole source file, the other is used to generate
-each individual method related to properties (setter, getters, etc).
-
-They can be in whatever format and contain whatever content, 
-as long as their placeholders are recognized by plugins. 
-
-### Schema template example
-Default filename: `php.schema.tpl`.
-
-```
-<?php
-
-namespace <<NAMESPACE>>;
-
-<<ABSTRACT>>class <<CLASSNAME>><<EXTENDS>> <<IMPLEMENTS_INTERFACE>>
-{
-    /**
-     * @var array
-     */
-    protected $data = <<SCHEMA_DATA>>;
-
-    /**
-     * @param string $property
-     *
-     * @return mixed|null
-     */
-    protected function getValue(string $property)
-    {
-        if (!isset($this->data[$property])) {
-            return null;
-        }
-
-        return $this->data[$property];
-    }
-
-    /**
-     * @param string $property
-     * @param mixed $value
-     *
-     * @return void
-     */
-    protected function setValue(string $property, $value): void
-    {
-        $this->data[$property] = $value;
-    }
-
-    <<METHODS>>
-}
-```
-
-### Property template example
-Default filename: `php.property.tpl`.
-
-This template is used for each of the defined properties,
-and it will replace `<<METHODS>>` placeholder in the schema template above.  
-
-```
-
-    /**
-     * @return <<GET_METHOD_RETURN_DOCKBLOCK>>
-     */
-    public function <<GET_METHOD_NAME>>()<<GET_METHOD_RETURN_TYPE>>
-    {
-        return $this->getValue('<<PROPERTY_NAME>>');
-    }
-
-    /**
-     * @param <<SET_METHOD_PARAM_DOCKBLOCK>>
-     *
-     * @return <<SET_METHOD_RETURN_DOCKBLOCK>>
-     */
-    public function <<SET_METHOD_NAME>>(<<SET_METHOD_PARAMETERS>>)<<SET_METHOD_RETURN_TYPE>>
-    {
-        $this->setValue('<<PROPERTY_NAME>>', $<<PROPERTY_NAME>>);
-
-        return $this;
-    }
-
-```
-
-#### Customizing Templates
-Copy the default templates somewhere, and set it up in the configurator as template directory.
-
-
-## Tests
-Run `vendor/bin/phpunit`. 
-
-The files are generated under `tests/App/Generated`.
-The schema files are under `tests/fixtures/bundles`.
-The tests are under `tests/Popo`.
+See [tests/fixtures/popo-readme](tests/fixtures/popo-readme/) for examples.

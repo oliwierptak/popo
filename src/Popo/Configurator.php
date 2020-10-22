@@ -23,23 +23,46 @@ class Configurator
     protected string $extension = '.php';
 
     /**
+     * @var string|null if set, will overwrite namespace value of implemented interfaces
+     */
+    protected ?string $namespaceWithInterface;
+
+    /**
+     * Determines if generated POPO will be abstract class
+     *
      * @var bool|null if set, will overwrite the abstract value from schema file
      */
-    protected $isAbstract = null;
+    protected $isAbstract;
 
     /**
+     * Generate POPO files
+     *
+     * @var bool|null if set, will overwrite the withPopo value from schema file
+     */
+    protected $withPopo;
+
+    /**
+     * Generate interfaces
+     *
      * @var bool|null if set, will overwrite the withInterface value from schema file
      */
-    protected $withInterface = null;
+    protected $withInterface;
 
     /**
-     * @var string|null if set, the generated classes will be extended with this class
+     * Generated class will be extended by this value
+     *
+     * @var string|null if set, will overwrite the withPopo value from schema file
      */
-    protected $extends = null;
+    protected $extends;
 
     protected SchemaConfigurator $schemaConfigurator;
 
-    protected string $returnType = 'self';
+    /**
+     * The return type of fromArray() method will be set to this value
+     *
+     * @var string|null if set, overrides the return value of fromArray() method
+     */
+    protected $returnType;
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]|string[]
@@ -129,6 +152,18 @@ class Configurator
         return $this;
     }
 
+    public function getNamespaceWithInterface(): ?string
+    {
+        return $this->namespaceWithInterface;
+    }
+
+    public function setNamespaceWithInterface(?string $namespaceWithInterface): self
+    {
+        $this->namespaceWithInterface = $namespaceWithInterface;
+
+        return $this;
+    }
+
     public function getExtension(): string
     {
         return $this->extension;
@@ -149,6 +184,18 @@ class Configurator
     public function setIsAbstract(?bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
+
+        return $this;
+    }
+
+    public function getWithPopo(): ?bool
+    {
+        return $this->withPopo;
+    }
+
+    public function setWithPopo(?bool $withPopo): self
+    {
+        $this->withPopo = $withPopo;
 
         return $this;
     }

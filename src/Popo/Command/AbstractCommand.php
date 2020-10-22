@@ -36,6 +36,7 @@ abstract class AbstractCommand extends Command
     const OPTION_IS_ABSTRACT = 'abstract';
     const OPTION_EXTENDS = 'extends';
     const OPTION_RETURN_TYPE = 'returnType';
+    const OPTION_WITH_POPO = 'withPopo';
     const OPTION_WITH_INTERFACE = 'withInterface';
     const OPTION_CONFIG_FILENAME = 'configFile';
     const OPTION_SHOW_CONFIGURATION = 'showConfiguration';
@@ -86,13 +87,14 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_CONFIG_FILENAME, 'c', InputOption::VALUE_OPTIONAL, 'Config filename', '.popo'),
                 new InputOption(static::OPTION_SCHEMA, 's', InputOption::VALUE_OPTIONAL, 'Schema directory', 'popo/'),
                 new InputOption(static::OPTION_TEMPLATE, 't', InputOption::VALUE_OPTIONAL, 'Template directory', 'vendor/popo/generator/templates/'),
-                new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Directory for generated files', 'src/Popo/'),
-                new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated files', 'Popo'),
+                new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Directory for generated files', 'src/Configurator/'),
+                new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated files', 'Configurator'),
                 new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
                 new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
                 new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
-                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', 'self'),
-                new InputOption(static::OPTION_WITH_INTERFACE, 'i', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', false),
+                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', null),
+                new InputOption(static::OPTION_WITH_POPO, 'wp', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate POPO files', true),
+                new InputOption(static::OPTION_WITH_INTERFACE, 'wi', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', null),
                 new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration table with settings defined in config file', true),
                 new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration table', true),
                 new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', true),
@@ -145,10 +147,12 @@ abstract class AbstractCommand extends Command
                 ->setTemplateDirectory($item->getTemplate())
                 ->setOutputDirectory($item->getOutput())
                 ->setNamespace($item->getNamespace())
+                ->setNamespaceWithInterface($item->getNamespaceWithInterface())
                 ->setExtension($item->getExtension())
                 ->setIsAbstract($item->isAbstract())
                 ->setExtends($item->getExtends())
                 ->setReturnType($item->getReturnType())
+                ->setWithPopo($item->isWithPopo())
                 ->setWithInterface($item->isWithInterface());
 
             $item->setConfigurator($configurator);
@@ -174,6 +178,7 @@ abstract class AbstractCommand extends Command
             static::OPTION_IS_ABSTRACT => $input->getOption(static::OPTION_IS_ABSTRACT),
             static::OPTION_EXTENDS => $input->getOption(static::OPTION_EXTENDS),
             static::OPTION_RETURN_TYPE => $input->getOption(static::OPTION_RETURN_TYPE),
+            static::OPTION_WITH_POPO => $input->getOption(static::OPTION_WITH_POPO),
             static::OPTION_WITH_INTERFACE => $input->getOption(static::OPTION_WITH_INTERFACE),
         ];
 

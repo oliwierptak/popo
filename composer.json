@@ -30,7 +30,7 @@
     "psr-4": {
       "TestsSuites\\Popo\\": "tests/suits",
       "TestsStubs\\Popo\\": "tests/stubs",
-      "TestsPopoApp\\App\\": "tests/App"
+      "App\\": "tests/App"
     }
   },
   "scripts": {

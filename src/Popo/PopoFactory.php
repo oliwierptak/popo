@@ -80,15 +80,22 @@ class PopoFactory
         $generatorPopo = $this->createBuilderFactory()->createPopoGeneratorBuilder()->build($configurator, $pluginContainer);
 
         $configurator = clone $configuratorOrig;
+        $configurator = $provider->configureAbstract($configurator);
+        $pluginContainer = $this->createBuilderFactory()->createPluginContainer($configurator);
+        $generatorAbstract = $this->createBuilderFactory()->createPopoGeneratorBuilder()->build($configurator, $pluginContainer);
+
+        $configurator = clone $configuratorOrig;
         $configurator = $provider->configureDto($configurator);
         $pluginContainer = $this->createBuilderFactory()->createPluginContainer($configurator);
         $generatorDto = $this->createBuilderFactory()->createPopoGeneratorBuilder()->build($configurator, $pluginContainer);
+
 
         return new Popo(
             $this->createSchemaFactory()->createSchemaBuilder(),
             $this->createSchemaFactory()->createSchemaMerger(),
             $this->createWriterFactory()->createFileWriter($generatorPopo),
-            $this->createWriterFactory()->createFileWriter($generatorDto)
+            $this->createWriterFactory()->createFileWriter($generatorDto),
+            $this->createWriterFactory()->createFileWriter($generatorAbstract),
         );
     }
 

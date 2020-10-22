@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace TestsPopoApp\App;
+namespace App;
 
 interface TestAppDefinesInterface
 {

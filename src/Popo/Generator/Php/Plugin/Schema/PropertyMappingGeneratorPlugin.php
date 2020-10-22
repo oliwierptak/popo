@@ -8,6 +8,7 @@ use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\Schema;
+use function ctype_upper;
 use function var_export;
 
 class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements SchemaGeneratorPluginInterface
@@ -20,7 +21,11 @@ class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements 
 
         foreach ($schema->getSchema() as $propertyData) {
             $property = $this->buildProperty($schema, $propertyData);
-            $schemaKeys[$property->getName()] = $property->getType();
+            $type = trim($property->getType());
+            if ($this->isPopoClassName($type)) {
+                $type = sprintf('\\%s\\%s', $schema->getNamespaceName(), $type);
+            }
+            $schemaKeys[$property->getName()] = $type;
         }
 
         return var_export($schemaKeys, true);
@@ -29,5 +34,10 @@ class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements 
     protected function buildProperty(Schema $schema, array $propertyData): Property
     {
         return new Property($schema, $propertyData);
+    }
+
+    protected function isPopoClassName(string $value): bool
+    {
+        return $value[0] !== '\\' && ctype_upper($value[0]);
     }
 }

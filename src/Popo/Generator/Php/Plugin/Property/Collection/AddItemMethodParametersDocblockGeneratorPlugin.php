@@ -28,10 +28,16 @@ class AddItemMethodParametersDocblockGeneratorPlugin extends AbstractGeneratorPl
             $name = ' ' . $name;
         }
 
+        $interfacePostfix = '';
+        if ($property->getSchema()->isWithInterface()) {
+            $interfacePostfix = 'Interface';
+        }
+
         $string = sprintf(
-            '%s%s%s',
+            '%s%s%s%s',
             $docblock,
             $property->getCollectionItem(),
+            $interfacePostfix,
             $name
         );
 

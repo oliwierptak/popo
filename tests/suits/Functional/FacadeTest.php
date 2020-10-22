@@ -38,8 +38,8 @@ class FacadeTest extends TestCase
             ->setSchemaConfigurator(new SchemaConfigurator())
             ->setSchemaDirectory($this->schemaDirectory . 'popo/bundles/')
             ->setTemplateDirectory($this->templateDirectory)
-            ->setOutputDirectory($this->outputDirectory . 'Popo/')
-            ->setNamespace('TestsPopoApp\App\Generated\Popo')
+            ->setOutputDirectory($this->outputDirectory . 'Configurator/')
+            ->setNamespace('TestsPopoApp\App\Popo')
             ->setExtension('.php');
 
         $result = $facade->generate($configurator);
@@ -53,12 +53,12 @@ class FacadeTest extends TestCase
 
         $facade = new PopoFacade();
 
-        $configurator = (new BuilderConfigurator())
+        $configurator = (new Configurator())
             ->setSchemaConfigurator(new SchemaConfigurator())
             ->setSchemaDirectory($this->schemaDirectory . 'invalidPath')
             ->setTemplateDirectory($this->templateDirectory . 'invalidPath')
             ->setOutputDirectory($this->outputDirectory . 'invalidPath')
-            ->setNamespace('TestsPopoApp\App\Generated\Popo')
+            ->setNamespace('TestsPopoApp\App\Popo')
             ->setExtension('.php');
 
         $facade->generatePopo($configurator);
@@ -68,12 +68,12 @@ class FacadeTest extends TestCase
     {
         $facade = new PopoFacade();
 
-        $configurator = (new BuilderConfigurator())
+        $configurator = (new Configurator())
             ->setSchemaConfigurator(new SchemaConfigurator())
             ->setSchemaDirectory($this->schemaDirectory . 'popo/bundles/')
             ->setTemplateDirectory($this->templateDirectory)
-            ->setOutputDirectory($this->outputDirectory . 'Popo/')
-            ->setNamespace('TestsPopoApp\App\Generated\Popo')
+            ->setOutputDirectory($this->outputDirectory . 'Configurator/')
+            ->setNamespace('TestsPopoApp\App\Popo')
             ->setExtension('.php');
 
         $numberOfFilesGenerated = $facade->generatePopo($configurator);
@@ -85,21 +85,21 @@ class FacadeTest extends TestCase
 
     protected function assertCreateDeep(): void
     {
-        $fooPopo = new \Tests\App\Generated\Popo\Foo();
-        $buzz = new \Tests\App\Generated\Popo\Buzz();
-        $fooBar = new \Tests\App\Generated\Popo\FooBar();
+        $fooPopo = new \App\Popo\Foo();
+        $buzz = new \App\Popo\Buzz();
+        $fooBar = new \App\Popo\FooBar();
 
-        $this->assertInstanceOf(\Tests\App\Generated\Popo\Buzz::class, $buzz);
-        $this->assertInstanceOf(\Tests\App\Generated\Popo\FooBar::class, $fooBar);
+        $this->assertInstanceOf(\App\Popo\Buzz::class, $buzz);
+        $this->assertInstanceOf(\App\Popo\FooBar::class, $fooBar);
 
-        $this->assertInstanceOf(\Tests\App\Generated\Popo\Buzz::class, $fooPopo->getBuzz());
+        $this->assertInstanceOf(\App\Popo\Buzz::class, $fooPopo->getBuzz());
         $this->assertFalse($fooPopo->hasBuzz());
     }
 
     protected function assertNoInterfaces(): void
     {
-        $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/BuzzInterface.php');
-        $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/FooInterface.php');
-        $this->assertFileNotExists(TESTS_DIR . 'App/Generated/Popo/FooBarInterface.php');
+        $this->assertFileNotExists(POPO_TESTS_DIR . 'App/Configurator/BuzzInterface.php');
+        $this->assertFileNotExists(POPO_TESTS_DIR . 'App/Configurator/FooInterface.php');
+        $this->assertFileNotExists(POPO_TESTS_DIR . 'App/Configurator/FooBarInterface.php');
     }
 }

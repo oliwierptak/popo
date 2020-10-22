@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace TestsSuites\Popo\Functional;
 
+use App\Configurator\Foo;
 use PHPUnit\Framework\TestCase;
 use Popo\PopoFactory;
-use TestsPopoApp\App\Generated\Popo\Foo;
 
 class PopoGeneratedTest extends TestCase
 {
@@ -34,24 +34,24 @@ class PopoGeneratedTest extends TestCase
     public function test_fromArrayToArray_defaults(): void
     {
         $value = [
-            'fooId' => '123',
+            'fooId' => 123,
             'optionalData' => [
-                ['id' => 123],
                 ['id' => 456],
+                ['id' => 789],
             ],
         ];
 
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => '123',
+            'fooId' => 123,
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
             'resetPassword' => null,
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option'],
                 ['id' => 456, 'anOption' => 'Lorem Option'],
+                ['id' => 789, 'anOption' => 'Lorem Option'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem ipsum'
@@ -66,11 +66,11 @@ class PopoGeneratedTest extends TestCase
     public function test_fromArrayToArray_deep_values(): void
     {
         $value = [
-            'fooId' => '123',
+            'fooId' => 123,
             'username' => 'JohnDoe',
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option 1'],
-                ['id' => 456, 'anOption' => 'Lorem Option 2'],
+                ['id' => 456, 'anOption' => 'Lorem Option 1'],
+                ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem new 1'
@@ -80,14 +80,14 @@ class PopoGeneratedTest extends TestCase
         $foo = (new Foo())->fromArray($value);
 
         $expected = [
-            'fooId' => '123',
+            'fooId' => 123,
             'username' => 'JohnDoe',
             'password' => null,
             'isLoggedIn' => null,
             'resetPassword' => null,
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option 1'],
-                ['id' => 456, 'anOption' => 'Lorem Option 2'],
+                ['id' => 456, 'anOption' => 'Lorem Option 1'],
+                ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem new 1'
@@ -104,8 +104,8 @@ class PopoGeneratedTest extends TestCase
         $value = [
             'fooId' => '123',
             'optionalData' => [
-                ['id' => 123],
                 ['id' => 456],
+                ['id' => 789],
             ],
         ];
 
@@ -118,8 +118,8 @@ class PopoGeneratedTest extends TestCase
             'isLoggedIn' => null,
             'resetPassword' => null,
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option'],
                 ['id' => 456, 'anOption' => 'Lorem Option'],
+                ['id' => 789, 'anOption' => 'Lorem Option'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem ipsum'
@@ -149,8 +149,8 @@ class PopoGeneratedTest extends TestCase
             'isLoggedIn' => null,
             'resetPassword' => null,
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option 1'],
-                ['id' => 456, 'anOption' => 'Lorem Option 2'],
+                ['id' => 456, 'anOption' => 'Lorem Option 1'],
+                ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem new 1'
@@ -166,8 +166,8 @@ class PopoGeneratedTest extends TestCase
             'isLoggedIn' => null,
             'resetPassword' => null,
             'optionalData' => [
-                ['id' => 123, 'anOption' => 'Lorem Option 1'],
-                ['id' => 456, 'anOption' => 'Lorem Option 2'],
+                ['id' => 456, 'anOption' => 'Lorem Option 1'],
+                ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
                 'buzz' => 'Lorem new 1'

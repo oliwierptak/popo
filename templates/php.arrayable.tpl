@@ -1,30 +1,28 @@
 
     public function toArray(): array
     {
-        $data = $this->prepareToArrayData();
+        $data = [];
 
         foreach ($this->propertyMapping as $key => $type) {
             $data[$key] = $this->default[$key] ?? null;
+            $value = $this->data[$key];
 
-            if (isset($this->data[$key])) {
-                $value = $this->data[$key];
-
-                if ($this->collectionItems[$key] !== '') {
-                    if (\is_array($value) && \class_exists($this->collectionItems[$key])) {
-                        foreach ($value as $popo) {
-                            if (\method_exists($popo, 'toArray')) {
-                                $data[$key][] = $popo->toArray();
-                            }
-                        }
+            if ($this->isCollectionItem($key) && \is_array($value)) {
+                foreach ($value as $popo) {
+                    if (\is_object($popo) && \method_exists($popo, 'toArray')) {
+                        $data[$key][] = $popo->toArray();
                     }
-                } else {
-                    $data[$key] = $value;
                 }
 
-                if (\is_object($value) && \method_exists($value, 'toArray')) {
-                    $data[$key] = $value->toArray();
-                }
+                continue;
             }
+
+            if (\is_object($value) && \method_exists($value, 'toArray')) {
+                $data[$key] = $value->toArray();
+                continue;
+            }
+
+            $data[$key] = $value;
         }
 
         return $data;
@@ -32,15 +30,22 @@
 
     public function fromArray(array $data): <<RETURN_TYPE>>
     {
-        $result = $this->prepareFromArrayData($data);
+        $result = [];
 
         foreach ($this->propertyMapping as $key => $type) {
-            $result[$key] = null;
-            if (\array_key_exists($key, $this->default)) {
-                $result[$key] = $this->default[$key];
+            if ($this->typeIsObject($type)) {
+                $popo = new $this->propertyMapping[$key];
+                if (\method_exists($popo, 'fromArray')) {
+                    $popoData = $data[$key] ?? $this->default[$key] ?? [];
+                    $popo->fromArray($popoData);
+                }
+                $result[$key] = $popo;
+
+                continue;
             }
+
             if (\array_key_exists($key, $data)) {
-                if ($this->isCollectionItem($key, $data)) {
+                if ($this->isCollectionItem($key)) {
                     foreach ($data[$key] as $popoData) {
                         $popo = new $this->collectionItems[$key]();
                         if (\method_exists($popo, 'fromArray')) {
@@ -51,14 +56,8 @@
                 } else {
                     $result[$key] = $data[$key];
                 }
-            }
-
-            if (\class_exists($type)) {
-                $popo = new $type();
-                if (\is_array($result[$key]) && \method_exists($popo, 'fromArray')) {
-                    $popo->fromArray($result[$key]);
-                }
-                $result[$key] = $popo;
+            } else {
+                $result[$key] = $this->default[$key] ?? null;
             }
         }
 
@@ -75,37 +74,6 @@
         }
 
         return $this;
-    }
-
-    protected function prepareToArrayData(): array
-    {
-        $data = [];
-        $parents = \class_parents($this, false);
-        if (count($parents) === 1 && \current($parents) === \get_class($this)) {
-            $data = [];
-        } else if (count($parents) > 1) {
-            $parent = \get_parent_class($this);
-            if (method_exists($parent, 'toArray')) {
-                $data = parent::toArray();
-            }
-        }
-        return $data;
-    }
-
-    protected function prepareFromArrayData(array $data): array
-    {
-        $result = [];
-        $parents = \class_parents($this, false);
-
-        if (count($parents) === 1 && \current($parents) === \get_class($this)) {
-            $result = $data;
-        } else if (count($parents) > 1) {
-            $parent = \get_parent_class($this);
-            if (method_exists($parent, 'fromArray')) {
-                $result = parent::fromArray($data);
-            }
-        }
-        return $result;
     }
 
     protected function typecastValue(string $type, $value)
@@ -130,4 +98,14 @@
         }
 
         return $value;
+    }
+
+    protected function isCollectionItem(string $key): bool
+    {
+        return \array_key_exists($key, $this->collectionItems);
+    }
+
+    protected function typeIsObject(string $value): bool
+    {
+    return $value[0] === '\\' && \ctype_upper($value[1]);
     }

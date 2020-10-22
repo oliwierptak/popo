@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "bar",
+        "type": "Bar",
+        "docblock": "Adds Bar property to Foo from Foo bundle"
+      }
+    ]
+  },
+  {
+    "name": "Bar",
+    "schema": [
+      {
+        "name": "value",
+        "type": "string",
+        "default": "Lorem Ipsum Default Bar Value"
+      }
+    ]
+  }
+]

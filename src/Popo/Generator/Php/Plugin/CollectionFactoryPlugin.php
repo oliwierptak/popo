@@ -10,7 +10,7 @@ use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersGenerat
 use Popo\Generator\Php\Plugin\Property\DocblockTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\PropertyNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin;
 
 class CollectionFactoryPlugin extends PropertyFactoryPlugin
 {

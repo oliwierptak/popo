@@ -27,6 +27,8 @@ class ConfigurationTable
 
         $table = new Table($this->output->section());
         $table->setStyle('compact');
+        $table->setColumnWidth(0, 10);
+        $table->setColumnWidth(1, 48);
 
         if ($configurator->getModelHelperConfigurator()->isShowBorder()) {
             $table->setStyle('default');
@@ -46,6 +48,7 @@ class ConfigurationTable
                 ['returnType', $configurator->getReturnType()],
                 new TableSeparator(),
                 ['abstract', (int)$configurator->getIsAbstract()],
+                ['withPopo', (int)$configurator->getWithPopo()],
                 ['withInterface', (int)$configurator->getWithInterface()],
             ]);
 

@@ -146,20 +146,22 @@ class SchemaBuilder
         array $propertyCollection
     ): BundleSchema
     {
-        $schemaData = [];
-
+        $properties = [];
+        $schemaData = $sourceBundleSchema->getSchema()->toArray();
         foreach ($propertyCollection as $property) {
-            $schemaData[] = $property->toArray();
+            $properties[] = $property->toArray();
         }
+        $schemaData['schema'] = $properties;
 
-        $schema = $this->readerFactory->createSchema(
-            $sourceBundleSchema->getSchema()->toArray()
-        );
-
-        return $this->bundleSchemaFactory->createBundleSchema(
+        $schema = $this->readerFactory->createSchema($schemaData);
+        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema(
             $schema,
             $sourceBundleSchema->getSchemaFilename()
         );
+
+        $bundleSchema->setIsBundleSchema($sourceBundleSchema->isBundleSchema());
+
+        return $bundleSchema;
     }
 
     /**
@@ -205,8 +207,12 @@ class SchemaBuilder
     protected function buildSchema(array $schemaData, Configurator $configurator): Schema
     {
         $schema = $this->readerFactory->createSchema($schemaData);
+
         $schema = $this->updateAbstractFlag($schema, $configurator);
         $schema = $this->updateExtendsFlag($schema, $configurator);
+        $schema = $this->updateReturnFlag($schema, $configurator);
+        $schema = $this->updateWithInterfaceFlag($schema, $configurator);
+        $schema = $this->updateWithPopoFlag($schema, $configurator);
 
         return $schema;
     }
@@ -239,6 +245,33 @@ class SchemaBuilder
             $extends = trim((string)$schema->getExtends());
         }
         $schema->setExtends($extends);
+
+        return $schema;
+    }
+
+    protected function updateReturnFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        if ($configurator->getReturnType() !== null) {
+            $schema->setReturnType($configurator->getReturnType());
+        }
+
+        return $schema;
+    }
+
+    protected function updateWithInterfaceFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        if ($configurator->getWithInterface() !== null) {
+            $schema->setIsWithInterface($configurator->getWithInterface());
+        }
+
+        return $schema;
+    }
+
+    protected function updateWithPopoFlag(Schema $schema, Configurator $configurator)
+    {
+        if ($configurator->getWithPopo() !== null) {
+            $schema->setIsWithPopo($configurator->getWithPopo());
+        }
 
         return $schema;
     }

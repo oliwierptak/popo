@@ -20,10 +20,16 @@ class AddItemMethodParametersGeneratorPlugin extends AbstractGeneratorPlugin imp
             'item'
         );
 
+        $interfacePostfix = '';
+        if ($property->getSchema()->isWithInterface()) {
+            $interfacePostfix = 'Interface';
+        }
+
         if ($property->isCollectionItem()) {
             $string = \sprintf(
-                '%s $%s',
+                '%s%s $%s',
                 $property->getCollectionItem(),
+                $interfacePostfix,
                 'item'
             );
         }

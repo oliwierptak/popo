@@ -16,6 +16,8 @@ class Item
 
     protected ?string $namespace;
 
+    protected ?string $namespaceWithInterface = null;
+
     protected string $extension = '.php';
 
     protected string $returnType = 'self';
@@ -24,51 +26,64 @@ class Item
 
     protected bool $abstract = false;
 
+    protected bool $withPopo = true;
+
     protected bool $withInterface = false;
 
     protected ?Configurator $configurator;
 
-    public function getSchema(): string
+    public function getSchema(): ?string
     {
         return $this->schema;
     }
 
-    public function setSchema(string $schema): self
+    public function setSchema(?string $schema): self
     {
         $this->schema = $schema;
         return $this;
     }
 
-    public function getTemplate(): string
+    public function getTemplate(): ?string
     {
         return $this->template;
     }
 
-    public function setTemplate(string $template): self
+    public function setTemplate(?string $template): self
     {
         $this->template = $template;
         return $this;
     }
 
-    public function getOutput(): string
+    public function getOutput(): ?string
     {
         return $this->output;
     }
 
-    public function setOutput(string $output): self
+    public function setOutput(?string $output): self
     {
         $this->output = $output;
         return $this;
     }
 
-    public function getNamespace(): string
+    public function getNamespace(): ?string
     {
         return $this->namespace;
     }
 
-    public function setNamespace(string $namespace): self
+    public function setNamespace(?string $namespace): self
     {
         $this->namespace = $namespace;
+        return $this;
+    }
+
+    public function getNamespaceWithInterface(): ?string
+    {
+        return $this->namespaceWithInterface;
+    }
+
+    public function setNamespaceWithInterface(?string $namespaceWithInterface): self
+    {
+        $this->namespaceWithInterface = $namespaceWithInterface;
         return $this;
     }
 
@@ -116,6 +131,17 @@ class Item
         return $this;
     }
 
+    public function isWithPopo(): bool
+    {
+        return $this->withPopo;
+    }
+
+    public function setWithPopo(bool $withPopo): self
+    {
+        $this->withPopo = $withPopo;
+        return $this;
+    }
+
     public function isWithInterface(): bool
     {
         return $this->withInterface;
@@ -127,12 +153,12 @@ class Item
         return $this;
     }
 
-    public function getConfigurator(): Configurator
+    public function getConfigurator(): ?Configurator
     {
         return $this->configurator;
     }
 
-    public function setConfigurator(Configurator $configurator): self
+    public function setConfigurator(?Configurator $configurator): self
     {
         $this->configurator = $configurator;
         return $this;
@@ -147,8 +173,9 @@ class Item
         $this->extension = $data['extension'] ?? '.php';
         $this->returnType = $data['returnType'] ?? 'self';
         $this->extends = $data['extends'] ?? null;
-        $this->abstract = (bool)$data['abstract'] ?? false;
-        $this->withInterface = (bool) $data['withInterface'] ?? false;
+        $this->abstract = (bool)(int)$data['abstract'] ?? false;
+        $this->withPopo = (bool)(int)$data['withPopo'] ?? false;
+        $this->withInterface = (bool)(int)$data['withInterface'] ?? false;
         $this->configurator = $data['configurator'] ?? null;
 
         return $this;
@@ -165,6 +192,7 @@ class Item
             'returnType' => $this->returnType,
             'extends' => $this->extends,
             'abstract' => (bool)$this->abstract,
+            'withPopo' => (bool)$this->withPopo,
             'withInterface' => (bool)$this->withInterface,
             'configurator' => $this->configurator,
         ];

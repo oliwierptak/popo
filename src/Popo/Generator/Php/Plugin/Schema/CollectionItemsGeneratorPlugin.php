@@ -20,7 +20,10 @@ class CollectionItemsGeneratorPlugin extends AbstractGeneratorPlugin implements 
 
         foreach ($schema->getSchema() as $propertyData) {
             $property = $this->buildProperty($schema, $propertyData);
-            $items[$property->getName()] = $property->getCollectionItem();
+            $collectionItem = trim($property->getCollectionItem());
+            if ($collectionItem !== '') {
+                $items[$property->getName()] = '\\' . $schema->getNamespaceName() . '\\' . $collectionItem;
+            }
         }
 
         return var_export($items, true);

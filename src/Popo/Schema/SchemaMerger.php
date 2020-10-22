@@ -52,8 +52,8 @@ class SchemaMerger
             $bundleSchema = array_shift($schemaFiles);
             $this->schemaValidator->assertIsBundleSchema($bundleSchema);
 
-            $mergedProperties = $this->mergeProperties($bundleSchema, $schemaFiles);
-            $mergedBundleSchema = $this->schemaBuilder->buildBundleSchemaWithProperties($bundleSchema, $mergedProperties);
+            $properties = $this->mergeProperties($bundleSchema, $schemaFiles);
+            $mergedBundleSchema = $this->schemaBuilder->buildBundleSchemaWithProperties($bundleSchema, $properties);
 
             $result[$mergedBundleSchema->getSchema()->getName()] = $mergedBundleSchema;
         }

@@ -17,7 +17,7 @@ use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeGenerato
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin;
 use Popo\Plugin\Factory\PropertyFactoryPluginInterface;
 use Popo\Schema\Reader\PropertyExplorer;
 
