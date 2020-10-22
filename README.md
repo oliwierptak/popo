@@ -315,4 +315,4 @@ A title
 Bar lorem ipsum
 ```
 
-See [tests/fixtures/popo-readme](tests/fixtures/popo-readme/) for examples.
+See [tests/fixtures/](tests/fixtures/) for more schema examples.
