@@ -25,7 +25,7 @@ class ProgressIndicator
         $this->max = $max;
     }
 
-    public function initProgressBar(): void
+    public function start(): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
             return;
@@ -37,7 +37,7 @@ class ProgressIndicator
             $borderChar = '';
         }
 
-        $this->progressBar = new ProgressBar($this->configurator->getOutput()->section(), $this->max);
+        $this->progressBar = new ProgressBar($this->output->section(), $this->max);
         $this->progressBar->setFormat("${borderChar} %current%/%max% %bar% %percent:3s%% ${borderChar}\n${borderChar} %remaining:-10s% %memory:53s ${borderChar}%");
 
         if (!$this->configurator->getModelHelperConfigurator()->isShowConfiguration()) {
@@ -48,7 +48,7 @@ class ProgressIndicator
         $this->progressBar->start();
     }
 
-    public function advanceProgressBar(): void
+    public function advance(): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
             return;
@@ -57,7 +57,7 @@ class ProgressIndicator
         $this->progressBar->advance();
     }
 
-    public function finishProgressBar(): void
+    public function stop(): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
             $this->output->writeln(sprintf(
@@ -92,4 +92,5 @@ class ProgressIndicator
 
         $this->output->writeln($separator);
     }
+
 }

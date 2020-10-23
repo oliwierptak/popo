@@ -18,11 +18,25 @@ use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 
 class ConfiguratorProvider
 {
+    /**
+     * @param Configurator $configurator
+     *
+     * @return Configurator
+     * @throws \InvalidArgumentException
+     */
     public function configurePopo(Configurator $configurator): Configurator
     {
+        $this->assertConfiguration($configurator);
+
         return $this->configurePopoPlugins($configurator);
     }
 
+    /**
+     * @param Configurator $configurator
+     *
+     * @return Configurator
+     * @throws \InvalidArgumentException
+     */
     public function configureDto(Configurator $configurator): Configurator
     {
         $configurator = $this->configureDtoPlugins($configurator);
@@ -33,15 +47,25 @@ class ConfiguratorProvider
             ->setPropertyTemplateFilename('interface/php.interface.property.tpl')
             ->setCollectionTemplateFilename('interface/php.interface.collection.tpl');
 
+        $this->assertConfiguration($configurator);
+
         return $configurator;
     }
 
+    /**
+     * @param Configurator $configurator
+     *
+     * @return Configurator
+     * @throws \InvalidArgumentException
+     */
     public function configureAbstract(Configurator $configurator): Configurator
     {
         $configurator = $this->configurePopoPlugins($configurator);
         $configurator
             ->getSchemaConfigurator()
             ->setSchemaTemplateFilename('php.schema-abstract.tpl');
+
+        $this->assertConfiguration($configurator);
 
         return $configurator;
     }
@@ -92,5 +116,34 @@ class ConfiguratorProvider
             ]);
 
         return $configurator;
+    }
+
+    /**
+     * @param \Popo\Configurator $configurator
+     *
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    protected function assertConfiguration(Configurator $configurator): void
+    {
+        $schemaDirectory = $configurator->getSchemaDirectory();
+        $outputDirectory = $configurator->getOutputDirectory();
+        $templateDirectory = $configurator->getTemplateDirectory();
+
+        $requiredPaths = [
+            'schema' => $schemaDirectory,
+            'output' => $outputDirectory,
+            'template' => $templateDirectory,
+        ];
+
+        foreach ($requiredPaths as $type => $path) {
+            if (!\is_dir($path)) {
+                throw new \InvalidArgumentException(\sprintf(
+                    'Required %s directory does not exist under path: %s',
+                    $type,
+                    $path
+                ));
+            }
+        }
     }
 }

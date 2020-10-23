@@ -11,6 +11,7 @@ use Popo\Model\Helper\ConfigurationTable;
 use Popo\Model\Helper\ModelHelperConfigurator;
 use Popo\PopoFacade;
 use Popo\PopoFacadeInterfaces;
+use Popo\PopoFactory;
 use Popo\Schema\SchemaConfigurator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -53,20 +54,6 @@ abstract class AbstractCommand extends Command
 
     abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
-    public function setFacade(PopoFacadeInterfaces $facade): void
-    {
-        $this->facade = $facade;
-    }
-
-    protected function getFacade(): PopoFacadeInterfaces
-    {
-        if (empty($this->facade)) {
-            $this->facade = new PopoFacade();
-        }
-
-        return $this->facade;
-    }
-
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->modelHelperConfigurator = (new ModelHelperConfigurator())
@@ -75,6 +62,12 @@ abstract class AbstractCommand extends Command
             ->setShowBorder((bool)$input->getOption(static::OPTION_SHOW_CONFIGURATION_BORDER));
 
         $this->configurationTable = new ConfigurationTable($output);
+
+        $factory = new PopoFactory();
+        $factory->setOutput($output);
+
+        $this->facade = new PopoFacade();
+        $this->facade->setFactory($factory);
     }
 
     protected function configure(): void
@@ -87,17 +80,17 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_CONFIG_FILENAME, 'c', InputOption::VALUE_OPTIONAL, 'Config filename', '.popo'),
                 new InputOption(static::OPTION_SCHEMA, 's', InputOption::VALUE_OPTIONAL, 'Schema directory', 'popo/'),
                 new InputOption(static::OPTION_TEMPLATE, 't', InputOption::VALUE_OPTIONAL, 'Template directory', 'vendor/popo/generator/templates/'),
-                new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Directory for generated files', 'src/Configurator/'),
-                new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated files', 'Configurator'),
-                new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated files', '.php'),
-                new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract classes', null),
+                new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Output directory for generated files', 'src/Configurator/'),
+                new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated POPO files', 'Configurator'),
+                new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated POPO files', '.php'),
+                new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract POPO classes', null),
                 new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
                 new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', null),
                 new InputOption(static::OPTION_WITH_POPO, 'wp', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate POPO files', true),
-                new InputOption(static::OPTION_WITH_INTERFACE, 'wi', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', null),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration table with settings defined in config file', false),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration table', false),
-                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', false),
+                new InputOption(static::OPTION_WITH_INTERFACE, 'wi', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces for POPO files', null),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration settings defined in config file', true),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration settings', true),
+                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', true),
             ]);
     }
 
@@ -140,17 +133,16 @@ abstract class AbstractCommand extends Command
 
             $configurator = (new Configurator())
                 ->setConfigName($name)
-                ->setOutput($output)
                 ->setModelHelperConfigurator(new ModelHelperConfigurator())
                 ->setSchemaConfigurator(new SchemaConfigurator())
                 ->setSchemaDirectory($item->getSchema())
                 ->setTemplateDirectory($item->getTemplate())
                 ->setOutputDirectory($item->getOutput())
                 ->setNamespace($item->getNamespace())
-                ->setNamespaceWithInterface($item->getNamespaceWithInterface())
+                ->setNamespaceWithInterface((string)$item->getNamespaceWithInterface())
                 ->setExtension($item->getExtension())
                 ->setIsAbstract($item->isAbstract())
-                ->setExtends($item->getExtends())
+                ->setExtends((string)$item->getExtends())
                 ->setReturnType($item->getReturnType())
                 ->setWithPopo($item->isWithPopo())
                 ->setWithInterface($item->isWithInterface());

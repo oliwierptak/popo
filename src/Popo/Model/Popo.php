@@ -25,13 +25,16 @@ class Popo
 
     protected FileWriter $abstractWriter;
 
-    public function __construct(SchemaBuilder $schemaBuilder, SchemaMerger $schemaMerger, FileWriter $popoWriter, FileWriter $dtoWriter, FileWriter $abstractWriter)
+    protected ProgressIndicator $progressIndicator;
+
+    public function __construct(SchemaBuilder $schemaBuilder, SchemaMerger $schemaMerger, FileWriter $popoWriter, FileWriter $dtoWriter, FileWriter $abstractWriter, ProgressIndicator $progressIndicator)
     {
         $this->schemaBuilder = $schemaBuilder;
         $this->schemaMerger = $schemaMerger;
         $this->popoWriter = $popoWriter;
         $this->dtoWriter = $dtoWriter;
         $this->abstractWriter = $abstractWriter;
+        $this->progressIndicator = $progressIndicator;
     }
 
     /**
@@ -50,8 +53,7 @@ class Popo
         $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
 
-        $progressIndicator = new ProgressIndicator($configurator->getOutput(), $configurator, count($mergedSchemaFiles));
-        $progressIndicator->initProgressBar();
+        $this->progressIndicator->start();
 
         foreach ($mergedSchemaFiles as $schemaFilename => $bundleSchema) {
             $bundleSchema = $this->updateSchema($bundleSchema, $configurator);
@@ -72,12 +74,12 @@ class Popo
 
             $numberOfGeneratedFiles++;
 
-            $progressIndicator->advanceProgressBar();
+            $this->progressIndicator->advance();
         }
 
         $result->setFileCount(count($mergedSchemaFiles));
 
-        $progressIndicator->finishProgressBar();
+        $this->progressIndicator->stop();
 
         return $result;
     }

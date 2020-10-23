@@ -6,7 +6,6 @@ namespace Popo;
 
 use Popo\Model\Helper\ModelHelperConfigurator;
 use Popo\Schema\SchemaConfigurator;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Configurator
 {
@@ -23,46 +22,36 @@ class Configurator
     protected string $extension = '.php';
 
     /**
-     * @var string|null if set, will overwrite namespace value of implemented interfaces
+     * Value to be used for interfaces
      */
-    protected ?string $namespaceWithInterface;
+    protected string $namespaceWithInterface = '';
 
     /**
      * Determines if generated POPO will be abstract class
-     *
-     * @var bool|null if set, will overwrite the abstract value from schema file
      */
-    protected $isAbstract;
+    protected bool $isAbstract = false;
 
     /**
-     * Generate POPO files
-     *
-     * @var bool|null if set, will overwrite the withPopo value from schema file
+     * Only generate POPO files
      */
-    protected $withPopo;
+    protected bool $withPopo = true;
 
     /**
-     * Generate interfaces
-     *
-     * @var bool|null if set, will overwrite the withInterface value from schema file
+     * Only generate interfaces
      */
-    protected $withInterface;
+    protected bool $withInterface = false;
 
     /**
      * Generated class will be extended by this value
-     *
-     * @var string|null if set, will overwrite the withPopo value from schema file
      */
-    protected $extends;
-
-    protected SchemaConfigurator $schemaConfigurator;
+    protected string $extends = '';
 
     /**
      * The return type of fromArray() method will be set to this value
-     *
-     * @var string|null if set, overrides the return value of fromArray() method
      */
-    protected $returnType;
+    protected string $returnType = 'self';
+
+    protected SchemaConfigurator $schemaConfigurator;
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]|string[]
@@ -83,8 +72,6 @@ class Configurator
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]|string[]
      */
     protected array $collectionPluginClasses = [];
-
-    protected ?OutputInterface $output;
 
     protected ModelHelperConfigurator $modelHelperConfigurator;
 
@@ -112,7 +99,6 @@ class Configurator
     public function setSchemaDirectory(string $schemaDirectory): self
     {
         $this->schemaDirectory = $schemaDirectory;
-
         return $this;
     }
 
@@ -124,7 +110,6 @@ class Configurator
     public function setTemplateDirectory(string $templateDirectory): self
     {
         $this->templateDirectory = $templateDirectory;
-
         return $this;
     }
 
@@ -136,7 +121,6 @@ class Configurator
     public function setOutputDirectory(string $outputDirectory): self
     {
         $this->outputDirectory = $outputDirectory;
-
         return $this;
     }
 
@@ -148,19 +132,6 @@ class Configurator
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
-
-        return $this;
-    }
-
-    public function getNamespaceWithInterface(): ?string
-    {
-        return $this->namespaceWithInterface;
-    }
-
-    public function setNamespaceWithInterface(?string $namespaceWithInterface): self
-    {
-        $this->namespaceWithInterface = $namespaceWithInterface;
-
         return $this;
     }
 
@@ -172,7 +143,17 @@ class Configurator
     public function setExtension(string $extension): self
     {
         $this->extension = $extension;
+        return $this;
+    }
 
+    public function getNamespaceWithInterface(): ?string
+    {
+        return $this->namespaceWithInterface;
+    }
+
+    public function setNamespaceWithInterface(string $namespaceWithInterface): self
+    {
+        $this->namespaceWithInterface = $namespaceWithInterface;
         return $this;
     }
 
@@ -181,10 +162,9 @@ class Configurator
         return $this->isAbstract;
     }
 
-    public function setIsAbstract(?bool $isAbstract): self
+    public function setIsAbstract(bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
-
         return $this;
     }
 
@@ -193,10 +173,9 @@ class Configurator
         return $this->withPopo;
     }
 
-    public function setWithPopo(?bool $withPopo): self
+    public function setWithPopo(bool $withPopo): self
     {
         $this->withPopo = $withPopo;
-
         return $this;
     }
 
@@ -205,10 +184,9 @@ class Configurator
         return $this->withInterface;
     }
 
-    public function setWithInterface(?bool $withInterface): self
+    public function setWithInterface(bool $withInterface): self
     {
         $this->withInterface = $withInterface;
-
         return $this;
     }
 
@@ -217,22 +195,9 @@ class Configurator
         return $this->extends;
     }
 
-    public function setExtends(?string $extends): self
+    public function setExtends(string $extends): self
     {
         $this->extends = $extends;
-
-        return $this;
-    }
-
-    public function getReturnType(): string
-    {
-        return $this->returnType;
-    }
-
-    public function setReturnType(string $returnType): self
-    {
-        $this->returnType = $returnType;
-
         return $this;
     }
 
@@ -244,129 +209,75 @@ class Configurator
     public function setSchemaConfigurator(SchemaConfigurator $schemaConfigurator): self
     {
         $this->schemaConfigurator = $schemaConfigurator;
-
         return $this;
     }
 
-    public function getSchemaPluginClasses(): array
+    public function getReturnType(): ?string
+    {
+        return $this->returnType;
+    }
+
+    public function setReturnType(string $returnType): self
+    {
+        $this->returnType = $returnType;
+        return $this;
+    }
+
+    public function getSchemaPluginClasses()
     {
         return $this->schemaPluginClasses;
     }
 
-    public function getArrayablePluginClasses(): array
+    public function setSchemaPluginClasses($schemaPluginClasses)
+    {
+        $this->schemaPluginClasses = $schemaPluginClasses;
+        return $this;
+    }
+
+    public function getArrayablePluginClasses()
     {
         return $this->arrayablePluginClasses;
     }
 
-    /**
-     * Format:
-     *
-     * [
-     *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
-     *  ]
-     *
-     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]|string[] $schemaPluginClasses
-     *
-     * @return self
-     */
-    public function setArrayablePluginClasses(array $arrayablePluginClasses): self
+    public function setArrayablePluginClasses($arrayablePluginClasses)
     {
         $this->arrayablePluginClasses = $arrayablePluginClasses;
-
         return $this;
     }
 
-    /**
-     * Format:
-     *
-     * [
-     *  SchemaGeneratorPluginInterface::PATTERN => SchemaGeneratorPluginInterface::class,
-     *  ]
-     *
-     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]|string[] $schemaPluginClasses
-     *
-     * @return self
-     */
-    public function setSchemaPluginClasses(array $schemaPluginClasses): self
-    {
-        $this->schemaPluginClasses = $schemaPluginClasses;
-
-        return $this;
-    }
-
-    /**
-     * @return Plugin\Generator\PropertyGeneratorPluginInterface[]|string[]
-     */
-    public function getPropertyPluginClasses(): array
+    public function getPropertyPluginClasses()
     {
         return $this->propertyPluginClasses;
     }
 
-    /**
-     * Format:
-     *
-     * [
-     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
-     *  ]
-     *
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]|string[] $propertyPluginClasses
-     *
-     * @return self
-     */
-    public function setPropertyPluginClasses(array $propertyPluginClasses): self
+    public function setPropertyPluginClasses($propertyPluginClasses)
     {
         $this->propertyPluginClasses = $propertyPluginClasses;
-
         return $this;
     }
 
-    /**
-     * @return Plugin\Generator\PropertyGeneratorPluginInterface[]|string[]
-     */
-    public function getCollectionPluginClasses(): array
+    public function getCollectionPluginClasses()
     {
         return $this->collectionPluginClasses;
     }
 
-    /**
-     * Format of $propertyPlugins:
-     *
-     * [
-     *  PropertyGeneratorPluginInterface::PATTERN => PropertyGeneratorPluginInterface::class,
-     *  ]
-     *
-     * @param \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]|string[] $collectionPluginClasses
-     *
-     * @return self
-     */
-    public function setCollectionPluginClasses(array $collectionPluginClasses): self
+    public function setCollectionPluginClasses($collectionPluginClasses)
     {
         $this->collectionPluginClasses = $collectionPluginClasses;
-
-        return $this;
-    }
-
-    public function getOutput(): ?OutputInterface
-    {
-        return $this->output;
-    }
-
-    public function setOutput(?OutputInterface $output): self
-    {
-        $this->output = $output;
-
         return $this;
     }
 
     public function getModelHelperConfigurator(): ModelHelperConfigurator
     {
+        if (empty($this->modelHelperConfigurator)) {
+            $this->modelHelperConfigurator = new ModelHelperConfigurator();
+        }
         return $this->modelHelperConfigurator;
     }
 
     public function setModelHelperConfigurator(ModelHelperConfigurator $modelHelperConfigurator): self
     {
         $this->modelHelperConfigurator = $modelHelperConfigurator;
-
         return $this;
     }
 }

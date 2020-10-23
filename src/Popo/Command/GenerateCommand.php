@@ -20,7 +20,7 @@ class GenerateCommand extends AbstractCommand
         foreach ($items as $name => $configItem) {
             $configItem->getConfigurator()->setModelHelperConfigurator($this->modelHelperConfigurator);
             $this->configurationTable->showConfigurationTable($configItem->getConfigurator());
-            $this->getFacade()->generate($configItem->getConfigurator());
+            $this->facade->generate($configItem->getConfigurator());
         }
 
         return 0;

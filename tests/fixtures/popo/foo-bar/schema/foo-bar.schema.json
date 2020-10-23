@@ -7,7 +7,7 @@
         "type": "int"
       },
       {
-        "name": "fooBarStringValue",
+        "name": "value",
         "type": "string",
         "default": "Lorem Ipsum"
       }
