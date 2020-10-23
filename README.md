@@ -5,8 +5,6 @@ POPO - "Plain Old Php Object" was inspired by "Plain Old Java Object" (POJO) con
 POPO can also locate, load, validate, and combine JSON schemas to generate PHP source code files.
 The schema supports inheritance, collections and encapsulation of other POPO objects.
 
-## Example
-
 ```php
 use App\Popo\Foo;
 
