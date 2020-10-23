@@ -16,27 +16,32 @@ class ProgressIndicator
 
     protected ?ProgressBar $progressBar;
 
-    public function __construct(OutputInterface $output, Configurator $configurator)
+    protected int $max = 0;
+
+    public function __construct(OutputInterface $output, Configurator $configurator, int $max = 0)
     {
         $this->output = $output;
         $this->configurator = $configurator;
+        $this->max = $max;
     }
 
-    public function initProgressBar(int $max = 0): void
+    public function initProgressBar(): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
             return;
         }
 
-        $this->progressBar = new ProgressBar($this->configurator->getOutput()->section(), $max);
-
-        $this->progressBar->setFormat(" %current%/%max% %bar% %percent:3s%% \n %remaining:-10s% %memory:53s %");
-        if ($this->configurator->getModelHelperConfigurator()->isShowBorder()) {
-            $this->progressBar->setFormat("| %current%/%max% %bar% %percent:3s%% |\n| %remaining:-10s% %memory:53s |%");
+        $borderChar = '|';
+        if (!$this->configurator->getModelHelperConfigurator()->isShowBorder()) {
+            //$this->progressBar->setFormat("| %current%/%max% %bar% %percent:3s%% |\n| %remaining:-10s% %memory:53s |%");
+            $borderChar = '';
         }
 
+        $this->progressBar = new ProgressBar($this->configurator->getOutput()->section(), $this->max);
+        $this->progressBar->setFormat("${borderChar} %current%/%max% %bar% %percent:3s%% ${borderChar}\n${borderChar} %remaining:-10s% %memory:53s ${borderChar}%");
+
         if (!$this->configurator->getModelHelperConfigurator()->isShowConfiguration()) {
-            $this->output->writeln(sprintf(' Generating: <fg=yellow>%s</>' , $this->configurator->getConfigName()));
+            $this->output->writeln(sprintf(' Generating: <fg=yellow>%s</>', $this->configurator->getConfigName()));
         }
 
         $this->progressBar->setBarWidth(55);
@@ -55,6 +60,11 @@ class ProgressIndicator
     public function finishProgressBar(): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
+            $this->output->writeln(sprintf(
+                '>> Generated %d POPO files for "%s" section',
+                $this->max,
+                $this->configurator->getConfigName()
+            ));
             return;
         }
 

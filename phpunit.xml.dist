@@ -15,7 +15,7 @@
 
     <testsuites>
         <testsuite name="PopoFunctionalTestSuit">
-            <directory>./tests/Functional</directory>
+            <directory>./tests/suits/Functional</directory>
         </testsuite>
     </testsuites>
 

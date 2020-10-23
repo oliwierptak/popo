@@ -70,9 +70,9 @@ abstract class AbstractCommand extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->modelHelperConfigurator = (new ModelHelperConfigurator())
-            ->setShowConfiguration($input->getOption(static::OPTION_SHOW_CONFIGURATION))
-            ->setShowProgressBar($input->getOption(static::OPTION_SHOW_PROGRESS_BAR))
-            ->setShowBorder($input->getOption(static::OPTION_SHOW_CONFIGURATION_BORDER));
+            ->setShowConfiguration((bool)$input->getOption(static::OPTION_SHOW_CONFIGURATION))
+            ->setShowProgressBar((bool)$input->getOption(static::OPTION_SHOW_PROGRESS_BAR))
+            ->setShowBorder((bool)$input->getOption(static::OPTION_SHOW_CONFIGURATION_BORDER));
 
         $this->configurationTable = new ConfigurationTable($output);
     }
@@ -95,9 +95,9 @@ abstract class AbstractCommand extends Command
                 new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', null),
                 new InputOption(static::OPTION_WITH_POPO, 'wp', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate POPO files', true),
                 new InputOption(static::OPTION_WITH_INTERFACE, 'wi', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces', null),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration table with settings defined in config file', true),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration table', true),
-                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', true),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration table with settings defined in config file', false),
+                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration table', false),
+                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', false),
             ]);
     }
 

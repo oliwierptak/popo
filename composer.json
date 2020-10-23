@@ -34,7 +34,7 @@
     }
   },
   "scripts": {
-    "popo": "bin/popo generate ",
+    "popo": "bin/popo generate --showConfiguration 1 --showConfigurationBorder 1 --showProgressBar 0 -c tests/fixtures/.popo",
     "post-autoload-dump": [
       "chmod +x bin/popo",
       "vendor/bin/cs-setup"

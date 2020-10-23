@@ -56,7 +56,7 @@ vendor/bin/popo generate
 
 See [popo.dist](.popo.dist) for examples.
 
-You can also skip the `.popo` file and provide all settings via the command line. See `--help` for details.
+_Note_: The command line arguments allow to globally override every setting. See `--help` for details.
 
 
 ## Schema directory structure
