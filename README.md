@@ -109,9 +109,6 @@ because each of the schema definitions will be merged into one POPO object.
  
 The additional schema definitions are merged together and added as properties to `main schema`.
 
-_Note_: There can be multiple schema folders, and each can be used as a parameter from a command line or as configuration option.
-
-
 ## Schema definition
 
 A schema is a JSON file describing a POPO object.
