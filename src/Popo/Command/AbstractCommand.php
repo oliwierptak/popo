@@ -45,8 +45,6 @@ abstract class AbstractCommand extends Command
     protected Configurator $configurator;
     protected ModelHelperConfigurator $modelHelperConfigurator;
 
-    abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
-
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->setupModelHelperConfigurator($output);
@@ -59,6 +57,29 @@ abstract class AbstractCommand extends Command
         $this->facade->setFactory($factory);
     }
 
+    protected function setupModelHelperConfigurator(OutputInterface $output): void
+    {
+        $this->modelHelperConfigurator = new ModelHelperConfigurator();
+
+        if ($output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(false)
+                ->setShowProgressBar(false);
+        }
+
+        if ($output->getVerbosity() === OutputInterface::VERBOSITY_VERBOSE) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(true)
+                ->setShowProgressBar(false);
+        }
+
+        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(true)
+                ->setShowProgressBar(true);
+        }
+    }
+
     protected function configure(): void
     {
         $this
@@ -69,14 +90,14 @@ abstract class AbstractCommand extends Command
                     new InputArgument(
                         static::ARGUMENT_CONFIG_SECTION_NAME,
                         InputOption::VALUE_OPTIONAL,
-                        'ConfigContainer section name',
+                        'Config section name',
                         []
                     ),
                     new InputOption(
                         static::OPTION_CONFIG_FILENAME,
                         'c',
                         InputOption::VALUE_OPTIONAL,
-                        'ConfigContainer filename',
+                        'Config filename',
                         '.popo'
                     ),
                     new InputOption(
@@ -93,7 +114,7 @@ abstract class AbstractCommand extends Command
                         static::OPTION_OUTPUT,
                         'o',
                         InputOption::VALUE_OPTIONAL,
-                        'Output directory for generated files',
+                        'Output directory for generated POPO files',
                         'src/Configurator/'
                     ),
                     new InputOption(
@@ -160,6 +181,8 @@ abstract class AbstractCommand extends Command
 
         return $this->executeCommand($input, $output);
     }
+
+    abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
     /**
      * @param InputInterface $input
@@ -246,7 +269,7 @@ abstract class AbstractCommand extends Command
         if (!is_file($filename)) {
             throw new LogicException(
                 sprintf(
-                    'ConfigContainer file: "%s" not found',
+                    'Config file: "%s" not found',
                     $filename
                 )
             );
@@ -263,28 +286,5 @@ abstract class AbstractCommand extends Command
     protected function getPopoFilename(?string $configFilename = null): string
     {
         return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $configFilename;
-    }
-
-    protected function setupModelHelperConfigurator(OutputInterface $output): void
-    {
-        $this->modelHelperConfigurator = new ModelHelperConfigurator();
-
-        if ($output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL) {
-            $this->modelHelperConfigurator
-                ->setShowConfiguration(false)
-                ->setShowProgressBar(false);
-        }
-
-        if ($output->getVerbosity() === OutputInterface::VERBOSITY_VERBOSE) {
-            $this->modelHelperConfigurator
-                ->setShowConfiguration(true)
-                ->setShowProgressBar(false);
-        }
-
-        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-            $this->modelHelperConfigurator
-                ->setShowConfiguration(true)
-                ->setShowProgressBar(true);
-        }
     }
 }

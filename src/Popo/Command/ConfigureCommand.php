@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use function file_put_contents;
 
 class ConfigureCommand extends Command
 {
@@ -45,19 +46,19 @@ class ConfigureCommand extends Command
 
         $question = new Question('Schema [popo/]: ', 'popo/');
         $question->setAutocompleterValues(['popo/']);
-        $schema = rtrim($helper->ask($input, $output, $question), '/').'/';
+        $schema = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Template [vendor/popo/generator/templates/]: ', 'vendor/popo/generator/templates/');
         $question->setAutocompleterValues(['vendor/popo/generator/templates/']);
-        $template = rtrim($helper->ask($input, $output, $question), '/').'/';
+        $template = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Output directory [src/Configurator/]: ', 'src/Configurator/');
         $question->setAutocompleterValues(['src/Configurator/', 'src/Popo/', 'src/Generated/']);
-        $outputDirectory = rtrim($helper->ask($input, $output, $question), '/').'/';
+        $outputDirectory = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Namespace [\App\Configurator]: ', 'App\Configurator');
         $question->setAutocompleterValues(['\App\Configurator']);
-        $namespace = rtrim($helper->ask($input, $output, $question), '\\');;
+        $namespace = rtrim($helper->ask($input, $output, $question), '\\');
 
         $question = new Question('Extension [.php]: ', '.php');
         $question->setAutocompleterValues(['.php']);
@@ -87,7 +88,7 @@ EOT;
 
         $output->writeln('Generating configuration file under: ' . $configFilename);
 
-        \file_put_contents($configFilename, $content);
+        file_put_contents($configFilename, $content);
 
         return 0;
     }

@@ -92,26 +92,6 @@ class Popo
         }
     }
 
-    protected function generatePopo(BundleSchema $bundleSchema, Configurator $configurator): void
-    {
-        if ($bundleSchema->getSchema()->isWithIPopo()) {
-            $currentBundleSchema = clone $bundleSchema;
-            $filename = $this->generateFilename($currentBundleSchema, $configurator);
-            $this->writePopo($currentBundleSchema, $configurator, $filename);
-        }
-    }
-
-    protected function generateDto(BundleSchema $bundleSchema, Configurator $configurator): void
-    {
-        if ($this->shouldGenerateInterface($bundleSchema)) {
-            $currentBundleSchema = clone $bundleSchema;
-            $currentBundleSchema->getSchema()->setIsWithInterface(true);
-            $currentBundleSchema->getSchema()->setExtension('Interface.php');
-            $filename = $this->generateFilename($currentBundleSchema, $configurator);
-            $this->writeDto($currentBundleSchema, $configurator, $filename);
-        }
-    }
-
     protected function updateSchema(BundleSchema $bundleSchema, Configurator $configurator): BundleSchema
     {
         $extends = trim((string) $configurator->getExtends());
@@ -122,6 +102,15 @@ class Popo
         }
 
         return $bundleSchema;
+    }
+
+    protected function generatePopo(BundleSchema $bundleSchema, Configurator $configurator): void
+    {
+        if ($bundleSchema->getSchema()->isWithIPopo()) {
+            $currentBundleSchema = clone $bundleSchema;
+            $filename = $this->generateFilename($currentBundleSchema, $configurator);
+            $this->writePopo($currentBundleSchema, $configurator, $filename);
+        }
     }
 
     protected function generateFilename(BundleSchema $bundleSchema, Configurator $configurator): SplFileInfo
@@ -167,6 +156,30 @@ class Popo
         $this->schemaWriter->writePopo($filename->getPathname(), $bundleSchema->getSchema());
     }
 
+    protected function generateProjectSchemaName(BundleSchema $bundleSchema, Configurator $configurator): string
+    {
+        $nameTokens = explode('\\', $bundleSchema->getSchema()->getName());
+        $name = array_pop($nameTokens);
+
+        return $configurator->getNamespace() . '\\' . $name;
+    }
+
+    protected function generateDto(BundleSchema $bundleSchema, Configurator $configurator): void
+    {
+        if ($this->shouldGenerateInterface($bundleSchema)) {
+            $currentBundleSchema = clone $bundleSchema;
+            $currentBundleSchema->getSchema()->setIsWithInterface(true);
+            $currentBundleSchema->getSchema()->setExtension('Interface.php');
+            $filename = $this->generateFilename($currentBundleSchema, $configurator);
+            $this->writeDto($currentBundleSchema, $configurator, $filename);
+        }
+    }
+
+    protected function shouldGenerateInterface(BundleSchema $bundleSchema): bool
+    {
+        return !$bundleSchema->getSchema()->isAbstract() && $bundleSchema->getSchema()->isWithInterface();
+    }
+
     protected function writeDto(BundleSchema $bundleSchema, Configurator $configurator, SplFileInfo $filename): void
     {
         $bundleSchemaToWrite = clone $bundleSchema;
@@ -177,18 +190,5 @@ class Popo
             ->setName($name);
 
         $this->schemaWriter->writeDto($filename->getPathname(), $bundleSchemaToWrite->getSchema());
-    }
-
-    protected function generateProjectSchemaName(BundleSchema $bundleSchema, Configurator $configurator): string
-    {
-        $nameTokens = explode('\\', $bundleSchema->getSchema()->getName());
-        $name = array_pop($nameTokens);
-
-        return $configurator->getNamespace() . '\\' . $name;
-    }
-
-    protected function shouldGenerateInterface(BundleSchema $bundleSchema): bool
-    {
-        return !$bundleSchema->getSchema()->isAbstract() && $bundleSchema->getSchema()->isWithInterface();
     }
 }
