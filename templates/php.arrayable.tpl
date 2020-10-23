@@ -107,5 +107,5 @@
 
     protected function typeIsObject(string $value): bool
     {
-    return $value[0] === '\\' && \ctype_upper($value[1]);
+        return $value[0] === '\\' && \ctype_upper($value[1]);
     }

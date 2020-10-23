@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace <<NAMESPACE>>;
 
@@ -10,30 +8,15 @@ namespace <<NAMESPACE>>;
  */
 class <<CLASSNAME>><<EXTENDS>> <<IMPLEMENTS_INTERFACE>>
 {
-    /**
-     * @var array
-     */
-    protected $data = <<SCHEMA_DATA>>;
+    protected array $data = <<SCHEMA_DATA>>;
 
-    /**
-     * @var array
-     */
-    protected $default = <<SCHEMA_DATA>>;
+    protected array $default = <<SCHEMA_DATA>>;
 
-    /**
-     * @var array
-     */
-    protected $propertyMapping = <<PROPERTY_MAPPING>>;
+    protected array $propertyMapping = <<PROPERTY_MAPPING>>;
 
-    /**
-     * @var array
-     */
-    protected $collectionItems = <<COLLECTION_ITEMS>>;
+    protected array $collectionItems = <<COLLECTION_ITEMS>>;
 
-    /**
-     * @var array
-     */
-    protected $updateMap = [];
+    protected array $updateMap = [];
 
     /**
      * @param string $property
