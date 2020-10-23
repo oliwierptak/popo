@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator;
 
@@ -53,5 +51,4 @@ class GeneratorFactory
             $container->getCollectionPluginCollection()
         );
     }
-
 }

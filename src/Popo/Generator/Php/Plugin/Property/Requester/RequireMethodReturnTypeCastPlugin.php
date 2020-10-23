@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Requester;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
-use Popo\Schema\Reader\Schema;
 use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 
 class RequireMethodReturnTypeCastPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -18,7 +16,7 @@ class RequireMethodReturnTypeCastPlugin extends AbstractGeneratorPlugin implemen
         $returnType = '';
 
         if ($this->propertyExplorer->hasTypeCast($property->getType())) {
-            $returnType = '('.$property->getType().')';
+            $returnType = '(' . $property->getType() . ')';
         }
 
         return $returnType;

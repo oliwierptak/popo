@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Schema\Popo;
 
@@ -15,7 +13,7 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
     public function generate(Schema $schema): string
     {
-        $extends = trim((string)$schema->getExtends());
+        $extends = trim((string) $schema->getExtends());
         if ($extends !== '') {
             return $extends;
         }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo;
 
@@ -8,9 +6,11 @@ class PopoFacade implements PopoFacadeInterfaces
 {
     protected ?PopoFactory $factory;
 
-    public function setFactory(PopoFactory $factory): void
+    public function generate(Configurator $configurator): GeneratorResult
     {
-        $this->factory = $factory;
+        return $this->getFactory()
+            ->createPopoModel($configurator)
+            ->generate($configurator);
     }
 
     protected function getFactory(): PopoFactory
@@ -22,10 +22,8 @@ class PopoFacade implements PopoFacadeInterfaces
         return $this->factory;
     }
 
-    public function generate(Configurator $configurator): GeneratorResult
+    public function setFactory(PopoFactory $factory): void
     {
-        return $this->getFactory()
-            ->createPopoModel($configurator)
-            ->generate($configurator);
+        $this->factory = $factory;
     }
 }

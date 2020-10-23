@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
@@ -15,7 +13,6 @@ class Property
     const DOCBLOCK = 'docblock';
     const COLLECTION_ITEM = 'collectionItem';
     const SINGULAR = 'singular';
-
     /**
      * @var array
      */
@@ -27,17 +24,14 @@ class Property
         self::COLLECTION_ITEM => '',
         self::SINGULAR => '',
     ];
-
     /**
      * @var array
      */
     protected $data;
-
     /**
      * @var \Popo\Schema\Reader\Schema
      */
     protected $schema;
-
     /**
      * @var array
      */
@@ -53,39 +47,9 @@ class Property
         $this->data = array_merge($this->defaults, $propertySchema);
     }
 
-    protected function getSchemaDefinition(): array
-    {
-        if ($this->schemaDefinition) {
-            return $this->schemaDefinition;
-        }
-
-        foreach ($this->schema->getSchema() as $schemaItem) {
-            if ($schemaItem[static::NAME] === $this->getName()) {
-                $this->schemaDefinition = $schemaItem;
-
-                break;
-            }
-        }
-
-        return $this->schemaDefinition;
-    }
-
     public function getSchema(): Schema
     {
         return $this->schema;
-    }
-
-    public function getName(): string
-    {
-        return $this->data[static::NAME];
-    }
-
-    /**
-     * @return mixed|null
-     */
-    public function getDefault()
-    {
-        return $this->data[static::DEFAULT];
     }
 
     public function getDocblock(): string
@@ -118,6 +82,28 @@ class Property
         return trim($definitions[static::COLLECTION_ITEM]) !== '';
     }
 
+    protected function getSchemaDefinition(): array
+    {
+        if ($this->schemaDefinition) {
+            return $this->schemaDefinition;
+        }
+
+        foreach ($this->schema->getSchema() as $schemaItem) {
+            if ($schemaItem[static::NAME] === $this->getName()) {
+                $this->schemaDefinition = $schemaItem;
+
+                break;
+            }
+        }
+
+        return $this->schemaDefinition;
+    }
+
+    public function getName(): string
+    {
+        return $this->data[static::NAME];
+    }
+
     public function hasDefault(): bool
     {
         return array_key_exists(static::DEFAULT, $this->getSchemaDefinition());
@@ -126,6 +112,14 @@ class Property
     public function hasConstantValue(): bool
     {
         return trim($this->getDefault()[0] ?? '') === '\\';
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getDefault()
+    {
+        return $this->data[static::DEFAULT];
     }
 
     /**

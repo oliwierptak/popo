@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace TestsSuites\Popo\Functional;
 
@@ -14,15 +12,6 @@ class PopoReadmeTest extends TestCase
     protected string $templateDirectory;
     protected PopoFactory $popoFactory;
     protected string $outputDirectory;
-
-    protected function setUp(): void
-    {
-        $this->popoFactory = new PopoFactory();
-
-        $this->schemaDirectory = POPO_TESTS_DIR . 'fixtures/';
-        $this->templateDirectory = POPO_APPLICATION_DIR . 'templates/';
-        $this->outputDirectory = POPO_TESTS_DIR . 'App/Popo';
-    }
 
     public function test_constructor(): void
     {
@@ -40,8 +29,8 @@ class PopoReadmeTest extends TestCase
         $expected = [
             'title' => '',
             'bar' => [
-                'value' => 'Lorem Ipsum Default Bar Value'
-            ]
+                'value' => 'Lorem Ipsum Default Bar Value',
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
@@ -61,10 +50,19 @@ class PopoReadmeTest extends TestCase
         $expected = [
             'title' => 'A title',
             'bar' => [
-                'value' => 'Bar lorem ipsum'
-            ]
+                'value' => 'Bar lorem ipsum',
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
+    }
+
+    protected function setUp(): void
+    {
+        $this->popoFactory = new PopoFactory();
+
+        $this->schemaDirectory = POPO_TESTS_DIR . 'fixtures/';
+        $this->templateDirectory = POPO_APPLICATION_DIR . 'templates/';
+        $this->outputDirectory = POPO_TESTS_DIR . 'App/Popo';
     }
 }

@@ -1,8 +1,9 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
+
+use function current;
+use function explode;
 
 class SchemaConfigurator
 {
@@ -10,27 +11,22 @@ class SchemaConfigurator
      * @var string
      */
     protected $schemaPath = '@schema@';
-
     /**
      * @var string
      */
     protected $schemaFilename = '*.schema.json';
-
     /**
      * @var string
      */
     protected $schemaTemplateFilename = 'php.schema.tpl';
-
     /**
      * @var string
      */
     protected $arrayableTemplateFilename = 'php.arrayable.tpl';
-
     /**
      * @var string
      */
     protected $propertyTemplateFilename = 'php.property.tpl';
-
     /**
      * @var string
      */
@@ -62,9 +58,9 @@ class SchemaConfigurator
 
     public function resolveBundleName(string $schemaFilename, string $delimiter = '.'): string
     {
-        $parts = \explode($delimiter, $schemaFilename);
+        $parts = explode($delimiter, $schemaFilename);
 
-        return \current($parts);
+        return current($parts);
     }
 
     public function getSchemaTemplateFilename(): string
@@ -72,16 +68,16 @@ class SchemaConfigurator
         return $this->schemaTemplateFilename;
     }
 
-    public function getArrayableTemplateFilename(): string
-    {
-        return $this->arrayableTemplateFilename;
-    }
-
     public function setSchemaTemplateFilename(string $schemaTemplateFilename): self
     {
         $this->schemaTemplateFilename = $schemaTemplateFilename;
 
         return $this;
+    }
+
+    public function getArrayableTemplateFilename(): string
+    {
+        return $this->arrayableTemplateFilename;
     }
 
     public function getPropertyTemplateFilename(): string

@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Setter\Dto;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
-use Popo\Schema\Reader\Schema;
 use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use function sprintf;
 
 class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
@@ -16,7 +14,7 @@ class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
     public function generate(Schema $schema, Property $property): string
     {
-        $extends = trim((string)$schema->getExtends());
+        $extends = trim((string) $schema->getExtends());
         if ($extends !== '') {
             return sprintf(
                 ': %s',

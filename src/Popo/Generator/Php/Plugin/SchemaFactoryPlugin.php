@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin;
 
@@ -9,10 +7,10 @@ use Popo\Generator\Php\Plugin\Schema\ClassNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\CollectionItemsGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\ExtendGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\FromArrayResultPlugin;
-use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 use Popo\Generator\Php\Plugin\Schema\NamespaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\PropertyMappingGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\SchemaDataGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 use Popo\Plugin\Factory\SchemaFactoryPluginInterface;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyExplorer;
@@ -44,6 +42,18 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         ];
     }
 
+    protected function createNamespaceGeneratorPlugin(): SchemaGeneratorPluginInterface
+    {
+        return new NamespaceGeneratorPlugin(
+            $this->getPropertyExplorer()
+        );
+    }
+
+    protected function getPropertyExplorer(): PropertyExplorer
+    {
+        return $this->propertyExplorer;
+    }
+
     protected function createClassNameGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
         return new ClassNameGeneratorPlugin(
@@ -51,16 +61,16 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         );
     }
 
-    protected function createAbstractClassGeneratorPlugin(): SchemaGeneratorPluginInterface
+    protected function createExtendsGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
-        return new AbstractClassGeneratorPlugin(
+        return new ExtendGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }
 
-    protected function createNamespaceGeneratorPlugin(): SchemaGeneratorPluginInterface
+    protected function createAbstractClassGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
-        return new NamespaceGeneratorPlugin(
+        return new AbstractClassGeneratorPlugin(
             $this->getPropertyExplorer()
         );
     }
@@ -79,20 +89,6 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         );
     }
 
-    protected function createCollectionItemsGeneratorPlugin(): SchemaGeneratorPluginInterface
-    {
-        return new CollectionItemsGeneratorPlugin(
-            $this->getPropertyExplorer()
-        );
-    }
-
-    protected function createExtendsGeneratorPlugin(): SchemaGeneratorPluginInterface
-    {
-        return new ExtendGeneratorPlugin(
-            $this->getPropertyExplorer()
-        );
-    }
-
     protected function createFromArrayResultPlugin(): SchemaGeneratorPluginInterface
     {
         return new ToArrayResultPlugin(
@@ -107,8 +103,10 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
         );
     }
 
-    protected function getPropertyExplorer(): PropertyExplorer
+    protected function createCollectionItemsGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
-        return $this->propertyExplorer;
+        return new CollectionItemsGeneratorPlugin(
+            $this->getPropertyExplorer()
+        );
     }
 }

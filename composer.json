@@ -34,11 +34,18 @@
     }
   },
   "scripts": {
-    "popo": "bin/popo generate --showConfiguration 1 --showConfigurationBorder 1 --showProgressBar 0 -c tests/fixtures/.popo",
+    "popo": "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo",
+    "popo-readme": "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme",
     "post-autoload-dump": [
       "chmod +x bin/popo",
       "vendor/bin/cs-setup"
-    ]
+    ],
+    "tests": [
+      "@popo",
+      "@popo-readme",
+      "vendor/bin/phpunit --testdox"
+    ],
+    "testsVerbose": "@tests -v"
   },
   "scripts-descriptions": {
     "popo": "Generate POPO files"

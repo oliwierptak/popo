@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace TestsSuites\Popo\Functional;
 
@@ -40,14 +38,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Ipsum Option'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem ipsum'
+                'buzz' => 'Lorem ipsum',
             ],
             'fooBar' => [
                 'fooBarId' => null,
                 'value' => 'Lorem Ipsum',
                 'buzzPropertyInFooBar' => null,
                 'xyyPropertyInFooBar' => null,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
@@ -63,8 +61,8 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem new 1'
-            ]
+                'buzz' => 'Lorem new 1',
+            ],
         ];
 
         $foo = (new Foo())->fromArray($value);
@@ -80,14 +78,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem new 1'
+                'buzz' => 'Lorem new 1',
             ],
             'fooBar' => [
                 'fooBarId' => null,
                 'value' => 'Lorem Ipsum',
                 'buzzPropertyInFooBar' => null,
                 'xyyPropertyInFooBar' => null,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
@@ -116,14 +114,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Ipsum Option'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem ipsum'
+                'buzz' => 'Lorem ipsum',
             ],
             'fooBar' => [
                 'fooBarId' => null,
                 'value' => 'Lorem Ipsum',
                 'buzzPropertyInFooBar' => null,
                 'xyyPropertyInFooBar' => null,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
@@ -151,8 +149,8 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem new 1'
-            ]
+                'buzz' => 'Lorem new 1',
+            ],
         ];
 
         $foo = (new Foo())->fromArray($value);
@@ -168,14 +166,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 789, 'anOption' => 'Lorem Option 2'],
             ],
             'buzz' => [
-                'buzz' => 'Lorem new 1'
+                'buzz' => 'Lorem new 1',
             ],
             'fooBar' => [
                 'fooBarId' => null,
                 'value' => 'Lorem Ipsum',
                 'buzzPropertyInFooBar' => null,
                 'xyyPropertyInFooBar' => null,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());
@@ -199,14 +197,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 456],
             ],
             'buzz' => [
-                'buzz' => 'lorem buzz 1'
+                'buzz' => 'lorem buzz 1',
             ],
             'fooBar' => [
                 'fooBarId' => 111,
                 'value' => 'New Lorem Ipsum',
                 'buzzPropertyInFooBar' => 'buzz',
                 'xyyPropertyInFooBar' => 'xyy',
-            ]
+            ],
         ];
 
         $foo = (new Foo())->fromArray($value);
@@ -227,14 +225,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 456],
             ],
             'buzz' => [
-                'buzz' => 'lorem buzz 1'
+                'buzz' => 'lorem buzz 1',
             ],
             'fooBar' => [
                 'fooBarId' => 111,
                 'value' => 'New Lorem Ipsum',
                 'buzzPropertyInFooBar' => 'buzz',
                 'xyyPropertyInFooBar' => 'xyy',
-            ]
+            ],
         ];
 
         $foo = (new Foo())->fromArray($value);
@@ -256,14 +254,14 @@ class PopoGeneratedTest extends TestCase
                 ['id' => 987, 'anOption' => 'abc'],
             ],
             'buzz' => [
-                'buzz' => 'lorem buzz 1'
+                'buzz' => 'lorem buzz 1',
             ],
             'fooBar' => [
                 'fooBarId' => 111,
                 'value' => 'New Lorem Ipsum',
                 'buzzPropertyInFooBar' => 'buzz',
                 'xyyPropertyInFooBar' => 'xyy',
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $foo->toArray());

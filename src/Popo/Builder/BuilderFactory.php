@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Builder;
 
@@ -9,24 +7,21 @@ use Popo\Generator\GeneratorFactory;
 use Popo\Plugin\PluginContainer;
 use Popo\Schema\Loader\LoaderFactory;
 use Popo\Schema\SchemaFactory;
-use Popo\Writer\WriterFactory;
 
 class BuilderFactory
 {
     protected LoaderFactory $loaderFactory;
-
     protected GeneratorFactory $generatorFactory;
-
     protected SchemaFactory $schemaFactory;
 
-    protected WriterFactory $writerFactory;
-
-    public function __construct(LoaderFactory $loaderFactory, GeneratorFactory $generatorFactory, SchemaFactory $schemaFactory, WriterFactory $writerFactory)
-    {
+    public function __construct(
+        LoaderFactory $loaderFactory,
+        GeneratorFactory $generatorFactory,
+        SchemaFactory $schemaFactory
+    ) {
         $this->loaderFactory = $loaderFactory;
         $this->generatorFactory = $generatorFactory;
         $this->schemaFactory = $schemaFactory;
-        $this->writerFactory = $writerFactory;
     }
 
     public function createPopoGeneratorBuilder(): PopoGeneratorBuilder
@@ -52,8 +47,7 @@ class BuilderFactory
     protected function registerPlugins(
         PluginContainer $pluginContainer,
         Configurator $configurator
-    ): PluginContainer
-    {
+    ): PluginContainer {
         $pluginContainer->registerSchemaClassPlugins(
             $configurator->getSchemaPluginClasses()
         );

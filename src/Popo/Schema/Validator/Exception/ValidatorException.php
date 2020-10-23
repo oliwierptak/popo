@@ -1,9 +1,9 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Validator\Exception;
 
-class ValidatorException extends \Exception
+use Exception;
+
+class ValidatorException extends Exception
 {
 }

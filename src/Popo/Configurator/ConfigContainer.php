@@ -1,50 +1,36 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types = 1);
+namespace Popo\Configurator;
 
-namespace Popo\Command\Config;
-
-class Config
+class ConfigContainer
 {
     protected array $data = [];
 
     protected array $arguments = [];
 
     /**
-     * @var Item[]
+     * @var ConfigurationItem[]
      */
     protected array $itemsToGenerate = [];
 
-    public function getConfigByName(string $name): ?Item
+    public function getConfigByName(string $name): ?ConfigurationItem
     {
         return $this->getConfigItems()[$name] ?? null;
     }
 
     /**
-     * @return Item[]
+     * @return ConfigurationItem[]
      */
     public function getConfigItems(): array
     {
         $result = [];
         foreach ($this->data as $name => $data) {
             $data = array_merge($this->getArguments(), $data);
-            $config = (new Item())->fromArray($data);
+            $config = (new ConfigurationItem())->fromArray($data);
             $result[$name] = $config;
         }
 
         return $result;
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    public function setData(array $data): self
-    {
-        $this->data = $data;
-
-        return $this;
     }
 
     public function getArguments(): array
@@ -59,8 +45,20 @@ class Config
         return $this;
     }
 
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
     /**
-     * @return Item[]
+     * @return ConfigurationItem[]
      */
     public function getItemsToGenerate(): array
     {
@@ -68,13 +66,14 @@ class Config
     }
 
     /**
-     * @param Item[] $itemsToGenerate
+     * @param ConfigurationItem[] $itemsToGenerate
      *
      * @return $this
      */
     public function setItemsToGenerate(array $itemsToGenerate): self
     {
         $this->itemsToGenerate = $itemsToGenerate;
+
         return $this;
     }
 }

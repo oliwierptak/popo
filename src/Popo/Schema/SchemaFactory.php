@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
 
@@ -17,17 +15,14 @@ class SchemaFactory
      * @var \Popo\Schema\Bundle\BundleSchemaFactory
      */
     protected $bundleSchemaFactory;
-
     /**
      * @var \Popo\Finder\FinderFactory
      */
     protected $finderFactory;
-
     /**
      * @var \Popo\Schema\Loader\LoaderFactory
      */
     protected $loaderFactory;
-
     /**
      * @var \Popo\Schema\Reader\ReaderFactory
      */
@@ -38,22 +33,11 @@ class SchemaFactory
         LoaderFactory $loaderFactory,
         ReaderFactory $readerFactory,
         BundleSchemaFactory $bundleSchemaFactory
-    )
-    {
+    ) {
         $this->finderFactory = $finderFactory;
         $this->loaderFactory = $loaderFactory;
         $this->readerFactory = $readerFactory;
         $this->bundleSchemaFactory = $bundleSchemaFactory;
-    }
-
-    public function createSchemaBuilder(): SchemaBuilder
-    {
-        return new SchemaBuilder(
-            $this->finderFactory->createFileLoader(),
-            $this->loaderFactory->createJsonLoader(),
-            $this->readerFactory,
-            $this->bundleSchemaFactory
-        );
     }
 
     public function createSchemaMerger(): SchemaMerger
@@ -67,6 +51,16 @@ class SchemaFactory
     public function createSchemaValidator(): SchemaValidator
     {
         return new SchemaValidator();
+    }
+
+    public function createSchemaBuilder(): SchemaBuilder
+    {
+        return new SchemaBuilder(
+            $this->finderFactory->createFileLoader(),
+            $this->loaderFactory->createJsonLoader(),
+            $this->readerFactory,
+            $this->bundleSchemaFactory
+        );
     }
 
     public function createPropertyExplorer(): PropertyExplorer

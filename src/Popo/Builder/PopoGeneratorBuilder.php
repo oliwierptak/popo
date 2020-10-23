@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Builder;
 
@@ -17,13 +15,13 @@ use Popo\Plugin\PluginContainer;
 use Popo\Schema\Loader\ContentLoader;
 use Popo\Schema\Reader\PropertyExplorer;
 use Popo\Schema\SchemaFactory;
+use SplFileInfo;
+use function array_merge;
 
 class PopoGeneratorBuilder
 {
     protected ContentLoader $contentLoader;
-
     protected GeneratorFactory $generatorFactory;
-
     protected SchemaFactory $schemaFactory;
 
     public function __construct(
@@ -86,30 +84,10 @@ class PopoGeneratorBuilder
 
     protected function getTemplateString(string $templateDirectory, string $templateFilename): string
     {
-        $filename = new \SplFileInfo($templateDirectory . $templateFilename);
+        $filename = new SplFileInfo($templateDirectory . $templateFilename);
         $schemaTemplateString = $this->contentLoader->load($filename);
 
         return $schemaTemplateString;
-    }
-
-    protected function createPropertyFactoryPlugin(PropertyExplorer $propertyExplorer): PropertyFactoryPluginInterface
-    {
-        return new PropertyFactoryPlugin($propertyExplorer);
-    }
-
-    protected function createArrayableFactoryPlugin(PropertyExplorer $propertyExplorer): SchemaFactoryPluginInterface
-    {
-        return new ArrayableFactoryPlugin($propertyExplorer);
-    }
-
-    protected function createCollectionFactoryPlugin(PropertyExplorer $propertyExplorer): PropertyFactoryPluginInterface
-    {
-        return new CollectionFactoryPlugin($propertyExplorer);
-    }
-
-    protected function createSchemaFactoryPlugin(PropertyExplorer $propertyExplorer): SchemaFactoryPluginInterface
-    {
-        return new SchemaFactoryPlugin($propertyExplorer);
     }
 
     /**
@@ -126,7 +104,12 @@ class PopoGeneratorBuilder
             ->createSchemaFactoryPlugin($propertyExplorer)
             ->createPluginCollection();
 
-        return \array_merge($schemaPlugins, $pluginContainer->getSchemaPlugins());
+        return array_merge($schemaPlugins, $pluginContainer->getSchemaPlugins());
+    }
+
+    protected function createSchemaFactoryPlugin(PropertyExplorer $propertyExplorer): SchemaFactoryPluginInterface
+    {
+        return new SchemaFactoryPlugin($propertyExplorer);
     }
 
     /**
@@ -143,7 +126,12 @@ class PopoGeneratorBuilder
             ->createPropertyFactoryPlugin($propertyExplorer)
             ->createPluginCollection();
 
-        return \array_merge($propertyPlugins, $pluginContainer->getPropertyPlugins());
+        return array_merge($propertyPlugins, $pluginContainer->getPropertyPlugins());
+    }
+
+    protected function createPropertyFactoryPlugin(PropertyExplorer $propertyExplorer): PropertyFactoryPluginInterface
+    {
+        return new PropertyFactoryPlugin($propertyExplorer);
     }
 
     /**
@@ -160,7 +148,12 @@ class PopoGeneratorBuilder
             ->createArrayableFactoryPlugin($propertyExplorer)
             ->createPluginCollection();
 
-        return \array_merge($arrayablePlugins, $pluginContainer->getArrayablePlugins());
+        return array_merge($arrayablePlugins, $pluginContainer->getArrayablePlugins());
+    }
+
+    protected function createArrayableFactoryPlugin(PropertyExplorer $propertyExplorer): SchemaFactoryPluginInterface
+    {
+        return new ArrayableFactoryPlugin($propertyExplorer);
     }
 
     /**
@@ -177,6 +170,11 @@ class PopoGeneratorBuilder
             ->createCollectionFactoryPlugin($propertyExplorer)
             ->createPluginCollection();
 
-        return \array_merge($collectionPlugins, $pluginContainer->getCollectionPlugins());
+        return array_merge($collectionPlugins, $pluginContainer->getCollectionPlugins());
+    }
+
+    protected function createCollectionFactoryPlugin(PropertyExplorer $propertyExplorer): PropertyFactoryPluginInterface
+    {
+        return new CollectionFactoryPlugin($propertyExplorer);
     }
 }

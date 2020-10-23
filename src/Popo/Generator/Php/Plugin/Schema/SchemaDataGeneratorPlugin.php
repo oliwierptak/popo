@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Schema;
 
@@ -38,7 +36,7 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
         }
 
         $result = var_export($defaults, true);
-        $result = (string)$this->fixConstantValuesEscaping($constants, $result);
+        $result = (string) $this->fixConstantValuesEscaping($constants, $result);
 
         return $result;
     }

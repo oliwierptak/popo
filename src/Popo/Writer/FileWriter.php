@@ -1,12 +1,15 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Writer;
 
 use Popo\Generator\GeneratorInterface;
 use Popo\Schema\Reader\Schema;
 use Popo\Writer\Exception\WriterException;
+use Throwable;
+use function fclose;
+use function fopen;
+use function fwrite;
+use function mb_strlen;
 
 class FileWriter
 {
@@ -30,16 +33,16 @@ class FileWriter
      *
      * @return void
      * @throws \Popo\Writer\Exception\WriterException
-     *
      */
     protected function writeFile(string $filename, string $content): void
     {
         try {
-            $f = \fopen($filename, 'w');
-            \fwrite($f, $content, \mb_strlen($content));
-            \fclose($f);
-        } catch (\Throwable $exception) {
-            throw new WriterException($exception->getMessage(), (int)$exception->getCode(), $exception);
+            $file = fopen($filename, 'w');
+            fwrite($file, $content, mb_strlen($content));
+            fclose($file);
+        }
+        catch (Throwable $exception) {
+            throw new WriterException($exception->getMessage(), (int) $exception->getCode(), $exception);
         }
     }
 }

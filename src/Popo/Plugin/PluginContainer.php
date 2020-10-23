@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Plugin;
 
@@ -14,22 +12,18 @@ class PluginContainer
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $schemaPlugins = [];
-
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $arrayablePlugins = [];
-
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $propertyPlugins = [];
-
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $collectionPlugins = [];
-
     protected PropertyExplorer $propertyExplorer;
 
     public function __construct(PropertyExplorer $propertyExplorer)

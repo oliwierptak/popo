@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Model\Helper;
 
@@ -35,22 +33,24 @@ class ConfigurationTable
         }
 
         $table
-            ->setRows([
-                [new TableCell(sprintf('<options=bold>%s</>', $configurator->getConfigName()), ['colspan' => 2])],
-                new TableSeparator(),
-                ['schema', $configurator->getSchemaDirectory()],
-                ['template', $configurator->getTemplateDirectory()],
-                ['output', $configurator->getOutputDirectory()],
-                ['namespace', $configurator->getNamespace()],
-                ['extends', $configurator->getExtends()],
-                new TableSeparator(),
-                ['extension', $configurator->getExtension()],
-                ['returnType', $configurator->getReturnType()],
-                new TableSeparator(),
-                ['abstract', (int)$configurator->getIsAbstract()],
-                ['withPopo', (int)$configurator->getWithPopo()],
-                ['withInterface', (int)$configurator->getWithInterface()],
-            ]);
+            ->setRows(
+                [
+                    [new TableCell(sprintf('<options=bold>%s</>', $configurator->getConfigName()), ['colspan' => 2])],
+                    new TableSeparator(),
+                    ['schema', $configurator->getSchemaDirectory()],
+                    ['template', $configurator->getTemplateDirectory()],
+                    ['output', $configurator->getOutputDirectory()],
+                    ['namespace', $configurator->getNamespace()],
+                    ['extends', $configurator->getExtends()],
+                    new TableSeparator(),
+                    ['extension', $configurator->getExtension()],
+                    ['returnType', $configurator->getReturnType()],
+                    new TableSeparator(),
+                    ['abstract', (int) $configurator->getIsAbstract()],
+                    ['withPopo', (int) $configurator->getWithPopo()],
+                    ['withInterface', (int) $configurator->getWithInterface()],
+                ]
+            );
 
         $table->render();
     }

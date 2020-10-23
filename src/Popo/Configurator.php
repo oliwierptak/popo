@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo;
 
@@ -88,6 +86,7 @@ class Configurator
     public function setConfigName(string $configName): self
     {
         $this->configName = $configName;
+
         return $this;
     }
 
@@ -99,6 +98,7 @@ class Configurator
     public function setSchemaDirectory(string $schemaDirectory): self
     {
         $this->schemaDirectory = $schemaDirectory;
+
         return $this;
     }
 
@@ -110,6 +110,7 @@ class Configurator
     public function setTemplateDirectory(string $templateDirectory): self
     {
         $this->templateDirectory = $templateDirectory;
+
         return $this;
     }
 
@@ -121,6 +122,7 @@ class Configurator
     public function setOutputDirectory(string $outputDirectory): self
     {
         $this->outputDirectory = $outputDirectory;
+
         return $this;
     }
 
@@ -132,6 +134,7 @@ class Configurator
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
+
         return $this;
     }
 
@@ -143,6 +146,7 @@ class Configurator
     public function setExtension(string $extension): self
     {
         $this->extension = $extension;
+
         return $this;
     }
 
@@ -154,6 +158,7 @@ class Configurator
     public function setNamespaceWithInterface(string $namespaceWithInterface): self
     {
         $this->namespaceWithInterface = $namespaceWithInterface;
+
         return $this;
     }
 
@@ -165,6 +170,7 @@ class Configurator
     public function setIsAbstract(bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
+
         return $this;
     }
 
@@ -176,6 +182,7 @@ class Configurator
     public function setWithPopo(bool $withPopo): self
     {
         $this->withPopo = $withPopo;
+
         return $this;
     }
 
@@ -187,6 +194,7 @@ class Configurator
     public function setWithInterface(bool $withInterface): self
     {
         $this->withInterface = $withInterface;
+
         return $this;
     }
 
@@ -198,6 +206,7 @@ class Configurator
     public function setExtends(string $extends): self
     {
         $this->extends = $extends;
+
         return $this;
     }
 
@@ -209,6 +218,7 @@ class Configurator
     public function setSchemaConfigurator(SchemaConfigurator $schemaConfigurator): self
     {
         $this->schemaConfigurator = $schemaConfigurator;
+
         return $this;
     }
 
@@ -220,6 +230,7 @@ class Configurator
     public function setReturnType(string $returnType): self
     {
         $this->returnType = $returnType;
+
         return $this;
     }
 
@@ -231,6 +242,7 @@ class Configurator
     public function setSchemaPluginClasses($schemaPluginClasses)
     {
         $this->schemaPluginClasses = $schemaPluginClasses;
+
         return $this;
     }
 
@@ -242,6 +254,7 @@ class Configurator
     public function setArrayablePluginClasses($arrayablePluginClasses)
     {
         $this->arrayablePluginClasses = $arrayablePluginClasses;
+
         return $this;
     }
 
@@ -253,6 +266,7 @@ class Configurator
     public function setPropertyPluginClasses($propertyPluginClasses)
     {
         $this->propertyPluginClasses = $propertyPluginClasses;
+
         return $this;
     }
 
@@ -264,6 +278,7 @@ class Configurator
     public function setCollectionPluginClasses($collectionPluginClasses)
     {
         $this->collectionPluginClasses = $collectionPluginClasses;
+
         return $this;
     }
 
@@ -272,12 +287,14 @@ class Configurator
         if (empty($this->modelHelperConfigurator)) {
             $this->modelHelperConfigurator = new ModelHelperConfigurator();
         }
+
         return $this->modelHelperConfigurator;
     }
 
     public function setModelHelperConfigurator(ModelHelperConfigurator $modelHelperConfigurator): self
     {
         $this->modelHelperConfigurator = $modelHelperConfigurator;
+
         return $this;
     }
 }

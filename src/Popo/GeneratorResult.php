@@ -1,12 +1,10 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo;
 
 class GeneratorResult
 {
-    protected int $fileCount;
+    protected int $fileCount = 0;
 
     public function getFileCount(): int
     {
@@ -18,5 +16,10 @@ class GeneratorResult
         $this->fileCount = $fileCount;
 
         return $this;
+    }
+
+    public function grow(): void
+    {
+        $this->fileCount++;
     }
 }

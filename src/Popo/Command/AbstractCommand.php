@@ -1,12 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Command;
 
-use Popo\Command\Config\Config;
-use Popo\Command\Config\Item;
+use LogicException;
 use Popo\Configurator;
+use Popo\Configurator\ConfigContainer;
+use Popo\Configurator\ConfigurationItem;
 use Popo\Model\Helper\ConfigurationTable;
 use Popo\Model\Helper\ModelHelperConfigurator;
 use Popo\PopoFacade;
@@ -40,27 +39,17 @@ abstract class AbstractCommand extends Command
     const OPTION_WITH_POPO = 'withPopo';
     const OPTION_WITH_INTERFACE = 'withInterface';
     const OPTION_CONFIG_FILENAME = 'configFile';
-    const OPTION_SHOW_CONFIGURATION = 'showConfiguration';
-    const OPTION_SHOW_CONFIGURATION_BORDER = 'showConfigurationBorder';
-    const OPTION_SHOW_PROGRESS_BAR = 'showProgressBar';
-
+    //
     protected ?PopoFacadeInterfaces $facade;
-
     protected ?ConfigurationTable $configurationTable;
-
     protected Configurator $configurator;
-
-    protected ModelHelperConfigurator$modelHelperConfigurator;
+    protected ModelHelperConfigurator $modelHelperConfigurator;
 
     abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->modelHelperConfigurator = (new ModelHelperConfigurator())
-            ->setShowConfiguration((bool)$input->getOption(static::OPTION_SHOW_CONFIGURATION))
-            ->setShowProgressBar((bool)$input->getOption(static::OPTION_SHOW_PROGRESS_BAR))
-            ->setShowBorder((bool)$input->getOption(static::OPTION_SHOW_CONFIGURATION_BORDER));
-
+        $this->setupModelHelperConfigurator($output);
         $this->configurationTable = new ConfigurationTable($output);
 
         $factory = new PopoFactory();
@@ -75,28 +64,95 @@ abstract class AbstractCommand extends Command
         $this
             ->setName(static::COMMAND_NAME)
             ->setDescription(static::COMMAND_DESCRIPTION)
-            ->setDefinition([
-                new InputArgument(static::ARGUMENT_CONFIG_SECTION_NAME, InputOption::VALUE_OPTIONAL, 'Config section name', []),
-                new InputOption(static::OPTION_CONFIG_FILENAME, 'c', InputOption::VALUE_OPTIONAL, 'Config filename', '.popo'),
-                new InputOption(static::OPTION_SCHEMA, 's', InputOption::VALUE_OPTIONAL, 'Schema directory', 'popo/'),
-                new InputOption(static::OPTION_TEMPLATE, 't', InputOption::VALUE_OPTIONAL, 'Template directory', 'vendor/popo/generator/templates/'),
-                new InputOption(static::OPTION_OUTPUT, 'o', InputOption::VALUE_OPTIONAL, 'Output directory for generated files', 'src/Configurator/'),
-                new InputOption(static::OPTION_NAMESPACE, 'm', InputOption::VALUE_OPTIONAL, 'Namespace for generated POPO files', 'Configurator'),
-                new InputOption(static::OPTION_EXTENSION, 'x', InputOption::VALUE_OPTIONAL, 'Extension of generated POPO files', '.php'),
-                new InputOption(static::OPTION_IS_ABSTRACT, 'a', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate abstract POPO classes', null),
-                new InputOption(static::OPTION_EXTENDS, 'e', InputOption::VALUE_OPTIONAL, 'Which class should the generated classes inherit from', null),
-                new InputOption(static::OPTION_RETURN_TYPE, 'r', InputOption::VALUE_OPTIONAL, 'What fromArray(..) method should return', null),
-                new InputOption(static::OPTION_WITH_POPO, 'wp', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate POPO files', true),
-                new InputOption(static::OPTION_WITH_INTERFACE, 'wi', InputOption::VALUE_OPTIONAL, 'Setting it to true will generate interfaces for POPO files', null),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION, 'sc', InputOption::VALUE_OPTIONAL, 'Show configuration settings defined in config file', true),
-                new InputOption(static::OPTION_SHOW_CONFIGURATION_BORDER, 'scb', InputOption::VALUE_OPTIONAL, 'Show border when showing configuration settings', true),
-                new InputOption(static::OPTION_SHOW_PROGRESS_BAR, 'sp', InputOption::VALUE_OPTIONAL, 'Show progress bar', true),
-            ]);
+            ->setDefinition(
+                [
+                    new InputArgument(
+                        static::ARGUMENT_CONFIG_SECTION_NAME,
+                        InputOption::VALUE_OPTIONAL,
+                        'ConfigContainer section name',
+                        []
+                    ),
+                    new InputOption(
+                        static::OPTION_CONFIG_FILENAME,
+                        'c',
+                        InputOption::VALUE_OPTIONAL,
+                        'ConfigContainer filename',
+                        '.popo'
+                    ),
+                    new InputOption(
+                        static::OPTION_SCHEMA, 's', InputOption::VALUE_OPTIONAL, 'Schema directory', 'popo/'
+                    ),
+                    new InputOption(
+                        static::OPTION_TEMPLATE,
+                        't',
+                        InputOption::VALUE_OPTIONAL,
+                        'Template directory',
+                        'vendor/popo/generator/templates/'
+                    ),
+                    new InputOption(
+                        static::OPTION_OUTPUT,
+                        'o',
+                        InputOption::VALUE_OPTIONAL,
+                        'Output directory for generated files',
+                        'src/Configurator/'
+                    ),
+                    new InputOption(
+                        static::OPTION_NAMESPACE,
+                        'm',
+                        InputOption::VALUE_OPTIONAL,
+                        'Namespace for generated POPO files',
+                        'Configurator'
+                    ),
+                    new InputOption(
+                        static::OPTION_EXTENSION,
+                        'x',
+                        InputOption::VALUE_OPTIONAL,
+                        'Extension of generated POPO files',
+                        '.php'
+                    ),
+                    new InputOption(
+                        static::OPTION_IS_ABSTRACT,
+                        'a',
+                        InputOption::VALUE_OPTIONAL,
+                        'Setting it to true will generate abstract POPO classes',
+                        null
+                    ),
+                    new InputOption(
+                        static::OPTION_EXTENDS,
+                        'e',
+                        InputOption::VALUE_OPTIONAL,
+                        'Which class should the generated classes inherit from',
+                        null
+                    ),
+                    new InputOption(
+                        static::OPTION_RETURN_TYPE,
+                        'r',
+                        InputOption::VALUE_OPTIONAL,
+                        'What fromArray(..) method should return',
+                        null
+                    ),
+                    new InputOption(
+                        static::OPTION_WITH_POPO,
+                        'wp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Setting it to true will generate POPO files',
+                        true
+                    ),
+                    new InputOption(
+                        static::OPTION_WITH_INTERFACE,
+                        'wi',
+                        InputOption::VALUE_OPTIONAL,
+                        'Setting it to true will generate interfaces for POPO files',
+                        null
+                    ),
+                ]
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->modelHelperConfigurator->isShowConfiguration() || $this->modelHelperConfigurator->isShowProgressBar()) {
+        if ($this->modelHelperConfigurator->isShowConfiguration()
+            || $this->modelHelperConfigurator->isShowProgressBar()) {
             $output->writeln('');
             $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoFacadeInterfaces::VERSION));
             $output->writeln('');
@@ -109,9 +165,10 @@ abstract class AbstractCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return Config
+     * @return \Popo\Configurator\ConfigContainer
+     * @throws \LogicException
      */
-    protected function buildConfigurator(InputInterface $input, OutputInterface $output): Config
+    protected function buildConfigurator(InputInterface $input, OutputInterface $output): ConfigContainer
     {
         $config = $this->buildConfig($input);
         $configSections = $input->getArgument(static::ARGUMENT_CONFIG_SECTION_NAME);
@@ -124,11 +181,14 @@ abstract class AbstractCommand extends Command
         foreach ($configSections as $name) {
             $item = $config->getConfigByName($name);
 
-            if (!($item instanceof Item)) {
-                throw new \LogicException(sprintf('Unknown config section: "%s". Available sections: %s',
-                    $name,
-                    implode(', ', array_keys($config->getData()))
-                ));
+            if (!($item instanceof ConfigurationItem)) {
+                throw new LogicException(
+                    sprintf(
+                        'Unknown config section: "%s". Available sections: %s',
+                        $name,
+                        implode(', ', array_keys($config->getData()))
+                    )
+                );
             }
 
             $configurator = (new Configurator())
@@ -139,10 +199,10 @@ abstract class AbstractCommand extends Command
                 ->setTemplateDirectory($item->getTemplate())
                 ->setOutputDirectory($item->getOutput())
                 ->setNamespace($item->getNamespace())
-                ->setNamespaceWithInterface((string)$item->getNamespaceWithInterface())
+                ->setNamespaceWithInterface((string) $item->getNamespaceWithInterface())
                 ->setExtension($item->getExtension())
                 ->setIsAbstract($item->isAbstract())
-                ->setExtends((string)$item->getExtends())
+                ->setExtends((string) $item->getExtends())
                 ->setReturnType($item->getReturnType())
                 ->setWithPopo($item->isWithPopo())
                 ->setWithInterface($item->isWithInterface());
@@ -157,7 +217,7 @@ abstract class AbstractCommand extends Command
         return $config;
     }
 
-    protected function buildConfig(InputInterface $input): Config
+    protected function buildConfig(InputInterface $input): ConfigContainer
     {
         $config = $this->loadConfig($input->getOption(static::OPTION_CONFIG_FILENAME));
 
@@ -179,15 +239,17 @@ abstract class AbstractCommand extends Command
         return $config;
     }
 
-    protected function loadConfig(?string $configFilename = null): Config
+    protected function loadConfig(?string $configFilename = null): ConfigContainer
     {
         $filename = $this->getPopoFilename($configFilename);
 
         if (!is_file($filename)) {
-            throw new \LogicException(sprintf(
-                'Config file: "%s" not found',
-                $filename
-            ));
+            throw new LogicException(
+                sprintf(
+                    'ConfigContainer file: "%s" not found',
+                    $filename
+                )
+            );
         }
 
         $data = parse_ini_file($filename, true) ?? [];
@@ -195,11 +257,34 @@ abstract class AbstractCommand extends Command
             $data = [];
         }
 
-        return (new Config)->setData($data);
+        return (new ConfigContainer)->setData($data);
     }
 
     protected function getPopoFilename(?string $configFilename = null): string
     {
         return rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $configFilename;
+    }
+
+    protected function setupModelHelperConfigurator(OutputInterface $output): void
+    {
+        $this->modelHelperConfigurator = new ModelHelperConfigurator();
+
+        if ($output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(false)
+                ->setShowProgressBar(false);
+        }
+
+        if ($output->getVerbosity() === OutputInterface::VERBOSITY_VERBOSE) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(true)
+                ->setShowProgressBar(false);
+        }
+
+        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            $this->modelHelperConfigurator
+                ->setShowConfiguration(true)
+                ->setShowProgressBar(true);
+        }
     }
 }

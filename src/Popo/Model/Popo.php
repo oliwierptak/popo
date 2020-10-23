@@ -1,39 +1,35 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Model;
 
+use InvalidArgumentException;
 use Popo\Configurator;
 use Popo\GeneratorResult;
 use Popo\Model\Helper\ProgressIndicator;
 use Popo\Schema\Bundle\BundleSchema;
 use Popo\Schema\SchemaBuilder;
 use Popo\Schema\SchemaMerger;
-use Popo\Writer\FileWriter;
+use Popo\Writer\SchemaWriter;
 use SplFileInfo;
+use function is_dir;
+use function sprintf;
 
 class Popo
 {
     protected SchemaBuilder $schemaBuilder;
-
     protected SchemaMerger $schemaMerger;
-
-    protected FileWriter $popoWriter;
-
-    protected FileWriter $dtoWriter;
-
-    protected FileWriter $abstractWriter;
-
+    protected SchemaWriter $schemaWriter;
     protected ProgressIndicator $progressIndicator;
 
-    public function __construct(SchemaBuilder $schemaBuilder, SchemaMerger $schemaMerger, FileWriter $popoWriter, FileWriter $dtoWriter, FileWriter $abstractWriter, ProgressIndicator $progressIndicator)
-    {
+    public function __construct(
+        SchemaBuilder $schemaBuilder,
+        SchemaMerger $schemaMerger,
+        SchemaWriter $popoWriter,
+        ProgressIndicator $progressIndicator
+    ) {
         $this->schemaBuilder = $schemaBuilder;
         $this->schemaMerger = $schemaMerger;
-        $this->popoWriter = $popoWriter;
-        $this->dtoWriter = $dtoWriter;
-        $this->abstractWriter = $abstractWriter;
+        $this->schemaWriter = $popoWriter;
         $this->progressIndicator = $progressIndicator;
     }
 
@@ -47,41 +43,85 @@ class Popo
     {
         $this->assertConfiguration($configurator);
 
-        $numberOfGeneratedFiles = 0;
         $result = new GeneratorResult();
-
         $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
 
-        $this->progressIndicator->start();
+        $this->progressIndicator->start(count($mergedSchemaFiles));
 
         foreach ($mergedSchemaFiles as $schemaFilename => $bundleSchema) {
             $bundleSchema = $this->updateSchema($bundleSchema, $configurator);
 
-            if ($bundleSchema->getSchema()->isWithIPopo()) {
-                $currentBundleSchema = clone $bundleSchema;
-                $filename = $this->generateFilename($currentBundleSchema, $configurator);
-                $this->writePopo($currentBundleSchema, $configurator, $filename);
-            }
-
-            if ($this->shouldGenerateInterface($bundleSchema)) {
-                $currentBundleSchema = clone $bundleSchema;
-                $currentBundleSchema->getSchema()->setIsWithInterface(true);
-                $currentBundleSchema->getSchema()->setExtension('Interface.php');
-                $filename = $this->generateFilename($currentBundleSchema, $configurator);
-                $this->writeDto($currentBundleSchema, $configurator, $filename);
-            }
-
-            $numberOfGeneratedFiles++;
+            $this->generatePopo($bundleSchema, $configurator);
+            $this->generateDto($bundleSchema, $configurator);
 
             $this->progressIndicator->advance();
+            $result->grow();
         }
 
-        $result->setFileCount(count($mergedSchemaFiles));
-
-        $this->progressIndicator->stop();
+        $this->progressIndicator->stop($result->getFileCount());
 
         return $result;
+    }
+
+    /**
+     * @param \Popo\Configurator $configurator
+     *
+     * @return void
+     * @throws \InvalidArgumentException
+     *
+     */
+    protected function assertConfiguration(Configurator $configurator): void
+    {
+        $requiredPaths = [
+            'schema' => $configurator->getSchemaDirectory(),
+            'output' => $configurator->getOutputDirectory(),
+            'template' => $configurator->getTemplateDirectory(),
+        ];
+
+        foreach ($requiredPaths as $type => $path) {
+            if (!is_dir($path)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Required %s directory does not exist under path: %s',
+                        $type,
+                        $path
+                    )
+                );
+            }
+        }
+    }
+
+    protected function generatePopo(BundleSchema $bundleSchema, Configurator $configurator): void
+    {
+        if ($bundleSchema->getSchema()->isWithIPopo()) {
+            $currentBundleSchema = clone $bundleSchema;
+            $filename = $this->generateFilename($currentBundleSchema, $configurator);
+            $this->writePopo($currentBundleSchema, $configurator, $filename);
+        }
+    }
+
+    protected function generateDto(BundleSchema $bundleSchema, Configurator $configurator): void
+    {
+        if ($this->shouldGenerateInterface($bundleSchema)) {
+            $currentBundleSchema = clone $bundleSchema;
+            $currentBundleSchema->getSchema()->setIsWithInterface(true);
+            $currentBundleSchema->getSchema()->setExtension('Interface.php');
+            $filename = $this->generateFilename($currentBundleSchema, $configurator);
+            $this->writeDto($currentBundleSchema, $configurator, $filename);
+        }
+    }
+
+    protected function updateSchema(BundleSchema $bundleSchema, Configurator $configurator): BundleSchema
+    {
+        $extends = trim((string) $configurator->getExtends());
+        if ($extends !== '') {
+            $bundleSchema
+                ->getSchema()
+                ->setExtends($extends);
+        }
+
+        return $bundleSchema;
     }
 
     protected function generateFilename(BundleSchema $bundleSchema, Configurator $configurator): SplFileInfo
@@ -90,14 +130,6 @@ class Popo
         $dir = $this->generateOutputDirectory($configurator->getOutputDirectory());
 
         return new SplFileInfo($dir . $filename);
-    }
-
-    protected function generateOutputDirectory(string $outputDirectory): string
-    {
-        $outputDirectory = trim($outputDirectory);
-        $outputDirectory = str_replace('\\', DIRECTORY_SEPARATOR, $outputDirectory);
-
-        return $outputDirectory;
     }
 
     protected function generateOutputFilename(BundleSchema $bundleSchema): string
@@ -109,31 +141,42 @@ class Popo
         return $name;
     }
 
+    protected function generateOutputDirectory(string $outputDirectory): string
+    {
+        $outputDirectory = trim($outputDirectory);
+        $outputDirectory = str_replace('\\', DIRECTORY_SEPARATOR, $outputDirectory);
+
+        return $outputDirectory;
+    }
+
     protected function writePopo(BundleSchema $bundleSchema, Configurator $configurator, SplFileInfo $filename): void
     {
-        $name = $this->generateProjectSchemaName($bundleSchema, $configurator);
+        $bundleSchemaToWrite = clone $bundleSchema;
+        $name = $this->generateProjectSchemaName($bundleSchemaToWrite, $configurator);
 
-        $bundleSchema
+        $bundleSchemaToWrite
             ->getSchema()
             ->setName($name);
 
-        if ($bundleSchema->getSchema()->isAbstract()) {
-            $this->abstractWriter->write($filename->getPathname(), $bundleSchema->getSchema());
+        if ($bundleSchemaToWrite->getSchema()->isAbstract()) {
+            $this->schemaWriter->writeAbstract($filename->getPathname(), $bundleSchemaToWrite->getSchema());
+
             return;
         }
 
-        $this->popoWriter->write($filename->getPathname(), $bundleSchema->getSchema());
+        $this->schemaWriter->writePopo($filename->getPathname(), $bundleSchema->getSchema());
     }
 
     protected function writeDto(BundleSchema $bundleSchema, Configurator $configurator, SplFileInfo $filename): void
     {
-        $name = $this->generateProjectSchemaName($bundleSchema, $configurator);
+        $bundleSchemaToWrite = clone $bundleSchema;
+        $name = $this->generateProjectSchemaName($bundleSchemaToWrite, $configurator);
 
-        $bundleSchema
+        $bundleSchemaToWrite
             ->getSchema()
             ->setName($name);
 
-        $this->dtoWriter->write($filename->getPathname(), $bundleSchema->getSchema());
+        $this->schemaWriter->writeDto($filename->getPathname(), $bundleSchemaToWrite->getSchema());
     }
 
     protected function generateProjectSchemaName(BundleSchema $bundleSchema, Configurator $configurator): string
@@ -147,47 +190,5 @@ class Popo
     protected function shouldGenerateInterface(BundleSchema $bundleSchema): bool
     {
         return !$bundleSchema->getSchema()->isAbstract() && $bundleSchema->getSchema()->isWithInterface();
-    }
-
-    protected function updateSchema(BundleSchema $bundleSchema, Configurator $configurator): BundleSchema
-    {
-        $extends = trim((string)$configurator->getExtends());
-        if ($extends !== '') {
-            $bundleSchema
-                ->getSchema()
-                ->setExtends($extends);
-        }
-
-        return $bundleSchema;
-    }
-
-    /**
-     * @param \Popo\Configurator $configurator
-     *
-     * @return void
-     * @throws \InvalidArgumentException
-     *
-     */
-    protected function assertConfiguration(Configurator $configurator): void
-    {
-        $schemaDirectory = $configurator->getSchemaDirectory();
-        $outputDirectory = $configurator->getOutputDirectory();
-        $templateDirectory = $configurator->getTemplateDirectory();
-
-        $requiredPaths = [
-            'schema' => $schemaDirectory,
-            'output' => $outputDirectory,
-            'template' => $templateDirectory,
-        ];
-
-        foreach ($requiredPaths as $type => $path) {
-            if (!\is_dir($path)) {
-                throw new \InvalidArgumentException(\sprintf(
-                    'Required %s directory does not exist under path: %s',
-                    $type,
-                    $path
-                ));
-            }
-        }
     }
 }

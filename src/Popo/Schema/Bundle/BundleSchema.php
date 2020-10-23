@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Bundle;
 
@@ -10,9 +8,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class BundleSchema
 {
     protected Schema $schema;
-
     protected SplFileInfo $filename;
-
     protected bool $isBundleSchema = false;
 
     public function __construct(Schema $schema, SplFileInfo $filename)

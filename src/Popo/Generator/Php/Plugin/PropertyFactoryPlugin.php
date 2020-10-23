@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin;
 
@@ -14,10 +12,10 @@ use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodNameGeneratorPlugi
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeCastPlugin;
 use Popo\Generator\Php\Plugin\Property\Requester\RequireMethodReturnTypeGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin;
 use Popo\Plugin\Factory\PropertyFactoryPluginInterface;
 use Popo\Schema\Reader\PropertyExplorer;
 

@@ -1,9 +1,9 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Writer\Exception;
 
-class WriterException extends \Exception
+use Exception;
+
+class WriterException extends Exception
 {
 }

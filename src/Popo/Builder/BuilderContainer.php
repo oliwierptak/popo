@@ -1,34 +1,25 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Builder;
 
 class BuilderContainer
 {
     protected string $schemaTemplateString;
-
     protected string $propertyTemplateString;
-
     protected string $arrayableTemplateString;
-
     protected string $collectionTemplateString;
-
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $schemaPluginCollection = [];
-
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $propertyPluginCollection = [];
-
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $arrayablePluginCollection = [];
-
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */

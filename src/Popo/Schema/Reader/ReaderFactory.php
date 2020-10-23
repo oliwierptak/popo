@@ -1,16 +1,9 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
 class ReaderFactory
 {
-    public function createProperty(Schema $schema, array $propertySchema): Property
-    {
-        return new Property($schema, $propertySchema);
-    }
-
     public function createSchema(array $schema = []): Schema
     {
         return new Schema($schema);
@@ -30,6 +23,11 @@ class ReaderFactory
         }
 
         return $propertyCollection;
+    }
+
+    public function createProperty(Schema $schema, array $propertySchema): Property
+    {
+        return new Property($schema, $propertySchema);
     }
 
     public function createPropertyExplorer(): PropertyExplorer

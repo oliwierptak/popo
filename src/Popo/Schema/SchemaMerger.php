@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
 
@@ -17,7 +15,6 @@ class SchemaMerger
      * @var \Popo\Schema\Validator\SchemaValidator
      */
     protected $schemaValidator;
-
     /**
      * @var \Popo\Schema\SchemaBuilder
      */
@@ -62,6 +59,26 @@ class SchemaMerger
     }
 
     /**
+     * @param \Popo\Schema\Bundle\BundleSchema[] $schemaFiles
+     *
+     * @return \Popo\Schema\Bundle\BundleSchema[]
+     */
+    protected function sortByBundleSchema(array $schemaFiles): array
+    {
+        uksort(
+            $schemaFiles,
+            static function ($a, $b) use ($schemaFiles) {
+                $aSchema = $schemaFiles[$a];
+                $bSchema = $schemaFiles[$b];
+
+                return $aSchema->isBundleSchema() < $bSchema->isBundleSchema() ? 1 : 0;
+            }
+        );
+
+        return array_values($schemaFiles);
+    }
+
+    /**
      * @param \Popo\Schema\Bundle\BundleSchema $bundleSchema
      * @param array $additionalBundleSchemaCollection
      *
@@ -94,23 +111,5 @@ class SchemaMerger
         $bundleSchemaProperties = array_merge($bundleSchemaProperties, $propertiesToMerge);
 
         return $bundleSchemaProperties;
-    }
-
-
-    /**
-     * @param \Popo\Schema\Bundle\BundleSchema[] $schemaFiles
-     *
-     * @return \Popo\Schema\Bundle\BundleSchema[]
-     */
-    protected function sortByBundleSchema(array $schemaFiles): array
-    {
-        uksort($schemaFiles, static function ($a, $b) use ($schemaFiles) {
-            $aSchema = $schemaFiles[$a];
-            $bSchema = $schemaFiles[$b];
-
-            return $aSchema->isBundleSchema() < $bSchema->isBundleSchema() ? 1 : 0;
-        });
-
-        return array_values($schemaFiles);
     }
 }

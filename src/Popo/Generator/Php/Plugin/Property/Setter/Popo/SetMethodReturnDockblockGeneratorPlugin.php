@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Setter\Popo;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
-use Popo\Schema\Reader\Schema;
 use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use function sprintf;
 use function trim;
 
@@ -23,7 +21,7 @@ class SetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin im
             $docblock = ' ' . $docblock;
         }
 
-        $extends = trim((string)$schema->getExtends());
+        $extends = trim((string) $schema->getExtends());
         if ($extends !== '') {
             $generated = sprintf(
                 '%s',

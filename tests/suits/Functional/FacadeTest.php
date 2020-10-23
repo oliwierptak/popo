@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace TestsSuites\Popo\Functional;
 
@@ -14,21 +12,9 @@ use Popo\Schema\SchemaConfigurator;
 class FacadeTest extends TestCase
 {
     protected string $schemaDirectory;
-
     protected string $templateDirectory;
-
     protected PopoFactory $popoFactory;
-
     protected string $outputDirectory;
-
-    protected function setUp(): void
-    {
-        $this->popoFactory = new PopoFactory();
-
-        $this->schemaDirectory = POPO_TESTS_DIR . 'fixtures/popo/';
-        $this->templateDirectory = POPO_APPLICATION_DIR . 'templates/';
-        $this->outputDirectory = POPO_TESTS_DIR . 'App/Configurator/';
-    }
 
     public function test_generate(): void
     {
@@ -42,6 +28,9 @@ class FacadeTest extends TestCase
             ->setOutputDirectory($this->outputDirectory)
             ->setNamespace('App\Configurator')
             ->setExtension('.php');
+        $configurator
+            ->getModelHelperConfigurator()
+            ->setShowSummary(false);
 
         $result = $facade->generate($configurator);
         $this->assertEquals(5, $result->getFileCount());
@@ -64,6 +53,15 @@ class FacadeTest extends TestCase
             ->setExtension('.php');
 
         $facade->generate($configurator);
+    }
+
+    protected function setUp(): void
+    {
+        $this->popoFactory = new PopoFactory();
+
+        $this->schemaDirectory = POPO_TESTS_DIR . 'fixtures/popo/';
+        $this->templateDirectory = POPO_APPLICATION_DIR . 'templates/';
+        $this->outputDirectory = POPO_TESTS_DIR . 'App/Configurator/';
     }
 
     protected function no_interfaces_should_be_generated(): void

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator;
 
@@ -31,8 +29,7 @@ class SchemaGenerator implements GeneratorInterface
         ArrayableGenerator $arrayableGenerator,
         CollectionGenerator $collectionGenerator,
         array $generatorPlugins
-    )
-    {
+    ) {
         $this->propertyGenerator = $propertyGenerator;
         $this->arrayableGenerator = $arrayableGenerator;
         $this->collectionGenerator = $collectionGenerator;
@@ -66,22 +63,22 @@ class SchemaGenerator implements GeneratorInterface
         return $generated;
     }
 
-    protected function generateMethodsPattern(Schema $schema, string $generated): string
+    protected function generateArrayablePattern(Schema $schema, string $generated): string
     {
         $generated = \str_replace(
-            static::METHODS_PATTERN,
-            $this->propertyGenerator->generate($schema),
+            static::ARRAYABLE_PATTERN,
+            $this->arrayableGenerator->generate($schema),
             $generated
         );
 
         return $generated;
     }
 
-    protected function generateArrayablePattern(Schema $schema, string $generated): string
+    protected function generateMethodsPattern(Schema $schema, string $generated): string
     {
         $generated = \str_replace(
-            static::ARRAYABLE_PATTERN,
-            $this->arrayableGenerator->generate($schema),
+            static::METHODS_PATTERN,
+            $this->propertyGenerator->generate($schema),
             $generated
         );
 

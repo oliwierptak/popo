@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Getter;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
-use Popo\Schema\Reader\Schema;
 use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use function sprintf;
 use function trim;
 

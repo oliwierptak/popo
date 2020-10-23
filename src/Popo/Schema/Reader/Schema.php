@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
@@ -20,12 +18,10 @@ class Schema
     protected const WITH_POPO = 'withPopo';
     protected const WITH_INTERFACE = 'withInterface';
     protected const NAMESPACE_WITH_INTERFACE = 'namespaceWithInterface';
-
     /**
      * @var array
      */
     protected $data;
-
     /**
      * @var array
      */
@@ -44,11 +40,6 @@ class Schema
     public function __construct(array $data = [])
     {
         $this->data = array_merge($this->defaults, $data);
-    }
-
-    public function getName(): string
-    {
-        return $this->data[static::NAME];
     }
 
     public function setName(string $name): self
@@ -72,7 +63,7 @@ class Schema
 
     public function isAbstract(): bool
     {
-        return (bool)$this->data[static::IS_ABSTRACT];
+        return (bool) $this->data[static::IS_ABSTRACT];
     }
 
     public function setIsAbstract(bool $isAbstract): self
@@ -149,6 +140,11 @@ class Schema
         $name = array_pop($nameTokens);
 
         return $name;
+    }
+
+    public function getName(): string
+    {
+        return $this->data[static::NAME];
     }
 
     public function getNamespaceName(): string

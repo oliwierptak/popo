@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Model\Helper;
 
@@ -11,21 +9,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProgressIndicator
 {
     protected OutputInterface $output;
-
     protected Configurator $configurator;
-
     protected ?ProgressBar $progressBar;
 
-    protected int $max = 0;
-
-    public function __construct(OutputInterface $output, Configurator $configurator, int $max = 0)
+    public function __construct(OutputInterface $output, Configurator $configurator)
     {
         $this->output = $output;
         $this->configurator = $configurator;
-        $this->max = $max;
     }
 
-    public function start(): void
+    public function start(int $max = 0): void
     {
         if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
             return;
@@ -37,8 +30,10 @@ class ProgressIndicator
             $borderChar = '';
         }
 
-        $this->progressBar = new ProgressBar($this->output, $this->max);
-        $this->progressBar->setFormat("${borderChar} %current%/%max% %bar% %percent:3s%% ${borderChar}\n${borderChar} %remaining:-10s% %memory:53s ${borderChar}%");
+        $this->progressBar = new ProgressBar($this->output, $max);
+        $this->progressBar->setFormat(
+            "${borderChar} %current%/%max% %bar% %percent:3s%% ${borderChar}\n${borderChar} %remaining:-10s% %memory:53s ${borderChar}%"
+        );
 
         if (!$this->configurator->getModelHelperConfigurator()->isShowConfiguration()) {
             $this->output->writeln(sprintf(' Generating: <fg=yellow>%s</>', $this->configurator->getConfigName()));
@@ -57,40 +52,38 @@ class ProgressIndicator
         $this->progressBar->advance();
     }
 
-    public function stop(): void
+    public function stop(int $max = 0): void
     {
-        if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
-            $this->output->writeln(sprintf(
-                '>> Generated %d POPO files for "%s" section',
-                $this->max,
-                $this->configurator->getConfigName()
-            ));
-            return;
+        if ($this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
+            $format = " %elapsed% %memory:56s%";
+            if ($this->configurator->getModelHelperConfigurator()->isShowBorder()) {
+                $format = "| %elapsed% %memory:56s |%";
+            }
+
+            $this->progressBar->setFormat($format);
+            $this->progressBar->finish();
+            $this->showProgressBarSeparator();
         }
 
-        $format = " %elapsed% %memory:56s%";
-        if ($this->configurator->getModelHelperConfigurator()->isShowBorder()) {
-            $format = "| %elapsed% %memory:56s |%";
+        if ($this->configurator->getModelHelperConfigurator()->isShowSummary()) {
+            $this->output->writeln(
+                sprintf(
+                    '>> Generated <fg=yellow>%d</> POPO files for "%s" section',
+                    $max,
+                    $this->configurator->getConfigName(),
+                )
+            );
         }
-
-        $this->progressBar->setFormat($format);
-        $this->progressBar->finish();
-
-        $this->showProgressBarSeparator();
     }
 
     protected function showProgressBarSeparator(): void
     {
-        if (!$this->configurator->getModelHelperConfigurator()->isShowProgressBar()) {
-            return;
-        }
-
         $separator = '';
         if ($this->configurator->getModelHelperConfigurator()->isShowBorder()) {
+            $this->output->writeln('');
             $separator = '+---------------+--------------------------------------------------+';
         }
 
         $this->output->writeln($separator);
     }
-
 }

@@ -48,13 +48,20 @@ composer require popo/generator` --dev
 
 
 ## Usage
-Define schema, configure and save settings in `.popo` file and run:
 
-```sh
-vendor/bin/popo generate
-```
+1. Define schema, see [tests/fixtures](tests/fixtures/) for examples.
 
-See [popo.dist](.popo.dist) for examples.
+2. Generate configuration file, run:
+
+    ```sh
+    bin/popo configure
+    ```
+
+3. Generate POPO files, run:
+
+    ```sh
+    vendor/bin/popo generate -c <path-to-config>
+    ```
 
 _Note_: The command line arguments allow to globally override every setting. See `--help` for details.
 
@@ -312,5 +319,34 @@ echo $foo->getBar()->getValue();
 A title
 Bar lorem ipsum
 ```
+
+### Displaying configuration
+
+Increase console's verbosity to see configuration settings, eg.
+
+```
+bin/popo generate -c tests/fixtures/.popo -v
+
+POPO v3.0.0
+
++---------------+--------------------------------------------------+
+| popo                                                             |
++---------------+--------------------------------------------------+
+| schema        | tests/fixtures/popo/                             |
+| template      | templates/                                       |
+| output        | tests/App/Configurator/                          |
+| namespace     | App\Configurator                                 |
+| extends       |                                                  |
++---------------+--------------------------------------------------+
+| extension     | .php                                             |
+| returnType    | self                                             |
++---------------+--------------------------------------------------+
+| abstract      | 0                                                |
+| withPopo      | 1                                                |
+| withInterface | 0                                                |
++---------------+--------------------------------------------------+
+>> Generated 5 POPO files for "popo" section
+```
+
 
 See [tests/fixtures/](tests/fixtures/) for more schema examples.
