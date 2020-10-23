@@ -22,8 +22,8 @@ echo $foo->getBar()->getValue();
 ```
 
 ```
-'A title'
-'Bar lorem ipsum'
+A title
+Bar lorem ipsum
 ```
 
 ```php
