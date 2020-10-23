@@ -25,7 +25,7 @@ class ConfigurationTable
             return;
         }
 
-        $table = new Table($this->output->section());
+        $table = new Table($this->output);
         $table->setStyle('compact');
         $table->setColumnWidth(0, 10);
         $table->setColumnWidth(1, 48);

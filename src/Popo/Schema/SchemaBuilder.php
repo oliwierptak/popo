@@ -174,6 +174,12 @@ class SchemaBuilder
         return $this->jsonLoader->load($bundleSchemaFile->getPathname());
     }
 
+    /**
+     * @param SplFileInfo $bundleSchemaFile
+     * @param Configurator $configurator
+     *
+     * @return BundleSchema[]
+     */
     protected function buildBundleSchemaFiles(
         SplFileInfo $bundleSchemaFile,
         Configurator $configurator

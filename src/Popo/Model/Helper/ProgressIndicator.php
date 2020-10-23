@@ -37,7 +37,7 @@ class ProgressIndicator
             $borderChar = '';
         }
 
-        $this->progressBar = new ProgressBar($this->output->section(), $this->max);
+        $this->progressBar = new ProgressBar($this->output, $this->max);
         $this->progressBar->setFormat("${borderChar} %current%/%max% %bar% %percent:3s%% ${borderChar}\n${borderChar} %remaining:-10s% %memory:53s ${borderChar}%");
 
         if (!$this->configurator->getModelHelperConfigurator()->isShowConfiguration()) {

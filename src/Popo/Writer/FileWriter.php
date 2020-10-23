@@ -38,8 +38,8 @@ class FileWriter
             $f = \fopen($filename, 'w');
             \fwrite($f, $content, \mb_strlen($content));
             \fclose($f);
-        } catch (\Throwable $e) {
-            throw new WriterException($e->getMessage(), $e->getCode(), $e);
+        } catch (\Throwable $exception) {
+            throw new WriterException($exception->getMessage(), (int)$exception->getCode(), $exception);
         }
     }
 }

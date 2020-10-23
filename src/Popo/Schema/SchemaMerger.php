@@ -108,7 +108,7 @@ class SchemaMerger
             $aSchema = $schemaFiles[$a];
             $bSchema = $schemaFiles[$b];
 
-            return $aSchema->isBundleSchema() < $bSchema->isBundleSchema();
+            return $aSchema->isBundleSchema() < $bSchema->isBundleSchema() ? 1 : 0;
         });
 
         return array_values($schemaFiles);

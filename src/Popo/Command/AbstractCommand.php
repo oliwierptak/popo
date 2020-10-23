@@ -191,9 +191,11 @@ abstract class AbstractCommand extends Command
         }
 
         $data = parse_ini_file($filename, true) ?? [];
-        $config = (new Config)->setData($data);
+        if ($data === false) {
+            $data = [];
+        }
 
-        return $config;
+        return (new Config)->setData($data);
     }
 
     protected function getPopoFilename(?string $configFilename = null): string

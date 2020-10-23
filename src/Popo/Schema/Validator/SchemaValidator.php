@@ -16,7 +16,7 @@ class SchemaValidator
         if (!$bundleSchema->isBundleSchema()) {
             throw new NotBundleSchemaException(\sprintf(
                 'Schema: "%s" is not bundle schema',
-                $bundleSchema->getSchemaFilename()
+                $bundleSchema->getSchemaFilename()->getPathname()
             ));
         }
     }
@@ -58,8 +58,8 @@ class SchemaValidator
                 throw new NotUniquePropertyException(\sprintf(
                     'The property: "%s" is already defined in "%s" and cannot be redefined in "%s"',
                     $bundleSchemaProperty->getName(),
-                    $bundleSchema->getSchemaFilename(),
-                    $additionalBundleSchema->getSchemaFilename()
+                    $bundleSchema->getSchemaFilename()->getPathname(),
+                    $additionalBundleSchema->getSchemaFilename()->getPathname()
                 ));
             }
         }
