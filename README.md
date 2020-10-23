@@ -188,9 +188,9 @@ To achieve this, you can either `add` or `inject` property.
 
 ### Case 1: Single project / library
 
-One schema file, no bundles.
-
 Main schema: `Foo`.
+
+One schema file, no bundles.
 
 `Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
 
@@ -264,9 +264,10 @@ _Note:_: Run `bin/popo generate -c tests/fixtures/.popo case2` to generate files
 
 ### Case 3: Extend Foo schema from within Bar bundle.
 
+Main schema: `Bar`.
+
 Multiple schema files, multiple bundles.
 
-Main schema: `Bar`.
 
 `Bar` injects `bar` into `Foo`. `Foo` does not need to be modified. 
 
