@@ -315,8 +315,6 @@ Main schema: `Foo`.
 
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
 
-The generated files are located under [tests/App/Popo](tests/App/Popo/).
-
 
 ### Result
 
