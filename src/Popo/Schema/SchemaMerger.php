@@ -11,14 +11,9 @@ use function uksort;
 
 class SchemaMerger
 {
-    /**
-     * @var \Popo\Schema\Validator\SchemaValidator
-     */
-    protected $schemaValidator;
-    /**
-     * @var \Popo\Schema\SchemaBuilder
-     */
-    protected $schemaBuilder;
+    protected SchemaValidator $schemaValidator;
+
+    protected SchemaBuilder $schemaBuilder;
 
     public function __construct(SchemaValidator $schemaValidator, SchemaBuilder $schemaBuilder)
     {
@@ -27,7 +22,7 @@ class SchemaMerger
     }
 
     /**
-     * @param array $bundleSchemaCollection
+     * @param \Popo\Schema\Bundle\BundleSchema[] $bundleSchemaCollection
      *
      * @return \Popo\Schema\Bundle\BundleSchema[]
      */
@@ -44,8 +39,10 @@ class SchemaMerger
             }
         }
 
-        foreach ($collectionToMerge as $name => $data) {
-            $schemaFiles = $this->sortByBundleSchema($data);
+        $collectionToMerge = $this->setupHierarchy($collectionToMerge);
+        /** @var BundleSchema[] $schemaFiles */
+        foreach ($collectionToMerge as $name => $schemaFiles) {
+            $schemaFiles = $this->sortByBundleSchema($schemaFiles);
             $bundleSchema = array_shift($schemaFiles);
             $this->schemaValidator->assertIsBundleSchema($bundleSchema);
 
@@ -56,6 +53,26 @@ class SchemaMerger
         }
 
         return $result;
+    }
+
+    /**
+     * @param \Popo\Schema\Bundle\BundleSchema[] $bundleSchemaCollection
+     *
+     * @return \Popo\Schema\Bundle\BundleSchema[]
+     */
+    protected function setupHierarchy(array $bundleSchemaCollection): array
+    {
+        /** @var BundleSchema[] $schemaCollection */
+        foreach ($bundleSchemaCollection as $name => $schemaCollection) {
+            foreach ($schemaCollection as $bundleSchema) {
+                $parent = $bundleSchema->getSchema()->getExtends();
+                if ($parent !== '' && \array_key_exists($parent, $bundleSchemaCollection)) {
+                    $bundleSchema->getSchema()->setParent($bundleSchema->getSchema());
+                }
+            }
+        }
+
+        return $bundleSchemaCollection;
     }
 
     /**
@@ -82,7 +99,7 @@ class SchemaMerger
      * @param \Popo\Schema\Bundle\BundleSchema $bundleSchema
      * @param array $additionalBundleSchemaCollection
      *
-     * @return array
+     * @return \Popo\Schema\Reader\Property[]
      */
     protected function mergeProperties(BundleSchema $bundleSchema, array $additionalBundleSchemaCollection): array
     {

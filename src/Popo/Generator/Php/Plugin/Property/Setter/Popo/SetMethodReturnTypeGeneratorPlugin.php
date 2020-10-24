@@ -14,9 +14,20 @@ class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
     public function generate(Schema $schema, Property $property): string
     {
+        if ($schema->getReturnType() !== null) {
+            return trim($schema->getReturnType());
+        }
+
+        $returnValue = $schema->getClassName();
+        if ($schema->getParent() !== null) {
+            if ($schema->getParent()->isAbstract()) {
+                $returnValue = $schema->getParent()->getClassName();
+            }
+        }
+
         return sprintf(
-            ': \%s',
-            $property->getSchema()->getName()
+            ': %s',
+            $returnValue
         );
     }
 }

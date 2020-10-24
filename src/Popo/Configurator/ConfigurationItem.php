@@ -18,9 +18,9 @@ class ConfigurationItem
 
     protected string $extension = '.php';
 
-    protected string $returnType = 'self';
+    protected ?string $returnType = null;
 
-    protected ?string $extends;
+    protected ?string $extends = null;
 
     protected bool $abstract = false;
 
@@ -102,12 +102,12 @@ class ConfigurationItem
         return $this;
     }
 
-    public function getReturnType(): string
+    public function getReturnType(): ?string
     {
         return $this->returnType;
     }
 
-    public function setReturnType(string $returnType): self
+    public function setReturnType(?string $returnType): self
     {
         $this->returnType = $returnType;
 
@@ -181,7 +181,7 @@ class ConfigurationItem
         $this->output = $data['output'] ?? null;
         $this->namespace = $data['namespace'] ?? null;
         $this->extension = $data['extension'] ?? '.php';
-        $this->returnType = $data['returnType'] ?? 'self';
+        $this->returnType = $data['returnType'] ?? null;
         $this->extends = $data['extends'] ?? null;
         $this->abstract = (bool) (int) $data['abstract'] ?? false;
         $this->withPopo = (bool) (int) $data['withPopo'] ?? false;

@@ -222,10 +222,10 @@ abstract class AbstractCommand extends Command
                 ->setTemplateDirectory($item->getTemplate())
                 ->setOutputDirectory($item->getOutput())
                 ->setNamespace($item->getNamespace())
-                ->setNamespaceWithInterface((string) $item->getNamespaceWithInterface())
+                ->setNamespaceWithInterface($item->getNamespaceWithInterface())
                 ->setExtension($item->getExtension())
                 ->setIsAbstract($item->isAbstract())
-                ->setExtends((string) $item->getExtends())
+                ->setExtends($item->getExtends())
                 ->setReturnType($item->getReturnType())
                 ->setWithPopo($item->isWithPopo())
                 ->setWithInterface($item->isWithInterface());

@@ -190,7 +190,7 @@ To achieve this, you can either `add` or `inject` property.
 
 Main schema: `Foo`.
 
-One schema file, no bundles.
+[One schema file, no bundles](tests/fixtures/popo-readme/case1).
 
 `Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
 
@@ -226,14 +226,14 @@ One schema file, no bundles.
 
 ```
 
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case1` to generate files from this example.
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case1` to generate files from this example.
 
 
 ### Case 2: Extend Bar schema from within Foo bundle.
   
 Main schema: `Foo`. 
 
-Multiple schema files, multiple bundles.
+[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case2).
 
 `Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
 
@@ -259,14 +259,14 @@ Multiple schema files, multiple bundles.
 ]
 ```
 
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case2` to generate files from this example.
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case2` to generate files from this example.
 
 
 ### Case 3: Extend Foo schema from within Bar bundle.
 
 Main schema: `Bar`.
 
-Multiple schema files, multiple bundles.
+[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case3).
 
 
 `Bar` injects `bar` into `Foo`. `Foo` does not need to be modified. 
@@ -289,7 +289,34 @@ Multiple schema files, multiple bundles.
 ]
 ```
 
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo case3` to generate files from this example.
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case3` to generate files from this example.
+
+
+### Case 4: Foo extends Bar
+
+Main schema: `Foo`.
+
+[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case4).
+
+`Foo` inherits from `Bar`. `Bar` does not need to be modified. 
+
+
+**`foo/schema/foo.schema.json`** schema:
+
+```json
+[
+  {
+    "name": "Foo",
+    "extends": "Bar",
+    "schema": ...
+  }
+]
+```
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
+
+The generated files are located under [tests/App/Popo](tests/App/Popo/).
+
 
 ### Result
 

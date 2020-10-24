@@ -68,7 +68,7 @@ class ProgressIndicator
         if ($this->configurator->getModelHelperConfigurator()->isShowSummary()) {
             $this->output->writeln(
                 sprintf(
-                    '>> Generated <fg=yellow>%d</> POPO files for "%s" section',
+                    ' <fg=green>✔</> Generated <fg=yellow>%d</> POPO files for "%s" section',
                     $max,
                     $this->configurator->getConfigName(),
                 )

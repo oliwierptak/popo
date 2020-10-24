@@ -13,14 +13,15 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
     public function generate(Schema $schema): string
     {
-        $extends = trim((string) $schema->getExtends());
-        if ($extends !== '') {
-            return $extends;
+        if ($schema->getReturnType() !== null) {
+            return trim($schema->getReturnType());
         }
 
-        $returnValue = '\\' . $schema->getName();
-        if (trim($schema->getReturnType()) !== '') {
-            $returnValue = trim($schema->getReturnType());
+        $returnValue = $schema->getClassName();
+        if ($schema->getParent() !== null) {
+            if ($schema->getParent()->isAbstract()) {
+                $returnValue = $schema->getParent()->getClassName();
+            }
         }
 
         return sprintf(

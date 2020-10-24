@@ -47,6 +47,8 @@ class Popo
         $schemaFiles = $this->schemaBuilder->build($configurator);
         $mergedSchemaFiles = $this->schemaMerger->merge($schemaFiles);
 
+        dump($mergedSchemaFiles);
+
         $this->progressIndicator->start(count($mergedSchemaFiles));
 
         foreach ($mergedSchemaFiles as $schemaFilename => $bundleSchema) {

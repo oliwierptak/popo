@@ -18,23 +18,21 @@ class Schema
     protected const WITH_POPO = 'withPopo';
     protected const WITH_INTERFACE = 'withInterface';
     protected const NAMESPACE_WITH_INTERFACE = 'namespaceWithInterface';
-    /**
-     * @var array
-     */
-    protected $data;
-    /**
-     * @var array
-     */
-    protected $defaults = [
+    protected const PARENT = 'parent';
+
+    protected array $data;
+
+    protected array $defaults = [
         self::NAME => '',
         self::SCHEMA => [],
         self::IS_ABSTRACT => false,
         self::EXTENDS => '',
         self::EXTENSION => '.php',
-        self::RETURN_TYPE => 'self',
+        self::RETURN_TYPE => null,
         self::WITH_POPO => true,
         self::WITH_INTERFACE => false,
         self::NAMESPACE_WITH_INTERFACE => null,
+        self::PARENT => null,
     ];
 
     public function __construct(array $data = [])
@@ -97,12 +95,12 @@ class Schema
         return $this;
     }
 
-    public function getReturnType(): string
+    public function getReturnType(): ?string
     {
         return $this->data[static::RETURN_TYPE];
     }
 
-    public function setReturnType(string $returnType): self
+    public function setReturnType(?string $returnType): self
     {
         $this->data[static::RETURN_TYPE] = $returnType;
 
@@ -129,6 +127,18 @@ class Schema
     public function setIsWithInterface(bool $isWithInterface): self
     {
         $this->data[static::WITH_INTERFACE] = $isWithInterface;
+
+        return $this;
+    }
+
+    public function getParent(): ?Schema
+    {
+        return $this->data[static::PARENT];
+    }
+
+    public function setParent(?Schema $parent): self
+    {
+        $this->data[static::PARENT] = $parent;
 
         return $this;
     }

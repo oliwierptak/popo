@@ -18,22 +18,13 @@ use const DIRECTORY_SEPARATOR;
 
 class SchemaBuilder
 {
-    /**
-     * @var \Popo\Finder\FileLoader
-     */
-    protected $fileLoader;
-    /**
-     * @var \Popo\Schema\Loader\JsonLoader
-     */
-    protected $jsonLoader;
-    /**
-     * @var \Popo\Schema\Reader\ReaderFactory
-     */
-    protected $readerFactory;
-    /**
-     * @var \Popo\Schema\Bundle\BundleSchemaFactory
-     */
-    protected $bundleSchemaFactory;
+    protected FileLoader $fileLoader;
+
+    protected JsonLoader $jsonLoader;
+
+    protected ReaderFactory $readerFactory;
+
+    protected BundleSchemaFactory $bundleSchemaFactory;
 
     public function __construct(
         FileLoader $fileLoader,
@@ -98,7 +89,7 @@ class SchemaBuilder
      * @param SplFileInfo $bundleSchemaFile
      * @param Configurator $configurator
      *
-     * @return BundleSchema[]
+     * @return BundleSchema[][]
      */
     protected function buildBundleSchemaFiles(
         SplFileInfo $bundleSchemaFile,

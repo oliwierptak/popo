@@ -15,33 +15,20 @@ class SetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin im
 
     public function generate(Schema $schema, Property $property): string
     {
-        $generated = 'self';
-        $docblock = trim($property->getDocblock());
-        if ($docblock !== '') {
-            $docblock = ' ' . $docblock;
+        if ($schema->getReturnType() !== null) {
+            return trim($schema->getReturnType());
         }
 
-        $extends = trim((string) $schema->getExtends());
-        if ($extends !== '') {
-            $generated = sprintf(
-                '%s',
-                $extends
-            );
+        $returnValue = $schema->getClassName();
+        if ($schema->getParent() !== null) {
+            if ($schema->getParent()->isAbstract()) {
+                $returnValue = $schema->getParent()->getClassName();
+            }
         }
 
-        if ($schema->isAbstract()) {
-            $generated = sprintf(
-                '\%s',
-                $property->getSchema()->getName()
-            );
-        }
-
-        $string = sprintf(
-            '%s%s',
-            $generated,
-            $docblock
+        return sprintf(
+            '%s',
+            $returnValue
         );
-
-        return $string;
     }
 }

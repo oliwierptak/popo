@@ -7,9 +7,9 @@
             $data[$key] = $this->default[$key] ?? null;
             $value = $this->data[$key];
 
-            if ($this->isCollectionItem($key) && \is_array($value)) {
+            if ($this->isCollectionItem($key) && is_array($value)) {
                 foreach ($value as $popo) {
-                    if (\is_object($popo) && \method_exists($popo, 'toArray')) {
+                    if (is_object($popo) && method_exists($popo, 'toArray')) {
                         $data[$key][] = $popo->toArray();
                     }
                 }
@@ -17,7 +17,7 @@
                 continue;
             }
 
-            if (\is_object($value) && \method_exists($value, 'toArray')) {
+            if (is_object($value) && method_exists($value, 'toArray')) {
                 $data[$key] = $value->toArray();
                 continue;
             }
@@ -33,9 +33,11 @@
         $result = [];
 
         foreach ($this->propertyMapping as $key => $type) {
+            $result[$key] = $this->default[$key] ?? null;
+
             if ($this->typeIsObject($type)) {
                 $popo = new $this->propertyMapping[$key];
-                if (\method_exists($popo, 'fromArray')) {
+                if (method_exists($popo, 'fromArray')) {
                     $popoData = $data[$key] ?? $this->default[$key] ?? [];
                     $popo->fromArray($popoData);
                 }
@@ -44,11 +46,11 @@
                 continue;
             }
 
-            if (\array_key_exists($key, $data)) {
+            if (array_key_exists($key, $data)) {
                 if ($this->isCollectionItem($key)) {
                     foreach ($data[$key] as $popoData) {
                         $popo = new $this->collectionItems[$key]();
-                        if (\method_exists($popo, 'fromArray')) {
+                        if (method_exists($popo, 'fromArray')) {
                             $popo->fromArray($popoData);
                         }
                         $result[$key][] = $popo;
@@ -56,26 +58,32 @@
                 } else {
                     $result[$key] = $data[$key];
                 }
-            } else {
-                $result[$key] = $this->default[$key] ?? null;
             }
         }
 
         $this->data = $result;
 
         foreach ($data as $key => $value) {
-            if (!\array_key_exists($key, $result)) {
+            if (!array_key_exists($key, $result)) {
                 continue;
             }
 
-            $type = $this->propertyMapping[$key] ?? 'string';
-            $value = $this->typecastValue($type, $result[$key]);
-            $this->popoSetValue($key, $value);
+            $type = $this->propertyMapping[$key] ?? null;
+            if ($type !== null) {
+                $value = $this->typecastValue($type, $result[$key]);
+                $this->popoSetValue($key, $value);
+            }
         }
 
         return $this;
     }
 
+    /**
+     * @param string $type
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     protected function typecastValue(string $type, $value)
     {
         if ($value === null) {
@@ -102,10 +110,10 @@
 
     protected function isCollectionItem(string $key): bool
     {
-        return \array_key_exists($key, $this->collectionItems);
+        return array_key_exists($key, $this->collectionItems);
     }
 
     protected function typeIsObject(string $value): bool
     {
-        return $value[0] === '\\' && \ctype_upper($value[1]);
+        return $value[0] === '\\' && ctype_upper($value[1]);
     }

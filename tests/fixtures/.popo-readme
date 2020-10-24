@@ -15,3 +15,9 @@ schema = tests/fixtures/popo-readme/case3/
 template = templates/
 output = tests/App/Popo/
 namespace = App\Popo
+
+[case4]
+schema = tests/fixtures/popo-readme/case4/
+template = templates/
+output = tests/App/Popo/
+namespace = App\Popo

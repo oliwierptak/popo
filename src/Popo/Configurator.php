@@ -22,12 +22,12 @@ class Configurator
     /**
      * Value to be used for interfaces
      */
-    protected string $namespaceWithInterface = '';
+    protected ?string $namespaceWithInterface;
 
     /**
      * Determines if generated POPO will be abstract class
      */
-    protected bool $isAbstract = false;
+    protected ?bool $isAbstract;
 
     /**
      * Only generate POPO files
@@ -37,17 +37,17 @@ class Configurator
     /**
      * Only generate interfaces
      */
-    protected bool $withInterface = false;
+    protected ?bool $withInterface;
 
     /**
      * Generated class will be extended by this value
      */
-    protected string $extends = '';
+    protected ?string $extends;
 
     /**
      * The return type of fromArray() method will be set to this value
      */
-    protected string $returnType = 'self';
+    protected ?string $returnType;
 
     protected SchemaConfigurator $schemaConfigurator;
 
@@ -155,7 +155,7 @@ class Configurator
         return $this->namespaceWithInterface;
     }
 
-    public function setNamespaceWithInterface(string $namespaceWithInterface): self
+    public function setNamespaceWithInterface(?string $namespaceWithInterface): self
     {
         $this->namespaceWithInterface = $namespaceWithInterface;
 
@@ -167,7 +167,7 @@ class Configurator
         return $this->isAbstract;
     }
 
-    public function setIsAbstract(bool $isAbstract): self
+    public function setIsAbstract(?bool $isAbstract): self
     {
         $this->isAbstract = $isAbstract;
 
@@ -191,7 +191,7 @@ class Configurator
         return $this->withInterface;
     }
 
-    public function setWithInterface(bool $withInterface): self
+    public function setWithInterface(?bool $withInterface): self
     {
         $this->withInterface = $withInterface;
 
@@ -203,7 +203,7 @@ class Configurator
         return $this->extends;
     }
 
-    public function setExtends(string $extends): self
+    public function setExtends(?string $extends): self
     {
         $this->extends = $extends;
 
@@ -227,7 +227,7 @@ class Configurator
         return $this->returnType;
     }
 
-    public function setReturnType(string $returnType): self
+    public function setReturnType(?string $returnType): self
     {
         $this->returnType = $returnType;
 

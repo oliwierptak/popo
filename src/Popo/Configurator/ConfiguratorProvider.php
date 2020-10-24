@@ -78,14 +78,14 @@ class ConfiguratorProvider
             )
             ->setPropertyPluginClasses(
                 [
-                    PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
                     PopoSetMethodReturnDockblockGeneratorPlugin::PATTERN => PopoSetMethodReturnDockblockGeneratorPlugin::class,
+                    PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
                 ]
             )
             ->setCollectionPluginClasses(
                 [
-                    PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
                     PopoSetMethodReturnDockblockGeneratorPlugin::PATTERN => PopoSetMethodReturnDockblockGeneratorPlugin::class,
+                    PopoSetMethodReturnTypeGeneratorPlugin::PATTERN => PopoSetMethodReturnTypeGeneratorPlugin::class,
                 ]
             );
 
@@ -131,14 +131,14 @@ class ConfiguratorProvider
             )
             ->setPropertyPluginClasses(
                 [
-                    DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
                     DtoSetMethodReturnDockblockGeneratorPlugin::PATTERN => DtoSetMethodReturnDockblockGeneratorPlugin::class,
+                    DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
                 ]
             )
             ->setCollectionPluginClasses(
                 [
-                    DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
                     DtoSetMethodReturnDockblockGeneratorPlugin::PATTERN => DtoSetMethodReturnDockblockGeneratorPlugin::class,
+                    DtoSetMethodReturnTypeGeneratorPlugin::PATTERN => DtoSetMethodReturnTypeGeneratorPlugin::class,
                 ]
             );
 
