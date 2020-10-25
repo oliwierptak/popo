@@ -324,13 +324,13 @@ by using `extends` option, for example:
 [
   {
     "name": "Foo",
-    "extends": "\\\\App\\\\AbstractConfigurator",
+    "extends": "\\App\\AbstractConfigurator",
     "schema": ...
   }
 ,
   {
     "name": "Bar",
-    "extends": "\\\\App\\\\AbstractConfigurator",
+    "extends": "\\App\\AbstractConfigurator",
     "schema": ...
   }
 ]
