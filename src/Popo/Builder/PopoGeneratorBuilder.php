@@ -4,7 +4,6 @@ namespace Popo\Builder;
 
 use Popo\Configurator;
 use Popo\Generator\GeneratorFactory;
-use Popo\Generator\Php\Plugin\ArrayableFactoryPlugin;
 use Popo\Generator\Php\Plugin\CollectionFactoryPlugin;
 use Popo\Generator\Php\Plugin\PropertyFactoryPlugin;
 use Popo\Generator\Php\Plugin\SchemaFactoryPlugin;
@@ -21,7 +20,9 @@ use function array_merge;
 class PopoGeneratorBuilder
 {
     protected ContentLoader $contentLoader;
+
     protected GeneratorFactory $generatorFactory;
+
     protected SchemaFactory $schemaFactory;
 
     public function __construct(
@@ -48,7 +49,6 @@ class PopoGeneratorBuilder
     ): BuilderContainer {
         $templateDirectory = $configurator->getTemplateDirectory();
         $schemaTemplateFilename = $configurator->getSchemaConfigurator()->getSchemaTemplateFilename();
-        $arrayableTemplateFilename = $configurator->getSchemaConfigurator()->getArrayableTemplateFilename();
         $propertyTemplateFilename = $configurator->getSchemaConfigurator()->getPropertyTemplateFilename();
         $collectionTemplateFilename = $configurator->getSchemaConfigurator()->getCollectionTemplateFilename();
         $propertyExplorer = $this->schemaFactory->createPropertyExplorer();
@@ -56,9 +56,6 @@ class PopoGeneratorBuilder
         $container = (new BuilderContainer())
             ->setSchemaTemplateString(
                 $this->getTemplateString($templateDirectory, $schemaTemplateFilename)
-            )
-            ->setArrayableTemplateString(
-                $this->getTemplateString($templateDirectory, $arrayableTemplateFilename)
             )
             ->setPropertyTemplateString(
                 $this->getTemplateString($templateDirectory, $propertyTemplateFilename)
@@ -71,9 +68,6 @@ class PopoGeneratorBuilder
             )
             ->setPropertyPluginCollection(
                 $this->buildPropertyPluginCollection($pluginContainer, $propertyExplorer)
-            )
-            ->setArrayablePluginCollection(
-                $this->buildArrayablePluginCollection($pluginContainer, $propertyExplorer)
             )
             ->setCollectionPluginCollection(
                 $this->buildCollectionPluginCollection($pluginContainer, $propertyExplorer)
@@ -132,28 +126,6 @@ class PopoGeneratorBuilder
     protected function createPropertyFactoryPlugin(PropertyExplorer $propertyExplorer): PropertyFactoryPluginInterface
     {
         return new PropertyFactoryPlugin($propertyExplorer);
-    }
-
-    /**
-     * @param \Popo\Plugin\PluginContainer $pluginContainer
-     * @param \Popo\Schema\Reader\PropertyExplorer $propertyExplorer
-     *
-     * @return \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
-     */
-    protected function buildArrayablePluginCollection(
-        PluginContainer $pluginContainer,
-        PropertyExplorer $propertyExplorer
-    ): array {
-        $arrayablePlugins = $this
-            ->createArrayableFactoryPlugin($propertyExplorer)
-            ->createPluginCollection();
-
-        return array_merge($arrayablePlugins, $pluginContainer->getArrayablePlugins());
-    }
-
-    protected function createArrayableFactoryPlugin(PropertyExplorer $propertyExplorer): SchemaFactoryPluginInterface
-    {
-        return new ArrayableFactoryPlugin($propertyExplorer);
     }
 
     /**

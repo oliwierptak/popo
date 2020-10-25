@@ -12,6 +12,6 @@ class NamespaceGeneratorPlugin extends AbstractGeneratorPlugin implements Schema
 
     public function generate(Schema $schema): string
     {
-        return $schema->getNamespaceName();
+        return $schema->getNamespace();
     }
 }

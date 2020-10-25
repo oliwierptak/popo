@@ -12,18 +12,22 @@ class PluginContainer
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $schemaPlugins = [];
+
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $arrayablePlugins = [];
+
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $propertyPlugins = [];
+
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $collectionPlugins = [];
+
     protected PropertyExplorer $propertyExplorer;
 
     public function __construct(PropertyExplorer $propertyExplorer)
@@ -77,23 +81,6 @@ class PluginContainer
             }
 
             $this->schemaPlugins[$pattern] = $plugin;
-        }
-
-        return $this;
-    }
-
-    public function registerArrayableClassPlugins(array $pluginCollection): PluginContainer
-    {
-        foreach ($pluginCollection as $pattern => $pluginClass) {
-            $plugin = new $pluginClass(
-                $this->propertyExplorer
-            );
-
-            if (!($plugin instanceof SchemaGeneratorPluginInterface)) {
-                continue;
-            }
-
-            $this->arrayablePlugins[$pattern] = $plugin;
         }
 
         return $this;

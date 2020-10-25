@@ -1,7 +1,7 @@
 [
   {
     "name": "Buzz",
-    "extends": "AbstractXyy",
+    "extends": "\\App\\AbstractConfigurator",
     "schema": [
       {
         "name": "buzz",

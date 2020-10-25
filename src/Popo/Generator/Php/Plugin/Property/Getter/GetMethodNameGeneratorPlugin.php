@@ -6,6 +6,7 @@ use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\Schema;
+use function ucfirst;
 
 class GetMethodNameGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -19,6 +20,6 @@ class GetMethodNameGeneratorPlugin extends AbstractGeneratorPlugin implements Pr
             return $name;
         }
 
-        return 'get' . \ucfirst($name);
+        return 'get' . ucfirst($name);
     }
 }

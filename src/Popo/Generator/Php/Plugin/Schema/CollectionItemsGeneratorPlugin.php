@@ -20,7 +20,7 @@ class CollectionItemsGeneratorPlugin extends AbstractGeneratorPlugin implements 
             $property = $this->buildProperty($schema, $propertyData);
             $collectionItem = trim($property->getCollectionItem());
             if ($collectionItem !== '') {
-                $items[$property->getName()] = '\\' . $schema->getNamespaceName() . '\\' . $collectionItem;
+                $items[$property->getName()] = '\\' . $schema->getNamespace() . '\\' . $collectionItem;
             }
         }
 

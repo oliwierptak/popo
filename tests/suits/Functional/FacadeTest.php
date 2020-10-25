@@ -12,8 +12,11 @@ use Popo\Schema\SchemaConfigurator;
 class FacadeTest extends TestCase
 {
     protected string $schemaDirectory;
+
     protected string $templateDirectory;
+
     protected PopoFactory $popoFactory;
+
     protected string $outputDirectory;
 
     public function test_generate(): void

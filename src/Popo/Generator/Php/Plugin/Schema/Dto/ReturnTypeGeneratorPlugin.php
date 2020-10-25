@@ -20,13 +20,13 @@ class ReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 
         $returnValue = sprintf(
             '\%sInterface',
-            $schema->getName()
+            $schema->getClassName()
         );
 
         if ($schema->isAbstract()) {
             $returnValue = sprintf(
                 '\%s',
-                $schema->getName()
+                $schema->getFullClassName()
             );
         }
 

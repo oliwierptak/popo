@@ -27,7 +27,7 @@ class Configurator
     /**
      * Determines if generated POPO will be abstract class
      */
-    protected ?bool $isAbstract;
+    protected ?bool $isAbstract = null;
 
     /**
      * Only generate POPO files
@@ -37,17 +37,17 @@ class Configurator
     /**
      * Only generate interfaces
      */
-    protected ?bool $withInterface;
+    protected ?bool $withInterface = null;
 
     /**
      * Generated class will be extended by this value
      */
-    protected ?string $extends;
+    protected ?string $extends = null;
 
     /**
      * The return type of fromArray() method will be set to this value
      */
-    protected ?string $returnType;
+    protected ?string $returnType = null;
 
     protected SchemaConfigurator $schemaConfigurator;
 

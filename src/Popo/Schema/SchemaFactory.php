@@ -15,14 +15,17 @@ class SchemaFactory
      * @var \Popo\Schema\Bundle\BundleSchemaFactory
      */
     protected $bundleSchemaFactory;
+
     /**
      * @var \Popo\Finder\FinderFactory
      */
     protected $finderFactory;
+
     /**
      * @var \Popo\Schema\Loader\LoaderFactory
      */
     protected $loaderFactory;
+
     /**
      * @var \Popo\Schema\Reader\ReaderFactory
      */

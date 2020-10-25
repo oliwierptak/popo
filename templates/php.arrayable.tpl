@@ -1,10 +1,32 @@
+    /**
+     * @param string $propertyName
+     * @param mixed $value
+     *
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    protected function addCollectionItem(string $propertyName, $value): void
+    {
+        $type = trim(strtolower($this->propertyMapping[$propertyName]));
+        $collection = $this->popoGetValue($propertyName) ?? [];
+
+        if (!is_array($collection) || $type !== 'array') {
+            throw new InvalidArgumentException('Cannot add item to non array type: ' . $propertyName);
+        }
+
+        $collection[] = $value;
+
+        $this->popoSetValue($propertyName, $collection);
+    }
 
     public function toArray(): array
     {
         $data = [];
 
         foreach ($this->propertyMapping as $key => $type) {
-            $data[$key] = $this->default[$key] ?? null;
+            if (!array_key_exists($key, $data)) {
+                $data[$key] = $this->default[$key] ?? null;
+            }
             $value = $this->data[$key];
 
             if ($this->isCollectionItem($key) && is_array($value)) {
@@ -30,8 +52,6 @@
 
     public function fromArray(array $data): <<RETURN_TYPE>>
     {
-        $result = [];
-
         foreach ($this->propertyMapping as $key => $type) {
             $result[$key] = $this->default[$key] ?? null;
 

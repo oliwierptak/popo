@@ -1,6 +1,7 @@
 [
   {
     "name": "Bar",
+    "extends": "\\App\\AbstractConfigurator",
     "schema": [
       {
         "name": "value",

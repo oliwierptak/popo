@@ -9,7 +9,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProgressIndicator
 {
     protected OutputInterface $output;
+
     protected Configurator $configurator;
+
     protected ?ProgressBar $progressBar;
 
     public function __construct(OutputInterface $output, Configurator $configurator)

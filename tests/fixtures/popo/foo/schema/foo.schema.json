@@ -1,7 +1,7 @@
 [
   {
     "name": "Foo",
-    "extends": "AbstractXyy",
+    "extends": "\\App\\AbstractConfigurator",
     "schema": [
       {
         "name": "fooId",

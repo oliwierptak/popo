@@ -2,29 +2,35 @@
 
 namespace TestsSuites\Popo\Functional;
 
-use App\Popo\Foo;
 use PHPUnit\Framework\TestCase;
 use Popo\PopoFactory;
 
-class PopoReadmeTest extends TestCase
+abstract class AbstractCaseTest extends TestCase
 {
     protected string $schemaDirectory;
+
     protected string $templateDirectory;
+
     protected PopoFactory $popoFactory;
+
     protected string $outputDirectory;
 
     public function test_constructor(): void
     {
-        $foo = new Foo();
+        $popo = $this->getPopoToTest();
 
-        $this->assertInstanceOf(Foo::class, $foo);
+        $this->assertInstanceOf($this->getPopoToTestClassName(), $popo);
     }
+
+    abstract protected function getPopoToTest(): object;
+
+    abstract protected function getPopoToTestClassName(): string;
 
     public function test_fromArrayToArray(): void
     {
         $value = [];
 
-        $foo = (new Foo())->fromArray($value);
+        $popo = $this->getPopoToTest()->fromArray($value);
 
         $expected = [
             'title' => '',
@@ -33,7 +39,7 @@ class PopoReadmeTest extends TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $foo->toArray());
+        $this->assertEquals($expected, $popo->toArray());
     }
 
     public function test_fromArrayToArray_defaults(): void
@@ -45,7 +51,7 @@ class PopoReadmeTest extends TestCase
             ],
         ];
 
-        $foo = (new Foo())->fromArray($value);
+        $popo = $this->getPopoToTest()->fromArray($value);
 
         $expected = [
             'title' => 'A title',
@@ -54,7 +60,7 @@ class PopoReadmeTest extends TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $foo->toArray());
+        $this->assertEquals($expected, $popo->toArray());
     }
 
     protected function setUp(): void

@@ -18,7 +18,7 @@ class ImplementsInterfaceGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
         return sprintf(
             'implements \%s\%sInterface',
-            $schema->getNamespaceWithInterface() ?? $schema->getNamespaceName(),
+            $schema->getNamespaceWithInterface() ?? $schema->getNamespace(),
             $schema->getClassName()
         );
     }

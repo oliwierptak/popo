@@ -32,7 +32,7 @@ class SetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin im
         if ($schema->isAbstract()) {
             $generated = sprintf(
                 '\%s',
-                $property->getSchema()->getName()
+                $property->getSchema()->getFullClassName()
             );
         }
 

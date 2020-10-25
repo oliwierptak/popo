@@ -21,7 +21,7 @@ class PropertyMappingGeneratorPlugin extends AbstractGeneratorPlugin implements 
             $property = $this->buildProperty($schema, $propertyData);
             $type = trim($property->getType());
             if ($this->isPopoClassName($type)) {
-                $type = sprintf('\\%s\\%s', $schema->getNamespaceName(), $type);
+                $type = sprintf('\\%s\\%s', $schema->getNamespace(), $type);
             }
             $schemaKeys[$property->getName()] = $type;
         }

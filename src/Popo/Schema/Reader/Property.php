@@ -13,6 +13,7 @@ class Property
     const DOCBLOCK = 'docblock';
     const COLLECTION_ITEM = 'collectionItem';
     const SINGULAR = 'singular';
+
     /**
      * @var array
      */
@@ -24,14 +25,17 @@ class Property
         self::COLLECTION_ITEM => '',
         self::SINGULAR => '',
     ];
+
     /**
      * @var array
      */
     protected $data;
+
     /**
      * @var \Popo\Schema\Reader\Schema
      */
     protected $schema;
+
     /**
      * @var array
      */

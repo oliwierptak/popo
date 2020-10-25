@@ -19,7 +19,6 @@ class GeneratorFactory
         return new SchemaGenerator(
             $container->getSchemaTemplateString(),
             $this->createPropertyGenerator($container),
-            $this->createArrayableGenerator($container),
             $this->createCollectionGenerator($container),
             $container->getSchemaPluginCollection()
         );
@@ -31,15 +30,6 @@ class GeneratorFactory
             $container->getPropertyTemplateString(),
             $this->readerFactory,
             $container->getPropertyPluginCollection()
-        );
-    }
-
-    public function createArrayableGenerator(BuilderContainer $container): ArrayableGenerator
-    {
-        return new ArrayableGenerator(
-            $container->getArrayableTemplateString(),
-            $this->readerFactory,
-            $container->getArrayablePluginCollection()
         );
     }
 

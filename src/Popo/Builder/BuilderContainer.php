@@ -5,21 +5,23 @@ namespace Popo\Builder;
 class BuilderContainer
 {
     protected string $schemaTemplateString;
+
     protected string $propertyTemplateString;
+
     protected string $arrayableTemplateString;
+
     protected string $collectionTemplateString;
+
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
     protected array $schemaPluginCollection = [];
+
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     protected array $propertyPluginCollection = [];
-    /**
-     * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
-     */
-    protected array $arrayablePluginCollection = [];
+
     /**
      * @var \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
@@ -129,26 +131,6 @@ class BuilderContainer
     public function setArrayableTemplateString(string $arrayableTemplateString): self
     {
         $this->arrayableTemplateString = $arrayableTemplateString;
-
-        return $this;
-    }
-
-    /**
-     * @return \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
-     */
-    public function getArrayablePluginCollection(): array
-    {
-        return $this->arrayablePluginCollection;
-    }
-
-    /**
-     * @param \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[] $arrayablePluginCollection
-     *
-     * @return $this
-     */
-    public function setArrayablePluginCollection(array $arrayablePluginCollection): self
-    {
-        $this->arrayablePluginCollection = $arrayablePluginCollection;
 
         return $this;
     }

@@ -9,10 +9,8 @@ use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGener
 use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnTypeGeneratorPlugin as PopoSetMethodReturnTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ImplementsInterfaceGeneratorPlugin as DtoImplementsInterfaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Dto\ReturnTypeGeneratorPlugin as DtoReturnTypeGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Schema\FromArrayResultPlugin;
 use Popo\Generator\Php\Plugin\Schema\Popo\ImplementsInterfaceGeneratorPlugin as PopoImplementsInterfaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\Popo\ReturnTypeGeneratorPlugin as PopoReturnTypeGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 
 class ConfiguratorProvider
 {
@@ -69,13 +67,6 @@ class ConfiguratorProvider
                     PopoReturnTypeGeneratorPlugin::PATTERN => PopoReturnTypeGeneratorPlugin::class,
                 ]
             )
-            ->setArrayablePluginClasses(
-                [
-                    FromArrayResultPlugin::PATTERN => FromArrayResultPlugin::class,
-                    ToArrayResultPlugin::PATTERN => ToArrayResultPlugin::class,
-                    PopoReturnTypeGeneratorPlugin::PATTERN => PopoReturnTypeGeneratorPlugin::class,
-                ]
-            )
             ->setPropertyPluginClasses(
                 [
                     PopoSetMethodReturnDockblockGeneratorPlugin::PATTERN => PopoSetMethodReturnDockblockGeneratorPlugin::class,
@@ -119,13 +110,6 @@ class ConfiguratorProvider
             ->setSchemaPluginClasses(
                 [
                     DtoImplementsInterfaceGeneratorPlugin::PATTERN => DtoImplementsInterfaceGeneratorPlugin::class,
-                    DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
-                ]
-            )
-            ->setArrayablePluginClasses(
-                [
-                    FromArrayResultPlugin::PATTERN => FromArrayResultPlugin::class,
-                    ToArrayResultPlugin::PATTERN => ToArrayResultPlugin::class,
                     DtoReturnTypeGeneratorPlugin::PATTERN => DtoReturnTypeGeneratorPlugin::class,
                 ]
             )

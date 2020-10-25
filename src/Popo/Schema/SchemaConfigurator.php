@@ -7,30 +7,15 @@ use function explode;
 
 class SchemaConfigurator
 {
-    /**
-     * @var string
-     */
-    protected $schemaPath = '@schema@';
-    /**
-     * @var string
-     */
-    protected $schemaFilename = '*.schema.json';
-    /**
-     * @var string
-     */
-    protected $schemaTemplateFilename = 'php.schema.tpl';
-    /**
-     * @var string
-     */
-    protected $arrayableTemplateFilename = 'php.arrayable.tpl';
-    /**
-     * @var string
-     */
-    protected $propertyTemplateFilename = 'php.property.tpl';
-    /**
-     * @var string
-     */
-    protected $collectionTemplateFilename = 'php.collection.tpl';
+    protected string $schemaPath = '@schema@';
+
+    protected string $schemaFilename = '*.schema.json';
+
+    protected string $schemaTemplateFilename = 'php.schema.tpl';
+
+    protected string $propertyTemplateFilename = 'php.property.tpl';
+
+    protected string $collectionTemplateFilename = 'php.collection.tpl';
 
     public function getSchemaPath(): string
     {
@@ -73,11 +58,6 @@ class SchemaConfigurator
         $this->schemaTemplateFilename = $schemaTemplateFilename;
 
         return $this;
-    }
-
-    public function getArrayableTemplateFilename(): string
-    {
-        return $this->arrayableTemplateFilename;
     }
 
     public function getPropertyTemplateFilename(): string

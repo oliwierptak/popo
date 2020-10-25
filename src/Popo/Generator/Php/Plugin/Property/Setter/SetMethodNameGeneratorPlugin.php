@@ -6,6 +6,7 @@ use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\Schema;
+use function ucfirst;
 
 class SetMethodNameGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -13,7 +14,7 @@ class SetMethodNameGeneratorPlugin extends AbstractGeneratorPlugin implements Pr
 
     public function generate(Schema $schema, Property $property): string
     {
-        $name = \ucfirst($property->getName());
+        $name = ucfirst($property->getName());
 
         return 'set' . $name;
     }

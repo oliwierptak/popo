@@ -5,8 +5,11 @@ namespace Popo\Model\Helper;
 class ModelHelperConfigurator
 {
     protected bool $showConfiguration = false;
+
     protected bool $showBorder = true;
+
     protected bool $showProgressBar = false;
+
     protected bool $showSummary = true;
 
     public function isShowConfiguration(): bool

@@ -3,13 +3,11 @@
 namespace Popo\Schema\Reader;
 
 use function array_merge;
-use function array_pop;
-use function explode;
-use function implode;
 
 class Schema
 {
     protected const NAME = 'name';
+    protected const NAMESPACE = 'namespace';
     protected const SCHEMA = 'schema';
     protected const IS_ABSTRACT = 'abstract';
     protected const EXTENDS = 'extends';
@@ -24,6 +22,7 @@ class Schema
 
     protected array $defaults = [
         self::NAME => '',
+        self::NAMESPACE => '',
         self::SCHEMA => [],
         self::IS_ABSTRACT => false,
         self::EXTENDS => '',
@@ -47,6 +46,13 @@ class Schema
         return $this;
     }
 
+    public function setNamespace(string $namespace): self
+    {
+        $this->data[static::NAMESPACE] = $namespace;
+
+        return $this;
+    }
+
     public function getSchema(): array
     {
         return $this->data[static::SCHEMA];
@@ -57,11 +63,6 @@ class Schema
         $this->data[static::SCHEMA] = $schema;
 
         return $this;
-    }
-
-    public function isAbstract(): bool
-    {
-        return (bool) $this->data[static::IS_ABSTRACT];
     }
 
     public function setIsAbstract(bool $isAbstract): self
@@ -143,28 +144,31 @@ class Schema
         return $this;
     }
 
+    public function getFullClassName(): string
+    {
+        return sprintf('%s\\%s', $this->getNamespace(), $this->getClassName());
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->data[static::NAMESPACE];
+    }
+
     public function getClassName(): string
     {
-        $nameTokens = explode('\\', $this->getName());
+        $abstract = $this->isAbstract() ? 'Abstract' : '';
 
-        $name = array_pop($nameTokens);
+        return sprintf('%s%s', $abstract, $this->getName());
+    }
 
-        return $name;
+    public function isAbstract(): bool
+    {
+        return (bool) $this->data[static::IS_ABSTRACT];
     }
 
     public function getName(): string
     {
         return $this->data[static::NAME];
-    }
-
-    public function getNamespaceName(): string
-    {
-        $nameTokens = explode('\\', $this->getName());
-
-        array_pop($nameTokens);
-        $namespace = implode('\\', $nameTokens);
-
-        return $namespace;
     }
 
     public function setNamespaceWithInterface(?string $name): self

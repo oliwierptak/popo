@@ -2,8 +2,10 @@
 
 namespace Popo\Schema\Validator;
 
+use LogicException;
 use Popo\Schema\Bundle\BundleSchema;
 use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use Popo\Schema\Validator\Exception\NotBundleSchemaException;
 use Popo\Schema\Validator\Exception\NotUniquePropertyException;
 use function sprintf;
@@ -66,6 +68,49 @@ class SchemaValidator
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * @param \Popo\Schema\Reader\Schema $schema
+     *
+     * @return void
+     * @throws \LogicException
+     */
+    public function assertExtends(Schema $schema): void
+    {
+        $extends = trim($schema->getExtends());
+        if ($extends === '') {
+            return;
+        }
+
+        $tokens = explode('\\', $schema->getExtends());
+        array_pop($tokens);
+
+        if (empty($tokens)) {
+            throw new LogicException(
+                sprintf(
+                    'Schema "%s" expects Fully Qualified Class Name (FQCN) for "extends" option. Got "%s" instead.',
+                    $schema->getName(),
+                    $extends
+                )
+            );
+        }
+
+        $parentNamespace = implode('\\', $tokens);
+        $parentNamespace = ltrim($parentNamespace, '\\');
+        $parentNamespace = rtrim($parentNamespace, '\\');
+
+        if (strcasecmp($schema->getNamespace(), $parentNamespace) === 0) {
+            throw new LogicException(
+                sprintf(
+                    'Class "%s" cannot be used to extend schema "%s" because they both seem to be POPO objects. ' .
+                    'Please move the parent class out of POPO namespace or define class "%s" as abstract.',
+                    $extends,
+                    $schema->getName(),
+                    $schema->getName()
+                )
+            );
         }
     }
 }

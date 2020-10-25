@@ -6,11 +6,9 @@ use Popo\Generator\Php\Plugin\Schema\AbstractClassGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\ClassNameGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\CollectionItemsGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\ExtendGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Schema\FromArrayResultPlugin;
 use Popo\Generator\Php\Plugin\Schema\NamespaceGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\PropertyMappingGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Schema\SchemaDataGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Schema\ToArrayResultPlugin;
 use Popo\Plugin\Factory\SchemaFactoryPluginInterface;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\PropertyExplorer;
@@ -36,8 +34,6 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
             AbstractClassGeneratorPlugin::PATTERN => $this->createAbstractClassGeneratorPlugin(),
             SchemaDataGeneratorPlugin::PATTERN => $this->createSchemaDataGeneratorPlugin(),
             PropertyMappingGeneratorPlugin::PATTERN => $this->createPropertyMappingGeneratorPlugin(),
-            ToArrayResultPlugin::PATTERN => $this->createFromArrayResultPlugin(),
-            FromArrayResultPlugin::PATTERN => $this->createToArrayResultPlugin(),
             CollectionItemsGeneratorPlugin::PATTERN => $this->createCollectionItemsGeneratorPlugin(),
         ];
     }
@@ -85,20 +81,6 @@ class SchemaFactoryPlugin implements SchemaFactoryPluginInterface
     protected function createPropertyMappingGeneratorPlugin(): SchemaGeneratorPluginInterface
     {
         return new PropertyMappingGeneratorPlugin(
-            $this->getPropertyExplorer()
-        );
-    }
-
-    protected function createFromArrayResultPlugin(): SchemaGeneratorPluginInterface
-    {
-        return new ToArrayResultPlugin(
-            $this->getPropertyExplorer()
-        );
-    }
-
-    protected function createToArrayResultPlugin(): SchemaGeneratorPluginInterface
-    {
-        return new ToArrayResultPlugin(
             $this->getPropertyExplorer()
         );
     }

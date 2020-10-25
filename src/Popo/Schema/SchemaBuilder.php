@@ -10,8 +10,6 @@ use Popo\Schema\Loader\JsonLoader;
 use Popo\Schema\Reader\ReaderFactory;
 use Popo\Schema\Reader\Schema;
 use Symfony\Component\Finder\SplFileInfo;
-use function count;
-use function explode;
 use function strcasecmp;
 use function trim;
 use const DIRECTORY_SEPARATOR;
@@ -125,6 +123,7 @@ class SchemaBuilder
     protected function buildSchema(array $schemaData, Configurator $configurator): Schema
     {
         $schema = $this->readerFactory->createSchema($schemaData);
+        $schema->setNamespace($configurator->getNamespace());
 
         $schema = $this->updateAbstractFlag($schema, $configurator);
         $schema = $this->updateExtendsFlag($schema, $configurator);
@@ -142,17 +141,6 @@ class SchemaBuilder
             $isAbstract = true;
         }
         $schema->setIsAbstract($isAbstract);
-
-        if ($schema->isAbstract()) {
-            $namespaceTokens = explode('\\', $schema->getName());
-
-            if (count($namespaceTokens) > 1) {
-                $schema->setName($schema->getNamespaceName() . '\\' . 'Abstract' . $schema->getClassName());
-            }
-            else {
-                $schema->setName('Abstract' . $schema->getName());
-            }
-        }
 
         return $schema;
     }

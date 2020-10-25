@@ -11,7 +11,9 @@ use Popo\Schema\SchemaFactory;
 class BuilderFactory
 {
     protected LoaderFactory $loaderFactory;
+
     protected GeneratorFactory $generatorFactory;
+
     protected SchemaFactory $schemaFactory;
 
     public function __construct(
@@ -50,10 +52,6 @@ class BuilderFactory
     ): PluginContainer {
         $pluginContainer->registerSchemaClassPlugins(
             $configurator->getSchemaPluginClasses()
-        );
-
-        $pluginContainer->registerArrayableClassPlugins(
-            $configurator->getArrayablePluginClasses()
         );
 
         $pluginContainer->registerPropertyClassPlugins(

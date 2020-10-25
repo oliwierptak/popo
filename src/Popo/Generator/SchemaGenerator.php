@@ -8,13 +8,10 @@ class SchemaGenerator implements GeneratorInterface
 {
     protected const METHODS_PATTERN = '<<METHODS>>';
     protected const COLLECTION_PATTERN = '<<COLLECTION>>';
-    protected const ARRAYABLE_PATTERN = '<<ARRAYABLE_BLOCK>>';
 
     protected string $templateString;
 
     protected PropertyGenerator $propertyGenerator;
-
-    protected ArrayableGenerator $arrayableGenerator;
 
     protected CollectionGenerator $collectionGenerator;
 
@@ -26,12 +23,10 @@ class SchemaGenerator implements GeneratorInterface
     public function __construct(
         string $templateString,
         PropertyGenerator $propertyGenerator,
-        ArrayableGenerator $arrayableGenerator,
         CollectionGenerator $collectionGenerator,
         array $generatorPlugins
     ) {
         $this->propertyGenerator = $propertyGenerator;
-        $this->arrayableGenerator = $arrayableGenerator;
         $this->collectionGenerator = $collectionGenerator;
         $this->templateString = $templateString;
         $this->generatorPlugins = $generatorPlugins;
@@ -40,7 +35,6 @@ class SchemaGenerator implements GeneratorInterface
     public function generate(Schema $schema): string
     {
         $generated = $this->generateSchemaString($schema);
-        $generated = $this->generateArrayablePattern($schema, $generated);
         $generated = $this->generateMethodsPattern($schema, $generated);
         $generated = $this->generateCollectionPattern($schema, $generated);
 
@@ -59,17 +53,6 @@ class SchemaGenerator implements GeneratorInterface
             $expression = $plugin->generate($schema);
             $generated = \str_replace($pattern, $expression, $generated);
         }
-
-        return $generated;
-    }
-
-    protected function generateArrayablePattern(Schema $schema, string $generated): string
-    {
-        $generated = \str_replace(
-            static::ARRAYABLE_PATTERN,
-            $this->arrayableGenerator->generate($schema),
-            $generated
-        );
 
         return $generated;
     }

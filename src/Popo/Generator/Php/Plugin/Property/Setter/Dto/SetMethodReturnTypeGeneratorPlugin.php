@@ -24,14 +24,14 @@ class SetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin impleme
 
         if ($schema->isAbstract()) {
             return sprintf(
-                ': \%s',
-                $property->getSchema()->getName()
+                ': %s',
+                $property->getSchema()->getFullClassName()
             );
         }
 
         return sprintf(
-            ': \%sInterface',
-            $property->getSchema()->getName()
+            ': %sInterface',
+            $property->getSchema()->getFullClassName()
         );
     }
 }

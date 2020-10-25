@@ -8,6 +8,7 @@ use Popo\Schema\Reader\PropertyExplorer;
 abstract class AbstractGeneratorPlugin implements AcceptPatternInterface
 {
     public const PATTERN = '<<UNDEFINED>>';
+
     protected PropertyExplorer $propertyExplorer;
 
     public function __construct(PropertyExplorer $propertyExplorer)

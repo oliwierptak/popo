@@ -178,7 +178,7 @@ Schema examples:
 Running `generate` will produce two independent POPO objects `Foo` and `Bar`.
 
 
-## Relations and extending already defined schemas
+## Relations, encapsulation and extending already defined schemas
 
 At this point `Foo` has no idea about `Bar` and vice versa.
 However, it could be useful to be able to extend schemas that were already defined. 
@@ -187,8 +187,6 @@ To achieve this, you can either `add` or `inject` property.
 
 
 ### Case 1: Single project / library
-
-Main schema: `Foo`.
 
 [One schema file, no bundles](tests/fixtures/popo-readme/case1).
 
@@ -231,8 +229,6 @@ _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case1` to generat
 
 ### Case 2: Extend Bar schema from within Foo bundle.
   
-Main schema: `Foo`. 
-
 [Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case2).
 
 `Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
@@ -264,8 +260,6 @@ _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case2` to generat
 
 ### Case 3: Extend Foo schema from within Bar bundle.
 
-Main schema: `Bar`.
-
 [Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case3).
 
 
@@ -292,29 +286,6 @@ Main schema: `Bar`.
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case3` to generate files from this example.
 
 
-### Case 4: Foo extends Bar
-
-Main schema: `Foo`.
-
-[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case4).
-
-`Foo` inherits from `Bar`. `Bar` does not need to be modified. 
-
-
-**`foo/schema/foo.schema.json`** schema:
-
-```json
-[
-  {
-    "name": "Foo",
-    "extends": "Bar",
-    "schema": ...
-  }
-]
-```
-
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
-
 
 ### Result
 
@@ -340,6 +311,34 @@ echo $foo->getBar()->getValue();
 A title
 Bar lorem ipsum
 ```
+
+
+## Inheriting from an abstract class
+
+Every POPO object can inherit form an existing, non-POPO (abstract) class,
+by using `extends` option, for example:
+
+`Foo` and `Bar` inherit from `\App\AbstractConfigurator`.  
+
+```json
+[
+  {
+    "name": "Foo",
+    "extends": "\\\\App\\\\AbstractConfigurator",
+    "schema": ...
+  }
+,
+  {
+    "name": "Bar",
+    "extends": "\\\\App\\\\AbstractConfigurator",
+    "schema": ...
+  }
+]
+```
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
+
+
 
 ### Displaying configuration
 

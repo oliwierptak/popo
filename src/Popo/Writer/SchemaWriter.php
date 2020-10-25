@@ -7,7 +7,9 @@ use Popo\Schema\Reader\Schema;
 class SchemaWriter
 {
     protected FileWriter $popoWriter;
+
     protected FileWriter $dtoWriter;
+
     protected FileWriter $abstractWriter;
 
     public function __construct(

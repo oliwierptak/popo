@@ -39,7 +39,8 @@ class SchemaMerger
             }
         }
 
-        $collectionToMerge = $this->setupHierarchy($collectionToMerge);
+        $collectionToMerge = $this->validateExtends($collectionToMerge);
+
         /** @var BundleSchema[] $schemaFiles */
         foreach ($collectionToMerge as $name => $schemaFiles) {
             $schemaFiles = $this->sortByBundleSchema($schemaFiles);
@@ -60,15 +61,12 @@ class SchemaMerger
      *
      * @return \Popo\Schema\Bundle\BundleSchema[]
      */
-    protected function setupHierarchy(array $bundleSchemaCollection): array
+    protected function validateExtends(array $bundleSchemaCollection): array
     {
         /** @var BundleSchema[] $schemaCollection */
         foreach ($bundleSchemaCollection as $name => $schemaCollection) {
             foreach ($schemaCollection as $bundleSchema) {
-                $parent = $bundleSchema->getSchema()->getExtends();
-                if ($parent !== '' && \array_key_exists($parent, $bundleSchemaCollection)) {
-                    $bundleSchema->getSchema()->setParent($bundleSchema->getSchema());
-                }
+                $this->schemaValidator->assertExtends($bundleSchema->getSchema());
             }
         }
 

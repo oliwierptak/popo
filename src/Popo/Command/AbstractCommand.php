@@ -39,10 +39,14 @@ abstract class AbstractCommand extends Command
     const OPTION_WITH_POPO = 'withPopo';
     const OPTION_WITH_INTERFACE = 'withInterface';
     const OPTION_CONFIG_FILENAME = 'configFile';
+
     //
     protected ?PopoFacadeInterfaces $facade;
+
     protected ?ConfigurationTable $configurationTable;
+
     protected Configurator $configurator;
+
     protected ModelHelperConfigurator $modelHelperConfigurator;
 
     protected function initialize(InputInterface $input, OutputInterface $output)

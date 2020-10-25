@@ -6,6 +6,7 @@ use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
 use Popo\Schema\Reader\Schema;
+use function sprintf;
 
 class GetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
@@ -17,7 +18,7 @@ class GetMethodReturnTypeGeneratorPlugin extends AbstractGeneratorPlugin impleme
             return '';
         }
 
-        $returnType = \sprintf(
+        $returnType = sprintf(
             ': ?%s',
             $property->getType()
         );
