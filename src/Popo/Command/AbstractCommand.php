@@ -40,7 +40,6 @@ abstract class AbstractCommand extends Command
     const OPTION_WITH_INTERFACE = 'withInterface';
     const OPTION_CONFIG_FILENAME = 'configFile';
 
-    //
     protected ?PopoFacadeInterfaces $facade;
 
     protected ?ConfigurationTable $configurationTable;
