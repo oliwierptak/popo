@@ -370,3 +370,10 @@ POPO v3.0.0
 
 
 See [tests/fixtures/](tests/fixtures/) for more schema examples.
+
+
+### PHP version compatibility
+
+- POPO `v1.x` - PHP 7.2+
+- POPO `v2.x` - PHP 7.2+
+- POPO `v3.x` - PHP 7.4+
