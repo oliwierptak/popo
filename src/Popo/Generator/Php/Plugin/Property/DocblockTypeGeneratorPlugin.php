@@ -1,15 +1,13 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
-use Popo\Plugin\Generator\GeneratorPluginInterface;
-use Popo\Schema\Reader\PropertyInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
+use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 
-class DocblockTypeGeneratorPlugin extends AbstractGeneratorPlugin implements GeneratorPluginInterface
+class DocblockTypeGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
     const PATTERN = '<<DOCBLOCK_TYPE>>';
 
@@ -24,7 +22,7 @@ class DocblockTypeGeneratorPlugin extends AbstractGeneratorPlugin implements Gen
         'array' => 'array',
     ];
 
-    public function generate(SchemaInterface $schema, PropertyInterface $property): string
+    public function generate(Schema $schema, Property $property): string
     {
         return $this->typeToDocblockType($property->getType());
     }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Command;
 
@@ -9,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use function file_put_contents;
 
 class ConfigureCommand extends Command
 {
@@ -21,9 +20,17 @@ class ConfigureCommand extends Command
         $this
             ->setName(static::COMMAND_NAME)
             ->setDescription(static::COMMAND_DESCRIPTION)
-            ->setDefinition([
-                new InputOption(static::OPTION_CONFIG_FILE, 's', InputOption::VALUE_OPTIONAL, 'Configuration filename', '.popo'),
-            ]);
+            ->setDefinition(
+                [
+                    new InputOption(
+                        static::OPTION_CONFIG_FILE,
+                        's',
+                        InputOption::VALUE_OPTIONAL,
+                        'Configuration filename',
+                        '.popo'
+                    ),
+                ]
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): ?int
@@ -34,21 +41,24 @@ class ConfigureCommand extends Command
         $question->setAutocompleterValues(['.popo', '.popo.dist']);
         $configFilename = $helper->ask($input, $output, $question);
 
+        $question = new Question('Schema name: ', '');
+        $name = $helper->ask($input, $output, $question);
+
         $question = new Question('Schema [popo/]: ', 'popo/');
         $question->setAutocompleterValues(['popo/']);
-        $schema = $helper->ask($input, $output, $question);
+        $schema = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Template [vendor/popo/generator/templates/]: ', 'vendor/popo/generator/templates/');
         $question->setAutocompleterValues(['vendor/popo/generator/templates/']);
-        $template = $helper->ask($input, $output, $question);
+        $template = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Output directory [src/Configurator/]: ', 'src/Configurator/');
-        $question->setAutocompleterValues(['src/Configurator/']);
-        $outputDirectory = $helper->ask($input, $output, $question);
+        $question->setAutocompleterValues(['src/Configurator/', 'src/Popo/', 'src/Generated/']);
+        $outputDirectory = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
         $question = new Question('Namespace [\App\Configurator]: ', 'App\Configurator');
         $question->setAutocompleterValues(['\App\Configurator']);
-        $namespace = $helper->ask($input, $output, $question);
+        $namespace = rtrim($helper->ask($input, $output, $question), '\\');
 
         $question = new Question('Extension [.php]: ', '.php');
         $question->setAutocompleterValues(['.php']);
@@ -63,7 +73,7 @@ class ConfigureCommand extends Command
         $extends = $helper->ask($input, $output, $question);
 
         $content = <<<EOT
-[popo]
+[${name}]
 schema = ${schema}
 template = ${template}
 output = ${outputDirectory}
@@ -71,20 +81,14 @@ namespace = $namespace
 extension = $extension
 abstract = $abstract
 extends = $extends
-
-[dto]
-schema = ${schema}
-template = ${template}
-output = ${outputDirectory}
-namespace = $namespace
-extension = $extension
-abstract = $abstract
-extends = $extends
+withInterface = 0
+withPopo = 1
+returnType =
 EOT;
 
         $output->writeln('Generating configuration file under: ' . $configFilename);
 
-        \file_put_contents($configFilename, $content);
+        file_put_contents($configFilename, $content);
 
         return 0;
     }

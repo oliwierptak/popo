@@ -1,47 +1,28 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-class SchemaConfigurator implements SchemaConfiguratorInterface
+use function current;
+use function explode;
+
+class SchemaConfigurator
 {
-    /**
-     * @var string
-     */
-    protected $schemaPath = '@schema@';
+    protected string $schemaPath = '@schema@';
 
-    /**
-     * @var string
-     */
-    protected $schemaFilename = '*.schema.json';
+    protected string $schemaFilename = '*.schema.json';
 
-    /**
-     * @var string
-     */
-    protected $schemaTemplateFilename = 'php.schema.tpl';
+    protected string $schemaTemplateFilename = 'php.schema.tpl';
 
-    /**
-     * @var string
-     */
-    protected $arrayableTemplateFilename = 'php.arrayable.tpl';
+    protected string $propertyTemplateFilename = 'php.property.tpl';
 
-    /**
-     * @var string
-     */
-    protected $propertyTemplateFilename = 'php.property.tpl';
-
-    /**
-     * @var string
-     */
-    protected $collectionTemplateFilename = 'php.collection.tpl';
+    protected string $collectionTemplateFilename = 'php.collection.tpl';
 
     public function getSchemaPath(): string
     {
         return $this->schemaPath;
     }
 
-    public function setSchemaPath(string $schemaPath): SchemaConfiguratorInterface
+    public function setSchemaPath(string $schemaPath): self
     {
         $this->schemaPath = $schemaPath;
 
@@ -53,7 +34,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->schemaFilename;
     }
 
-    public function setSchemaFilename(string $schemaFilename): SchemaConfiguratorInterface
+    public function setSchemaFilename(string $schemaFilename): self
     {
         $this->schemaFilename = $schemaFilename;
 
@@ -62,9 +43,9 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
 
     public function resolveBundleName(string $schemaFilename, string $delimiter = '.'): string
     {
-        $parts = \explode($delimiter, $schemaFilename);
+        $parts = explode($delimiter, $schemaFilename);
 
-        return \current($parts);
+        return current($parts);
     }
 
     public function getSchemaTemplateFilename(): string
@@ -72,12 +53,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->schemaTemplateFilename;
     }
 
-    public function getArrayableTemplateFilename(): string
-    {
-        return $this->arrayableTemplateFilename;
-    }
-
-    public function setSchemaTemplateFilename(string $schemaTemplateFilename): SchemaConfiguratorInterface
+    public function setSchemaTemplateFilename(string $schemaTemplateFilename): self
     {
         $this->schemaTemplateFilename = $schemaTemplateFilename;
 
@@ -89,7 +65,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->propertyTemplateFilename;
     }
 
-    public function setPropertyTemplateFilename(string $propertyTemplateFilename): SchemaConfiguratorInterface
+    public function setPropertyTemplateFilename(string $propertyTemplateFilename): self
     {
         $this->propertyTemplateFilename = $propertyTemplateFilename;
 
@@ -101,7 +77,7 @@ class SchemaConfigurator implements SchemaConfiguratorInterface
         return $this->collectionTemplateFilename;
     }
 
-    public function setCollectionTemplateFilename(string $collectionTemplateFilename): SchemaConfiguratorInterface
+    public function setCollectionTemplateFilename(string $collectionTemplateFilename): self
     {
         $this->collectionTemplateFilename = $collectionTemplateFilename;
 

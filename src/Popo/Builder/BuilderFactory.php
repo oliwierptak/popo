@@ -1,68 +1,41 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Popo\Generator\GeneratorFactoryInterface;
-use Popo\Schema\Loader\LoaderFactoryInterface;
-use Popo\Schema\SchemaFactoryInterface;
-use Popo\Writer\WriterFactoryInterface;
+use Popo\Configurator;
+use Popo\Generator\GeneratorFactory;
+use Popo\Plugin\PluginContainer;
+use Popo\Schema\Loader\LoaderFactory;
+use Popo\Schema\SchemaFactory;
 
-class BuilderFactory implements BuilderFactoryInterface
+class BuilderFactory
 {
-    /**
-     * @var \Popo\Schema\Loader\LoaderFactoryInterface
-     */
-    protected $loaderFactory;
+    protected LoaderFactory $loaderFactory;
 
-    /**
-     * @var \Popo\Generator\GeneratorFactoryInterface
-     */
-    protected $generatorFactory;
+    protected GeneratorFactory $generatorFactory;
 
-    /**
-     * @var \Popo\Schema\SchemaFactoryInterface
-     */
-    protected $schemaFactory;
-
-    /**
-     * @var \Popo\Writer\WriterFactoryInterface
-     */
-    protected $writerFactory;
+    protected SchemaFactory $schemaFactory;
 
     public function __construct(
-        LoaderFactoryInterface $loaderFactory,
-        GeneratorFactoryInterface $generatorFactory,
-        SchemaFactoryInterface $schemaFactory,
-        WriterFactoryInterface $writerFactory
-    )
-    {
+        LoaderFactory $loaderFactory,
+        GeneratorFactory $generatorFactory,
+        SchemaFactory $schemaFactory
+    ) {
         $this->loaderFactory = $loaderFactory;
         $this->generatorFactory = $generatorFactory;
         $this->schemaFactory = $schemaFactory;
-        $this->writerFactory = $writerFactory;
     }
 
-    public function createBuilder(): GeneratorBuilderInterface
+    public function createPopoGeneratorBuilder(): PopoGeneratorBuilder
     {
-        return new GeneratorBuilder(
+        return new PopoGeneratorBuilder(
             $this->loaderFactory->createContentLoader(),
             $this->generatorFactory,
             $this->schemaFactory
         );
     }
 
-    public function createBuilderWriter(): BuilderWriterInterface
-    {
-        return new BuilderWriter(
-            $this->schemaFactory->createSchemaBuilder(),
-            $this->schemaFactory->createSchemaMerger(),
-            $this->writerFactory
-        );
-    }
-
-    public function createPluginContainer(BuilderConfigurator $configurator): PluginContainerInterface
+    public function createPluginContainer(Configurator $configurator): PluginContainer
     {
         $pluginContainer = new PluginContainer(
             $this->schemaFactory->createPropertyExplorer()
@@ -74,16 +47,11 @@ class BuilderFactory implements BuilderFactoryInterface
     }
 
     protected function registerPlugins(
-        PluginContainerInterface $pluginContainer,
-        BuilderConfigurator $configurator
-    ): PluginContainerInterface
-    {
+        PluginContainer $pluginContainer,
+        Configurator $configurator
+    ): PluginContainer {
         $pluginContainer->registerSchemaClassPlugins(
             $configurator->getSchemaPluginClasses()
-        );
-
-        $pluginContainer->registerArrayableClassPlugins(
-            $configurator->getArrayablePluginClasses()
         );
 
         $pluginContainer->registerPropertyClassPlugins(

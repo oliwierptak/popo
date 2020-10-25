@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin;
 
@@ -9,13 +7,13 @@ use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersDocbloc
 use Popo\Generator\Php\Plugin\Property\Collection\AddItemMethodParametersGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\DocblockTypeGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\PropertyNameGeneratorPlugin;
+use Popo\Generator\Php\Plugin\Property\Setter\Popo\SetMethodReturnDockblockGeneratorPlugin;
 use Popo\Generator\Php\Plugin\Property\Setter\SetMethodParametersDocblockGeneratorPlugin;
-use Popo\Generator\Php\Plugin\Property\Setter\SetMethodReturnDockblockGeneratorPlugin;
 
 class CollectionFactoryPlugin extends PropertyFactoryPlugin
 {
     /**
-     * @return \Popo\Plugin\Generator\GeneratorPluginInterface[]
+     * @return \Popo\Plugin\Generator\PropertyGeneratorPluginInterface[]
      */
     public function createPluginCollection(): array
     {

@@ -1,44 +1,41 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use Popo\Finder\FinderFactoryInterface;
-use Popo\Schema\Bundle\BundleSchemaFactoryInterface;
-use Popo\Schema\Loader\LoaderFactoryInterface;
-use Popo\Schema\Reader\PropertyExplorerInterface;
-use Popo\Schema\Reader\ReaderFactoryInterface;
+use Popo\Finder\FinderFactory;
+use Popo\Schema\Bundle\BundleSchemaFactory;
+use Popo\Schema\Loader\LoaderFactory;
+use Popo\Schema\Reader\PropertyExplorer;
+use Popo\Schema\Reader\ReaderFactory;
 use Popo\Schema\Validator\SchemaValidator;
-use Popo\Schema\Validator\SchemaValidatorInterface;
 
-class SchemaFactory implements SchemaFactoryInterface
+class SchemaFactory
 {
     /**
-     * @var \Popo\Schema\Bundle\BundleSchemaFactoryInterface
+     * @var \Popo\Schema\Bundle\BundleSchemaFactory
      */
     protected $bundleSchemaFactory;
 
     /**
-     * @var \Popo\Finder\FinderFactoryInterface
+     * @var \Popo\Finder\FinderFactory
      */
     protected $finderFactory;
 
     /**
-     * @var \Popo\Schema\Loader\LoaderFactoryInterface
+     * @var \Popo\Schema\Loader\LoaderFactory
      */
     protected $loaderFactory;
 
     /**
-     * @var \Popo\Schema\Reader\ReaderFactoryInterface
+     * @var \Popo\Schema\Reader\ReaderFactory
      */
     protected $readerFactory;
 
     public function __construct(
-        FinderFactoryInterface $finderFactory,
-        LoaderFactoryInterface $loaderFactory,
-        ReaderFactoryInterface $readerFactory,
-        BundleSchemaFactoryInterface $bundleSchemaFactory
+        FinderFactory $finderFactory,
+        LoaderFactory $loaderFactory,
+        ReaderFactory $readerFactory,
+        BundleSchemaFactory $bundleSchemaFactory
     ) {
         $this->finderFactory = $finderFactory;
         $this->loaderFactory = $loaderFactory;
@@ -46,7 +43,20 @@ class SchemaFactory implements SchemaFactoryInterface
         $this->bundleSchemaFactory = $bundleSchemaFactory;
     }
 
-    public function createSchemaBuilder(): SchemaBuilderInterface
+    public function createSchemaMerger(): SchemaMerger
+    {
+        return new SchemaMerger(
+            $this->createSchemaValidator(),
+            $this->createSchemaBuilder()
+        );
+    }
+
+    public function createSchemaValidator(): SchemaValidator
+    {
+        return new SchemaValidator();
+    }
+
+    public function createSchemaBuilder(): SchemaBuilder
     {
         return new SchemaBuilder(
             $this->finderFactory->createFileLoader(),
@@ -56,20 +66,7 @@ class SchemaFactory implements SchemaFactoryInterface
         );
     }
 
-    public function createSchemaMerger(): SchemaMergerInterface
-    {
-        return new SchemaMerger(
-            $this->createSchemaValidator(),
-            $this->createSchemaBuilder()
-        );
-    }
-
-    public function createSchemaValidator(): SchemaValidatorInterface
-    {
-        return new SchemaValidator();
-    }
-
-    public function createPropertyExplorer(): PropertyExplorerInterface
+    public function createPropertyExplorer(): PropertyExplorer
     {
         return $this->readerFactory->createPropertyExplorer();
     }

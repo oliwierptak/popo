@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Foo",
+    "extends": "\\App\\AbstractConfigurator",
+    "schema": [
+      {
+        "name": "fooId",
+        "type": "int"
+      },
+      {
+        "name": "username",
+        "type": "string",
+        "default": "JohnDoe"
+      },
+      {
+        "name": "password",
+        "type": "string"
+      },
+      {
+        "name": "isLoggedIn",
+        "type": "bool"
+      },
+      {
+        "name": "resetPassword",
+        "type": "bool"
+      },      {
+        "name": "optionalData",
+        "type": "array",
+        "collectionItem": "OptionalDataFoo",
+        "default": []
+      },
+      {
+        "name": "buzz",
+        "type": "Buzz"
+      }
+    ]
+  },
+  {
+    "name": "OptionalDataFoo",
+    "schema": [
+      {
+        "name": "id",
+        "type": "int"
+      },
+      {
+        "name": "anOption",
+        "type": "string",
+        "default": "Lorem Ipsum Option"
+      }
+    ]
+  }
+]

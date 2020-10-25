@@ -1,0 +1,6 @@
+[popo]
+schema = tests/fixtures/popo/
+template = templates/
+output = tests/App/Configurator/
+namespace = App\Configurator
+; extends = \App\AbstractConfigurator

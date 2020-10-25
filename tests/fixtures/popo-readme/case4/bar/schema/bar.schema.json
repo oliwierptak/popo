@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Bar",
+    "extends": "\\App\\AbstractConfigurator",
+    "schema": [
+      {
+        "name": "value",
+        "type": "string",
+        "default": "Lorem Ipsum Default Bar Value"
+      }
+    ]
+  }
+]

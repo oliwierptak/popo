@@ -1,52 +1,35 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use Popo\Builder\BuilderConfigurator;
-use Popo\Finder\FileLoaderInterface;
-use Popo\Schema\Bundle\BundleSchemaFactoryInterface;
-use Popo\Schema\Bundle\BundleSchemaInterface;
-use Popo\Schema\Loader\JsonLoaderInterface;
-use Popo\Schema\Reader\ReaderFactoryInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Configurator;
+use Popo\Finder\FileLoader;
+use Popo\Schema\Bundle\BundleSchema;
+use Popo\Schema\Bundle\BundleSchemaFactory;
+use Popo\Schema\Loader\JsonLoader;
+use Popo\Schema\Reader\ReaderFactory;
+use Popo\Schema\Reader\Schema;
 use Symfony\Component\Finder\SplFileInfo;
-use function count;
-use function explode;
 use function strcasecmp;
 use function trim;
 use const DIRECTORY_SEPARATOR;
 
-class SchemaBuilder implements SchemaBuilderInterface
+class SchemaBuilder
 {
-    /**
-     * @var \Popo\Finder\FileLoaderInterface
-     */
-    protected $fileLoader;
+    protected FileLoader $fileLoader;
 
-    /**
-     * @var \Popo\Schema\Loader\JsonLoaderInterface
-     */
-    protected $jsonLoader;
+    protected JsonLoader $jsonLoader;
 
-    /**
-     * @var \Popo\Schema\Reader\ReaderFactoryInterface
-     */
-    protected $readerFactory;
+    protected ReaderFactory $readerFactory;
 
-    /**
-     * @var \Popo\Schema\Bundle\BundleSchemaFactoryInterface
-     */
-    protected $bundleSchemaFactory;
+    protected BundleSchemaFactory $bundleSchemaFactory;
 
     public function __construct(
-        FileLoaderInterface $fileLoader,
-        JsonLoaderInterface $jsonLoader,
-        ReaderFactoryInterface $readerFactory,
-        BundleSchemaFactoryInterface $bundleSchemaFactory
-    )
-    {
+        FileLoader $fileLoader,
+        JsonLoader $jsonLoader,
+        ReaderFactory $readerFactory,
+        BundleSchemaFactory $bundleSchemaFactory
+    ) {
         $this->fileLoader = $fileLoader;
         $this->jsonLoader = $jsonLoader;
         $this->readerFactory = $readerFactory;
@@ -54,11 +37,11 @@ class SchemaBuilder implements SchemaBuilderInterface
     }
 
     /**
-     * @param \Popo\Builder\BuilderConfigurator $configurator
+     * @param \Popo\Configurator $configurator
      *
-     * @return \Popo\Schema\Bundle\BundleSchemaInterface[]
+     * @return \Popo\Schema\Bundle\BundleSchema[]
      */
-    public function build(BuilderConfigurator $configurator): array
+    public function build(Configurator $configurator): array
     {
         $schemaFiles = $this->fileLoader->load(
             $configurator->getSchemaDirectory(),
@@ -100,11 +83,121 @@ class SchemaBuilder implements SchemaBuilderInterface
         return $fileInfoCollection;
     }
 
-    protected function markBundleSchema(
-        BundleSchemaInterface $bundleSchema,
-        SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface
+    /**
+     * @param SplFileInfo $bundleSchemaFile
+     * @param Configurator $configurator
+     *
+     * @return BundleSchema[][]
+     */
+    protected function buildBundleSchemaFiles(
+        SplFileInfo $bundleSchemaFile,
+        Configurator $configurator
+    ): array {
+        $schemaDataCollection = $this->loadSchemaData($bundleSchemaFile);
+
+        $bundleSchemaFiles = [];
+
+        foreach ($schemaDataCollection as $schemaData) {
+            $schema = $this->buildSchema($schemaData, $configurator);
+            $bundleSchema = $this->buildBundleSchema(
+                $schema,
+                $bundleSchemaFile,
+                $configurator->getSchemaConfigurator()
+            );
+            $bundleSchemaFiles[$schema->getName()] = $bundleSchema;
+        }
+
+        return $bundleSchemaFiles;
+    }
+
+    /**
+     * @param \Symfony\Component\Finder\SplFileInfo $bundleSchemaFile
+     *
+     * @return array
+     */
+    protected function loadSchemaData(SplFileInfo $bundleSchemaFile): array
     {
+        return $this->jsonLoader->load($bundleSchemaFile->getPathname());
+    }
+
+    protected function buildSchema(array $schemaData, Configurator $configurator): Schema
+    {
+        $schema = $this->readerFactory->createSchema($schemaData);
+        $schema->setNamespace($configurator->getNamespace());
+
+        $schema = $this->updateAbstractFlag($schema, $configurator);
+        $schema = $this->updateExtendsFlag($schema, $configurator);
+        $schema = $this->updateReturnFlag($schema, $configurator);
+        $schema = $this->updateWithInterfaceFlag($schema, $configurator);
+        $schema = $this->updateWithPopoFlag($schema, $configurator);
+
+        return $schema;
+    }
+
+    protected function updateAbstractFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        $isAbstract = $schema->isAbstract();
+        if ($configurator->getIsAbstract() === true) {
+            $isAbstract = true;
+        }
+        $schema->setIsAbstract($isAbstract);
+
+        return $schema;
+    }
+
+    protected function updateExtendsFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        $extends = $configurator->getExtends();
+        if ($extends === null) {
+            $extends = trim((string) $schema->getExtends());
+        }
+        $schema->setExtends($extends);
+
+        return $schema;
+    }
+
+    protected function updateReturnFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        if ($configurator->getReturnType() !== null) {
+            $schema->setReturnType($configurator->getReturnType());
+        }
+
+        return $schema;
+    }
+
+    protected function updateWithInterfaceFlag(Schema $schema, Configurator $configurator): Schema
+    {
+        if ($configurator->getWithInterface() !== null) {
+            $schema->setIsWithInterface($configurator->getWithInterface());
+        }
+
+        return $schema;
+    }
+
+    protected function updateWithPopoFlag(Schema $schema, Configurator $configurator)
+    {
+        if ($configurator->getWithPopo() !== null) {
+            $schema->setIsWithPopo($configurator->getWithPopo());
+        }
+
+        return $schema;
+    }
+
+    protected function buildBundleSchema(
+        Schema $schema,
+        SplFileInfo $bundleSchemaFile,
+        SchemaConfigurator $configurator
+    ): BundleSchema {
+        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema($schema, $bundleSchemaFile);
+        $bundleSchema = $this->markBundleSchema($bundleSchema, $configurator);
+
+        return $bundleSchema;
+    }
+
+    protected function markBundleSchema(
+        BundleSchema $bundleSchema,
+        SchemaConfigurator $configurator
+    ): BundleSchema {
         $bundleNameFromFilename = $configurator->resolveBundleName(
             $bundleSchema->getSchemaFilename()->getFilename()
         );
@@ -126,120 +219,40 @@ class SchemaBuilder implements SchemaBuilderInterface
     }
 
     /**
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
+     * @param \Popo\Schema\Reader\Schema $schema
      *
-     * @return \Popo\Schema\Reader\PropertyInterface[]
+     * @return \Popo\Schema\Reader\Property[]
      */
-    public function buildProperties(SchemaInterface $schema): array
+    public function buildProperties(Schema $schema): array
     {
         return $this->readerFactory->createPropertyCollection($schema);
     }
 
     /**
-     * @param \Popo\Schema\Bundle\BundleSchemaInterface $sourceBundleSchema
-     * @param \Popo\Schema\Reader\PropertyInterface[] $propertyCollection
+     * @param \Popo\Schema\Bundle\BundleSchema $sourceBundleSchema
+     * @param \Popo\Schema\Reader\Property[] $propertyCollection
      *
-     * @return \Popo\Schema\Bundle\BundleSchemaInterface
+     * @return \Popo\Schema\Bundle\BundleSchema
      */
     public function buildBundleSchemaWithProperties(
-        BundleSchemaInterface $sourceBundleSchema,
+        BundleSchema $sourceBundleSchema,
         array $propertyCollection
-    ): BundleSchemaInterface
-    {
-        $schemaData = [];
-
+    ): BundleSchema {
+        $properties = [];
+        $schemaData = $sourceBundleSchema->getSchema()->toArray();
         foreach ($propertyCollection as $property) {
-            $schemaData[] = $property->toArray();
+            $properties[] = $property->toArray();
         }
+        $schemaData['schema'] = $properties;
 
-        $schema = $this->readerFactory->createSchema(
-            $sourceBundleSchema->getSchema()->toArray()
-        );
-
-        return $this->bundleSchemaFactory->createBundleSchema(
+        $schema = $this->readerFactory->createSchema($schemaData);
+        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema(
             $schema,
             $sourceBundleSchema->getSchemaFilename()
         );
-    }
 
-    /**
-     * @param \Symfony\Component\Finder\SplFileInfo $bundleSchemaFile
-     *
-     * @return array
-     */
-    protected function loadSchemaData(SplFileInfo $bundleSchemaFile): array
-    {
-        return $this->jsonLoader->load($bundleSchemaFile->getPathname());
-    }
-
-    protected function buildBundleSchemaFiles(
-        SplFileInfo $bundleSchemaFile,
-        BuilderConfigurator $configurator
-    ): array
-    {
-        $schemaDataCollection = $this->loadSchemaData($bundleSchemaFile);
-
-        $bundleSchemaFiles = [];
-
-        foreach ($schemaDataCollection as $schemaData) {
-            $schema = $this->buildSchema($schemaData, $configurator);
-            $bundleSchema = $this->buildBundleSchema($schema, $bundleSchemaFile, $configurator->getSchemaConfigurator());
-            $bundleSchemaFiles[$schema->getName()] = $bundleSchema;
-        }
-
-        return $bundleSchemaFiles;
-    }
-
-    protected function buildBundleSchema(
-        SchemaInterface $schema,
-        SplFileInfo $bundleSchemaFile,
-        SchemaConfiguratorInterface $configurator
-    ): BundleSchemaInterface
-    {
-        $bundleSchema = $this->bundleSchemaFactory->createBundleSchema($schema, $bundleSchemaFile);
-        $bundleSchema = $this->markBundleSchema($bundleSchema, $configurator);
+        $bundleSchema->setIsBundleSchema($sourceBundleSchema->isBundleSchema());
 
         return $bundleSchema;
-    }
-
-    protected function buildSchema(array $schemaData, BuilderConfigurator $configurator): SchemaInterface
-    {
-        $schema = $this->readerFactory->createSchema($schemaData);
-        $schema = $this->updateAbstractFlag($schema, $configurator);
-        $schema = $this->updateExtendsFlag($schema, $configurator);
-
-        return $schema;
-    }
-
-    protected function updateAbstractFlag(SchemaInterface $schema, BuilderConfigurator $configurator): SchemaInterface
-    {
-        $isAbstract = $schema->isAbstract();
-        if ($configurator->getIsAbstract() === true) {
-            $isAbstract = true;
-        }
-        $schema->setIsAbstract($isAbstract);
-
-        if ($schema->isAbstract()) {
-            $namespaceTokens = explode('\\', $schema->getName());
-
-            if (count($namespaceTokens) > 1) {
-                $schema->setName($schema->getNamespaceName() . '\\' . 'Abstract' . $schema->getClassName());
-            } else {
-                $schema->setName('Abstract' . $schema->getName());
-            }
-        }
-
-        return $schema;
-    }
-
-    protected function updateExtendsFlag(SchemaInterface $schema, BuilderConfigurator $configurator): SchemaInterface
-    {
-        $extends = $configurator->getExtends();
-        if ($extends === null) {
-            $extends = trim((string)$schema->getExtends());
-        }
-        $schema->setExtends($extends);
-
-        return $schema;
     }
 }

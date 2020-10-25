@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
 use function array_key_exists;
 use function array_merge;
 
-class Property implements PropertyInterface
+class Property
 {
     const NAME = 'name';
     const TYPE = 'type';
@@ -34,7 +32,7 @@ class Property implements PropertyInterface
     protected $data;
 
     /**
-     * @var \Popo\Schema\Reader\SchemaInterface
+     * @var \Popo\Schema\Reader\Schema
      */
     protected $schema;
 
@@ -44,48 +42,18 @@ class Property implements PropertyInterface
     protected $schemaDefinition;
 
     /**
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
+     * @param \Popo\Schema\Reader\Schema $schema
      * @param array $propertySchema
      */
-    public function __construct(SchemaInterface $schema, array $propertySchema)
+    public function __construct(Schema $schema, array $propertySchema)
     {
         $this->schema = $schema;
         $this->data = array_merge($this->defaults, $propertySchema);
     }
 
-    protected function getSchemaDefinition(): array
-    {
-        if ($this->schemaDefinition) {
-            return $this->schemaDefinition;
-        }
-
-        foreach ($this->schema->getSchema() as $schemaItem) {
-            if ($schemaItem[static::NAME] === $this->getName()) {
-                $this->schemaDefinition = $schemaItem;
-
-                break;
-            }
-        }
-
-        return $this->schemaDefinition;
-    }
-
-    public function getSchema(): SchemaInterface
+    public function getSchema(): Schema
     {
         return $this->schema;
-    }
-
-    public function getName(): string
-    {
-        return $this->data[static::NAME];
-    }
-
-    /**
-     * @return mixed|null
-     */
-    public function getDefault()
-    {
-        return $this->data[static::DEFAULT];
     }
 
     public function getDocblock(): string
@@ -118,6 +86,28 @@ class Property implements PropertyInterface
         return trim($definitions[static::COLLECTION_ITEM]) !== '';
     }
 
+    protected function getSchemaDefinition(): array
+    {
+        if ($this->schemaDefinition) {
+            return $this->schemaDefinition;
+        }
+
+        foreach ($this->schema->getSchema() as $schemaItem) {
+            if ($schemaItem[static::NAME] === $this->getName()) {
+                $this->schemaDefinition = $schemaItem;
+
+                break;
+            }
+        }
+
+        return $this->schemaDefinition;
+    }
+
+    public function getName(): string
+    {
+        return $this->data[static::NAME];
+    }
+
     public function hasDefault(): bool
     {
         return array_key_exists(static::DEFAULT, $this->getSchemaDefinition());
@@ -126,6 +116,14 @@ class Property implements PropertyInterface
     public function hasConstantValue(): bool
     {
         return trim($this->getDefault()[0] ?? '') === '\\';
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getDefault()
+    {
+        return $this->data[static::DEFAULT];
     }
 
     /**

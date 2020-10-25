@@ -1,21 +1,19 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Getter;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
-use Popo\Plugin\Generator\GeneratorPluginInterface;
-use Popo\Schema\Reader\SchemaInterface;
-use Popo\Schema\Reader\PropertyInterface;
+use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
+use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use function sprintf;
 use function trim;
 
-class GetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin implements GeneratorPluginInterface
+class GetMethodReturnDockblockGeneratorPlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
     const PATTERN = '<<GET_METHOD_RETURN_DOCKBLOCK>>';
 
-    public function generate(SchemaInterface $schema, PropertyInterface $property): string
+    public function generate(Schema $schema, Property $property): string
     {
         $docblock = trim($property->getDocblock());
         $docblockType = '<<DOCBLOCK_TYPE>>';

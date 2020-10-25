@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Buzz",
+    "extends": "\\App\\AbstractConfigurator",
+    "schema": [
+      {
+        "name": "buzz",
+        "type": "string",
+        "default": "\\App\\TestAppDefinesInterface::LOREM_ISPUM"
+      }
+    ]
+  }
+]

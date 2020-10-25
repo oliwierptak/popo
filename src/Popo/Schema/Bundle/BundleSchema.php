@@ -1,36 +1,25 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Bundle;
 
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 use Symfony\Component\Finder\SplFileInfo;
 
-class BundleSchema implements BundleSchemaInterface
+class BundleSchema
 {
-    /**
-     * @var \Popo\Schema\Reader\SchemaInterface
-     */
-    protected $schema;
+    protected Schema $schema;
 
-    /**
-     * @var \Symfony\Component\Finder\SplFileInfo
-     */
-    protected $filename;
+    protected SplFileInfo $filename;
 
-    /**
-     * @var bool
-     */
-    protected $isBundleSchema = false;
+    protected bool $isBundleSchema = false;
 
-    public function __construct(SchemaInterface $schema, SplFileInfo $filename)
+    public function __construct(Schema $schema, SplFileInfo $filename)
     {
         $this->schema = $schema;
         $this->filename = $filename;
     }
 
-    public function getSchema(): SchemaInterface
+    public function getSchema(): Schema
     {
         return $this->schema;
     }

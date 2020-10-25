@@ -1,36 +1,30 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator;
 
 use Popo\Builder\BuilderContainer;
-use Popo\Schema\Reader\ReaderFactoryInterface;
+use Popo\Schema\Reader\ReaderFactory;
 
-class GeneratorFactory implements GeneratorFactoryInterface
+class GeneratorFactory
 {
-    /**
-     * @var \Popo\Schema\Reader\ReaderFactoryInterface
-     */
-    protected $readerFactory;
+    protected ReaderFactory $readerFactory;
 
-    public function __construct(ReaderFactoryInterface $readerFactory)
+    public function __construct(ReaderFactory $readerFactory)
     {
         $this->readerFactory = $readerFactory;
     }
 
-    public function createSchemaGenerator(BuilderContainer $container): GeneratorInterface
+    public function createSchemaGenerator(BuilderContainer $container): SchemaGenerator
     {
         return new SchemaGenerator(
             $container->getSchemaTemplateString(),
             $this->createPropertyGenerator($container),
-            $this->createArrayableGenerator($container),
             $this->createCollectionGenerator($container),
             $container->getSchemaPluginCollection()
         );
     }
 
-    public function createPropertyGenerator(BuilderContainer $container): GeneratorInterface
+    public function createPropertyGenerator(BuilderContainer $container): PropertyGenerator
     {
         return new PropertyGenerator(
             $container->getPropertyTemplateString(),
@@ -39,16 +33,7 @@ class GeneratorFactory implements GeneratorFactoryInterface
         );
     }
 
-    public function createArrayableGenerator(BuilderContainer $container): GeneratorInterface
-    {
-        return new ArrayableGenerator(
-            $container->getArrayableTemplateString(),
-            $this->readerFactory,
-            $container->getArrayablePluginCollection()
-        );
-    }
-
-    public function createCollectionGenerator(BuilderContainer $container): GeneratorInterface
+    public function createCollectionGenerator(BuilderContainer $container): CollectionGenerator
     {
         return new CollectionGenerator(
             $container->getCollectionTemplateString(),
@@ -56,5 +41,4 @@ class GeneratorFactory implements GeneratorFactoryInterface
             $container->getCollectionPluginCollection()
         );
     }
-
 }

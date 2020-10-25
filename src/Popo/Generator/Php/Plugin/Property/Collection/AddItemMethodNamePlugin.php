@@ -1,21 +1,19 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Property\Collection;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
-use Popo\Plugin\Generator\GeneratorPluginInterface;
-use Popo\Schema\Reader\SchemaInterface;
-use Popo\Schema\Reader\PropertyInterface;
+use Popo\Plugin\Generator\PropertyGeneratorPluginInterface;
+use Popo\Schema\Reader\Property;
+use Popo\Schema\Reader\Schema;
 use function trim;
 use function ucfirst;
 
-class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements GeneratorPluginInterface
+class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements PropertyGeneratorPluginInterface
 {
     const PATTERN = '<<ADD_ITEM_METHOD_NAME>>';
 
-    public function generate(SchemaInterface $schema, PropertyInterface $property): string
+    public function generate(Schema $schema, Property $property): string
     {
         $name = $property->getName();
 
@@ -23,7 +21,8 @@ class AddItemMethodNamePlugin extends AbstractGeneratorPlugin implements Generat
 
         if ($singular !== '') {
             $name = $singular;
-        } else {
+        }
+        else {
             $name .= 'Item';
         }
 

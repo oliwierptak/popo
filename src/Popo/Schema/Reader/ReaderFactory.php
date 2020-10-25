@@ -1,27 +1,20 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Schema\Reader;
 
-class ReaderFactory implements ReaderFactoryInterface
+class ReaderFactory
 {
-    public function createProperty(SchemaInterface $schema, array $propertySchema): PropertyInterface
-    {
-        return new Property($schema, $propertySchema);
-    }
-
-    public function createSchema(array $schema = []): SchemaInterface
+    public function createSchema(array $schema = []): Schema
     {
         return new Schema($schema);
     }
 
     /**
-     * @param \Popo\Schema\Reader\SchemaInterface $schema
+     * @param \Popo\Schema\Reader\Schema $schema
      *
-     * @return \Popo\Schema\Reader\PropertyInterface[]
+     * @return \Popo\Schema\Reader\Property[]
      */
-    public function createPropertyCollection(SchemaInterface $schema): array
+    public function createPropertyCollection(Schema $schema): array
     {
         $propertyCollection = [];
 
@@ -32,7 +25,12 @@ class ReaderFactory implements ReaderFactoryInterface
         return $propertyCollection;
     }
 
-    public function createPropertyExplorer(): PropertyExplorerInterface
+    public function createProperty(Schema $schema, array $propertySchema): Property
+    {
+        return new Property($schema, $propertySchema);
+    }
+
+    public function createPropertyExplorer(): PropertyExplorer
     {
         return new PropertyExplorer();
     }

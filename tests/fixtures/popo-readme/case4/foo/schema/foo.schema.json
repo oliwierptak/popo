@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Foo",
+    "extends": "\\App\\AbstractConfigurator",
+    "schema": [
+      {
+        "name": "title",
+        "type": "string"
+      }
+    ]
+  }
+]

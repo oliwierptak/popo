@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Foo",
+    "schema": [
+      {
+        "name": "bar",
+        "type": "Bar",
+        "docblock": "Adds Bar property to Foo from Bar bundle"
+      }
+    ]
+  }
+]

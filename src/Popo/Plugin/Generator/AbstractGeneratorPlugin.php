@@ -1,22 +1,17 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Plugin\Generator;
 
 use Popo\Plugin\AcceptPatternInterface;
-use Popo\Schema\Reader\PropertyExplorerInterface;
+use Popo\Schema\Reader\PropertyExplorer;
 
 abstract class AbstractGeneratorPlugin implements AcceptPatternInterface
 {
-    const PATTERN = '<<UNDEFINED>>';
+    public const PATTERN = '<<UNDEFINED>>';
 
-    /**
-     * @var \Popo\Schema\Reader\PropertyExplorerInterface
-     */
-    protected $propertyExplorer;
+    protected PropertyExplorer $propertyExplorer;
 
-    public function __construct(PropertyExplorerInterface $propertyExplorer)
+    public function __construct(PropertyExplorer $propertyExplorer)
     {
         $this->propertyExplorer = $propertyExplorer;
     }

@@ -1,68 +1,47 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator;
 
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 
 class SchemaGenerator implements GeneratorInterface
 {
     protected const METHODS_PATTERN = '<<METHODS>>';
     protected const COLLECTION_PATTERN = '<<COLLECTION>>';
-    protected const ARRAYABLE_PATTERN = '<<ARRAYABLE_BLOCK>>';
 
-    /**
-     * @var string
-     */
-    protected $templateString;
+    protected string $templateString;
 
-    /**
-     * @var \Popo\Generator\GeneratorInterface
-     */
-    protected $propertyGenerator;
+    protected PropertyGenerator $propertyGenerator;
 
-    /**
-     * @var \Popo\Generator\GeneratorInterface
-     */
-    protected $arrayableGenerator;
-
-    /**
-     * @var \Popo\Generator\GeneratorInterface
-     */
-    protected $collectionGenerator;
+    protected CollectionGenerator $collectionGenerator;
 
     /**
      * @var \Popo\Plugin\Generator\SchemaGeneratorPluginInterface[]
      */
-    protected $generatorPlugins = [];
+    protected array $generatorPlugins = [];
 
     public function __construct(
         string $templateString,
-        GeneratorInterface $propertyGenerator,
-        GeneratorInterface $arrayableGenerator,
-        GeneratorInterface $collectionGenerator,
+        PropertyGenerator $propertyGenerator,
+        CollectionGenerator $collectionGenerator,
         array $generatorPlugins
-    )
-    {
+    ) {
         $this->propertyGenerator = $propertyGenerator;
-        $this->arrayableGenerator = $arrayableGenerator;
         $this->collectionGenerator = $collectionGenerator;
         $this->templateString = $templateString;
         $this->generatorPlugins = $generatorPlugins;
     }
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         $generated = $this->generateSchemaString($schema);
-        $generated = $this->generateArrayablePattern($schema, $generated);
         $generated = $this->generateMethodsPattern($schema, $generated);
         $generated = $this->generateCollectionPattern($schema, $generated);
 
         return $generated;
     }
 
-    protected function generateSchemaString(SchemaInterface $schema): string
+    protected function generateSchemaString(Schema $schema): string
     {
         $generated = $this->templateString;
 
@@ -78,7 +57,7 @@ class SchemaGenerator implements GeneratorInterface
         return $generated;
     }
 
-    protected function generateMethodsPattern(SchemaInterface $schema, string $generated): string
+    protected function generateMethodsPattern(Schema $schema, string $generated): string
     {
         $generated = \str_replace(
             static::METHODS_PATTERN,
@@ -89,18 +68,7 @@ class SchemaGenerator implements GeneratorInterface
         return $generated;
     }
 
-    protected function generateArrayablePattern(SchemaInterface $schema, string $generated): string
-    {
-        $generated = \str_replace(
-            static::ARRAYABLE_PATTERN,
-            $this->arrayableGenerator->generate($schema),
-            $generated
-        );
-
-        return $generated;
-    }
-
-    protected function generateCollectionPattern(SchemaInterface $schema, string $generated): string
+    protected function generateCollectionPattern(Schema $schema, string $generated): string
     {
         $collectionString = $this->collectionGenerator->generate($schema);
         $generated = \str_replace(

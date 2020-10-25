@@ -1,14 +1,11 @@
-<?php
-
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace Popo\Generator\Php\Plugin\Schema;
 
 use Popo\Plugin\Generator\AbstractGeneratorPlugin;
 use Popo\Plugin\Generator\SchemaGeneratorPluginInterface;
 use Popo\Schema\Reader\Property;
-use Popo\Schema\Reader\PropertyInterface;
-use Popo\Schema\Reader\SchemaInterface;
+use Popo\Schema\Reader\Schema;
 use function preg_replace_callback;
 use function str_replace;
 use function var_export;
@@ -17,7 +14,7 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
 {
     const PATTERN = '<<SCHEMA_DATA>>';
 
-    public function generate(SchemaInterface $schema): string
+    public function generate(Schema $schema): string
     {
         $defaults = [];
         $constants = [];
@@ -39,12 +36,12 @@ class SchemaDataGeneratorPlugin extends AbstractGeneratorPlugin implements Schem
         }
 
         $result = var_export($defaults, true);
-        $result = (string)$this->fixConstantValuesEscaping($constants, $result);
+        $result = (string) $this->fixConstantValuesEscaping($constants, $result);
 
         return $result;
     }
 
-    protected function buildProperty(SchemaInterface $schema, array $propertyData): PropertyInterface
+    protected function buildProperty(Schema $schema, array $propertyData): Property
     {
         return new Property($schema, $propertyData);
     }
