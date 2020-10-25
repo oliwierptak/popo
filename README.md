@@ -41,7 +41,7 @@ $data = [
 ## Installation
 
 ```sh
-composer require popo/generator` --dev
+composer require popo/generator --dev
 ```
 
 
