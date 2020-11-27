@@ -2,20 +2,41 @@
 
 namespace Popo\Configurator;
 
+use LogicException;
+
 class ConfigContainer
 {
-    protected array $data = [];
+    protected string $configFilename;
+
+    protected ?array $data = null;
 
     protected array $arguments = [];
 
     /**
      * @var ConfigurationItem[]
      */
-    protected array $itemsToGenerate = [];
+    protected array $selectedItems = [];
+
+    public function __construct(string $configFilename)
+    {
+        $this->configFilename = $configFilename;
+    }
 
     public function getConfigByName(string $name): ?ConfigurationItem
     {
-        return $this->getConfigItems()[$name] ?? null;
+        $config = $this->getConfigItems()[$name] ?? null;
+
+        if (!($config instanceof ConfigurationItem)) {
+            throw new LogicException(
+                sprintf(
+                    'Unknown config section: "%s". Available sections: %s',
+                    $name,
+                    implode(', ', array_keys($this->getData()))
+                )
+            );
+        }
+
+        return $config;
     }
 
     /**
@@ -24,7 +45,7 @@ class ConfigContainer
     public function getConfigItems(): array
     {
         $result = [];
-        foreach ($this->data as $name => $data) {
+        foreach ($this->getData() as $name => $data) {
             $data = array_merge($this->getArguments(), $data);
             $config = (new ConfigurationItem())->fromArray($data);
             $result[$name] = $config;
@@ -47,6 +68,10 @@ class ConfigContainer
 
     public function getData(): array
     {
+        if (empty($this->data)) {
+            $this->data = $this->loadConfig();
+        }
+
         return $this->data;
     }
 
@@ -60,20 +85,39 @@ class ConfigContainer
     /**
      * @return ConfigurationItem[]
      */
-    public function getItemsToGenerate(): array
+    public function getSelectedItems(): array
     {
-        return $this->itemsToGenerate;
+        return $this->selectedItems;
     }
 
     /**
-     * @param ConfigurationItem[] $itemsToGenerate
+     * @param ConfigurationItem[] $selectedItems
      *
      * @return $this
      */
-    public function setItemsToGenerate(array $itemsToGenerate): self
+    public function setSelectedItems(array $selectedItems): self
     {
-        $this->itemsToGenerate = $itemsToGenerate;
+        $this->selectedItems = $selectedItems;
 
         return $this;
+    }
+
+    protected function loadConfig(): array
+    {
+        if (!is_file($this->configFilename)) {
+            throw new LogicException(
+                sprintf(
+                    'Config file: "%s" not found',
+                    $this->configFilename
+                )
+            );
+        }
+
+        $data = parse_ini_file($this->configFilename, true) ?? [];
+        if ($data === false) {
+            $data = [];
+        }
+
+        return $data;
     }
 }

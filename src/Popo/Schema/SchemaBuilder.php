@@ -158,7 +158,7 @@ class SchemaBuilder
 
     protected function updateReturnFlag(Schema $schema, Configurator $configurator): Schema
     {
-        if ($configurator->getReturnType() !== null) {
+        if (trim((string)$configurator->getReturnType()) !== '') {
             $schema->setReturnType($configurator->getReturnType());
         }
 

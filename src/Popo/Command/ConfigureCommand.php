@@ -56,8 +56,8 @@ class ConfigureCommand extends Command
         $question->setAutocompleterValues(['src/Configurator/', 'src/Popo/', 'src/Generated/']);
         $outputDirectory = rtrim($helper->ask($input, $output, $question), '/') . '/';
 
-        $question = new Question('Namespace [\App\Configurator]: ', 'App\Configurator');
-        $question->setAutocompleterValues(['\App\Configurator']);
+        $question = new Question('Namespace [App\Configurator]: ', 'App\Configurator');
+        $question->setAutocompleterValues(['App\Configurator']);
         $namespace = rtrim($helper->ask($input, $output, $question), '\\');
 
         $question = new Question('Extension [.php]: ', '.php');

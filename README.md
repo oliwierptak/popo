@@ -377,3 +377,19 @@ See [tests/fixtures/](tests/fixtures/) for more schema examples.
 - POPO `v1.x` - PHP 7.2+
 - POPO `v2.x` - PHP 7.2+
 - POPO `v3.x` - PHP 7.4+
+
+
+### Composer script
+
+Add popo scrip to composer and run `composer popo` in a project.
+
+```
+    "scripts": {
+        "popo": [
+            "vendor/bin/popo generate -c .popo"
+        ]
+    },
+    "scripts-descriptions": {
+        "popo": "Generate POPO files"
+    }
+```
