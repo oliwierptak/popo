@@ -273,4 +273,35 @@ class PopoGeneratedTest extends TestCase
         $this->assertFileNotExists(POPO_TESTS_DIR . 'App/Configurator/FooInterface.php');
         $this->assertFileNotExists(POPO_TESTS_DIR . 'App/Configurator/FooBarInterface.php');
     }
+
+    public function test_isNew_should_return_true(): void
+    {
+        $foo = new Foo();
+
+        $this->assertTrue($foo->isNew());
+    }
+
+    public function test_isNew_should_return_false(): void
+    {
+        $foo = (new Foo())
+            ->setFooId(123);
+
+        $this->assertFalse($foo->isNew());
+    }
+
+    public function test_isNew_should_return_false_fromArray(): void
+    {
+        $foo = (new Foo())
+            ->fromArray(['fooId' => 123]);
+
+        $this->assertFalse($foo->isNew());
+    }
+
+    public function test_fromArray_should_ignore_unknown_keys(): void
+    {
+        $foo = (new Foo())
+            ->fromArray(['unknownKey' => 123]);
+
+        $this->assertTrue($foo->isNew());
+    }
 }

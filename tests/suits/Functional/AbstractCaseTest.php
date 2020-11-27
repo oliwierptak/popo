@@ -63,6 +63,30 @@ abstract class AbstractCaseTest extends TestCase
         $this->assertEquals($expected, $popo->toArray());
     }
 
+    public function test_fromArray_overrides_state(): void
+    {
+        $value = [
+            'title' => 'A title',
+            'bar' => [
+                'value' => 'Bar lorem ipsum',
+            ],
+        ];
+
+        $popo = $this->getPopoToTest();
+        $popo->setTitle('foo bar title that will be overwritten');
+
+        $popo = $this->getPopoToTest()->fromArray($value);
+
+        $expected = [
+            'title' => 'A title',
+            'bar' => [
+                'value' => 'Bar lorem ipsum',
+            ],
+        ];
+
+        $this->assertEquals($expected, $popo->toArray());
+    }
+
     protected function setUp(): void
     {
         $this->popoFactory = new PopoFactory();

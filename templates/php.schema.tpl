@@ -216,6 +216,11 @@ class <<CLASSNAME>><<EXTENDS>> <<IMPLEMENTS_INTERFACE>>
     {
         return $value[0] === '\\' && ctype_upper($value[1]);
     }
+
+    public function isNew(): bool
+    {
+        return empty($this->updateMap);
+    }
     <<METHODS>>
     <<COLLECTION>>
 }
