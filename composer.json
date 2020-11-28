@@ -13,6 +13,7 @@
   "require": {
     "php": "^7.4",
     "ext-json": "*",
+    "ext-ctype": "*",
     "symfony/finder": "^5",
     "symfony/console": "^5"
   },
