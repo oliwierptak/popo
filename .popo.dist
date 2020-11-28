@@ -4,12 +4,11 @@ schema = tests/fixtures/popo/
 template = templates/
 output = tests/App/Configurator/
 namespace = App\Configurator
-extension = .php
-abstract =
+; extension = .php
+; abstract = 0
 ; extends = \App\AbstractConfigurator
-withInterface = 0
-withPopo = 1
-returnType =
+; returnType =
+
 
 [case1]
 schema = tests/fixtures/popo-readme/case1/

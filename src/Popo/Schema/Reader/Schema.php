@@ -15,10 +15,10 @@ class Schema
     protected const RETURN_TYPE = 'returnType';
     protected const WITH_POPO = 'withPopo';
     protected const WITH_INTERFACE = 'withInterface';
-    protected const NAMESPACE_WITH_INTERFACE = 'namespaceWithInterface';
+    protected const IMPLEMENTS_INTERFACE = 'implementsInterface';
     protected const PARENT = 'parent';
 
-    protected array $data;
+    protected array $data = [];
 
     protected array $defaults = [
         self::NAME => '',
@@ -30,7 +30,7 @@ class Schema
         self::RETURN_TYPE => null,
         self::WITH_POPO => true,
         self::WITH_INTERFACE => false,
-        self::NAMESPACE_WITH_INTERFACE => null,
+        self::IMPLEMENTS_INTERFACE => null,
         self::PARENT => null,
     ];
 
@@ -171,16 +171,16 @@ class Schema
         return $this->data[static::NAME];
     }
 
-    public function setNamespaceWithInterface(?string $name): self
+    public function setImplementsInterface(?string $name): self
     {
-        $this->data[static::NAMESPACE_WITH_INTERFACE] = $name;
+        $this->data[static::IMPLEMENTS_INTERFACE] = $name;
 
         return $this;
     }
 
-    public function getNamespaceWithInterface(): ?string
+    public function getImplementsInterface(): ?string
     {
-        return $this->data[static::NAMESPACE_WITH_INTERFACE];
+        return $this->data[static::IMPLEMENTS_INTERFACE];
     }
 
     public function toArray(): array
