@@ -377,6 +377,7 @@ See [tests/fixtures/](tests/fixtures/) for more schema examples.
 - POPO `v1.x` - PHP 7.2+
 - POPO `v2.x` - PHP 7.2+
 - POPO `v3.x` - PHP 7.4+
+- POPO `v4.x` - PHP 8+
 
 
 ### Composer script
