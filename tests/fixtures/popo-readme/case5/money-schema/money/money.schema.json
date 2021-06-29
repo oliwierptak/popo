@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Price",
+        "schema": [
+            {
+                "name": "value",
+                "type": "int"
+            },
+            {
+                "name": "currency",
+                "type": "\\App\\Popo\\Case5\\Money\\Currency"
+            }
+        ]
+    },
+    {
+        "name": "Currency",
+        "schema": [
+            {
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "name": "code",
+                "type": "string"
+            },
+            {
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "name": "decimalSymbol",
+                "type": "string",
+                "default": "."
+            }
+        ]
+    }
+]
