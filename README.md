@@ -313,7 +313,9 @@ Bar lorem ipsum
 ```
 
 
-## Inheriting from an abstract class
+## Case 4: Inheriting from an abstract class
+
+[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case4).
 
 Every POPO object can inherit form an existing, non-POPO (abstract) class,
 by using `extends` option, for example:
@@ -337,6 +339,33 @@ by using `extends` option, for example:
 ```
 
 _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
+
+
+## Case 5: Modules
+
+[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case5).
+
+The following modules are defined:
+
+- Customer
+- Location
+   - Address
+   - Street
+- Money
+   - Currency
+   - Price
+   - PriceCollector
+- Order
+   - Order
+   - OrderItem
+- Product
+
+There are simple relations between them, for example `Customer` is part of the `Order` schema.
+The `Money` is made of `Currency` and `Price`.
+The popo files will be generated under each module's directory.
+
+
+_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme-modules` to generate files from this example.
 
 
 

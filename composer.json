@@ -36,7 +36,8 @@
   "scripts": {
     "popo": [
       "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo",
-      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme"
+      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme",
+      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme-modules"
     ],
     "post-autoload-dump": [
       "chmod +x bin/popo"
