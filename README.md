@@ -292,7 +292,7 @@ _Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case3` to generat
 POPO objects will be generated in the same way, regardless of direction of the dependencies. 
 
 ```php
-use App\Popo\Foo;
+use App\ValueReader\Foo;
 
 $data = [        
     'title' => 'A title',

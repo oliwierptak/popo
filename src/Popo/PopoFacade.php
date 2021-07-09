@@ -1,19 +1,14 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Popo;
 
-class PopoFacade implements PopoFacadeInterfaces
+class PopoFacade
 {
-    protected ?PopoFactory $factory;
+    protected PopoFactory $factory;
 
-    public function generate(Configurator $configurator): GeneratorResult
-    {
-        return $this->getFactory()
-            ->createPopoModel($configurator)
-            ->generate($configurator);
-    }
-
-    protected function getFactory(): PopoFactory
+    public function getFactory(): PopoFactory
     {
         if (empty($this->factory)) {
             $this->factory = new PopoFactory();
@@ -22,8 +17,17 @@ class PopoFacade implements PopoFacadeInterfaces
         return $this->factory;
     }
 
-    public function setFactory(PopoFactory $factory): void
+    public function setFactory(PopoFactory $factory): self
     {
         $this->factory = $factory;
+
+        return $this;
+    }
+
+    public function generate(array $files): void
+    {
+        $this->getFactory()
+            ->createPopoModel()
+            ->generate($files);
     }
 }

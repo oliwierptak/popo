@@ -1,155 +1,54 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Popo;
 
-use Popo\Builder\BuilderFactory;
-use Popo\Configurator\ConfiguratorProvider;
-use Popo\Finder\FinderFactory;
-use Popo\Generator\GeneratorFactory;
-use Popo\Generator\GeneratorInterface;
-use Popo\Generator\SchemaGenerator;
-use Popo\Model\Helper\ProgressIndicator;
-use Popo\Model\Popo;
-use Popo\Schema\Bundle\BundleSchemaFactory;
-use Popo\Schema\Loader\LoaderFactory;
-use Popo\Schema\Reader\ReaderFactory;
-use Popo\Schema\SchemaFactory;
-use Popo\Writer\FileWriter;
-use Popo\Writer\SchemaWriter;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
+use JetBrains\PhpStorm\Pure;
+use Popo\Builder\ClassBuilder;
+use Popo\Generator\SchemaReader;
+use Popo\Generator\SchemaWriter;
+use Popo\Model\PopoModel;
+use Popo\Builder\SchemaBuilder;
+use Popo\Builder\SchemaLoader;
 
 class PopoFactory
 {
-    protected ?OutputInterface $output;
-
-    public function createPopoModel(Configurator $configurator): Popo
+    #[Pure] public function createPopoModel(): PopoModel
     {
-        return new Popo(
-            $this->createSchemaFactory()->createSchemaBuilder(),
-            $this->createSchemaFactory()->createSchemaMerger(),
-            $this->createSchemaWriter($configurator),
-            $this->createProgressIndicator($configurator)
+        return new PopoModel(
+            $this->createSchemaBuilder(),
+            $this->createClassBuilder()
         );
     }
 
-    protected function createPopoSchemaGenerator(Configurator $configurator): SchemaGenerator
+    #[Pure] protected function createSchemaBuilder(): SchemaBuilder
     {
-        $configuratorPopo = clone $configurator;
-        $configuratorPopo = $this->createConfiguratorProvider()->configurePopo($configuratorPopo);
-        $pluginContainer = $this->createBuilderFactory()->createPluginContainer($configuratorPopo);
-
-        return $this->createBuilderFactory()->createPopoGeneratorBuilder()->build(
-            $configuratorPopo,
-            $pluginContainer
+        return new SchemaBuilder(
+            $this->createSchemaLoader()
         );
     }
 
-    protected function createConfiguratorProvider(): ConfiguratorProvider
+    #[Pure] protected function createSchemaLoader(): SchemaLoader
     {
-        return new ConfiguratorProvider();
+        return new SchemaLoader();
     }
 
-    public function createBuilderFactory(): BuilderFactory
+    #[Pure] protected function createClassBuilder(): ClassBuilder
     {
-        return new BuilderFactory(
-            $this->createLoaderFactory(),
-            $this->createGeneratorFactory(),
-            $this->createSchemaFactory(),
+        return new ClassBuilder(
+            $this->createValueTypeReader(),
+            $this->createValueTypeWriter()
         );
     }
 
-    public function createLoaderFactory(): LoaderFactory
+    #[Pure] protected function createValueTypeReader(): SchemaReader
     {
-        return new LoaderFactory();
+        return new SchemaReader();
     }
 
-    public function createGeneratorFactory(): GeneratorFactory
+    #[Pure] protected function createValueTypeWriter(): SchemaWriter
     {
-        return new GeneratorFactory(
-            $this->createReaderFactory()
-        );
-    }
-
-    public function createReaderFactory(): ReaderFactory
-    {
-        return new ReaderFactory();
-    }
-
-    public function createSchemaFactory(): SchemaFactory
-    {
-        return new SchemaFactory(
-            $this->createFinderFactory(),
-            $this->createLoaderFactory(),
-            $this->createReaderFactory(),
-            $this->createBundleSchemaFactory()
-        );
-    }
-
-    public function createFinderFactory(): FinderFactory
-    {
-        return new FinderFactory();
-    }
-
-    public function createBundleSchemaFactory(): BundleSchemaFactory
-    {
-        return new BundleSchemaFactory();
-    }
-
-    protected function createDtoSchemaGenerator(Configurator $configurator): SchemaGenerator
-    {
-        $configuratorPopo = clone $configurator;
-        $configuratorPopo = $this->createConfiguratorProvider()->configureDto($configuratorPopo);
-        $pluginContainer = $this->createBuilderFactory()->createPluginContainer($configuratorPopo);
-
-        return $this->createBuilderFactory()->createPopoGeneratorBuilder()->build(
-            $configuratorPopo,
-            $pluginContainer
-        );
-    }
-
-    protected function createAbstractSchemaGenerator(Configurator $configurator): SchemaGenerator
-    {
-        $configuratorPopo = clone $configurator;
-        $configuratorPopo = $this->createConfiguratorProvider()->configureAbstract($configuratorPopo);
-        $pluginContainer = $this->createBuilderFactory()->createPluginContainer($configuratorPopo);
-
-        return $this->createBuilderFactory()->createPopoGeneratorBuilder()->build(
-            $configuratorPopo,
-            $pluginContainer
-        );
-    }
-
-    protected function createFileWriter(GeneratorInterface $generator): FileWriter
-    {
-        return new FileWriter($generator);
-    }
-
-    protected function createProgressIndicator(Configurator $configurator): ProgressIndicator
-    {
-        return new ProgressIndicator($this->getOutput(), $configurator);
-    }
-
-    protected function createSchemaWriter(Configurator $configurator): SchemaWriter
-    {
-        return new SchemaWriter(
-            $this->createFileWriter($this->createPopoSchemaGenerator($configurator)),
-            $this->createFileWriter($this->createDtoSchemaGenerator($configurator)),
-            $this->createFileWriter($this->createAbstractSchemaGenerator($configurator))
-        );
-    }
-
-    protected function getOutput(): OutputInterface
-    {
-        if (empty($this->output)) {
-            $this->output = new ConsoleOutput();
-        }
-
-        return $this->output;
-    }
-
-    public function setOutput(?OutputInterface $output): void
-    {
-        $this->output = $output;
+        return new SchemaWriter();
     }
 }
