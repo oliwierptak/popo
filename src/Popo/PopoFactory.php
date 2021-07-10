@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Popo;
 
 use JetBrains\PhpStorm\Pure;
-use Popo\Builder\ClassBuilder;
+use Popo\Builder\PopoBuilder;
 use Popo\Inspector\SchemaValueInspector;
 use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Model\PopoModel;
@@ -18,7 +18,7 @@ class PopoFactory
     {
         return new PopoModel(
             $this->createSchemaBuilder(),
-            $this->createClassBuilder()
+            $this->createPopoBuilder()
         );
     }
 
@@ -34,9 +34,9 @@ class PopoFactory
         return new SchemaLoader();
     }
 
-    #[Pure] protected function createClassBuilder(): ClassBuilder
+    #[Pure] protected function createPopoBuilder(): PopoBuilder
     {
-        return new ClassBuilder(
+        return new PopoBuilder(
             $this->createValueTypeReader(),
             $this->createValueTypeWriter()
         );

@@ -4,14 +4,14 @@ declare(strict_types = 1);
 
 namespace Popo\Model;
 
-use Popo\Builder\ClassBuilder;
+use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
 use function fwrite;
 use const POPO_TESTS_DIR;
 
 class PopoModel
 {
-    public function __construct(protected SchemaBuilder $schemaBuilder, protected ClassBuilder $clasBuilder)
+    public function __construct(protected SchemaBuilder $schemaBuilder, protected PopoBuilder $clasBuilder)
     {
     }
 

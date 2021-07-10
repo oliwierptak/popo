@@ -16,7 +16,6 @@ class SchemaPropertyInspector
         return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
     }
 
-
     #[Pure] public function expandNamespaceForParameter(Schema $schema, PropertySchema $propertySchema): string
     {
         return sprintf(

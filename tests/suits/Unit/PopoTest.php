@@ -8,6 +8,9 @@ use App\Popo\Example\Foo;
 use PHPUnit\Framework\TestCase;
 use PopoTestsSuites\Functional\PopoFacadeTest;
 
+/**
+ * @group unit
+ */
 class PopoTest extends TestCase
 {
     public function test_toArray(): void

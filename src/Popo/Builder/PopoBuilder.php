@@ -16,7 +16,7 @@ use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function ucfirst;
 
-class ClassBuilder
+class PopoBuilder
 {
     protected ClassType $class;
     protected Method $method;
@@ -58,30 +58,36 @@ class ClassBuilder
 
     public function addSchemaShapeConstant(): self
     {
-        $properties = [];
+        $shapeProperties = [];
         $metadata = [];
 
         foreach ($this->schema->getPropertyCollection() as $property) {
-            $type = $property->getSchema()->getType();
-            $metadata[$property->getSchema()->getName()] = $type;
+            $metadata[$property->getSchema()->getName()] = $property->getSchema()->toArray();
+            $shapeProperties[$property->getSchema()->getName()] = $property->getSchema()->getType();
 
-            if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
-                $type = new Literal($property->getSchema()->getDefault());
+            if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) ||
+                $this->valueInspector->isConstValue($property->getSchema()->getDefault())) {
+                $literalValue = new Literal($property->getSchema()->getDefault());
+
+                $metadata[$property->getSchema()->getName()] = $property->getSchema()->toArray();
+                $metadata[$property->getSchema()->getName()]['default'] = $literalValue;
+
+                if ($this->valueInspector->isConstValue($property->getSchema()->getDefault()) === false) {
+                    $shapeProperties[$property->getSchema()->getName()] = $literalValue;
+                }
             }
-
-            $properties[$property->getSchema()->getName()] = $type;
         }
 
         $this->class
             ->addConstant(
                 'SHAPE_PROPERTIES',
-                $properties
+                $shapeProperties
             )
             ->setProtected();
 
         $this->class
             ->addConstant(
-                'SHAPE_METADATA',
+                'METADATA',
                 $metadata
             )
             ->setProtected();
@@ -117,7 +123,12 @@ class ClassBuilder
             ->setPublic()
             ->setReturnType($this->generateMethodReturnType($property))
             ->setReturnNullable()
-            ->setBody('return $this->' . $property->getSchema()->getName() . ';');
+            ->setBody(
+                sprintf(
+                    'return $this->%s;',
+                    $property->getSchema()->getName()
+                )
+            );
 
         return $this;
     }
@@ -129,8 +140,12 @@ class ClassBuilder
             ->setPublic()
             ->setReturnType('self')
             ->setBody(
-                '$this->' . $property->getSchema()->getName() . ' = $' . $property->getSchema()->getName(
-                ) . '; return $this;'
+                sprintf(
+                    '$this->%s = $%s; return $this;',
+                    $property->getSchema()->getName(),
+                    $property->getSchema()->getName(),
+                )
+
             );
 
         return $this;
@@ -163,9 +178,9 @@ class ClassBuilder
 \array_walk(
     \$data,
     function (&\$value, \$name) use (\$data) {
-        \$type = self::SHAPE_PROPERTIES[\$name];
-        if (self::SHAPE_METADATA[\$name] === 'popo') {
-            \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$type)->toArray();
+        \$popo = static::METADATA[\$name]['default'];
+        if (static::METADATA[\$name]['type'] === 'popo') {
+            \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$popo)->toArray();
         }
     }
 );
@@ -189,17 +204,17 @@ EOF;
     public function addFromArrayMethod(): self
     {
         $body = "
-foreach (self::SHAPE_METADATA as \$name => \$type) {
+foreach (static::METADATA as \$name => \$meta) {
     \$value = \$data[\$name] ?? \$this->\$name ?? null;
-    \$popoValue = self::SHAPE_PROPERTIES[\$name];
+    \$popoValue = \$meta['default'];
 
-    if (\$popoValue !== null && \$type === 'popo') {
+    if (\$popoValue !== null && \$meta['type'] === 'popo') {
         \$popo = new \$popoValue;
 
         if (is_array(\$value)) {
             \$popo->fromArray(\$value);
         }
-        
+
         \$value = \$popo;
     }
 
@@ -211,15 +226,15 @@ return \$this;
 
         $this->class
             ->addMethod('fromArray')
-            ->addAttribute(
-                'JetBrains\PhpStorm\ArrayShape',
-                [new Literal('self::SHAPE_PROPERTIES')]
-            )
             ->setPublic()
             ->setReturnType('self')
             ->setBody($body)
             ->addParameter('data')
-            ->setType('array');
+            ->setType('array')
+            ->addAttribute(
+                'JetBrains\PhpStorm\ArrayShape',
+                [new Literal('self::SHAPE_PROPERTIES')]
+            );
 
         return $this;
     }

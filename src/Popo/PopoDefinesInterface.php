@@ -34,21 +34,4 @@ class PopoDefinesInterface
     public const PROPERTY_TYPE_CONST = 'const';
 
     public const PROPERTY_TYPE_POPO = 'popo';
-
-    //docblock types
-    public const DOCBLOCK_TYPE_ARRAY = 'array';
-
-    public const DOCBLOCK_TYPE_BOOL = 'boolean';
-
-    public const DOCBLOCK_TYPE_FLOAT = 'float';
-
-    public const DOCBLOCK_TYPE_INT = 'integer';
-
-    public const DOCBLOCK_TYPE_STRING = 'string';
-
-    public const DOCBLOCK_TYPE_MIXED = 'mixed';
-
-    public const DOCBLOCK_TYPE_CONST = 'constant';
-
-    public const DOCBLOCK_TYPE_POPO = 'popo';
 }
