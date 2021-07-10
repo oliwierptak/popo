@@ -20,10 +20,10 @@ use function ucfirst;
 class PopoBuilder
 {
     protected Schema $schema;
-    protected ClassType $class;
-    protected Method $method;
     protected PhpFile $file;
     protected PhpNamespace $namespace;
+    protected ClassType $class;
+    protected Method $method;
 
     public function __construct(
         protected SchemaValueInspector $valueInspector,
