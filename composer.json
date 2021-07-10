@@ -45,7 +45,7 @@
       "chmod +x bin/popo"
     ],
     "tests": [
-      "vendor/bin/phpunit --no-coverage --testdox --testsuite PopoFunctionalTestSuit,PopoUnitTestSuit"
+      "vendor/bin/phpunit --no-coverage --testdox --testsuite unit,functional"
     ]
   },
   "scripts-descriptions": {

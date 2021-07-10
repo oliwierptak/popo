@@ -14,7 +14,6 @@ class Schema
         'name' => 'string',
         'namespace' => 'string',
         'propertyCollection' => [Property::class],
-        'generated' => 'string',
         'configurator' => PopoConfigurator::class,
     ];
 
@@ -29,7 +28,6 @@ class Schema
      */
     #[ArrayShape([Property::class])]
     protected array $propertyCollection = [];
-    protected ?string $generated = null;
 
     public function getSchemaName(): string
     {
@@ -82,18 +80,6 @@ class Schema
         return $this;
     }
 
-    public function getGenerated(): ?string
-    {
-        return $this->generated;
-    }
-
-    public function setGenerated(?string $generated): self
-    {
-        $this->generated = $generated;
-
-        return $this;
-    }
-
     public function getConfigurator(): PopoConfigurator
     {
         return $this->configurator;
@@ -114,7 +100,6 @@ class Schema
             'name' => $this->name,
             'namespace' => $this->namespace,
             'propertyCollection' => $this->propertyCollection,
-            'generated' => $this->generated,
             'configurator' => $this->configurator,
         ];
     }
@@ -127,7 +112,6 @@ class Schema
         $this->name = $data['name'];
         $this->namespace = $data['namespace'];
         $this->propertyCollection = $data['propertyCollection'];
-        $this->generated = $data['generated'];
         $this->configurator = $data['configurator'];
 
         return $this;

@@ -21,7 +21,7 @@ class PopoFacadeTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setConfigFile(POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml')
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml')
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);

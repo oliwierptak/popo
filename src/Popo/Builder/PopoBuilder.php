@@ -31,7 +31,7 @@ class PopoBuilder
     ) {
     }
 
-    public function build(Schema $schema): self
+    public function buildSchema(Schema $schema): self
     {
         $this->schema = $schema;
 
@@ -115,7 +115,7 @@ class PopoBuilder
             ->addProperty($property->getSchema()->getName(), $value)
             ->setProtected()
             ->setNullable(true)
-            ->setType($this->generatePropertyType($property))
+            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setComment($property->getSchema()->getDocblock());
 
         return $this;
@@ -137,7 +137,7 @@ EOF;
         $this->method = $this->class
             ->addMethod('get' . ucfirst($property->getSchema()->getName()))
             ->setPublic()
-            ->setReturnType($this->generateMethodReturnType($property))
+            ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setReturnNullable()
             ->setBody(
                 sprintf(
@@ -172,7 +172,7 @@ EOF;
     {
         $this->method
             ->addParameter($property->getSchema()->getName())
-            ->setType($this->generateMethodParameterType($property))
+            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setNullable();
 
         return $this;
@@ -192,7 +192,7 @@ EOF;
         $this->class
             ->addMethod('require' . ucfirst($property->getSchema()->getName()))
             ->setPublic()
-            ->setReturnType($this->generateMethodReturnType($property))
+            ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setBody($body);
 
         return $this;
@@ -324,7 +324,7 @@ return \$this;
         return (new PsrPrinter)->printFile($this->file);
     }
 
-    public function save(): void
+    public function build(): void
     {
         try {
             $filename = sprintf(
@@ -340,63 +340,5 @@ return \$this;
         finally {
             fclose($handle);
         }
-    }
-
-    protected function generateMethodParameterType(Property $property): string
-    {
-        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) === false) {
-            return $property->getSchema()->getType();
-        }
-
-        $namespace = $this->schema->getNamespace();
-        $name = str_replace('::class', '', $property->getSchema()->getDefault());
-        if ($this->valueInspector->isFqcn($property->getSchema()->getDefault())) {
-            return $property->getSchema()->getDefault();
-        }
-
-        $sep = $namespace !== '' ? '\\' : '';
-
-        return sprintf(
-            '%s%s%s',
-            $namespace,
-            $sep,
-            $name
-        );
-    }
-
-    protected function generateMethodReturnType(Property $property): string
-    {
-        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
-            $namespace = $this->propertyInspector->expandNamespaceForParameter(
-                $this->schema,
-                $property->getSchema()
-            );
-
-            return sprintf(
-                '%s\\%s',
-                $namespace,
-                str_replace('::class', '', $property->getSchema()->getDefault())
-            );
-        }
-
-        return $property->getSchema()->getType();
-    }
-
-    protected function generatePropertyType(Property $property): string
-    {
-        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) === false) {
-            return $property->getSchema()->getType();
-        }
-
-        $namespace = $this->propertyInspector->expandNamespaceForParameter(
-            $this->schema,
-            $property->getSchema()
-        );
-
-        return sprintf(
-            '%s\\%s',
-            $namespace,
-            str_replace('::class', '', $property->getSchema()->getDefault())
-        );
     }
 }

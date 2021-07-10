@@ -16,7 +16,7 @@ class PopoModel
 
     public function generate(PopoConfigurator $configurator): void
     {
-        $files = [$configurator->getConfigFile()];
+        $files = [$configurator->getSchemaPath()];
         $data = $this->schemaBuilder->build($files);
 
         foreach ($data as $schemaName => $schemaCollection) {
@@ -24,7 +24,7 @@ class PopoModel
                 /** @var \Popo\Schema\Schema $popoSchema $class */
                 $popoSchema->setConfigurator($configurator);
 
-                $this->popoBuilder->build($popoSchema);
+                $this->popoBuilder->buildSchema($popoSchema);
 
                 foreach ($popoSchema->getPropertyCollection() as $property) {
                     $this->popoBuilder
@@ -43,9 +43,7 @@ class PopoModel
                     ->addUpdateMap()
                     ->addIsNewMethod();
 
-                $popoSchema->setGenerated($this->popoBuilder->print());
-
-                $this->popoBuilder->save();
+                $this->popoBuilder->build();
             }
         }
     }

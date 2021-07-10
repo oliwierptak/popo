@@ -6,16 +6,16 @@ namespace Popo;
 
 class PopoConfigurator
 {
-    protected string $namespace;
+    protected ?string $namespace;
     protected string $outputPath;
-    protected string $configFile;
+    protected string $schemaPath;
 
-    public function getNamespace(): string
+    public function getNamespace(): ?string
     {
         return $this->namespace;
     }
 
-    public function setNamespace(string $namespace): self
+    public function setNamespace(?string $namespace): self
     {
         $this->namespace = $namespace;
 
@@ -34,15 +34,15 @@ class PopoConfigurator
         return $this;
     }
 
-    public function setConfigFile(string $configFile): self
+    public function setSchemaPath(string $schemaPath): self
     {
-        $this->configFile = $configFile;
+        $this->schemaPath = $schemaPath;
 
         return $this;
     }
 
-    public function getConfigFile(): string
+    public function getSchemaPath(): string
     {
-        return $this->configFile;
+        return $this->schemaPath;
     }
 }

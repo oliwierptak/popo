@@ -1,9 +1,8 @@
-^:
+$:
   namespace: &option_namespace App\Popo\Example
   outputPath: &option_outputPath tests/App/Popo/
-  #schemaPath: &option_schemaPath tests/fixtures/popo-from-yaml/
 
-$:
+^:
   namespace: *option_namespace
   default:
     title: Hakuna Matata
