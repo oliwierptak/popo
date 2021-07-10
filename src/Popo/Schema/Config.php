@@ -10,14 +10,12 @@ class Config
 {
     protected const CONFIG_SHAPE = [
         'namespace' => "string",
-        'templatePath' => "null|string",
         'outputPath' => "null|string",
         'schemaPath' => "null|string",
         'default' => "array",
     ];
 
     protected string $namespace;
-    protected ?string $templatePath;
     protected ?string $outputPath;
     protected ?string $schemaPath;
     protected array $default = [];
@@ -30,18 +28,6 @@ class Config
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
-
-        return $this;
-    }
-
-    public function getTemplatePath(): ?string
-    {
-        return $this->templatePath;
-    }
-
-    public function setTemplatePath(?string $templatePath): self
-    {
-        $this->templatePath = $templatePath;
 
         return $this;
     }
@@ -88,7 +74,6 @@ class Config
     ): self {
         $data = array_merge(
             [
-                'templatePath' => null,
                 'outputPath' => null,
                 'schemaPath' => null,
                 'default' => [],
@@ -97,7 +82,6 @@ class Config
         );
 
         $this->namespace = $data['namespace'];
-        $this->templatePath = $data['templatePath'] ?? null;
         $this->outputPath = $data['outputPath'] ?? null;
         $this->schemaPath = $data['schemaPath'] ?? null;
         $this->default = $data['default'] ?? [];
@@ -110,7 +94,6 @@ class Config
     {
         return [
             'namespace' => $this->namespace,
-            'templatePath' => $this->templatePath ?? null,
             'outputPath' => $this->outputPath ?? null,
             'schemaPath' => $this->schemaPath ?? null,
             'default' => $this->default ?? [],

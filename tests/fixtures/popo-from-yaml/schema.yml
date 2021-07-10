@@ -24,9 +24,11 @@ Example:
     default:
       title: Lorem Ipsum
       buzz: Buzz::class
+      buzzCollection: []
     property: [
       {name: title}
       {name: buzz, type: popo}
+      {name: buzzCollection, type: array, itemType: Buzz:class, itemName: buzz}
     ]}}
 
   Buzz:

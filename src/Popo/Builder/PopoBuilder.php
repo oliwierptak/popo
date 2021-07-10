@@ -31,17 +31,17 @@ class PopoBuilder
     ) {
     }
 
-    public function build(Schema $popoSchema): void
+    public function build(Schema $schema): void
     {
-        $this->buildSchema($popoSchema);
+        $this->buildSchema($schema);
 
-        foreach ($popoSchema->getPropertyCollection() as $property) {
+        foreach ($schema->getPropertyCollection() as $property) {
             $this
                 ->addProperty($property)
-                ->addRequireByMethod($property)
                 ->addSetMethod($property)
                 ->addParameter($property)
                 ->addGetMethod($property)
+                ->addRequireByMethod($property)
                 ->addHasPropertyValueMethod($property);
         }
 
@@ -90,20 +90,20 @@ class PopoBuilder
         $metadata = [];
 
         foreach ($this->schema->getPropertyCollection() as $property) {
-            $metadata[$property->getSchema()->getName()] = [
-                'type' => $property->getSchema()->getType(),
-                'default' => $property->getSchema()->getDefault(),
+            $metadata[$property->getName()] = [
+                'type' => $property->getType(),
+                'default' => $property->getDefault(),
             ];
-            $shapeProperties[$property->getSchema()->getName()] = $property->getSchema()->getType();
+            $shapeProperties[$property->getName()] = $property->getType();
 
-            if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) ||
-                $this->valueInspector->isConstValue($property->getSchema()->getDefault())) {
-                $literalValue = new Literal($property->getSchema()->getDefault());
+            if ($this->propertyInspector->isPopoProperty($property->getType()) ||
+                $this->valueInspector->isConstValue($property->getDefault())) {
+                $literalValue = new Literal($property->getDefault());
 
-                $metadata[$property->getSchema()->getName()]['default'] = $literalValue;
+                $metadata[$property->getName()]['default'] = $literalValue;
 
-                if ($this->valueInspector->isConstValue($property->getSchema()->getDefault()) === false) {
-                    $shapeProperties[$property->getSchema()->getName()] = $literalValue;
+                if ($this->valueInspector->isConstValue($property->getDefault()) === false) {
+                    $shapeProperties[$property->getName()] = $literalValue;
                 }
             }
         }
@@ -127,28 +127,28 @@ class PopoBuilder
 
     protected function addProperty(Property $property): self
     {
-        $value = $property->getValue() ?? $property->getSchema()->getDefault();
-        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
+        $value = $property->getDefault();
+        if ($this->propertyInspector->isPopoProperty($property->getType())) {
             $value = null;
         }
 
-        if ($this->valueInspector->isConstValue($property->getSchema()->getDefault())) {
-            $value = new Literal($property->getSchema()->getDefault());
+        if ($this->valueInspector->isConstValue($property->getDefault())) {
+            $value = new Literal($property->getDefault());
         }
 
         $this->class
-            ->addProperty($property->getSchema()->getName(), $value)
+            ->addProperty($property->getName(), $value)
             ->setProtected()
             ->setNullable(true)
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setComment($property->getSchema()->getDocblock());
+            ->setComment($property->getComment());
 
         return $this;
     }
 
     protected function addGetMethod(Property $property): self
     {
-        $name = $property->getSchema()->getName();
+        $name = $property->getName();
 
         $body = <<<EOF
 if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) {
@@ -160,14 +160,14 @@ return \$this->${name};
 EOF;
 
         $this->method = $this->class
-            ->addMethod('get' . ucfirst($property->getSchema()->getName()))
+            ->addMethod('get' . ucfirst($property->getName()))
             ->setPublic()
             ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setReturnNullable()
             ->setBody(
                 sprintf(
                     $body,
-                    $property->getSchema()->getName()
+                    $property->getName()
                 )
             );
 
@@ -177,15 +177,15 @@ EOF;
     protected function addSetMethod(Property $property): self
     {
         $this->method = $this->class
-            ->addMethod('set' . ucfirst($property->getSchema()->getName()))
+            ->addMethod('set' . ucfirst($property->getName()))
             ->setPublic()
             ->setReturnType('self')
             ->setBody(
                 sprintf(
                     '$this->%s = $%s; $this->updateMap[\'%s\'] = true; return $this;',
-                    $property->getSchema()->getName(),
-                    $property->getSchema()->getName(),
-                    $property->getSchema()->getName(),
+                    $property->getName(),
+                    $property->getName(),
+                    $property->getName(),
                 )
 
             );
@@ -196,7 +196,7 @@ EOF;
     protected function addParameter(Property $property): self
     {
         $this->method
-            ->addParameter($property->getSchema()->getName())
+            ->addParameter($property->getName())
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setNullable();
 
@@ -205,7 +205,7 @@ EOF;
 
     protected function addRequireByMethod(Property $property): self
     {
-        $name = $property->getSchema()->getName();
+        $name = $property->getName();
 
         $body = <<<EOF
 if (\$this->${name} === null) {
@@ -215,7 +215,7 @@ return \$this->${name};
 EOF;
 
         $this->class
-            ->addMethod('require' . ucfirst($property->getSchema()->getName()))
+            ->addMethod('require' . ucfirst($property->getName()))
             ->setPublic()
             ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setBody($body);
@@ -240,15 +240,43 @@ EOF;
 
     protected function addRequireAllMethod(): self
     {
-        $body = "\n\t";
+        $body = <<<EOF
+\$errors = [];
+
+%s
+
+if (empty(\$errors) === false) {
+    throw new UnexpectedValueException(
+        \implode("\\n", \$errors)
+    );
+}
+
+return \$this;
+EOF;
+
+        $validationBody = <<<EOF
+try {
+    \$this->require%s();
+}
+catch (\Throwable \$throwable) {
+    \$errors['%s'] = \$throwable->getMessage();
+}
+
+EOF;
+
+        $require = '';
         foreach ($this->schema->getPropertyCollection() as $index => $property) {
-            $body .= sprintf(
-                "\$this->require%s();\n",
-                ucfirst($property->getSchema()->getName())
+            $require .= sprintf(
+                $validationBody,
+                ucfirst($property->getName()),
+                ucfirst($property->getName())
             );
         }
 
-        $body .= "\nreturn \$this;";
+        $body = sprintf(
+            $body,
+            rtrim($require, "\n")
+        );
 
         $this->class
             ->addMethod('requireAll')
@@ -261,14 +289,14 @@ EOF;
 
     protected function addHasPropertyValueMethod(Property $property): self
     {
-        $name = $property->getSchema()->getName();
+        $name = $property->getName();
 
         $body = <<<EOF
 return \$this->${name} !== null;
 EOF;
 
         $this->class
-            ->addMethod('has' . ucfirst($property->getSchema()->getName()))
+            ->addMethod('has' . ucfirst($property->getName()))
             ->setPublic()
             ->setReturnType('bool')
             ->setBody($body);
@@ -282,8 +310,8 @@ EOF;
         foreach ($this->schema->getPropertyCollection() as $index => $property) {
             $body .= sprintf(
                 "\t'%s' => \$this->%s,\n",
-                $property->getSchema()->getName(),
-                $property->getSchema()->getName()
+                $property->getName(),
+                $property->getName()
             );
         }
 
@@ -318,7 +346,7 @@ EOF;
 
     protected function addFromArrayMethod(): self
     {
-        $body = "
+        $body = <<<EOF
 foreach (static::METADATA as \$name => \$meta) {
     \$value = \$data[\$name] ?? \$this->\$name ?? null;
     \$popoValue = \$meta['default'];
@@ -338,7 +366,7 @@ foreach (static::METADATA as \$name => \$meta) {
 }
 
 return \$this;
-        ";
+EOF;
 
         $this->class
             ->addMethod('fromArray')

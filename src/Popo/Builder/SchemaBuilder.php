@@ -9,7 +9,6 @@ use Popo\PopoDefinesInterface;
 use Popo\Schema\Config;
 use Popo\Schema\Schema;
 use Popo\Schema\Property;
-use Popo\Schema\PropertySchema;
 
 class SchemaBuilder
 {
@@ -58,7 +57,7 @@ class SchemaBuilder
 
         $properties = [];
         foreach ($propertyCollection as $propertyData) {
-            $propertySchema = (new PropertySchema)
+            $propertySchema = (new Property)
                 ->fromArray($propertyData);
 
             $default = $propertySchema->getDefault() ??
@@ -69,8 +68,7 @@ class SchemaBuilder
             $propertySchema
                 ->setDefault($default);
 
-            $properties[] = (new Property)
-                ->setSchema($propertySchema);
+            $properties[] = $propertySchema;
         }
 
         $popoSchema->setPropertyCollection($properties);

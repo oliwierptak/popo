@@ -6,7 +6,6 @@ namespace PopoTestsSuites\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Schema\Property;
-use Popo\Schema\PropertySchema;
 use Popo\Schema\Schema;
 
 /**
@@ -16,17 +15,13 @@ class SchemaTest extends TestCase
 {
     public function test_array(): void
     {
-        $propertySchema = (new PropertySchema)
+        $property = (new Property)
             ->fromArray(
                 [
                     'name' => 'fooId',
                     'type' => 'int',
-                    'docblock' => 'Lorem ipsum',
                 ]
             );
-        $property = (new Property)
-            ->setSchema($propertySchema)
-            ->setValue(123);
 
         $schema = (new Schema)
             ->setNamespace('App\\Popo')

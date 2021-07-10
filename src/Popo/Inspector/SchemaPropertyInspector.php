@@ -7,27 +7,23 @@ namespace Popo\Inspector;
 use JetBrains\PhpStorm\Pure;
 use Popo\PopoDefinesInterface;
 use Popo\Schema\Property;
-use Popo\Schema\PropertySchema;
 use Popo\Schema\Schema;
 
 class SchemaPropertyInspector
 {
     public function generatePopoType(Schema $schema, Property $property): string
     {
-        if ($this->isPopoProperty($property->getSchema()->getType())) {
-            $namespace = $this->expandNamespaceForParameter(
-                $schema,
-                $property->getSchema()
-            );
+        if ($this->isPopoProperty($property->getType())) {
+            $namespace = $this->expandNamespaceForParameter($schema);
 
             return sprintf(
                 '%s\\%s',
                 $namespace,
-                str_replace('::class', '', $property->getSchema()->getDefault())
+                str_replace('::class', '', $property->getDefault())
             );
         }
 
-        return $property->getSchema()->getType();
+        return $property->getType();
     }
 
     #[Pure] public function isPopoProperty(string $type): bool
@@ -35,7 +31,7 @@ class SchemaPropertyInspector
         return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
     }
 
-    #[Pure] public function expandNamespaceForParameter(Schema $schema, PropertySchema $propertySchema): string
+    #[Pure] public function expandNamespaceForParameter(Schema $schema): string
     {
         return sprintf(
             '\\%s',

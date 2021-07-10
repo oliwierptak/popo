@@ -7,6 +7,7 @@ namespace PopoTestsSuites\Unit;
 use App\Popo\Example\Foo;
 use PHPUnit\Framework\TestCase;
 use PopoTestsSuites\Functional\PopoFacadeTest;
+use UnexpectedValueException;
 
 /**
  * @group unit
@@ -26,7 +27,8 @@ class PopoTest extends TestCase
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
                         'value' => 'Buzzzzz'
-                    ]
+                    ],
+                    'buzzCollection' => []
                 ],
             ],
             $foo->toArray()
@@ -45,7 +47,8 @@ class PopoTest extends TestCase
                 'title' => 'Bar Bar',
                 'buzz' => [
                     'value' => 'Foo Bar Buzz'
-                ]
+                ],
+                'buzzCollection' => []
             ],
         ];
 
@@ -54,11 +57,33 @@ class PopoTest extends TestCase
         $this->assertEquals($expected, $foo->toArray());
     }
 
+    public function test_is_new(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertTrue($foo->isNew());
+
+        $foo->setValue(1);
+        $this->assertFalse($foo->isNew());
+    }
+
     public function test_require_default(): void
     {
         $foo = (new Foo);
 
         $this->assertEquals('Hakuna Matata', $foo->getTitle());
         $this->assertEquals('Buzzzzz', $foo->getBar()->getBuzz()->getValue());
+    }
+
+    public function test_require_all(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Required property "fooId" is not set');
+        $this->expectExceptionMessage('Required property "value" is not set');
+        $this->expectExceptionMessage('Required property "bar" is not set');
+
+        $foo = (new Foo)->setValue(null);
+
+        $foo->requireAll();
     }
 }
