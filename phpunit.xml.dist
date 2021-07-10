@@ -14,10 +14,10 @@
         </report>-->
     </coverage>
     <testsuites>
-        <testsuite name="PopoFunctionalTestSuit">
+        <testsuite name="funtional">
             <directory>./tests/suits/Functional</directory>
         </testsuite>
-        <testsuite name="PopoUnitTestSuit">
+        <testsuite name="unit">
             <directory>./tests/suits/Unit</directory>
         </testsuite>
     </testsuites>

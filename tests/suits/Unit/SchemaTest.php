@@ -9,6 +9,9 @@ use Popo\Schema\Property;
 use Popo\Schema\PropertySchema;
 use Popo\Schema\Schema;
 
+/**
+ * @group unit
+ */
 class SchemaTest extends TestCase
 {
     public function test_array(): void

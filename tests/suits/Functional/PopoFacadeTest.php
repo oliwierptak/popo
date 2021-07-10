@@ -7,7 +7,11 @@ namespace PopoTestsSuites\Functional;
 use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
+use const POPO_TESTS_DIR;
 
+/**
+ * @group functional
+ */
 class PopoFacadeTest extends TestCase
 {
     public const TEST_BUZZ = 123;
@@ -17,8 +21,8 @@ class PopoFacadeTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setConfigFile(\POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml')
-            ->setOutputPath(\POPO_TESTS_DIR);
+            ->setConfigFile(POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);
 

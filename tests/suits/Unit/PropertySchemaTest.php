@@ -7,6 +7,9 @@ namespace PopoTestsSuites\Unit;
 use PHPUnit\Framework\TestCase;
 use Popo\Schema\PropertySchema;
 
+/**
+ * @group unit
+ */
 class PropertySchemaTest extends TestCase
 {
     public function test_array_partial(): void

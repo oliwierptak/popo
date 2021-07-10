@@ -10,7 +10,7 @@ use Popo\PopoConfigurator;
 
 class PopoModel
 {
-    public function __construct(protected SchemaBuilder $schemaBuilder, protected PopoBuilder $clasBuilder)
+    public function __construct(protected SchemaBuilder $schemaBuilder, protected PopoBuilder $popoBuilder)
     {
     }
 
@@ -23,10 +23,11 @@ class PopoModel
             foreach ($schemaCollection as $popoName => $popoSchema) {
                 /** @var \Popo\Schema\Schema $popoSchema $class */
                 $popoSchema->setConfigurator($configurator);
-                $this->clasBuilder->build($popoSchema);
+
+                $this->popoBuilder->build($popoSchema);
 
                 foreach ($popoSchema->getPropertyCollection() as $property) {
-                    $this->clasBuilder
+                    $this->popoBuilder
                         ->addProperty($property)
                         ->addRequireByMethod($property)
                         ->addSetMethod($property)
@@ -35,16 +36,16 @@ class PopoModel
                         ->addHasPropertyValueMethod($property);
                 }
 
-                $this->clasBuilder
+                $this->popoBuilder
                     ->addMetadataShapeConstant()
                     ->addToArrayMethod()
                     ->addFromArrayMethod()
                     ->addUpdateMap()
                     ->addIsNewMethod();
 
-                $popoSchema->setGenerated($this->clasBuilder->print());
+                $popoSchema->setGenerated($this->popoBuilder->print());
 
-                $this->clasBuilder->save();
+                $this->popoBuilder->save();
             }
         }
     }

@@ -65,14 +65,16 @@ class PopoBuilder
         $metadata = [];
 
         foreach ($this->schema->getPropertyCollection() as $property) {
-            $metadata[$property->getSchema()->getName()] = $property->getSchema()->toArray();
+            $metadata[$property->getSchema()->getName()] = [
+                'type' => $property->getSchema()->getType(),
+                'default' => $property->getSchema()->getDefault(),
+            ];
             $shapeProperties[$property->getSchema()->getName()] = $property->getSchema()->getType();
 
             if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) ||
                 $this->valueInspector->isConstValue($property->getSchema()->getDefault())) {
                 $literalValue = new Literal($property->getSchema()->getDefault());
 
-                $metadata[$property->getSchema()->getName()] = $property->getSchema()->toArray();
                 $metadata[$property->getSchema()->getName()]['default'] = $literalValue;
 
                 if ($this->valueInspector->isConstValue($property->getSchema()->getDefault()) === false) {
@@ -121,6 +123,17 @@ class PopoBuilder
 
     public function addGetMethod(Property $property): self
     {
+        $name = $property->getSchema()->getName();
+
+        $body = <<<EOF
+if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) {
+    \$popo = static::METADATA['${name}']['default'];
+    \$this->${name} = new \$popo;
+}
+
+return \$this->${name};
+EOF;
+
         $this->method = $this->class
             ->addMethod('get' . ucfirst($property->getSchema()->getName()))
             ->setPublic()
@@ -128,7 +141,7 @@ class PopoBuilder
             ->setReturnNullable()
             ->setBody(
                 sprintf(
-                    'return $this->%s;',
+                    $body,
                     $property->getSchema()->getName()
                 )
             );

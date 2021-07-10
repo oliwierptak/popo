@@ -53,4 +53,12 @@ class PopoTest extends TestCase
 
         $this->assertEquals($expected, $foo->toArray());
     }
+
+    public function test_require_default(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertEquals('Hakuna Matata', $foo->getTitle());
+        $this->assertEquals('Buzzzzz', $foo->getBar()->getBuzz()->getValue());
+    }
 }
