@@ -26,6 +26,7 @@ class SchemaTest extends TestCase
             ->setValue(123);
 
         $schema = (new Schema)
+            ->setNamespace('App\\Popo')
             ->setSchemaName('Example')
             ->setName('Foo')
             ->setPropertyCollection(['fooId' => $property]);
@@ -35,6 +36,8 @@ class SchemaTest extends TestCase
                 'schemaName' => 'Example',
                 'name' => 'Foo',
                 'propertyCollection' => ['fooId' => $property],
+                'namespace' => 'App\\Popo',
+                'generated' => null,
             ],
             $schema->toArray()
         );

@@ -12,21 +12,21 @@ class Schema
         'schemaName' => 'string',
         'name' => 'string',
         'namespace' => 'string',
-        //'constCollection' => 'array',
         'propertyCollection' => [Property::class],
         'generated' => 'string',
     ];
 
-    protected const PROPERTY_SHAPE = [
-        [Property::class],
-    ];
+    protected const PROPERTY_SHAPE = [Property::class];
 
     protected string $schemaName;
     protected string $name;
     protected string $namespace;
-    #[ArrayShape(self::PROPERTY_SHAPE)]
+    /**
+     * @var \Popo\Schema\Property[]
+     */
+    #[ArrayShape([Property::class])]
     protected array $propertyCollection = [];
-    protected ?string $generated;
+    protected ?string $generated = null;
 
     public function getSchemaName(): string
     {

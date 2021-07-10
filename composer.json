@@ -45,10 +45,8 @@
       "chmod +x bin/popo"
     ],
     "tests": [
-      "@popo",
-      "vendor/bin/phpunit --testdox"
-    ],
-    "testsVerbose": "@tests -v"
+      "vendor/bin/phpunit --no-coverage --testdox --testsuite PopoFunctionalTestSuit,PopoUnitTestSuit"
+    ]
   },
   "scripts-descriptions": {
     "popo": "Generate POPO files"

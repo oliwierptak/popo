@@ -2,19 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Generator;
+namespace Popo\Inspector;
 
 use JetBrains\PhpStorm\Pure;
-use Popo\PopoDefinesInterface;
 use function strpos;
 
-class SchemaReader
+class SchemaValueInspector
 {
-    #[Pure] public function isPopoProperty(string $type): bool
-    {
-        return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
-    }
-
     public function isConstValue(mixed $value): bool
     {
         if (is_string($value) === false) {
@@ -35,8 +29,21 @@ class SchemaReader
         return ctype_upper($value[0]) && $this->hasClassString($value);
     }
 
-    #[Pure] protected function hasConstString(string $value): bool
+    public function isFqcn(mixed $value): bool
     {
+        if (is_string($value) === false) {
+            return false;
+        }
+
+        return $value[0] === '\\' && ctype_upper($value[1]) && $this->hasClassString($value);
+    }
+
+    #[Pure] protected function hasConstString(mixed $value): bool
+    {
+        if (is_string($value) === false) {
+            return false;
+        }
+
         return strpos($value, '::') !== false && $this->hasClassString($value) === false;
     }
 

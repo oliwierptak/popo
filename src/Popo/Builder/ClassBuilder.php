@@ -4,18 +4,17 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use JetBrains\PhpStorm\Pure;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
-use Popo\Generator\SchemaReader;
-use Popo\Generator\SchemaWriter;
-use Popo\PopoDefinesInterface;
+use Popo\Inspector\SchemaValueInspector;
+use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
+use function ucfirst;
 
 class ClassBuilder
 {
@@ -26,8 +25,8 @@ class ClassBuilder
     protected PhpNamespace $namespace;
 
     public function __construct(
-        protected SchemaReader $schemaReader,
-        protected SchemaWriter $valueTypeWriter
+        protected SchemaValueInspector $valueInspector,
+        protected SchemaPropertyInspector $propertyInspector
     ) {
     }
 
@@ -36,7 +35,7 @@ class ClassBuilder
         $this->schema = $schema;
 
         $this->file = new PhpFile();
-        $this->file->addComment('This file is auto-generated.');
+        $this->file->addComment('This file is auto-generated.'); //TODO add file section to config
         $this->file->setStrictTypes();
 
         $this->namespace = $this->file->addNamespace(
@@ -57,20 +56,54 @@ class ClassBuilder
         return $this;
     }
 
+    public function addSchemaShapeConstant(): self
+    {
+        $properties = [];
+        $metadata = [];
+
+        foreach ($this->schema->getPropertyCollection() as $property) {
+            $type = $property->getSchema()->getType();
+            $metadata[$property->getSchema()->getName()] = $type;
+
+            if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
+                $type = new Literal($property->getSchema()->getDefault());
+            }
+
+            $properties[$property->getSchema()->getName()] = $type;
+        }
+
+        $this->class
+            ->addConstant(
+                'SHAPE_PROPERTIES',
+                $properties
+            )
+            ->setProtected();
+
+        $this->class
+            ->addConstant(
+                'SHAPE_METADATA',
+                $metadata
+            )
+            ->setProtected();
+
+        return $this;
+    }
+
     public function addProperty(Property $property): self
     {
         $value = $property->getValue() ?? $property->getSchema()->getDefault();
-        if ($this->schemaReader->isPopoProperty($property->getSchema()->getType())) {
+        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
             $value = null;
         }
 
-        if ($this->schemaReader->isConstValue($property->getSchema()->getDefault())) {
+        if ($this->valueInspector->isConstValue($property->getSchema()->getDefault())) {
             $value = new Literal($property->getSchema()->getDefault());
         }
 
         $this->class
             ->addProperty($property->getSchema()->getName(), $value)
             ->setProtected()
+            ->setNullable(true)
             ->setType($this->generatePropertyType($property))
             ->setComment($property->getSchema()->getDocblock());
 
@@ -80,7 +113,7 @@ class ClassBuilder
     public function addGetMethod(Property $property): self
     {
         $this->method = $this->class
-            ->addMethod('get' . \ucfirst($property->getSchema()->getName()))
+            ->addMethod('get' . ucfirst($property->getSchema()->getName()))
             ->setPublic()
             ->setReturnType($this->generateMethodReturnType($property))
             ->setReturnNullable()
@@ -92,10 +125,13 @@ class ClassBuilder
     public function addSetMethod(Property $property): self
     {
         $this->method = $this->class
-            ->addMethod('set' . \ucfirst($property->getSchema()->getName()))
+            ->addMethod('set' . ucfirst($property->getSchema()->getName()))
             ->setPublic()
             ->setReturnType('self')
-            ->setBody('$this->' . $property->getSchema()->getName() . ' = $value; return $this;');
+            ->setBody(
+                '$this->' . $property->getSchema()->getName() . ' = $' . $property->getSchema()->getName(
+                ) . '; return $this;'
+            );
 
         return $this;
     }
@@ -104,8 +140,86 @@ class ClassBuilder
     {
         $this->method
             ->addParameter($property->getSchema()->getName())
-            ->setType($this->generateMethodParameter($property))
+            ->setType($this->generateMethodParameterType($property))
             ->setNullable();
+
+        return $this;
+    }
+
+    public function addToArrayMethod(): self
+    {
+        $body = "\$data = [\n";
+        foreach ($this->schema->getPropertyCollection() as $index => $property) {
+            $body .= sprintf(
+                "\t'%s' => \$this->%s,\n",
+                $property->getSchema()->getName(),
+                $property->getSchema()->getName()
+            );
+        }
+
+        $body .= <<<EOF
+];
+
+\array_walk(
+    \$data,
+    function (&\$value, \$name) use (\$data) {
+        \$type = self::SHAPE_PROPERTIES[\$name];
+        if (self::SHAPE_METADATA[\$name] === 'popo') {
+            \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$type)->toArray();
+        }
+    }
+);
+
+return \$data;
+EOF;
+
+        $this->class
+            ->addMethod('toArray')
+            ->addAttribute(
+                'JetBrains\PhpStorm\ArrayShape',
+                [new Literal('self::SHAPE_PROPERTIES')]
+            )
+            ->setPublic()
+            ->setReturnType('array')
+            ->setBody($body);
+
+        return $this;
+    }
+
+    public function addFromArrayMethod(): self
+    {
+        $body = "
+foreach (self::SHAPE_METADATA as \$name => \$type) {
+    \$value = \$data[\$name] ?? \$this->\$name ?? null;
+    \$popoValue = self::SHAPE_PROPERTIES[\$name];
+
+    if (\$popoValue !== null && \$type === 'popo') {
+        \$popo = new \$popoValue;
+
+        if (is_array(\$value)) {
+            \$popo->fromArray(\$value);
+        }
+        
+        \$value = \$popo;
+    }
+
+    \$this->\$name = \$value;
+}
+
+return \$this;
+        ";
+
+        $this->class
+            ->addMethod('fromArray')
+            ->addAttribute(
+                'JetBrains\PhpStorm\ArrayShape',
+                [new Literal('self::SHAPE_PROPERTIES')]
+            )
+            ->setPublic()
+            ->setReturnType('self')
+            ->setBody($body)
+            ->addParameter('data')
+            ->setType('array');
 
         return $this;
     }
@@ -115,28 +229,32 @@ class ClassBuilder
         return (new PsrPrinter)->printFile($this->file);
     }
 
-    protected function generateMethodParameter(Property $property): string
+    protected function generateMethodParameterType(Property $property): string
     {
-        if ($this->schemaReader->isPopoProperty($property->getSchema()->getType())) {
-            $namespace = $this->valueTypeWriter->expandNamespaceForParameter(
-                $this->schema,
-                $property->getSchema()
-            );
-
-            return sprintf(
-                '%s\\%s',
-                $namespace,
-                str_replace('::class', '', $property->getSchema()->getDefault())
-            );
+        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) === false) {
+            return $property->getSchema()->getType();
         }
 
-        return $property->getSchema()->getType();
+        $namespace = $this->schema->getNamespace();
+        $name = str_replace('::class', '', $property->getSchema()->getDefault());
+        if ($this->valueInspector->isFqcn($property->getSchema()->getDefault())) {
+            return $property->getSchema()->getDefault();
+        }
+
+        $sep = $namespace !== '' ? '\\' : '';
+
+        return sprintf(
+            '%s%s%s',
+            $namespace,
+            $sep,
+            $name
+        );
     }
 
     protected function generateMethodReturnType(Property $property): string
     {
-        if ($this->schemaReader->isPopoProperty($property->getSchema()->getType())) {
-            $namespace = $this->valueTypeWriter->expandNamespaceForParameter(
+        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
+            $namespace = $this->propertyInspector->expandNamespaceForParameter(
                 $this->schema,
                 $property->getSchema()
             );
@@ -153,33 +271,19 @@ class ClassBuilder
 
     protected function generatePropertyType(Property $property): string
     {
-        if ($this->schemaReader->isPopoProperty($property->getSchema()->getType())) {
-            $namespace = $this->valueTypeWriter->expandNamespaceForParameter(
-                $this->schema,
-                $property->getSchema()
-            );
-
-            return sprintf(
-                '%s\\%s',
-                $namespace,
-                str_replace('::class', '', $property->getSchema()->getDefault())
-            );
+        if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType()) === false) {
+            return $property->getSchema()->getType();
         }
 
-        return $property->getSchema()->getType();
-    }
+        $namespace = $this->propertyInspector->expandNamespaceForParameter(
+            $this->schema,
+            $property->getSchema()
+        );
 
-    #[Pure] protected function generatePropertyValue(Property $property): mixed
-    {
-        if ($this->schemaReader->isPopoProperty($property->getSchema()->getType())) {
-            return null;
-        }
-
-        return $property->getSchema()->getDefault();
-    }
-
-    #[Pure] protected function isPopoProperty(Property $property): bool
-    {
-        return $property->getSchema()->getType() === PopoDefinesInterface::PROPERTY_TYPE_POPO;
+        return sprintf(
+            '%s\\%s',
+            $namespace,
+            str_replace('::class', '', $property->getSchema()->getDefault())
+        );
     }
 }

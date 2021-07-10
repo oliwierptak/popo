@@ -17,6 +17,9 @@
         <testsuite name="PopoFunctionalTestSuit">
             <directory>./tests/suits/Functional</directory>
         </testsuite>
+        <testsuite name="PopoUnitTestSuit">
+            <directory>./tests/suits/Unit</directory>
+        </testsuite>
     </testsuites>
     <logging>
         <testdoxHtml outputFile="./tests/logs/coverage/index.html"/>

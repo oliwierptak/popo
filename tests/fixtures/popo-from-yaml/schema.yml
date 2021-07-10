@@ -1,8 +1,7 @@
 ^:
-  namespace: &option_namespace App\Configurator
-  outputPath: &option_outputPath tests/App/
-  schemaPath: &option_schemaPath tests/fixtures/popo-from-yaml/
-  templatePath: &option_templatePath templates/
+  namespace: &option_namespace App\Popo\Example
+  outputPath: &option_outputPath tests/App/Popo/
+  #schemaPath: &option_schemaPath tests/fixtures/popo-from-yaml/
 
 $:
   namespace: *option_namespace
@@ -26,6 +25,13 @@ Example:
   Bar:
     default:
       title: Lorem Ipsum
+      buzz: Buzz::class
     property: [
       {name: title}
+      {name: buzz, type: popo}
+    ]}}
+
+  Buzz:
+    property: [
+      {name: value, default: Buzzzzz}
     ]}}

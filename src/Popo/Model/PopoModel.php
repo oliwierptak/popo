@@ -6,7 +6,8 @@ namespace Popo\Model;
 
 use Popo\Builder\ClassBuilder;
 use Popo\Builder\SchemaBuilder;
-use function dump;
+use function fwrite;
+use const POPO_TESTS_DIR;
 
 class PopoModel
 {
@@ -31,10 +32,17 @@ class PopoModel
                         ->addParameter($property);
                 }
 
+                $this->clasBuilder
+                    ->addSchemaShapeConstant()
+                    ->addToArrayMethod()
+                    ->addFromArrayMethod();
+
                 $popoSchema->setGenerated($this->clasBuilder->print());
+
+                $h = fopen(POPO_TESTS_DIR . 'App/Popo/' . $schemaName . '/' . $popoName . '.php', 'w');
+                fwrite($h, $popoSchema->getGenerated());
+                fclose($h);
             }
         }
-
-        dump($data);
     }
 }

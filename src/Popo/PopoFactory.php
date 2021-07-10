@@ -6,8 +6,8 @@ namespace Popo;
 
 use JetBrains\PhpStorm\Pure;
 use Popo\Builder\ClassBuilder;
-use Popo\Generator\SchemaReader;
-use Popo\Generator\SchemaWriter;
+use Popo\Inspector\SchemaValueInspector;
+use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Model\PopoModel;
 use Popo\Builder\SchemaBuilder;
 use Popo\Builder\SchemaLoader;
@@ -42,13 +42,13 @@ class PopoFactory
         );
     }
 
-    #[Pure] protected function createValueTypeReader(): SchemaReader
+    #[Pure] protected function createValueTypeReader(): SchemaValueInspector
     {
-        return new SchemaReader();
+        return new SchemaValueInspector();
     }
 
-    #[Pure] protected function createValueTypeWriter(): SchemaWriter
+    #[Pure] protected function createValueTypeWriter(): SchemaPropertyInspector
     {
-        return new SchemaWriter();
+        return new SchemaPropertyInspector();
     }
 }
