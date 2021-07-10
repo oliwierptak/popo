@@ -52,6 +52,8 @@ class PopoBuilder
 
     protected function buildClass(): self
     {
+        $this->namespace->addUse('UnexpectedValueException');
+
         $this->class = $this->namespace->addClass($this->schema->getName());
 
         return $this;
@@ -142,7 +144,8 @@ class PopoBuilder
             ->setReturnType('self')
             ->setBody(
                 sprintf(
-                    '$this->%s = $%s; return $this;',
+                    '$this->%s = $%s; $this->updateMap[\'%s\'] = true; return $this;',
+                    $property->getSchema()->getName(),
                     $property->getSchema()->getName(),
                     $property->getSchema()->getName(),
                 )
@@ -162,6 +165,58 @@ class PopoBuilder
         return $this;
     }
 
+    public function addRequireByMethod(Property $property): self
+    {
+        $name = $property->getSchema()->getName();
+
+        $body = <<<EOF
+if (\$this->${name} === null) {
+    throw new UnexpectedValueException('Required property "${name}" is not set');
+}
+return \$this->${name};
+EOF;
+
+        $this->class
+            ->addMethod('require' . ucfirst($property->getSchema()->getName()))
+            ->setPublic()
+            ->setReturnType($this->generateMethodReturnType($property))
+            ->setBody($body);
+
+        return $this;
+    }
+
+    public function addIsNewMethod(): self
+    {
+        $body = <<<EOF
+return empty(\$this->updateMap) === true;
+EOF;
+
+        $this->class
+            ->addMethod('isNew')
+            ->setPublic()
+            ->setReturnType('bool')
+            ->setBody($body);
+
+        return $this;
+    }
+
+    public function addHasPropertyValueMethod(Property $property): self
+    {
+        $name = $property->getSchema()->getName();
+
+        $body = <<<EOF
+return \$this->${name} !== null;
+EOF;
+
+        $this->class
+            ->addMethod('has' . ucfirst($property->getSchema()->getName()))
+            ->setPublic()
+            ->setReturnType('bool')
+            ->setBody($body);
+
+        return $this;
+    }
+
     public function addToArrayMethod(): self
     {
         $body = "\$data = [\n";
@@ -176,7 +231,7 @@ class PopoBuilder
         $body .= <<<EOF
 ];
 
-\array_walk(
+array_walk(
     \$data,
     function (&\$value, \$name) use (\$data) {
         \$popo = static::METADATA[\$name]['default'];
@@ -220,6 +275,7 @@ foreach (static::METADATA as \$name => \$meta) {
     }
 
     \$this->\$name = \$value;
+    \$this->updateMap[\$name] = true;
 }
 
 return \$this;
@@ -236,6 +292,16 @@ return \$this;
                 'JetBrains\PhpStorm\ArrayShape',
                 [new Literal('self::SHAPE_PROPERTIES')]
             );
+
+        return $this;
+    }
+
+    public function addUpdateMap(): self
+    {
+        $this->class
+            ->addProperty('updateMap', [])
+            ->setType('array')
+            ->setProtected();
 
         return $this;
     }

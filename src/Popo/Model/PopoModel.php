@@ -28,15 +28,19 @@ class PopoModel
                 foreach ($popoSchema->getPropertyCollection() as $property) {
                     $this->clasBuilder
                         ->addProperty($property)
-                        ->addGetMethod($property)
+                        ->addRequireByMethod($property)
                         ->addSetMethod($property)
-                        ->addParameter($property);
+                        ->addParameter($property)
+                        ->addGetMethod($property)
+                        ->addHasPropertyValueMethod($property);
                 }
 
                 $this->clasBuilder
                     ->addMetadataShapeConstant()
                     ->addToArrayMethod()
-                    ->addFromArrayMethod();
+                    ->addFromArrayMethod()
+                    ->addUpdateMap()
+                    ->addIsNewMethod();
 
                 $popoSchema->setGenerated($this->clasBuilder->print());
 
