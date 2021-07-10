@@ -24,10 +24,10 @@ class PopoFacade
         return $this;
     }
 
-    public function generate(array $files): void
+    public function generate(PopoConfigurator $configurator): void
     {
         $this->getFactory()
             ->createPopoModel()
-            ->generate($files);
+            ->generate($configurator);
     }
 }

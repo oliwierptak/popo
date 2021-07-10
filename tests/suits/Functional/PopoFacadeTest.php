@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Functional;
 
 use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
 use Popo\PopoFacade;
 
 class PopoFacadeTest extends TestCase
@@ -15,11 +16,11 @@ class PopoFacadeTest extends TestCase
     {
         $facade = new PopoFacade();
 
-        $configurationFiles = [
-            \POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml'
-        ];
+        $configurator = (new PopoConfigurator())
+            ->setConfigFile(\POPO_TESTS_DIR . 'fixtures/popo-from-yaml/schema.yml')
+            ->setOutputPath(\POPO_TESTS_DIR);
 
-        $facade->generate($configurationFiles);
+        $facade->generate($configurator);
 
         $this->assertTrue(true);
     }

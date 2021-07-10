@@ -14,13 +14,14 @@ use Popo\Inspector\SchemaValueInspector;
 use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
+use function fwrite;
 use function ucfirst;
 
 class PopoBuilder
 {
+    protected Schema $schema;
     protected ClassType $class;
     protected Method $method;
-    protected Schema $schema;
     protected PhpFile $file;
     protected PhpNamespace $namespace;
 
@@ -56,7 +57,7 @@ class PopoBuilder
         return $this;
     }
 
-    public function addSchemaShapeConstant(): self
+    public function addMetadataShapeConstant(): self
     {
         $shapeProperties = [];
         $metadata = [];
@@ -242,6 +243,24 @@ return \$this;
     public function print(): string
     {
         return (new PsrPrinter)->printFile($this->file);
+    }
+
+    public function save(): void
+    {
+        try {
+            $filename = sprintf(
+                '%s/%s/%s.php',
+                $this->schema->getConfigurator()->getOutputPath(),
+                str_replace('\\', '/', $this->schema->getNamespace()),
+                $this->schema->getName()
+            );
+
+            $handle = fopen($filename, 'w');
+            fwrite($handle, $this->print());
+        }
+        finally {
+            fclose($handle);
+        }
     }
 
     protected function generateMethodParameterType(Property $property): string

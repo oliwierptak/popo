@@ -38,6 +38,7 @@ class SchemaTest extends TestCase
                 'propertyCollection' => ['fooId' => $property],
                 'namespace' => 'App\\Popo',
                 'generated' => null,
+                'configurator' => null,
             ],
             $schema->toArray()
         );

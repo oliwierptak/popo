@@ -5,7 +5,6 @@
 
 $:
   namespace: *option_namespace
-
   default:
     title: Hakuna Matata
 

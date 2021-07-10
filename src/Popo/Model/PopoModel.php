@@ -6,8 +6,7 @@ namespace Popo\Model;
 
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
-use function fwrite;
-use const POPO_TESTS_DIR;
+use Popo\PopoConfigurator;
 
 class PopoModel
 {
@@ -15,13 +14,15 @@ class PopoModel
     {
     }
 
-    public function generate(array $files): void
+    public function generate(PopoConfigurator $configurator): void
     {
+        $files = [$configurator->getConfigFile()];
         $data = $this->schemaBuilder->build($files);
 
         foreach ($data as $schemaName => $schemaCollection) {
             foreach ($schemaCollection as $popoName => $popoSchema) {
                 /** @var \Popo\Schema\Schema $popoSchema $class */
+                $popoSchema->setConfigurator($configurator);
                 $this->clasBuilder->build($popoSchema);
 
                 foreach ($popoSchema->getPropertyCollection() as $property) {
@@ -33,15 +34,13 @@ class PopoModel
                 }
 
                 $this->clasBuilder
-                    ->addSchemaShapeConstant()
+                    ->addMetadataShapeConstant()
                     ->addToArrayMethod()
                     ->addFromArrayMethod();
 
                 $popoSchema->setGenerated($this->clasBuilder->print());
 
-                $h = fopen(POPO_TESTS_DIR . 'App/Popo/' . $schemaName . '/' . $popoName . '.php', 'w');
-                fwrite($h, $popoSchema->getGenerated());
-                fclose($h);
+                $this->clasBuilder->save();
             }
         }
     }
