@@ -31,7 +31,32 @@ class PopoBuilder
     ) {
     }
 
-    public function buildSchema(Schema $schema): self
+    public function build(Schema $popoSchema): void
+    {
+        $this->buildSchema($popoSchema);
+
+        foreach ($popoSchema->getPropertyCollection() as $property) {
+            $this
+                ->addProperty($property)
+                ->addRequireByMethod($property)
+                ->addSetMethod($property)
+                ->addParameter($property)
+                ->addGetMethod($property)
+                ->addHasPropertyValueMethod($property);
+        }
+
+        $this
+            ->addMetadataShapeConstant()
+            ->addToArrayMethod()
+            ->addFromArrayMethod()
+            ->addUpdateMap()
+            ->addIsNewMethod()
+            ->addRequireAllMethod();
+
+        $this->save();
+    }
+
+    protected function buildSchema(Schema $schema): self
     {
         $this->schema = $schema;
 
@@ -59,7 +84,7 @@ class PopoBuilder
         return $this;
     }
 
-    public function addMetadataShapeConstant(): self
+    protected function addMetadataShapeConstant(): self
     {
         $shapeProperties = [];
         $metadata = [];
@@ -100,7 +125,7 @@ class PopoBuilder
         return $this;
     }
 
-    public function addProperty(Property $property): self
+    protected function addProperty(Property $property): self
     {
         $value = $property->getValue() ?? $property->getSchema()->getDefault();
         if ($this->propertyInspector->isPopoProperty($property->getSchema()->getType())) {
@@ -121,7 +146,7 @@ class PopoBuilder
         return $this;
     }
 
-    public function addGetMethod(Property $property): self
+    protected function addGetMethod(Property $property): self
     {
         $name = $property->getSchema()->getName();
 
@@ -149,7 +174,7 @@ EOF;
         return $this;
     }
 
-    public function addSetMethod(Property $property): self
+    protected function addSetMethod(Property $property): self
     {
         $this->method = $this->class
             ->addMethod('set' . ucfirst($property->getSchema()->getName()))
@@ -168,7 +193,7 @@ EOF;
         return $this;
     }
 
-    public function addParameter(Property $property): self
+    protected function addParameter(Property $property): self
     {
         $this->method
             ->addParameter($property->getSchema()->getName())
@@ -178,7 +203,7 @@ EOF;
         return $this;
     }
 
-    public function addRequireByMethod(Property $property): self
+    protected function addRequireByMethod(Property $property): self
     {
         $name = $property->getSchema()->getName();
 
@@ -198,7 +223,7 @@ EOF;
         return $this;
     }
 
-    public function addIsNewMethod(): self
+    protected function addIsNewMethod(): self
     {
         $body = <<<EOF
 return empty(\$this->updateMap) === true;
@@ -213,7 +238,28 @@ EOF;
         return $this;
     }
 
-    public function addHasPropertyValueMethod(Property $property): self
+    protected function addRequireAllMethod(): self
+    {
+        $body = "\n\t";
+        foreach ($this->schema->getPropertyCollection() as $index => $property) {
+            $body .= sprintf(
+                "\$this->require%s();\n",
+                ucfirst($property->getSchema()->getName())
+            );
+        }
+
+        $body .= "\nreturn \$this;";
+
+        $this->class
+            ->addMethod('requireAll')
+            ->setPublic()
+            ->setReturnType('self')
+            ->setBody($body);
+
+        return $this;
+    }
+
+    protected function addHasPropertyValueMethod(Property $property): self
     {
         $name = $property->getSchema()->getName();
 
@@ -230,7 +276,7 @@ EOF;
         return $this;
     }
 
-    public function addToArrayMethod(): self
+    protected function addToArrayMethod(): self
     {
         $body = "\$data = [\n";
         foreach ($this->schema->getPropertyCollection() as $index => $property) {
@@ -270,7 +316,7 @@ EOF;
         return $this;
     }
 
-    public function addFromArrayMethod(): self
+    protected function addFromArrayMethod(): self
     {
         $body = "
 foreach (static::METADATA as \$name => \$meta) {
@@ -309,7 +355,7 @@ return \$this;
         return $this;
     }
 
-    public function addUpdateMap(): self
+    protected function addUpdateMap(): self
     {
         $this->class
             ->addProperty('updateMap', [])
@@ -324,7 +370,7 @@ return \$this;
         return (new PsrPrinter)->printFile($this->file);
     }
 
-    public function build(): void
+    public function save(): void
     {
         try {
             $filename = sprintf(

@@ -21,29 +21,8 @@ class PopoModel
 
         foreach ($data as $schemaName => $schemaCollection) {
             foreach ($schemaCollection as $popoName => $popoSchema) {
-                /** @var \Popo\Schema\Schema $popoSchema $class */
                 $popoSchema->setConfigurator($configurator);
-
-                $this->popoBuilder->buildSchema($popoSchema);
-
-                foreach ($popoSchema->getPropertyCollection() as $property) {
-                    $this->popoBuilder
-                        ->addProperty($property)
-                        ->addRequireByMethod($property)
-                        ->addSetMethod($property)
-                        ->addParameter($property)
-                        ->addGetMethod($property)
-                        ->addHasPropertyValueMethod($property);
-                }
-
-                $this->popoBuilder
-                    ->addMetadataShapeConstant()
-                    ->addToArrayMethod()
-                    ->addFromArrayMethod()
-                    ->addUpdateMap()
-                    ->addIsNewMethod();
-
-                $this->popoBuilder->build();
+                $this->popoBuilder->build($popoSchema);
             }
         }
     }
