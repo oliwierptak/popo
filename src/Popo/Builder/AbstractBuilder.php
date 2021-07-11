@@ -102,8 +102,8 @@ abstract class AbstractBuilder
         try {
             $filename = sprintf(
                 '%s/%s/%s.php',
-                $this->schema->getConfigurator()->getOutputPath(),
-                str_replace('\\', '/', $this->schema->getNamespace()),
+                $this->schema->getConfig()->getOutputPath(),
+                str_replace('\\', '/', $this->schema->getSchemaName()),
                 $this->schema->getName()
             );
 
@@ -119,7 +119,7 @@ abstract class AbstractBuilder
     {
         $filename = sprintf(
             '%s/%s/%s.php',
-            $this->schema->getConfigurator()->getOutputPath(),
+            $this->schema->getConfig()->getOutputPath(),
             str_replace('\\', '/', $this->schema->getNamespace()),
             $this->schema->getName()
         );

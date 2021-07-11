@@ -4,6 +4,9 @@ $:
 
 ^:
   namespace: *option_namespace
+  outputPath: *option_outputPath
+  extend: App\Popo\AbstractExample::class
+  implement: App\Popo\ExampleInterface::class
   default:
     title: Hakuna Matata
 

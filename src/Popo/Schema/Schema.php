@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Schema;
 
 use JetBrains\PhpStorm\ArrayShape;
-use Popo\PopoConfigurator;
 
 class Schema
 {
@@ -14,12 +13,12 @@ class Schema
         'name' => 'string',
         'namespace' => 'string',
         'propertyCollection' => [Property::class],
-        'configurator' => PopoConfigurator::class,
+        'config' => Config::class,
     ];
 
     protected const PROPERTY_SHAPE = [Property::class];
 
-    protected ?PopoConfigurator $configurator = null;
+    protected ?Config $config = null;
     protected string $schemaName;
     protected string $name;
     protected string $namespace;
@@ -80,14 +79,18 @@ class Schema
         return $this;
     }
 
-    public function getConfigurator(): PopoConfigurator
+    public function getConfig(): Config
     {
-        return $this->configurator;
+        if ($this->config === null) {
+            $this->config = new Config();
+        }
+        
+        return $this->config;
     }
 
-    public function setConfigurator(PopoConfigurator $configurator): self
+    public function setConfig(Config $config): self
     {
-        $this->configurator = $configurator;
+        $this->config = $config;
 
         return $this;
     }
@@ -100,7 +103,7 @@ class Schema
             'name' => $this->name,
             'namespace' => $this->namespace,
             'propertyCollection' => $this->propertyCollection,
-            'configurator' => $this->configurator,
+            'config' => $this->config,
         ];
     }
 
@@ -112,7 +115,7 @@ class Schema
         $this->name = $data['name'];
         $this->namespace = $data['namespace'];
         $this->propertyCollection = $data['propertyCollection'];
-        $this->configurator = $data['configurator'];
+        $this->config = $data['config'];
 
         return $this;
     }

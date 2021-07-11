@@ -20,6 +20,7 @@ class SchemaLoader
             );
             $defaultConfig = $this->extractDefaultConfig($data);
             unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_SYMBOL]);
+            unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
 
             $propertyData = $data;
             unset($propertyData[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
@@ -28,7 +29,6 @@ class SchemaLoader
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_FILENAME => $configurationFile,
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $defaultConfig,
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => $propertyData,
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION => $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION],
 
             ];
         }

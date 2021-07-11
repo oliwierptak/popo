@@ -10,12 +10,16 @@ class Config
 {
     protected const CONFIG_SHAPE = [
         'namespace' => "string",
+        'extend' => "null|string",
+        'implement' => "null|string",
         'outputPath' => "null|string",
         'schemaPath' => "null|string",
         'default' => "array",
     ];
 
     protected string $namespace;
+    protected ?string $extend;
+    protected ?string $implement;
     protected ?string $outputPath;
     protected ?string $schemaPath;
     protected array $default = [];
@@ -28,6 +32,30 @@ class Config
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
+
+        return $this;
+    }
+
+    public function getExtend(): ?string
+    {
+        return $this->extend;
+    }
+
+    public function setExtend(?string $extend): self
+    {
+        $this->extend = $extend;
+
+        return $this;
+    }
+
+    public function getImplement(): ?string
+    {
+        return $this->implement;
+    }
+
+    public function setImplement(?string $implement): self
+    {
+        $this->implement = $implement;
 
         return $this;
     }
@@ -74,6 +102,8 @@ class Config
     ): self {
         $data = array_merge(
             [
+                'extend' => null,
+                'implement' => null,
                 'outputPath' => null,
                 'schemaPath' => null,
                 'default' => [],
@@ -82,6 +112,8 @@ class Config
         );
 
         $this->namespace = $data['namespace'];
+        $this->extend = $data['extend'] ?? null;
+        $this->implement = $data['implement'] ?? null;
         $this->outputPath = $data['outputPath'] ?? null;
         $this->schemaPath = $data['schemaPath'] ?? null;
         $this->default = $data['default'] ?? [];
@@ -94,6 +126,8 @@ class Config
     {
         return [
             'namespace' => $this->namespace,
+            'extend' => $this->extend,
+            'implement' => $this->implement,
             'outputPath' => $this->outputPath ?? null,
             'schemaPath' => $this->schemaPath ?? null,
             'default' => $this->default ?? [],

@@ -12,7 +12,7 @@ use Popo\Schema\Property;
 
 class SchemaBuilder
 {
-    protected const SCHEMA_SHAPE = [[[Schema::class]]];
+    protected const SCHEMA_SHAPE = [Schema::class];
 
     public function __construct(protected SchemaLoader $loader)
     {
@@ -30,10 +30,14 @@ class SchemaBuilder
 
             foreach ($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] as $schemaName => $popoCollection) {
                 foreach ($popoCollection as $popoName => $popoData) {
+                    $popoConfig = clone $config;
+                    $popoConfig->fromArray(array_merge($config->toArray(), $popoData['config'] ?? []));
+
                     $popoSchema = (new Schema)
                         ->setSchemaName($schemaName)
                         ->setName($popoName)
-                        ->setNamespace($config->getNamespace());
+                        ->setNamespace($config->getNamespace())
+                        ->setConfig($popoConfig);
 
                     $result[$schemaName][$popoName] = $this->buildPopoSchema(
                         $popoSchema,

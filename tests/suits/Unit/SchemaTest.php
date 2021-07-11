@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Popo\Schema\Config;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 
@@ -28,14 +29,16 @@ class SchemaTest extends TestCase
             ->setSchemaName('Example')
             ->setName('Foo')
             ->setPropertyCollection(['fooId' => $property]);
+        $schema
+            ->getConfig()->setExtend('fooBar');
 
         $this->assertEquals(
             [
+                'namespace' => 'App\\Popo',
                 'schemaName' => 'Example',
                 'name' => 'Foo',
                 'propertyCollection' => ['fooId' => $property],
-                'namespace' => 'App\\Popo',
-                'configurator' => null,
+                'config' => $schema->getConfig(),
             ],
             $schema->toArray()
         );

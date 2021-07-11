@@ -21,7 +21,6 @@ class PopoModel
 
         foreach ($data as $schemaName => $schemaCollection) {
             foreach ($schemaCollection as $popoName => $popoSchema) {
-                $popoSchema->setConfigurator($configurator);
                 $this->popoBuilder->build($popoSchema);
             }
         }

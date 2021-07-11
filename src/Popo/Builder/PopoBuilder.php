@@ -28,6 +28,8 @@ class PopoBuilder extends AbstractBuilder
         }
 
         $this
+            ->addImplement()
+            ->addExtend()
             ->addMetadataShapeConstant()
             ->addToArrayMethod()
             ->addFromArrayMethod()
@@ -62,6 +64,26 @@ class PopoBuilder extends AbstractBuilder
         $this->namespace->addUse('UnexpectedValueException');
 
         $this->class = $this->namespace->addClass($this->schema->getName());
+
+        return $this;
+    }
+
+    protected function addExtend(): self
+    {
+        if ($this->schema->getConfig()->getExtend() !== null) {
+            $extend = str_replace('::class', '', $this->schema->getConfig()->getExtend());
+            $this->class->addExtend($extend);
+        }
+
+        return $this;
+    }
+
+    protected function addImplement(): self
+    {
+        if ($this->schema->getConfig()->getImplement() !== null) {
+            $implement = str_replace('::class', '', $this->schema->getConfig()->getImplement());
+            $this->class->addImplement($implement);
+        }
 
         return $this;
     }
