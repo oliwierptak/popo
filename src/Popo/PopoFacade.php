@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-class PopoFacade
+class PopoFacade implements PopoFacadeInterface
 {
     protected PopoFactory $factory;
 
