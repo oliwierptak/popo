@@ -30,8 +30,6 @@ class SchemaBuilder
                 $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG]
             );
 
-            dump($defaultConfig->toArray());
-
             foreach ($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] as $schemaName => $popoCollection) {
                 foreach ($popoCollection as $popoName => $popoData) {
                     $popoConfig = (new Config)->fromArray(
