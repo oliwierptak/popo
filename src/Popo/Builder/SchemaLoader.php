@@ -19,16 +19,12 @@ class SchemaLoader
                 Yaml::PARSE_OBJECT & Yaml::PARSE_CONSTANT & Yaml::PARSE_DATETIME & Yaml::PARSE_CUSTOM_TAGS
             );
             $defaultConfig = $this->extractDefaultConfig($data);
-            unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_SYMBOL]);
             unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
-
-            $propertyData = $data;
-            unset($propertyData[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
 
             $result[] = [
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_FILENAME => $configurationFile,
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $defaultConfig,
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => $propertyData,
+                PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => $data,
 
             ];
         }
@@ -39,9 +35,9 @@ class SchemaLoader
     protected function extractDefaultConfig(mixed $data): array
     {
         if ($data === false) {
-            $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_SYMBOL] = [];
+            $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] = [];
         }
 
-        return $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_SYMBOL];
+        return $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION];
     }
 }

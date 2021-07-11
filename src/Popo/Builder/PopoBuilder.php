@@ -50,7 +50,7 @@ class PopoBuilder extends AbstractBuilder
 
         $this->namespace = $this->file->addNamespace(
             new PhpNamespace(
-                $schema->getNamespace()
+                $schema->getConfig()->getNamespace()
             )
         );
 
@@ -100,16 +100,26 @@ class PopoBuilder extends AbstractBuilder
             ];
             $shapeProperties[$property->getName()] = $property->getType();
 
-            if ($this->propertyInspector->isPopoProperty($property->getType()) ||
-                $this->valueInspector->isConstValue($property->getDefault())) {
-                $literalValue = new Literal($property->getDefault());
+            if ($this->propertyInspector->isPopoProperty($property->getType())) {
+                    $literalValue = new Literal(
+                    $this->propertyInspector->generatePopoType(
+                        $this->schema,
+                        $property,
+                        false
+                    )
+                );
 
+                $shapeProperties[$property->getName()] = $literalValue;
                 $metadata[$property->getName()]['default'] = $literalValue;
+            }
+            else {
+                if ($this->valueInspector->isLiteral($property->getDefault())) {
+                    $literalValue = new Literal($property->getDefault());
 
-                if ($this->valueInspector->isConstValue($property->getDefault()) === false) {
-                    $shapeProperties[$property->getName()] = $literalValue;
+                    $metadata[$property->getName()]['default'] = $literalValue;
                 }
             }
+
         }
 
         $this->class
@@ -242,7 +252,7 @@ EOF;
             $require .= sprintf(
                 $validationBody,
                 ucfirst($property->getName()),
-                ucfirst($property->getName())
+                $property->getName()
             );
         }
 

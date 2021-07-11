@@ -19,29 +19,36 @@ class SchemaBuilder
     }
 
     #[ArrayShape(self::SCHEMA_SHAPE)]
-    public function build(array $files): array
-    {
+    public function build(
+        array $files
+    ): array {
         $data = $this->loader->load($files);
 
         $result = [];
         foreach ($data as $schemaData) {
-            $config = (new Config)
-                ->fromArray($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG]);
+            $defaultConfig = (new Config)->fromArray(
+                $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG]
+            );
+
+            dump($defaultConfig->toArray());
 
             foreach ($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] as $schemaName => $popoCollection) {
                 foreach ($popoCollection as $popoName => $popoData) {
-                    $popoConfig = clone $config;
-                    $popoConfig->fromArray(array_merge($config->toArray(), $popoData['config'] ?? []));
+                    $popoConfig = (new Config)->fromArray(
+                        array_merge(
+                            $defaultConfig->toArray(),
+                            $popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? [],
+                        )
+                    )->setDefaultConfig($defaultConfig);
 
                     $popoSchema = (new Schema)
-                        ->setSchemaName($schemaName)
                         ->setName($popoName)
-                        ->setNamespace($config->getNamespace())
+                        ->setSchemaName($schemaName)
                         ->setConfig($popoConfig);
 
                     $result[$schemaName][$popoName] = $this->buildPopoSchema(
                         $popoSchema,
-                        $config,
+                        $popoConfig,
                         $popoData
                     );
                 }

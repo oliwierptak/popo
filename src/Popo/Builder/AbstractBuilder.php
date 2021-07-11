@@ -15,7 +15,9 @@ use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function fwrite;
+use function pathinfo;
 use function unlink;
+use const PATHINFO_DIRNAME;
 
 abstract class AbstractBuilder
 {
@@ -43,7 +45,7 @@ abstract class AbstractBuilder
 
         $this->namespace = $this->file->addNamespace(
             new PhpNamespace(
-                $schema->getNamespace()
+                $schema->getConfig()->getNamespace()
             )
         );
 
@@ -67,9 +69,10 @@ abstract class AbstractBuilder
         if ($this->propertyInspector->isPopoProperty($property->getType())) {
             $value = null;
         }
-
-        if ($this->valueInspector->isConstValue($property->getDefault())) {
-            $value = new Literal($property->getDefault());
+        else {
+            if ($this->valueInspector->isLiteral($property->getDefault())) {
+                $value = new Literal($property->getDefault());
+            }
         }
 
         $this->class
@@ -103,10 +106,11 @@ abstract class AbstractBuilder
             $filename = sprintf(
                 '%s/%s/%s.php',
                 $this->schema->getConfig()->getOutputPath(),
-                str_replace('\\', '/', $this->schema->getSchemaName()),
+                str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
                 $this->schema->getName()
             );
 
+            @mkdir(pathinfo($filename, PATHINFO_DIRNAME), 0775, true);
             $handle = fopen($filename, 'w');
             fwrite($handle, $this->print());
         }
@@ -120,7 +124,7 @@ abstract class AbstractBuilder
         $filename = sprintf(
             '%s/%s/%s.php',
             $this->schema->getConfig()->getOutputPath(),
-            str_replace('\\', '/', $this->schema->getNamespace()),
+            str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
             $this->schema->getName()
         );
 

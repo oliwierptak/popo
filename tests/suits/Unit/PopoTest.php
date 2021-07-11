@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace PopoTestsSuites\Unit;
 
-use App\Popo\Example\Foo;
+use App\Popo\Example\Boo\Foo;
 use PHPUnit\Framework\TestCase;
 use PopoTestsSuites\Functional\GenerateTest;
 use UnexpectedValueException;

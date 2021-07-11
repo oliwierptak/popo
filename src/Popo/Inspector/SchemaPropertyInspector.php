@@ -11,16 +11,26 @@ use Popo\Schema\Schema;
 
 class SchemaPropertyInspector
 {
-    public function generatePopoType(Schema $schema, Property $property): string
+    public function generatePopoType(Schema $schema, Property $property, bool $stripClass = true): string
     {
         if ($this->isPopoProperty($property->getType())) {
             $namespace = $this->expandNamespaceForParameter($schema);
 
-            return sprintf(
-                '%s\\%s',
-                $namespace,
-                str_replace('::class', '', $property->getDefault())
+            $value = $property->getDefault();
+            $class = sprintf(
+                '%s',
+                $stripClass ? str_replace('::class', '', $value) : $value
             );
+
+            if ($value[0] !== '\\') {
+                $class = sprintf(
+                    '%s\\%s',
+                    $namespace,
+                    $stripClass ? str_replace('::class', '', $value) : $value
+                );
+            }
+
+            return $class;
         }
 
         return $property->getType();
@@ -31,11 +41,11 @@ class SchemaPropertyInspector
         return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
     }
 
-    #[Pure] public function expandNamespaceForParameter(Schema $schema): string
+    public function expandNamespaceForParameter(Schema $schema): string
     {
         return sprintf(
             '\\%s',
-            $schema->getNamespace()
+            $schema->getConfig()->getNamespace()
         );
     }
 }

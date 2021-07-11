@@ -10,19 +10,19 @@ class Config
 {
     protected const CONFIG_SHAPE = [
         'namespace' => "string",
+        'outputPath' => "string",
         'extend' => "null|string",
         'implement' => "null|string",
-        'outputPath' => "null|string",
-        'schemaPath' => "null|string",
         'default' => "array",
+        'defaultConfig' => Config::class,
     ];
 
     protected string $namespace;
+    protected string $outputPath;
     protected ?string $extend;
     protected ?string $implement;
-    protected ?string $outputPath;
-    protected ?string $schemaPath;
     protected array $default = [];
+    protected Config $defaultConfig;
 
     public function getNamespace(): string
     {
@@ -32,6 +32,18 @@ class Config
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
+
+        return $this;
+    }
+
+    public function getOutputPath(): string
+    {
+        return $this->outputPath;
+    }
+
+    public function setOutputPath(string $outputPath): self
+    {
+        $this->outputPath = $outputPath;
 
         return $this;
     }
@@ -60,30 +72,6 @@ class Config
         return $this;
     }
 
-    public function getOutputPath(): ?string
-    {
-        return $this->outputPath;
-    }
-
-    public function setOutputPath(?string $outputPath): self
-    {
-        $this->outputPath = $outputPath;
-
-        return $this;
-    }
-
-    public function getSchemaPath(): ?string
-    {
-        return $this->schemaPath;
-    }
-
-    public function setSchemaPath(?string $schemaPath): self
-    {
-        $this->schemaPath = $schemaPath;
-
-        return $this;
-    }
-
     public function getDefault(): array
     {
         return $this->default;
@@ -96,6 +84,22 @@ class Config
         return $this;
     }
 
+    public function getDefaultConfig(): Config
+    {
+        if (empty($this->defaultConfig)) {
+            $this->defaultConfig = new Config();
+        }
+
+        return $this->defaultConfig;
+    }
+
+    public function setDefaultConfig(Config $defaultConfig): self
+    {
+        $this->defaultConfig = $defaultConfig;
+
+        return $this;
+    }
+
     public function fromArray(
         #[ArrayShape(self::CONFIG_SHAPE)]
         array $data
@@ -104,19 +108,17 @@ class Config
             [
                 'extend' => null,
                 'implement' => null,
-                'outputPath' => null,
-                'schemaPath' => null,
                 'default' => [],
             ],
             $data
         );
 
         $this->namespace = $data['namespace'];
+        $this->outputPath = $data['outputPath'];
         $this->extend = $data['extend'] ?? null;
         $this->implement = $data['implement'] ?? null;
-        $this->outputPath = $data['outputPath'] ?? null;
-        $this->schemaPath = $data['schemaPath'] ?? null;
         $this->default = $data['default'] ?? [];
+        $this->defaultConfig = $this->getDefaultConfig();
 
         return $this;
     }
@@ -126,11 +128,11 @@ class Config
     {
         return [
             'namespace' => $this->namespace,
+            'outputPath' => $this->outputPath,
             'extend' => $this->extend,
             'implement' => $this->implement,
-            'outputPath' => $this->outputPath ?? null,
-            'schemaPath' => $this->schemaPath ?? null,
             'default' => $this->default ?? [],
+            'defaultConfig' => $this->getDefaultConfig(),
         ];
     }
 }

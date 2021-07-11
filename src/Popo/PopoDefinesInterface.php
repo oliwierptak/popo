@@ -8,8 +8,6 @@ class PopoDefinesInterface
 {
     public const CONFIGURATION_SCHEMA_OPTION = '$';
 
-    public const CONFIGURATION_SCHEMA_SYMBOL = '^';
-
     public const CONFIGURATION_SCHEMA_CONFIG = 'config';
 
     public const CONFIGURATION_SCHEMA_PROPERTY = 'property';

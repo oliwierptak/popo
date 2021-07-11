@@ -1,10 +1,6 @@
 $:
-  namespace: &option_namespace App\Popo\Example
-  outputPath: &option_outputPath tests/App/Popo/
-
-^:
-  namespace: *option_namespace
-  outputPath: *option_outputPath
+  namespace: App\Popo\Example
+  outputPath: tests/
   extend: App\Popo\AbstractExample::class
   implement: App\Popo\ExampleInterface::class
   default:
@@ -12,10 +8,10 @@ $:
 
 Example:
   Foo:
-    const: #TODO
-      {name: buzz, value: 123, type: int}
+    config:
+      namespace: App\Popo\Example\Boo
     default:
-      bar: Bar::class
+      bar: \App\Popo\Example\Bar::class
     property: [
       {name: fooId, type: int},
       {name: title},
