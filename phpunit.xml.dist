@@ -13,6 +13,11 @@
             <html outputDirectory="./tests/logs/coverage"/>
         </report>-->
     </coverage>
+    <groups>
+        <exclude>
+            <group>skip</group>
+        </exclude>
+    </groups>
     <testsuites>
         <testsuite name="functional">
             <directory>./tests/suits/Functional</directory>

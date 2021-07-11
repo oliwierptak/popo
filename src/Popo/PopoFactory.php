@@ -6,11 +6,13 @@ namespace Popo;
 
 use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
+use Popo\Builder\TestBuilder;
 use Popo\Inspector\SchemaValueInspector;
 use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Model\PopoModel;
 use Popo\Builder\SchemaBuilder;
 use Popo\Builder\SchemaLoader;
+use Popo\Model\TestModel;
 
 class PopoFactory
 {
@@ -19,6 +21,14 @@ class PopoFactory
         return new PopoModel(
             $this->createSchemaBuilder(),
             $this->createPopoBuilder()
+        );
+    }
+
+    #[Pure] public function createTestModel(): TestModel
+    {
+        return new TestModel(
+            $this->createSchemaBuilder(),
+            $this->createTestBuilder()
         );
     }
 
@@ -37,6 +47,14 @@ class PopoFactory
     #[Pure] protected function createPopoBuilder(): PopoBuilder
     {
         return new PopoBuilder(
+            $this->createValueTypeReader(),
+            $this->createValueTypeWriter()
+        );
+    }
+
+    #[Pure] protected function createTestBuilder(): TestBuilder
+    {
+        return new TestBuilder(
             $this->createValueTypeReader(),
             $this->createValueTypeWriter()
         );

@@ -4,33 +4,15 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
-use Popo\Inspector\SchemaValueInspector;
-use Popo\Inspector\SchemaPropertyInspector;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
-use function fwrite;
 use function ucfirst;
 
-class PopoBuilder
+class PopoBuilder extends AbstractBuilder
 {
-    protected Schema $schema;
-    protected PhpFile $file;
-    protected PhpNamespace $namespace;
-    protected ClassType $class;
-    protected Method $method;
-
-    public function __construct(
-        protected SchemaValueInspector $valueInspector,
-        protected SchemaPropertyInspector $propertyInspector
-    ) {
-    }
-
     public function build(Schema $schema): void
     {
         $this->buildSchema($schema);
@@ -125,27 +107,6 @@ class PopoBuilder
         return $this;
     }
 
-    protected function addProperty(Property $property): self
-    {
-        $value = $property->getDefault();
-        if ($this->propertyInspector->isPopoProperty($property->getType())) {
-            $value = null;
-        }
-
-        if ($this->valueInspector->isConstValue($property->getDefault())) {
-            $value = new Literal($property->getDefault());
-        }
-
-        $this->class
-            ->addProperty($property->getName(), $value)
-            ->setProtected()
-            ->setNullable(true)
-            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setComment($property->getComment());
-
-        return $this;
-    }
-
     protected function addGetMethod(Property $property): self
     {
         $name = $property->getName();
@@ -189,16 +150,6 @@ EOF;
                 )
 
             );
-
-        return $this;
-    }
-
-    protected function addParameter(Property $property): self
-    {
-        $this->method
-            ->addParameter($property->getName())
-            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setNullable();
 
         return $this;
     }
@@ -391,28 +342,5 @@ EOF;
             ->setProtected();
 
         return $this;
-    }
-
-    public function print(): string
-    {
-        return (new PsrPrinter)->printFile($this->file);
-    }
-
-    public function save(): void
-    {
-        try {
-            $filename = sprintf(
-                '%s/%s/%s.php',
-                $this->schema->getConfigurator()->getOutputPath(),
-                str_replace('\\', '/', $this->schema->getNamespace()),
-                $this->schema->getName()
-            );
-
-            $handle = fopen($filename, 'w');
-            fwrite($handle, $this->print());
-        }
-        finally {
-            fclose($handle);
-        }
     }
 }

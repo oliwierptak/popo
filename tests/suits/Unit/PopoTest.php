@@ -6,7 +6,7 @@ namespace PopoTestsSuites\Unit;
 
 use App\Popo\Example\Foo;
 use PHPUnit\Framework\TestCase;
-use PopoTestsSuites\Functional\PopoFacadeTest;
+use PopoTestsSuites\Functional\GenerateTest;
 use UnexpectedValueException;
 
 /**
@@ -22,7 +22,7 @@ class PopoTest extends TestCase
             [
                 'fooId' => null,
                 'title' => 'Hakuna Matata',
-                'value' => PopoFacadeTest::TEST_BUZZ,
+                'value' => GenerateTest::TEST_BUZZ,
                 'bar' => [
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
@@ -42,7 +42,7 @@ class PopoTest extends TestCase
         $expected = [
             'fooId' => null,
             'title' => 'Lorem Ipsum',
-            'value' => PopoFacadeTest::TEST_BUZZ,
+            'value' => GenerateTest::TEST_BUZZ,
             'bar' => [
                 'title' => 'Bar Bar',
                 'buzz' => [
