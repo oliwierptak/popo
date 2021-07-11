@@ -26,9 +26,9 @@ class PopoTest extends TestCase
                 'bar' => [
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
-                        'value' => 'Buzzzzz'
+                        'value' => 'Buzzzzz',
                     ],
-                    'buzzCollection' => []
+                    'buzzCollection' => [],
                 ],
             ],
             $foo->toArray()
@@ -46,9 +46,9 @@ class PopoTest extends TestCase
             'bar' => [
                 'title' => 'Bar Bar',
                 'buzz' => [
-                    'value' => 'Foo Bar Buzz'
+                    'value' => 'Foo Bar Buzz',
                 ],
-                'buzzCollection' => []
+                'buzzCollection' => [],
             ],
         ];
 
@@ -73,6 +73,24 @@ class PopoTest extends TestCase
 
         $this->assertEquals('Hakuna Matata', $foo->getTitle());
         $this->assertEquals('Buzzzzz', $foo->getBar()->getBuzz()->getValue());
+    }
+
+    public function test_require_fooId(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Required property "fooId" is not set');
+
+        $foo = (new Foo);
+
+        $foo->requireFooId();
+    }
+
+    public function test_require(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertEquals('Hakuna Matata', $foo->requireTitle());
+        $this->assertEquals(GenerateTest::TEST_BUZZ, $foo->requireValue());
     }
 
     public function test_require_all(): void
