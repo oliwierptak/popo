@@ -1,0 +1,20 @@
+$:
+  namespace: App\Example\Bundle
+  outputPath: tests/
+  extend: App\AbstractExample::class
+  implement: App\ExampleInterface::class
+  comment: Popo Example. Auto-generated.
+  default:
+    title: Hakuna Matata
+
+Example:
+  Bar:
+    default:
+      title: Lorem Ipsum
+      buzz: Buzz::class
+      buzzCollection: []
+    property: [
+      {name: title}
+      {name: buzz, type: popo}
+      {name: buzzCollection, type: array, itemType: Buzz::class, itemName: buzz}
+    ]}}
