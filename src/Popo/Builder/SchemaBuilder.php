@@ -47,13 +47,7 @@ class SchemaBuilder
         return $result;
     }
 
-    /**
-     * @param \Popo\Schema\Config $defaultConfig
-     * @param $popoData
-     *
-     * @return \Popo\Schema\Config
-     */
-    protected function buildPopoConfig(Config $defaultConfig, $popoData): Config
+    protected function buildPopoConfig(Config $defaultConfig, array $popoData): Config
     {
         return (new Config)->fromArray(
             array_merge(
