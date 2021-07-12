@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use App\Example\Popo\Bar;
-use App\Example\Popo\Boo\Foo;
+use App\Example\Popo\Fizz\Foo;
 use App\Example\Popo\Buzz;
 use PHPUnit\Framework\TestCase;
 use PopoTestsSuites\Functional\GenerateTest;

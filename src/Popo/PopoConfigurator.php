@@ -9,6 +9,8 @@ class PopoConfigurator
     protected ?string $namespace;
     protected string $outputPath;
     protected string $schemaPath;
+    protected ?string $schemaPathFilter = 'bundle';
+    protected ?string $schemaFilename = '*.schema.yml';
 
     public function getNamespace(): ?string
     {
@@ -44,5 +46,29 @@ class PopoConfigurator
     public function getSchemaPath(): string
     {
         return $this->schemaPath;
+    }
+
+    public function getSchemaPathFilter(): ?string
+    {
+        return $this->schemaPathFilter;
+    }
+
+    public function setSchemaPathFilter(?string $schemaPathFilter): self
+    {
+        $this->schemaPathFilter = $schemaPathFilter;
+
+        return $this;
+    }
+
+    public function getSchemaFilename(): ?string
+    {
+        return $this->schemaFilename;
+    }
+
+    public function setSchemaFilename(?string $schemaFilename): self
+    {
+        $this->schemaFilename = $schemaFilename;
+
+        return $this;
     }
 }

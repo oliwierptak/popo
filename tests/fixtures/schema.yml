@@ -10,7 +10,7 @@ $:
 Example:
   Foo:
     config:
-      namespace: App\Example\Popo\Boo
+      namespace: App\Example\Popo\Fizz
       comment: Foo example lorem ipsum
     default:
       bar: \App\Example\Popo\Bar::class

@@ -4,28 +4,27 @@ declare(strict_types = 1);
 
 namespace Popo\Loader;
 
-use JetBrains\PhpStorm\ArrayShape;
+use Popo\Loader\Finder\FileLoader;
+use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
+use SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 class SchemaLoader
 {
-    /**
-     * @param \Symfony\Component\Finder\SplFileInfo[] $files
-     *
-     * @return array
-     */
-    #[ArrayShape(PopoDefinesInterface::SCHEMA_LOADER_BUILD_SHAPE)]
-    public function load(array $files): array
+    public function __construct(protected FileLoader $fileLoader)
+    {
+    }
+
+    public function load(PopoConfigurator $configurator): array
     {
         $result = [];
 
+        $files = $this->loadSchemaFiles($configurator);
         foreach ($files as $configurationFile) {
-            $data = Yaml::parseFile(
-                $configurationFile->getPathname(),
-                Yaml::PARSE_OBJECT & Yaml::PARSE_CONSTANT & Yaml::PARSE_DATETIME & Yaml::PARSE_CUSTOM_TAGS
-            );
-            $defaultConfig = $this->extractDefaultConfig($data);
+            $data = $this->loadYaml($configurationFile);
+
+            $defaultConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] ??= [];
             unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
 
             $result[] = [
@@ -39,12 +38,35 @@ class SchemaLoader
         return $result;
     }
 
-    protected function extractDefaultConfig(mixed $data): array
+    /**
+     * @param \Popo\PopoConfigurator $configurator
+     *
+     * @return \SplFileInfo[]
+     */
+    protected function loadSchemaFiles(PopoConfigurator $configurator): array
     {
-        if ($data === false) {
-            $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] = [];
+        $files = [
+            new SplFileInfo(
+                $configurator->getSchemaPath()
+            ),
+        ];
+
+        if (is_file($configurator->getSchemaPath()) === false) {
+            $files = $this->fileLoader->load(
+                $configurator->getSchemaPath(),
+                $configurator->getSchemaPathFilter(),
+                $configurator->getSchemaFilename()
+            );
         }
 
-        return $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION];
+        return $files;
+    }
+
+    protected function loadYaml(SplFileInfo $configurationFile): array
+    {
+        return Yaml::parseFile(
+            $configurationFile->getPathname(),
+            Yaml::PARSE_OBJECT & Yaml::PARSE_CONSTANT & Yaml::PARSE_DATETIME & Yaml::PARSE_CUSTOM_TAGS
+        );
     }
 }

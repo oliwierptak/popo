@@ -10,7 +10,7 @@ $:
 Example:
   Foo:
     config:
-      namespace: App\Example\Bundle\Boo
+      namespace: App\Example\Bundle\Fizz
       comment: Foo example lorem ipsum
     default:
       bar: \App\Example\Bundle\Bar::class

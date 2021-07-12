@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Popo\Loader\SchemaLoader;
+use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
 use Popo\Schema\Config;
 use Popo\Schema\Schema;
@@ -17,16 +17,9 @@ class SchemaBuilder
     {
     }
 
-    /**
-     * @param \Symfony\Component\Finder\SplFileInfo[]] $files
-     *
-     * @return array
-     */
-    #[ArrayShape(PopoDefinesInterface::SCHEMA_LOADER_BUILD_SHAPE)]
-    public function build(
-        array $files
-    ): array {
-        $data = $this->loader->load($files);
+    public function build(PopoConfigurator $configurator): array
+    {
+        $data = $this->loader->load($configurator);
 
         $result = [];
         foreach ($data as $schemaData) {
@@ -36,23 +29,17 @@ class SchemaBuilder
 
             foreach ($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] as $schemaName => $popoCollection) {
                 foreach ($popoCollection as $popoName => $popoData) {
-                    $popoConfig = (new Config)->fromArray(
-                        array_merge(
-                            $defaultConfig->toArray(),
-                            $popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? [],
-                        )
-                    )->setDefaultConfig($defaultConfig);
+                    $popoConfig = $this->buildPopoConfig(
+                        $defaultConfig,
+                        $popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? []
+                    );
 
                     $popoSchema = (new Schema)
                         ->setName($popoName)
                         ->setSchemaName($schemaName)
                         ->setConfig($popoConfig);
 
-                    $result[$schemaName][$popoName] = $this->buildPopoSchema(
-                        $popoSchema,
-                        $popoConfig,
-                        $popoData
-                    );
+                    $result[$schemaName][$popoName] = $this->buildPropertyCollection($popoSchema, $popoData);
                 }
             }
         }
@@ -60,32 +47,49 @@ class SchemaBuilder
         return $result;
     }
 
-    protected function buildPopoSchema(
-        Schema $popoSchema,
-        Config $config,
-        array $popoSchemaData
-    ): Schema {
-        $propertyCollection = $popoSchemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
-        $propertyDefaultConfig = $popoSchemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT] ?? [];
+    /**
+     * @param \Popo\Schema\Config $defaultConfig
+     * @param $popoData
+     *
+     * @return \Popo\Schema\Config
+     */
+    protected function buildPopoConfig(Config $defaultConfig, $popoData): Config
+    {
+        return (new Config)->fromArray(
+            array_merge(
+                $defaultConfig->toArray(),
+                $popoData,
+            )
+        )->setDefaultConfig($defaultConfig);
+    }
+
+    protected function buildPropertyCollection(Schema $schema, array $schemaData): Schema
+    {
+        $propertyCollection = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
+        $propertyDefaultConfig = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT] ?? [];
 
         $properties = [];
         foreach ($propertyCollection as $propertyData) {
-            $propertySchema = (new Property)
-                ->fromArray($propertyData);
-
-            $default = $propertySchema->getDefault() ??
-                $propertyDefaultConfig[$propertySchema->getName()] ??
-                $config->getDefault()[$propertySchema->getName()] ??
-                null;
-
-            $propertySchema
-                ->setDefault($default);
-
-            $properties[] = $propertySchema;
+            $properties[] = $this->buildProperty($schema, $propertyData, $propertyDefaultConfig);
         }
 
-        $popoSchema->setPropertyCollection($properties);
+        $schema->setPropertyCollection($properties);
 
-        return $popoSchema;
+        return $schema;
+    }
+
+    private function buildProperty(Schema $schema, array $propertyData, array $propertyDefaultConfig): Property
+    {
+        $property = (new Property)
+            ->fromArray($propertyData);
+
+        $default = $property->getDefault() ??
+            $propertyDefaultConfig[$property->getName()] ??
+            $schema->getConfig()->getDefault()[$property->getName()] ??
+            null;
+
+        $property->setDefault($default);
+
+        return $property;
     }
 }

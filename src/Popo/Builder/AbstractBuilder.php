@@ -15,7 +15,6 @@ use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function fwrite;
 use function pathinfo;
-use function unlink;
 use const PATHINFO_DIRNAME;
 
 abstract class AbstractBuilder
@@ -122,14 +121,10 @@ abstract class AbstractBuilder
     public function save(): void
     {
         try {
-            $filename = sprintf(
-                '%s/%s/%s.php',
-                $this->schema->getConfig()->getOutputPath(),
-                str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
-                $this->schema->getName()
-            );
+            $filename = $this->generateFilename();
 
             @mkdir(pathinfo($filename, PATHINFO_DIRNAME), 0775, true);
+
             $handle = fopen($filename, 'w');
             fwrite($handle, $this->print());
         }
@@ -138,15 +133,13 @@ abstract class AbstractBuilder
         }
     }
 
-    public function remove(): void
+    public function generateFilename(): string
     {
-        $filename = sprintf(
+        return sprintf(
             '%s/%s/%s.php',
             $this->schema->getConfig()->getOutputPath(),
             str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
             $this->schema->getName()
         );
-
-        @unlink($filename);
     }
 }
