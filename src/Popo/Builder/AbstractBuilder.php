@@ -10,8 +10,7 @@ use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
-use Popo\Inspector\SchemaValueInspector;
-use Popo\Inspector\SchemaPropertyInspector;
+use Popo\Schema\SchemaInspector;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function fwrite;
@@ -30,8 +29,7 @@ abstract class AbstractBuilder
     abstract public function build(Schema $schema): void;
 
     public function __construct(
-        protected SchemaValueInspector $valueInspector,
-        protected SchemaPropertyInspector $propertyInspector
+        protected SchemaInspector $propertyInspector
     ) {
     }
 
@@ -40,7 +38,7 @@ abstract class AbstractBuilder
         $this->schema = $schema;
 
         $this->file = new PhpFile();
-        $this->file->addComment('This file is auto-generated.'); //TODO add file section to config
+        $this->file->addComment($schema->getConfig()->getComment());
         $this->file->setStrictTypes();
 
         $this->namespace = $this->file->addNamespace(
@@ -70,13 +68,14 @@ abstract class AbstractBuilder
             $value = null;
         }
         else {
-            if ($this->valueInspector->isLiteral($property->getDefault())) {
+            if ($this->propertyInspector->isLiteral($property->getDefault())) {
                 $value = new Literal($property->getDefault());
             }
         }
 
         $this->class
             ->addProperty($property->getName(), $value)
+            ->setComment($property->getComment())
             ->setProtected()
             ->setNullable(true)
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
@@ -91,6 +90,26 @@ abstract class AbstractBuilder
             ->addParameter($property->getName())
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setNullable();
+
+        return $this;
+    }
+
+    protected function addExtend(): self
+    {
+        if ($this->schema->getConfig()->getExtend() !== null) {
+            $extend = str_replace('::class', '', $this->schema->getConfig()->getExtend());
+            $this->class->addExtend($extend);
+        }
+
+        return $this;
+    }
+
+    protected function addImplement(): self
+    {
+        if ($this->schema->getConfig()->getImplement() !== null) {
+            $implement = str_replace('::class', '', $this->schema->getConfig()->getImplement());
+            $this->class->addImplement($implement);
+        }
 
         return $this;
     }

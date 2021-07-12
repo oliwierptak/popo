@@ -13,6 +13,7 @@ class Config
         'outputPath' => "string",
         'extend' => "null|string",
         'implement' => "null|string",
+        'comment' => "string",
         'default' => "array",
         'defaultConfig' => Config::class,
     ];
@@ -21,6 +22,7 @@ class Config
     protected string $outputPath;
     protected ?string $extend;
     protected ?string $implement;
+    protected ?string $comment;
     protected array $default = [];
     protected Config $defaultConfig;
 
@@ -84,6 +86,18 @@ class Config
         return $this;
     }
 
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
     public function getDefaultConfig(): Config
     {
         if (empty($this->defaultConfig)) {
@@ -108,6 +122,7 @@ class Config
             [
                 'extend' => null,
                 'implement' => null,
+                'comment' => null,
                 'default' => [],
             ],
             $data
@@ -115,9 +130,10 @@ class Config
 
         $this->namespace = $data['namespace'];
         $this->outputPath = $data['outputPath'];
-        $this->extend = $data['extend'] ?? null;
-        $this->implement = $data['implement'] ?? null;
-        $this->default = $data['default'] ?? [];
+        $this->extend = $data['extend'];
+        $this->implement = $data['implement'];
+        $this->comment = $data['comment'];
+        $this->default = $data['default'];
         $this->defaultConfig = $this->getDefaultConfig();
 
         return $this;
@@ -131,7 +147,8 @@ class Config
             'outputPath' => $this->outputPath,
             'extend' => $this->extend,
             'implement' => $this->implement,
-            'default' => $this->default ?? [],
+            'comment' => $this->comment,
+            'default' => $this->default,
             'defaultConfig' => $this->getDefaultConfig(),
         ];
     }

@@ -5,8 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Builder;
 
 use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\PhpNamespace;
+use Popo\PopoDefinesInterface;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function ucfirst;
@@ -40,54 +39,6 @@ class PopoBuilder extends AbstractBuilder
         $this->save();
     }
 
-    protected function buildSchema(Schema $schema): self
-    {
-        $this->schema = $schema;
-
-        $this->file = new PhpFile();
-        $this->file->addComment('This file is auto-generated.'); //TODO add file section to config
-        $this->file->setStrictTypes();
-
-        $this->namespace = $this->file->addNamespace(
-            new PhpNamespace(
-                $schema->getConfig()->getNamespace()
-            )
-        );
-
-        $this->buildClass();
-
-        return $this;
-    }
-
-    protected function buildClass(): self
-    {
-        $this->namespace->addUse('UnexpectedValueException');
-
-        $this->class = $this->namespace->addClass($this->schema->getName());
-
-        return $this;
-    }
-
-    protected function addExtend(): self
-    {
-        if ($this->schema->getConfig()->getExtend() !== null) {
-            $extend = str_replace('::class', '', $this->schema->getConfig()->getExtend());
-            $this->class->addExtend($extend);
-        }
-
-        return $this;
-    }
-
-    protected function addImplement(): self
-    {
-        if ($this->schema->getConfig()->getImplement() !== null) {
-            $implement = str_replace('::class', '', $this->schema->getConfig()->getImplement());
-            $this->class->addImplement($implement);
-        }
-
-        return $this;
-    }
-
     protected function addMetadataShapeConstant(): self
     {
         $shapeProperties = [];
@@ -101,7 +52,7 @@ class PopoBuilder extends AbstractBuilder
             $shapeProperties[$property->getName()] = $property->getType();
 
             if ($this->propertyInspector->isPopoProperty($property->getType())) {
-                    $literalValue = new Literal(
+                $literalValue = new Literal(
                     $this->propertyInspector->generatePopoType(
                         $this->schema,
                         $property,
@@ -113,13 +64,12 @@ class PopoBuilder extends AbstractBuilder
                 $metadata[$property->getName()]['default'] = $literalValue;
             }
             else {
-                if ($this->valueInspector->isLiteral($property->getDefault())) {
+                if ($this->propertyInspector->isLiteral($property->getDefault())) {
                     $literalValue = new Literal($property->getDefault());
 
                     $metadata[$property->getName()]['default'] = $literalValue;
                 }
             }
-
         }
 
         $this->class
@@ -144,25 +94,35 @@ class PopoBuilder extends AbstractBuilder
         $name = $property->getName();
 
         $body = <<<EOF
-if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) {
-    \$popo = static::METADATA['${name}']['default'];
-    \$this->${name} = new \$popo;
-}
-
 return \$this->${name};
 EOF;
 
         $this->method = $this->class
             ->addMethod('get' . ucfirst($property->getName()))
+            ->setComment($property->getComment())
             ->setPublic()
             ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setReturnNullable()
             ->setBody(
                 sprintf(
                     $body,
                     $property->getName()
                 )
             );
+
+        if ($this->propertyInspector->isArrayOrMixed($property->getType()) === false) {
+            $this->method->setReturnNullable();
+        }
+
+        if ($property->getItemType()) {
+            $returnType = $property->getItemType();
+            if ($this->propertyInspector->isLiteral($property->getItemType())) {
+                $returnType = $this->propertyInspector->generatePopoItemType(
+                    $this->schema,
+                    $property,
+                );
+            }
+            $this->method->setComment(sprintf('@return %s[]', $returnType));
+        }
 
         return $this;
     }
@@ -171,6 +131,7 @@ EOF;
     {
         $this->method = $this->class
             ->addMethod('set' . ucfirst($property->getName()))
+            ->setComment($property->getComment())
             ->setPublic()
             ->setReturnType('self')
             ->setBody(
@@ -191,14 +152,26 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-if (\$this->${name} === null) {
+if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) {
+    \$popo = static::METADATA['${name}']['default'];
+    \$this->${name} = new \$popo;
+}
+
+if (%s) {
     throw new UnexpectedValueException('Required property "${name}" is not set');
 }
 return \$this->${name};
 EOF;
 
+        $condition = $property->getType() === PopoDefinesInterface::PROPERTY_TYPE_ARRAY
+            ? "empty(\$this->${name})"
+            : "\$this->${name} === null";
+
+        $body = sprintf($body, $condition);
+
         $this->class
             ->addMethod('require' . ucfirst($property->getName()))
+            ->setComment($property->getComment())
             ->setPublic()
             ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setBody($body);
@@ -275,7 +248,7 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null;
+return \$this->${name} !== null || (\$this->${name} !== null && \array_key_exists('${name}', \$this->updateMap));
 EOF;
 
         $this->class

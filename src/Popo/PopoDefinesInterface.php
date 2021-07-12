@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use Symfony\Component\Finder\SplFileInfo;
+
 class PopoDefinesInterface
 {
     public const CONFIGURATION_SCHEMA_OPTION = '$';
@@ -32,4 +34,7 @@ class PopoDefinesInterface
     public const PROPERTY_TYPE_CONST = 'const';
 
     public const PROPERTY_TYPE_POPO = 'popo';
+
+    //
+    public const SCHEMA_LOADER_BUILD_SHAPE = [SplFileInfo::class];
 }

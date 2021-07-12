@@ -7,12 +7,13 @@ namespace Popo;
 use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\TestBuilder;
-use Popo\Inspector\SchemaValueInspector;
-use Popo\Inspector\SchemaPropertyInspector;
+use Popo\Loader\Finder\FileLoader;
+use Popo\Schema\SchemaInspector;
 use Popo\Model\PopoModel;
 use Popo\Builder\SchemaBuilder;
-use Popo\Builder\SchemaLoader;
+use Popo\Loader\SchemaLoader;
 use Popo\Model\TestModel;
+use Symfony\Component\Finder\Finder;
 
 class PopoFactory
 {
@@ -20,7 +21,8 @@ class PopoFactory
     {
         return new PopoModel(
             $this->createSchemaBuilder(),
-            $this->createPopoBuilder()
+            $this->createPopoBuilder(),
+            $this->createFileLoader()
         );
     }
 
@@ -47,7 +49,6 @@ class PopoFactory
     #[Pure] protected function createPopoBuilder(): PopoBuilder
     {
         return new PopoBuilder(
-            $this->createValueTypeReader(),
             $this->createValueTypeWriter()
         );
     }
@@ -55,18 +56,17 @@ class PopoFactory
     #[Pure] protected function createTestBuilder(): TestBuilder
     {
         return new TestBuilder(
-            $this->createValueTypeReader(),
             $this->createValueTypeWriter()
         );
     }
 
-    #[Pure] protected function createValueTypeReader(): SchemaValueInspector
+    #[Pure] protected function createValueTypeWriter(): SchemaInspector
     {
-        return new SchemaValueInspector();
+        return new SchemaInspector();
     }
 
-    #[Pure] protected function createValueTypeWriter(): SchemaPropertyInspector
+    protected function createFileLoader(): FileLoader
     {
-        return new SchemaPropertyInspector();
+        return new FileLoader(Finder::create());
     }
 }

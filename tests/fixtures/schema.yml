@@ -1,19 +1,21 @@
 $:
-  namespace: App\Popo\Example
+  namespace: App\Example\Popo
   outputPath: tests/
-  extend: App\Popo\AbstractExample::class
-  implement: App\Popo\ExampleInterface::class
+  extend: App\AbstractExample::class
+  implement: App\ExampleInterface::class
+  comment: Popo Example. Auto-generated.
   default:
     title: Hakuna Matata
 
 Example:
   Foo:
     config:
-      namespace: App\Popo\Example\Boo
+      namespace: App\Example\Popo\Boo
+      comment: Foo example lorem ipsum
     default:
-      bar: \App\Popo\Example\Bar::class
+      bar: \App\Example\Popo\Bar::class
     property: [
-      {name: fooId, type: int},
+      {name: fooId, type: int, comment: Foo ID COMMENT},
       {name: title},
       {name: value, type: int, default: \PopoTestsSuites\Functional\GenerateTest::TEST_BUZZ},
       {name: bar, type: popo},
@@ -27,7 +29,7 @@ Example:
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: Buzz:class, itemName: buzz}
+      {name: buzzCollection, type: array, itemType: Buzz::class, itemName: buzz}
     ]}}
 
   Buzz:

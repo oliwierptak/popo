@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Builder;
 
 use JetBrains\PhpStorm\ArrayShape;
+use Popo\Loader\SchemaLoader;
 use Popo\PopoDefinesInterface;
 use Popo\Schema\Config;
 use Popo\Schema\Schema;
@@ -12,13 +13,16 @@ use Popo\Schema\Property;
 
 class SchemaBuilder
 {
-    protected const SCHEMA_SHAPE = [Schema::class];
-
     public function __construct(protected SchemaLoader $loader)
     {
     }
 
-    #[ArrayShape(self::SCHEMA_SHAPE)]
+    /**
+     * @param \Symfony\Component\Finder\SplFileInfo[]] $files
+     *
+     * @return array
+     */
+    #[ArrayShape(PopoDefinesInterface::SCHEMA_LOADER_BUILD_SHAPE)]
     public function build(
         array $files
     ): array {
