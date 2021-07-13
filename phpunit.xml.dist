@@ -8,10 +8,10 @@
         <include>
             <directory suffix=".php">./src</directory>
         </include>
-<!--        <report>
+        <report>
             <clover outputFile="./tests/logs/coverage.xml"/>
             <html outputDirectory="./tests/logs/coverage"/>
-        </report>-->
+        </report>
     </coverage>
     <groups>
         <exclude>

@@ -41,7 +41,7 @@ class GenerateTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundle/')
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);
