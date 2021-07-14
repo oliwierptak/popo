@@ -49,6 +49,11 @@ class Schema
         return $this->propertyCollection;
     }
 
+    /**
+     * @param \Popo\Schema\Property[] $propertyCollection
+     *
+     * @return $this
+     */
     public function setPropertyCollection(#[ArrayShape(self::PROPERTY_SHAPE)] array $propertyCollection): self
     {
         $this->propertyCollection = $propertyCollection;

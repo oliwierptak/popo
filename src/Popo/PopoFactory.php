@@ -15,7 +15,7 @@ use Symfony\Component\Finder\Finder;
 
 class PopoFactory
 {
-    #[Pure] public function createPopoModel(): PopoModel
+    public function createPopoModel(): PopoModel
     {
         return new PopoModel(
             $this->createSchemaBuilder(),
@@ -23,7 +23,7 @@ class PopoFactory
         );
     }
 
-    #[Pure] protected function createSchemaBuilder(): SchemaBuilder
+    protected function createSchemaBuilder(): SchemaBuilder
     {
         return new SchemaBuilder(
             $this->createSchemaLoader()

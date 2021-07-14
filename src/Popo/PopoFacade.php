@@ -8,7 +8,7 @@ class PopoFacade implements PopoFacadeInterface
 {
     protected PopoFactory $factory;
 
-    public function getFactory(): PopoFactory
+    protected function getFactory(): PopoFactory
     {
         if (empty($this->factory)) {
             $this->factory = new PopoFactory();

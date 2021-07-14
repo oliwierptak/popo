@@ -87,6 +87,7 @@ class Property
         return $this;
     }
 
+    #[ExpectedValues(self::EXPECTED_TYPE_VALUES)]
     public function getType(): string
     {
         return $this->type;

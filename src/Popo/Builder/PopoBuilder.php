@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Builder;
 
 use Nette\PhpGenerator\Literal;
-use Popo\PopoDefinesInterface;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function ucfirst;
@@ -23,7 +22,8 @@ class PopoBuilder extends AbstractBuilder
                 ->addParameter($property)
                 ->addGetMethod($property)
                 ->addRequireByMethod($property)
-                ->addHasPropertyValueMethod($property);
+                ->addHasPropertyValueMethod($property)
+                ->addAddItemMethod($property);
         }
 
         $this
@@ -113,16 +113,7 @@ EOF;
             $this->method->setReturnNullable();
         }
 
-        if ($property->getItemType()) {
-            $returnType = $property->getItemType();
-            if ($this->propertyInspector->isLiteral($property->getItemType())) {
-                $returnType = $this->propertyInspector->generatePopoItemType(
-                    $this->schema,
-                    $property,
-                );
-            }
-            $this->method->setComment(sprintf('@return %s[]', $returnType));
-        }
+        $this->processItemType($property);
 
         return $this;
     }
@@ -163,7 +154,7 @@ if (%s) {
 return \$this->${name};
 EOF;
 
-        $condition = $property->getType() === PopoDefinesInterface::PROPERTY_TYPE_ARRAY
+        $condition = $this->propertyInspector->isArray($property->getType())
             ? "empty(\$this->${name})"
             : "\$this->${name} === null";
 
@@ -339,6 +330,34 @@ EOF;
         return $this;
     }
 
+    protected function addAddItemMethod(Property $property): self
+    {
+        if ($property->getItemType() === null || $this->propertyInspector->isArray($property->getType()) === false) {
+            return $this;
+        }
+
+        $name = $property->getName();
+
+        $body = <<<EOF
+\$this->${name}[] = \$item;
+
+return \$this;
+EOF;
+
+        $this->class
+            ->addMethod('add'.ucfirst($name).'Item')
+            ->setPublic()
+            ->setReturnType('self')
+            ->setBody($body)
+            ->addParameter('item')
+            ->setType($this->propertyInspector->generatePopoItemType(
+                $this->schema,
+                $property
+            ));
+
+        return $this;
+    }
+
     protected function addUpdateMap(): self
     {
         $this->class
@@ -347,5 +366,26 @@ EOF;
             ->setProtected();
 
         return $this;
+    }
+
+    /**
+     * @param \Popo\Schema\Property $property
+     *
+     * @return Property
+     */
+    protected function processItemType(Property $property): Property
+    {
+        if ($property->getItemType()) {
+            $returnType = $property->getItemType();
+            if ($this->propertyInspector->isLiteral($property->getItemType())) {
+                $returnType = $this->propertyInspector->generatePopoItemType(
+                    $this->schema,
+                    $property,
+                );
+            }
+            $this->method->setComment(sprintf('@return %s[]', $returnType));
+        }
+
+        return $property;
     }
 }
