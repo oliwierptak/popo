@@ -18,8 +18,7 @@ class SchemaTest extends TestCase
         $property = (new Property)
             ->fromArray(
                 [
-                    'name' => 'fooId',
-                    'type' => 'int',
+                    'name' => 'fooId'
                 ]
             );
 
