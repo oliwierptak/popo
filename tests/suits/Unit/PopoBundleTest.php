@@ -7,8 +7,8 @@ namespace PopoTestsSuites\Unit;
 use App\Example\Bundle\Bar;
 use App\Example\Bundle\Fizz\Foo;
 use App\Example\Bundle\Buzz;
+use App\ExampleInterface;
 use PHPUnit\Framework\TestCase;
-use PopoTestsSuites\Functional\GenerateTest;
 use UnexpectedValueException;
 
 /**
@@ -24,7 +24,7 @@ class PopoBundleTest extends TestCase
             [
                 'fooId' => null,
                 'title' => 'Hakuna Matata',
-                'value' => GenerateTest::TEST_BUZZ,
+                'value' => ExampleInterface::TEST_BUZZ,
                 'bar' => [
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
@@ -44,7 +44,7 @@ class PopoBundleTest extends TestCase
         $expected = [
             'fooId' => null,
             'title' => 'Lorem Ipsum',
-            'value' => GenerateTest::TEST_BUZZ,
+            'value' => ExampleInterface::TEST_BUZZ,
             'bar' => [
                 'title' => 'Bar Bar',
                 'buzz' => [
@@ -94,7 +94,7 @@ class PopoBundleTest extends TestCase
         $this->assertNull($foo->getBar());
         $this->assertInstanceOf(Bar::class, $foo->requireBar());
         $this->assertEquals('Hakuna Matata', $foo->requireTitle());
-        $this->assertEquals(GenerateTest::TEST_BUZZ, $foo->requireValue());
+        $this->assertEquals(ExampleInterface::TEST_BUZZ, $foo->requireValue());
     }
 
     public function test_require_all_exception(): void

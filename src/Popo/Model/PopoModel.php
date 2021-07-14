@@ -7,6 +7,7 @@ namespace Popo\Model;
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
 use Popo\PopoConfigurator;
+use Popo\PopoResult;
 
 class PopoModel
 {
@@ -16,14 +17,26 @@ class PopoModel
     ) {
     }
 
-    public function generate(PopoConfigurator $configurator): void
+    public function generate(PopoConfigurator $configurator): PopoResult
     {
+        $result = new PopoResult;
         $data = $this->schemaBuilder->build($configurator);
 
         foreach ($data as $schemaName => $schemaCollection) {
             foreach ($schemaCollection as $popoName => $popoSchema) {
-                $this->popoBuilder->build($popoSchema);
+                /** @var \Popo\Schema\Schema $popoSchema */
+                $filename = $this->popoBuilder->build($popoSchema);
+                $entry = sprintf(
+                    '<fg=gray>%s:</><fg=green>%s\%s</> -> <fg=green>%s</>',
+                    $schemaName,
+                    $popoSchema->getConfig()->getNamespace(),
+                    $popoName,
+                    $filename,
+                );
+                $result->add($entry);
             }
         }
+
+        return $result;
     }
 }

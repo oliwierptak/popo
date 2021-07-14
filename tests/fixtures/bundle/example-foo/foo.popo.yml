@@ -17,7 +17,7 @@ Example:
     property: [
       {name: fooId, type: int, comment: Foo ID COMMENT},
       {name: title},
-      {name: value, type: int, default: \PopoTestsSuites\Functional\GenerateTest::TEST_BUZZ},
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
       {name: bar, type: popo},
     ]}}
 

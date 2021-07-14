@@ -6,6 +6,8 @@ namespace Popo;
 
 class PopoDefinesInterface
 {
+    public const VERSION = 5;
+
     public const CONFIGURATION_SCHEMA_OPTION = '$';
 
     public const CONFIGURATION_SCHEMA_CONFIG = 'config';

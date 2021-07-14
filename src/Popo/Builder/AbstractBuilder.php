@@ -25,7 +25,7 @@ abstract class AbstractBuilder
     protected ClassType $class;
     protected Method $method;
 
-    abstract public function build(Schema $schema): void;
+    abstract public function build(Schema $schema): string;
 
     public function __construct(
         protected SchemaInspector $propertyInspector

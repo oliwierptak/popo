@@ -24,9 +24,9 @@ class PopoFacade implements PopoFacadeInterface
         return $this;
     }
 
-    public function generate(PopoConfigurator $configurator): void
+    public function generate(PopoConfigurator $configurator): PopoResult
     {
-        $this->getFactory()
+        return $this->getFactory()
             ->createPopoModel()
             ->generate($configurator);
     }

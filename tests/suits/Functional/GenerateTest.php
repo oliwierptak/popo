@@ -14,8 +14,6 @@ use const POPO_TESTS_DIR;
  */
 class GenerateTest extends TestCase
 {
-    public const TEST_BUZZ = 123;
-
     public static function setUpBeforeClass(): void
     {
         echo shell_exec(sprintf(
@@ -29,7 +27,7 @@ class GenerateTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/schema.yml')
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo.yml')
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);
@@ -41,7 +39,7 @@ class GenerateTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/') //"bundle" comes form schemaPaths
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);

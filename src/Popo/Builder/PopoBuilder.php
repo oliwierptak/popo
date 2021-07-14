@@ -11,7 +11,7 @@ use function ucfirst;
 
 class PopoBuilder extends AbstractBuilder
 {
-    public function build(Schema $schema): void
+    public function build(Schema $schema): string
     {
         $this->buildSchema($schema);
 
@@ -37,6 +37,8 @@ class PopoBuilder extends AbstractBuilder
             ->addRequireAllMethod();
 
         $this->save();
+
+        return $this->generateFilename();
     }
 
     protected function addMetadataShapeConstant(): self
