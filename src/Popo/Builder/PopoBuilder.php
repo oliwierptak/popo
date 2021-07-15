@@ -352,6 +352,8 @@ EOF;
         $body = <<<EOF
 \$this->${name}[] = \$item;
 
+\$this->updateMap['${name}'] = true;
+
 return \$this;
 EOF;
 

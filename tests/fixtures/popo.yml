@@ -24,11 +24,10 @@ Example:
     default:
       title: Lorem Ipsum
       buzz: \App\Example\Popo\Fizz\Buzz::class
-      itemType: \App\Example\Popo\Fizz\Buzz::class
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemName: buzz}
+      {name: buzzCollection, type: array, itemType: \App\Example\Popo\Fizz\Buzz::class, itemName: buzz}
     ]}}
 
   Buzz:
