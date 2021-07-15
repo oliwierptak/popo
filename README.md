@@ -91,7 +91,7 @@ composer require popo/generator --dev
     vendor/bin/popo generate -o <output-path> -s <schema-path>
     ```
 
-_Note_: For example: `bin/popo generate -o tests/ -s tests/fixtures/`
+_Note_: For example: `bin/popo generate -o tests/ -s tests/fixtures`
 
 
 ### <output-path>
