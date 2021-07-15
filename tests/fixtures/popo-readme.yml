@@ -1,0 +1,17 @@
+$:
+  namespace: App\Example\Readme
+  outputPath: tests/
+
+Example:
+  Foo:
+    default:
+      bar: Bar::class
+    property: [
+      {name: title},
+      {name: bar, type: popo},
+    ]}}
+
+  Bar:
+    property: [
+      {name: title}
+    ]}}

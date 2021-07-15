@@ -52,6 +52,9 @@ class PopoBuilder extends AbstractBuilder
                 'default' => $property->getDefault(),
             ];
             $shapeProperties[$property->getName()] = $property->getType();
+            if ($this->isPropertyNullable($property)) {
+                $shapeProperties[$property->getName()] = 'null|'.$property->getType();
+            }
 
             if ($this->propertyInspector->isPopoProperty($property->getType())) {
                 $literalValue = new Literal(
@@ -196,7 +199,7 @@ EOF;
 
 if (empty(\$errors) === false) {
     throw new UnexpectedValueException(
-        \implode("\\n", \$errors)
+        implode("\\n", \$errors)
     );
 }
 
@@ -241,8 +244,14 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null || (\$this->${name} !== null && \array_key_exists('${name}', \$this->updateMap));
+return \$this->${name} !== null || (\$this->${name} !== null && array_key_exists('${name}', \$this->updateMap));
 EOF;
+
+        if ($this->propertyInspector->isArray($property->getType())) {
+            $body = <<<EOF
+return !empty(\$this->${name}) && array_key_exists('${name}', \$this->updateMap);
+EOF;
+        }
 
         $this->class
             ->addMethod('has' . ucfirst($property->getName()))

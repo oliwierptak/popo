@@ -10,10 +10,9 @@ $:
 Example:
   Foo:
     config:
-      namespace: App\Example\Bundle\Fizz
       comment: Foo example lorem ipsum
     default:
-      bar: \App\Example\Bundle\Bar::class
+      bar: Bar::class
     property: [
       {name: fooId, type: int, comment: Foo ID COMMENT},
       {name: title},

@@ -17,7 +17,7 @@
     "symfony/finder": "^5",
     "symfony/console": "^5",
     "symfony/yaml": "^5",
-    "nette/php-generator": "^3.5"
+    "nette/php-generator": "^3"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
@@ -30,17 +30,11 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "PopoTestsSuites\\": "tests/suits",
-      "PopoTestsStubs\\": "tests/stubs",
+      "PopoTestsSuites\\": "tests/suite",
       "App\\": "tests/App"
     }
   },
   "scripts": {
-    "popo": [
-      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo",
-      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme",
-      "bin/popo generate -sc=1 -scb=1 -sp=1 -c tests/fixtures/.popo-readme-modules"
-    ],
     "post-autoload-dump": [
       "chmod +x bin/popo"
     ],

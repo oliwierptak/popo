@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
+use JetBrains\PhpStorm\Pure;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
@@ -37,8 +38,11 @@ abstract class AbstractBuilder
         $this->schema = $schema;
 
         $this->file = new PhpFile();
-        $this->file->addComment($schema->getConfig()->getComment());
         $this->file->setStrictTypes();
+
+        if ($schema->getConfig()->getComment() !== null) {
+            $this->file->addComment($schema->getConfig()->getComment());
+        }
 
         $this->namespace = $this->file->addNamespace(
             new PhpNamespace(
@@ -72,11 +76,15 @@ abstract class AbstractBuilder
             }
         }
 
+        if ($value === null && $this->propertyInspector->isArray($property->getType())) {
+            $value = [];
+        }
+
         $this->class
             ->addProperty($property->getName(), $value)
             ->setComment($property->getComment())
             ->setProtected()
-            ->setNullable(true)
+            ->setNullable($this->isPropertyNullable($property))
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setComment($property->getComment());
 
@@ -85,10 +93,12 @@ abstract class AbstractBuilder
 
     protected function addParameter(Property $property): self
     {
+        $nullable = $this->isPropertyNullable($property);
+
         $this->method
             ->addParameter($property->getName())
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setNullable();
+            ->setNullable($nullable);
 
         return $this;
     }
@@ -141,5 +151,11 @@ abstract class AbstractBuilder
             str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
             $this->schema->getName()
         );
+    }
+
+    #[Pure] protected function isPropertyNullable(Property $property): bool
+    {
+        return $this->propertyInspector->isArrayOrMixed($property->getType()) === false ||
+            $this->propertyInspector->isPopoProperty($property->getType());
     }
 }

@@ -20,10 +20,10 @@
     </groups>
     <testsuites>
         <testsuite name="functional">
-            <directory>./tests/suits/Functional</directory>
+            <directory>./tests/suite/Functional</directory>
         </testsuite>
         <testsuite name="unit">
-            <directory>./tests/suits/Unit</directory>
+            <directory>./tests/suite/Unit</directory>
         </testsuite>
     </testsuites>
     <logging>

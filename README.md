@@ -2,23 +2,51 @@
 
 POPO - "Plain Old Php Object" was inspired by "Plain Old Java Object" (POJO) concept.
 
-POPO can also locate, load, validate, and combine JSON schemas to generate PHP source code files.
+POPO can also locate, load, validate, and combine YAML schema to generate PHP source code files.
 The schema supports inheritance, collections and encapsulation of other POPO objects.
 
-```php
-use App\Popo\Foo;
 
-$data = [        
+### POPO schema example
+
+A POPO schema is a YAML file describing POPO objects and their relations.
+
+```yaml
+$:
+  namespace: App\Example\Readme
+  outputPath: tests/
+
+Example:
+  Foo:
+    default:
+      bar: Bar::class
+    property: [
+      {name: title},
+      {name: bar, type: popo},
+    ]}}
+
+  Bar:
+    property: [
+      {name: title}
+    ]}}
+
+```
+
+### Example usage of generated files
+
+```php
+use App\Example\Readme\Foo;
+
+$data = [
     'title' => 'A title',
     'bar' => [
-        'value' => 'Bar lorem ipsum'
-    ]
+        'title' => 'Bar lorem ipsum',
+    ],
 ];
 
 $foo = (new Foo)->fromArray($data);
 
 echo $foo->getTitle();
-echo $foo->getBar()->getValue();
+echo $foo->getBar()->getTitle();
 ```
 
 ```
@@ -26,17 +54,25 @@ A title
 Bar lorem ipsum
 ```
 
-```php
-$foo->getBar()->setValue('new value');
-$data = $foo->toArray();
 
-$data = [
-    'title' => 'A title',
+```php
+use App\Example\Readme\Foo;
+
+$foo = (new Foo);
+$foo->requireBar()->setTitle('new value');
+
+print_r($foo->toArray());
+```
+
+```
+[
+    'title' => null,
     'bar' => [
-        'value' => 'new value'
-    ]
+        'title' => 'new value',
+    ],
 ];
 ```
+
 
 ## Installation
 
@@ -49,357 +85,85 @@ composer require popo/generator --dev
 
 1. Define schema, see [tests/fixtures](tests/fixtures/) for examples.
 
-2. Generate configuration file, run:
+2. Generate POPO files, run:
 
     ```sh
-    bin/popo configure
+    vendor/bin/popo generate -o <output-path> -s <schema-path>
     ```
 
-3. Generate POPO files, run:
-
-    ```sh
-    vendor/bin/popo generate -c <path-to-config>
-    ```
-
-_Note_: The command line arguments allow to globally override every setting. See `--help` for details.
+_Note_: For example: `bin/popo generate -o tests/ -s tests/fixtures/`
 
 
-## Schema directory structure
+#### <output-path>
+Root path where the files will be generated, the namespace folders will be created automatically.
+
+#### <schema-path>
+The `<schema-path>` parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
+
+### Schema Path Directory Structure
 Schema directory structure, each schema folder can contain multiple schema files:
 
 ```
-<schema directory>
+<bundles>
     |
-    |-- <bundle_name>
-    |       |_ schema
-    |         |- <bundle_name>.schema.json   
-    |         |- ...   
-    |         |- ...   
-    |         ...    
+    |-- <example-foo>
+    |         |_ foo.popo.yml
+    |         
+    |-- <example-bar>
+    |         |- bar.popo.yml   
+    |         |_ buzz.popo.yml   
     |
-    |-- <another_bundle_name>
-    |       |_ schema
-    |         |- <another_bundle_name>.schema.json  
-    |         |- ...
-    |         |- ...
-    |         ...
 ...
 ```
 
-For example:
-``` 
-popo
-    bar
-        schema
-            bar.schema.json
-            buzz.schema.json
-            foo.schema.json
-    buzz
-        schema
-            bar.schema.json
-            buzz.schema.json
+### Schema definition example
 
-    foo
-        schema
-            foo.schema.json
-```
+```yaml
+$:
+  namespace: App\Example\Popo
+  outputPath: tests/
+  extend: App\AbstractExample::class
+  implement: App\ExampleInterface::class
+  comment: Popo Example. Auto-generated.
+  default:
+    title: Hakuna Matata
 
-There can only be one `main schema` per bundle, produced from schema files under schema folder,
-because each of the schema definitions will be merged into one POPO object.
- 
-The additional schema definitions are merged together and added as properties to `main schema`.
+Example:
+  Foo:
+    config:
+      comment: Foo example lorem ipsum
+    default:
+      bar: Bar::class
+    property: [
+      {name: fooId, type: int, comment: Foo ID COMMENT},
+      {name: title},
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
+      {name: bar, type: popo},
+    ]}}
 
-## Schema definition
+  Bar:
+    default:
+      title: Lorem Ipsum
+      buzz: \App\Example\Popo\Fizz\Buzz::class
+      itemType: \App\Example\Popo\Fizz\Buzz::class
+    property: [
+      {name: title}
+      {name: buzz, type: popo}
+      {name: buzzCollection, type: array, itemName: buzz}
+    ]}}
 
-A schema is a JSON file describing a POPO object.
-
-```json
-{
-  "popoSchema": {
-    "name": "<string>",
-    "schema": "<propertySchema[]>",
-    "abstract": "[<bool>]",
-    "extends": "[<string>]",
-    "extension": "[<string>]",
-    "returnType": "[<string>]",
-    "withPopo": "[<bool>]",
-    "withInterface": "[<bool>]",
-    "namespaceWithInterface": "<string>"
-  },
-  "propertySchema": {
-    "name": "<string>",
-    "type": "<array|bool|float|int|string|popo|mixed>",
-    "collectionItem": "[<type>]",
-    "singular": "[<string>]",
-    "docblock": "[<string>]",
-    "default": "[<mixed>|\\Php\\Const::VALUE]"
-  }
-}
-```
-
-## POPO objects definition
-
-Schema examples:
-
-`foo/schema/foo.schema.json` schema:
-
-```json
-[
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "name": "title",
-        "type": "string"
-      }
-    ]
-  }
-]
-```
-
-
-`bar/schema/bar.schema.json` schema:
-
-```json
-[
-  {
-    "name": "Bar",
-    "schema": [
-      {
-        "name": "value",
-        "type": "string",
-        "default": "Lorem Ipsum Default Bar Value"
-      }
-    ]
-  }
-]
-```
-
-Running `generate` will produce two independent POPO objects `Foo` and `Bar`.
-
-
-## Relations, encapsulation and extending already defined schemas
-
-At this point `Foo` has no idea about `Bar` and vice versa.
-However, it could be useful to be able to extend schemas that were already defined. 
-
-To achieve this, you can either `add` or `inject` property.
-
-
-### Case 1: Single project / library
-
-[One schema file, no bundles](tests/fixtures/popo-readme/case1).
-
-`Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
-
-**`foo/schema/foo.schema.json`** schema:
-
-```json
-[
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "name": "bar",
-        "type": "Bar",
-        "docblock": "Adds Bar property to Foo from Foo bundle"
-      }
-    ]
-  },
-  {
-    "name": "Bar",
-    "schema": [
-      {
-        "name": "value",
-        "type": "string",
-        "default": "Lorem Ipsum Default Bar Value"
-      }
-    ]
-  }
-]
+  Buzz:
+    config:
+      namespace: App\Example\Popo\Fizz
+    property: [
+      {name: value, default: Buzzzzz}
+    ]}}
 
 ```
 
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case1` to generate files from this example.
+Run `bin/popo generate -o tests/ -s tests/fixtures/popo.yml` to generate files from this schema.
 
-
-### Case 2: Extend Bar schema from within Foo bundle.
-  
-[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case2).
-
-`Foo` adds `bar` as its own property. `Bar` does not need to be modified. 
-
-
-**`foo/schema/foo.schema.json`** schema:
-
-```json
-[
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "name": "bar",
-        "type": "Bar",
-        "docblock": "Adds Bar property to Foo from Foo bundle"
-      }
-    ]
-  }
-]
-```
-
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case2` to generate files from this example.
-
-
-### Case 3: Extend Foo schema from within Bar bundle.
-
-[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case3).
-
-
-`Bar` injects `bar` into `Foo`. `Foo` does not need to be modified. 
-
-
-**`bar/schema/foo.schema.json`** schema:
-
-```json
-[
-  {
-    "name": "Foo",
-    "schema": [
-      {
-        "name": "bar",
-        "type": "Bar",
-        "docblock": "Adds Bar property to Foo from Bar bundle"
-      }
-    ]
-  }
-]
-```
-
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case3` to generate files from this example.
-
-
-
-### Result
-
-POPO objects will be generated in the same way, regardless of direction of the dependencies. 
-
-```php
-use App\ValueReader\Foo;
-
-$data = [        
-    'title' => 'A title',
-    'bar' => [
-        'value' => 'Bar lorem ipsum'
-    ]
-];
-
-$foo = (new Foo)->fromArray($data);
-
-echo $foo->getTitle();
-echo $foo->getBar()->getValue();
-```
-
-```
-A title
-Bar lorem ipsum
-```
-
-
-## Case 4: Inheriting from an abstract class
-
-[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case4).
-
-Every POPO object can inherit form an existing, non-POPO (abstract) class,
-by using `extends` option, for example:
-
-`Foo` and `Bar` inherit from `\App\AbstractConfigurator`.  
-
-```json
-[
-  {
-    "name": "Foo",
-    "extends": "\\App\\AbstractConfigurator",
-    "schema": []
-  }
-,
-  {
-    "name": "Bar",
-    "extends": "\\App\\AbstractConfigurator",
-    "schema": []
-  }
-]
-```
-
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme case4` to generate files from this example. 
-
-
-## Case 5: Modules
-
-[Multiple schema files, multiple bundles](tests/fixtures/popo-readme/case5).
-
-The following modules are defined:
-
-- Customer
-- Location
-   - Address
-   - Street
-- Money
-   - Currency
-   - Price
-   - PriceCollector
-- Order
-   - Order
-   - OrderItem
-- Product
-
-There are simple relations between them, for example `Customer` is part of the `Order` schema.
-The `Money` is made of `Currency` and `Price`.
-The popo files will be generated under each module's directory.
-
-
-_Note:_: Run `bin/popo generate -c tests/fixtures/.popo-readme-modules` to generate files from this example.
-
-
-
-### Displaying configuration
-
-Increase console's verbosity to see configuration settings, eg.
-
-```
-bin/popo generate -c tests/fixtures/.popo -v
-
-POPO v3.0.0
-
-+---------------+--------------------------------------------------+
-| popo                                                             |
-+---------------+--------------------------------------------------+
-| schema        | tests/fixtures/popo/                             |
-| template      | templates/                                       |
-| output        | tests/App/Configurator/                          |
-| namespace     | App\Configurator                                 |
-| extends       |                                                  |
-+---------------+--------------------------------------------------+
-| extension     | .php                                             |
-| returnType    | self                                             |
-+---------------+--------------------------------------------------+
-| abstract      | 0                                                |
-| withPopo      | 1                                                |
-| withInterface | 0                                                |
-+---------------+--------------------------------------------------+
->> Generated 5 POPO files for "popo" section
-```
-
-
-See [tests/fixtures/](tests/fixtures/) for more schema examples.
-
+_Note_: See [tests/fixtures](tests/fixtures) for more examples.
 
 ### PHP version compatibility
 
@@ -407,6 +171,7 @@ See [tests/fixtures/](tests/fixtures/) for more schema examples.
 - POPO `v2.x` - PHP 7.2+
 - POPO `v3.x` - PHP 7.4+
 - POPO `v4.x` - PHP 8+
+- POPO `v5.x` - PHP 8+
 
 
 ### Composer script
@@ -416,7 +181,7 @@ Add popo scrip to composer and run `composer popo` in a project.
 ```
     "scripts": {
         "popo": [
-            "vendor/bin/popo generate -c .popo"
+            "vendor/bin/popo generate -o <output-path> -s <schema-path>"
         ]
     },
     "scripts-descriptions": {

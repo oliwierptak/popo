@@ -34,6 +34,20 @@ class GenerateTest extends TestCase
 
         $this->assertTrue(true);
     }
+
+    public function test_generate_from_file_readme_example(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+
+        $this->assertTrue(true);
+    }
+
     public function test_generate_from_path(): void
     {
         $facade = new PopoFacade();

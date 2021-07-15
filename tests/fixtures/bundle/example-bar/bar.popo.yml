@@ -11,10 +11,11 @@ Example:
   Bar:
     default:
       title: Lorem Ipsum
-      buzz: Buzz::class
+      buzz: \App\Example\Bundle\Fizz\Buzz::class
+      itemType: \App\Example\Bundle\Fizz\Buzz::class
       buzzCollection: []
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: Buzz::class, itemName: buzz}
+      {name: buzzCollection, type: array, itemName: buzz}
     ]}}

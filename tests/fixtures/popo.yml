@@ -10,10 +10,9 @@ $:
 Example:
   Foo:
     config:
-      namespace: App\Example\Popo\Fizz
       comment: Foo example lorem ipsum
     default:
-      bar: \App\Example\Popo\Bar::class
+      bar: Bar::class
     property: [
       {name: fooId, type: int, comment: Foo ID COMMENT},
       {name: title},
@@ -24,15 +23,17 @@ Example:
   Bar:
     default:
       title: Lorem Ipsum
-      buzz: Buzz::class
-      buzzCollection: []
+      buzz: \App\Example\Popo\Fizz\Buzz::class
+      itemType: \App\Example\Popo\Fizz\Buzz::class
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: Buzz::class, itemName: buzz}
+      {name: buzzCollection, type: array, itemName: buzz}
     ]}}
 
   Buzz:
+    config:
+      namespace: App\Example\Popo\Fizz
     property: [
       {name: value, default: Buzzzzz}
     ]}}

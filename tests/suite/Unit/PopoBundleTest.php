@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use App\Example\Bundle\Bar;
-use App\Example\Bundle\Fizz\Foo;
-use App\Example\Bundle\Buzz;
+use App\Example\Bundle\Foo;
+use App\Example\Bundle\Fizz\Buzz;
 use App\ExampleInterface;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
@@ -143,5 +143,18 @@ class PopoBundleTest extends TestCase
 
         $foo->setValue(null);
         $this->assertFalse($foo->hasValue());
+    }
+
+    public function test_has_collection(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertFalse($foo->requireBar()->hasBuzzCollection());
+
+        $foo->getBar()->setBuzzCollection([new Buzz]);
+        $this->assertTrue($foo->requireBar()->hasBuzzCollection());
+
+        $foo->getBar()->setBuzzCollection([]);
+        $this->assertFalse($foo->requireBar()->hasBuzzCollection());
     }
 }

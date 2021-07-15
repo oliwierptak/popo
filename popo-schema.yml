@@ -1,0 +1,17 @@
+$:
+  config:
+    schemaPath: string
+    templatePath: string
+    outputPath: string
+    namespace: string
+  property: [{
+    property: {
+      reference: {name: string},
+      name: string,
+      type: {type: string, supportedTypes: ['array','bool','float','int','string','popo','mixed','const']},
+      comment: string,
+      default: mixed,
+      itemType: string,
+      itemName: string
+    }
+  }]
