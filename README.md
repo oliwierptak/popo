@@ -94,11 +94,11 @@ composer require popo/generator --dev
 _Note_: For example: `bin/popo generate -o tests/ -s tests/fixtures`
 
 
-### <output-path>
+### output-path
 
 Root path where the files will be generated, the namespace folders will be created automatically.
 
-### <schema-path>
+### schema-path
 
 The `<schema-path>` parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
