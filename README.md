@@ -84,9 +84,6 @@ _Run `bin/popo generate -o tests/ -s tests/fixtures/popo-readme.yml` to generate
 The method `requireBar()` automatically creates instance of Bar in case where the value has not been set yet,
 while the method `getBar()` simply returns Bar's property value.
 
-_This only works for `popo` type properties._
-
-
 
 ## Installation
 
