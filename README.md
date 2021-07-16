@@ -130,6 +130,8 @@ This parameter is optional, but when set it overrides `namespace` configured in 
 
 Additional path filter when `schema-path` is set to a folder. Default value is `bundles`.
 
+This parameter is optional.
+
 Each schema folder can contain multiple schema files, for example:
 
 ```
@@ -144,7 +146,6 @@ Each schema folder can contain multiple schema files, for example:
     |
 ```
 
-_This parameter is optional._
 
 ## Popo Schema
 
