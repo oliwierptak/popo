@@ -155,7 +155,7 @@ if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) 
 }
 
 if (%s) {
-    throw new UnexpectedValueException('Required property "${name}" is not set');
+    throw new UnexpectedValueException('Required value of "${name}" has not been set');
 }
 return \$this->${name};
 EOF;

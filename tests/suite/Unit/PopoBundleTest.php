@@ -82,7 +82,7 @@ class PopoBundleTest extends TestCase
     public function test_require_fooId(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Required property "fooId" is not set');
+        $this->expectExceptionMessage('Required value of "fooId" has not been set');
 
         $foo = (new Foo);
 
@@ -102,8 +102,8 @@ class PopoBundleTest extends TestCase
     public function test_require_all_exception(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Required property "fooId" is not set');
-        $this->expectExceptionMessage('Required property "value" is not set');
+        $this->expectExceptionMessage('Required value of "fooId" has not been set');
+        $this->expectExceptionMessage('Required value of "value" has not been set');
 
         $foo = (new Foo)->setValue(null);
 
@@ -124,7 +124,7 @@ class PopoBundleTest extends TestCase
     public function test_require_all_collection_exception(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Required property "buzzCollection" is not set');
+        $this->expectExceptionMessage('Required value of "buzzCollection" has not been set');
 
         $bar = (new Bar());
 
