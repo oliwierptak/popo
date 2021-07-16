@@ -27,7 +27,7 @@ class PopoModel
                 /** @var \Popo\Schema\Schema $popoSchema */
                 $filename = $this->popoBuilder->build($popoSchema);
                 $entry = sprintf(
-                    '<fg=gray>%s:</><fg=green>%s\%s</> -> <fg=green>%s</>',
+                    '<fg=yellow>%s:</><fg=green>%s\%s</> -> <fg=green>%s</>',
                     $schemaName,
                     $popoSchema->getConfig()->getNamespace(),
                     $popoName,
