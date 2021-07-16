@@ -134,6 +134,7 @@ class Config
     ): self {
         $data = array_merge(
             [
+                'namespaceRoot' => null,
                 'extend' => null,
                 'implement' => null,
                 'comment' => null,
@@ -143,6 +144,7 @@ class Config
         );
 
         $this->namespace = $data['namespace'];
+        $this->namespaceRoot = $data['namespaceRoot'];
         $this->outputPath = $data['outputPath'];
         $this->extend = $data['extend'];
         $this->implement = $data['implement'];
@@ -158,6 +160,7 @@ class Config
     {
         return [
             'namespace' => $this->namespace,
+            'namespaceRoot' => $this->namespaceRoot,
             'outputPath' => $this->outputPath,
             'extend' => $this->extend,
             'implement' => $this->implement,

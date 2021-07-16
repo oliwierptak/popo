@@ -1,0 +1,16 @@
+$:
+  namespace: ExampleBundle\BundleApp\Readme
+  namespaceRoot: ExampleBundle\
+  outputPath: tests/
+
+Example:
+  Foo:
+    property: [
+      {name: title},
+      {name: bar, type: popo, default: Bar::class},
+    ]}}
+
+  Bar:
+    property: [
+      {name: title}
+    ]}}

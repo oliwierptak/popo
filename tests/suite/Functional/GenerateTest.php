@@ -20,6 +20,11 @@ class GenerateTest extends TestCase
             'rm -rf %s',
             POPO_TESTS_DIR . 'App/Example/',
         ));
+
+        echo shell_exec(sprintf(
+            'rm -rf %s',
+            POPO_TESTS_DIR . 'BundleApp/Readme/',
+        ));
     }
 
     public function test_generate_from_file(): void
@@ -41,6 +46,19 @@ class GenerateTest extends TestCase
 
         $configurator = (new PopoConfigurator())
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+
+        $this->assertTrue(true);
+    }
+
+    public function test_generate_from_file_readme_example_with_namespace_root(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme-namespace-root.yml')
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);

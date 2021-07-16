@@ -1,2 +1,4 @@
-Example/*
+*
 !.gitignore
+!AbstractExample.php
+!ExampleInterface.php

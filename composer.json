@@ -31,7 +31,8 @@
   "autoload-dev": {
     "psr-4": {
       "PopoTestsSuites\\": "tests/suite",
-      "App\\": "tests/App"
+      "App\\": "tests/App",
+      "ExampleBundle\\BundleApp\\": "tests/BundleApp"
     }
   },
   "scripts": {

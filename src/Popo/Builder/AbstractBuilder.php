@@ -133,12 +133,16 @@ abstract class AbstractBuilder
      */
     public function save(): void
     {
+        $handle = null;
         try {
             $filename = $this->generateFilename();
 
             @mkdir(pathinfo($filename, PATHINFO_DIRNAME), 0775, true);
 
             $handle = fopen($filename, 'w');
+            if ($handle === false) {
+                throw new \RuntimeException('Could not open file: "'.$filename.'" for writing');
+            }
             fwrite($handle, $this->print());
         }
         finally {
@@ -151,7 +155,13 @@ abstract class AbstractBuilder
     public function generateFilename(): string
     {
         $path = rtrim($this->schema->getConfig()->getOutputPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $this->schema->getConfig()->getNamespace());
+        $namespace = $this->schema->getConfig()->getNamespace();
+        $namespaceRoot = trim((string)$this->schema->getConfig()->getNamespaceRoot());
+
+        if ($namespaceRoot !== '') {
+            $namespace = str_replace($namespaceRoot, '' , $namespace);
+        }
+        $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
 
         return sprintf(
             '%s/%s/%s.php',
