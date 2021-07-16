@@ -99,10 +99,13 @@ composer require popo/generator --dev
 2. Generate POPO files, run:
 
     ```sh
-    vendor/bin/popo generate -s <schema-path> [-o <output-path>] [-m <namespace>] [-p <schema-path-filter>]
+    vendor/bin/popo generate -s <schema-path> \
+      [-o <output-path>] \
+      [-m <namespace>] \
+      [-p <schema-path-filter>]
     ```
 
-_Note: For example: `bin/popo generate -s tests/fixtures`_
+_For example: `bin/popo generate -s tests/fixtures`_
 
 ### <schema-path>
 
