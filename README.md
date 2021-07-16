@@ -132,7 +132,7 @@ Additional path filter when `schema-path` is set to a folder. Default value is `
 
 This parameter is optional.
 
-Each schema folder can contain multiple schema files, for example:
+For example, each schema folder can contain multiple schema files:
 
 ```
 <bundles>
