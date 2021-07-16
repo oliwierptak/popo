@@ -358,6 +358,8 @@ EOF;
 return \$this;
 EOF;
 
+        $name = $property->getItemName() ?? $property->getName();
+
         $this->class
             ->addMethod('add'.ucfirst($name).'Item')
             ->setPublic()
