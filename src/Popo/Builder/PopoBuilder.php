@@ -51,8 +51,9 @@ class PopoBuilder extends AbstractBuilder
                 'type' => $property->getType(),
                 'default' => $property->getDefault(),
             ];
+
             $shapeProperties[$property->getName()] = $property->getType();
-            if ($this->isPropertyNullable($property)) {
+            if ($this->propertyInspector->isPropertyNullable($property)) {
                 $shapeProperties[$property->getName()] = 'null|'.$property->getType();
             }
 
@@ -244,12 +245,12 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null || (\$this->${name} !== null && array_key_exists('${name}', \$this->updateMap));
+return \$this->${name} !== null;
 EOF;
 
         if ($this->propertyInspector->isArray($property->getType())) {
             $body = <<<EOF
-return !empty(\$this->${name}) && array_key_exists('${name}', \$this->updateMap);
+return !empty(\$this->${name});
 EOF;
         }
 

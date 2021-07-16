@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use JetBrains\PhpStorm\Pure;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
@@ -16,6 +15,7 @@ use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function fwrite;
 use function pathinfo;
+use const DIRECTORY_SEPARATOR;
 use const PATHINFO_DIRNAME;
 
 abstract class AbstractBuilder
@@ -84,7 +84,7 @@ abstract class AbstractBuilder
             ->addProperty($property->getName(), $value)
             ->setComment($property->getComment())
             ->setProtected()
-            ->setNullable($this->isPropertyNullable($property))
+            ->setNullable($this->propertyInspector->isPropertyNullable($property))
             ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
             ->setComment($property->getComment());
 
@@ -93,7 +93,7 @@ abstract class AbstractBuilder
 
     protected function addParameter(Property $property): self
     {
-        $nullable = $this->isPropertyNullable($property);
+        $nullable = $this->propertyInspector->isPropertyNullable($property);
 
         $this->method
             ->addParameter($property->getName())
@@ -128,6 +128,9 @@ abstract class AbstractBuilder
         return (new PsrPrinter)->printFile($this->file);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function save(): void
     {
         try {
@@ -139,23 +142,22 @@ abstract class AbstractBuilder
             fwrite($handle, $this->print());
         }
         finally {
-            fclose($handle);
+            if ($handle) {
+                fclose($handle);
+            }
         }
     }
 
     public function generateFilename(): string
     {
+        $path = rtrim($this->schema->getConfig()->getOutputPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $this->schema->getConfig()->getNamespace());
+
         return sprintf(
             '%s/%s/%s.php',
-            $this->schema->getConfig()->getOutputPath(),
-            str_replace('\\', '/', $this->schema->getConfig()->getNamespace()),
+            rtrim($path, DIRECTORY_SEPARATOR),
+            $namespace,
             $this->schema->getName()
         );
-    }
-
-    #[Pure] protected function isPropertyNullable(Property $property): bool
-    {
-        return $this->propertyInspector->isArrayOrMixed($property->getType()) === false ||
-            $this->propertyInspector->isPopoProperty($property->getType());
     }
 }

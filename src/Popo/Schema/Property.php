@@ -31,10 +31,10 @@ class Property
 
     protected string $name;
     protected string $type = 'string';
-    protected ?string $comment;
-    protected ?string $itemType;
-    protected ?string $itemName;
-    protected mixed $default;
+    protected ?string $comment = null;
+    protected ?string $itemType = null;
+    protected ?string $itemName = null;
+    protected mixed $default = null;
 
     #[ArrayShape(self::PROPERTY_SHAPE)]
     public function toArray(): array

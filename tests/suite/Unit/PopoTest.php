@@ -32,6 +32,7 @@ class PopoTest extends TestCase
                     ],
                     'buzzCollection' => [],
                 ],
+                'test' => null
             ],
             $foo->toArray()
         );
@@ -52,6 +53,7 @@ class PopoTest extends TestCase
                 ],
                 'buzzCollection' => [],
             ],
+            'test' => null
         ];
 
         $foo->fromArray($expected);
@@ -110,7 +112,10 @@ class PopoTest extends TestCase
 
     public function test_require_all(): void
     {
-        $foo = (new Foo)->setFooId(1);
+        $foo = (new Foo)
+            ->setFooId(1)
+            ->setTest('abc');
+
         $foo->requireAll();
 
         $this->assertEquals(1, $foo->getFooId());

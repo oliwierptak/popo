@@ -4,11 +4,9 @@ $:
 
 Example:
   Foo:
-    default:
-      bar: Bar::class
     property: [
       {name: title},
-      {name: bar, type: popo},
+      {name: bar, type: popo, default: Bar::class},
     ]}}
 
   Bar:

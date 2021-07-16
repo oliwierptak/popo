@@ -18,5 +18,6 @@ Example:
       {name: title},
       {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
       {name: bar, type: popo},
+      {name: test, type: mixed},
     ]}}
 

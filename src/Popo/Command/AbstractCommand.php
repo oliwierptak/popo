@@ -8,6 +8,7 @@ use Popo\PopoFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 abstract class AbstractCommand extends Command
 {
@@ -31,6 +32,11 @@ abstract class AbstractCommand extends Command
     {
         $output->writeln(sprintf('<fg=yellow>POPO</> <fg=green>v%s</>', PopoDefinesInterface::VERSION));
 
-        return $this->executeCommand($input, $output);
+        try {
+            return $this->executeCommand($input, $output);
+        } catch (Throwable $exception) {
+            $output->writeln(sprintf('<fg=red>ERROR</> <fg=white>v%s</>', $exception->getMessage()));
+            return 1;
+        }
     }
 }

@@ -1,17 +1,24 @@
-$:
-  config:
-    schemaPath: string
-    templatePath: string
-    outputPath: string
-    namespace: string
-  property: [{
-    property: {
-      reference: {name: string},
+$: #shared configuration
+  namespace: string
+  outputPath: string
+  extend: string|null
+  implement: string|null
+  comment: string|null
+  default: array
+
+SchemaName:
+  PopoName:
+    config: array #overrides values from shared configuration, except for 'default'
+    default: array #overrides values from shared configuration's 'default'
+    property: [{
       name: string,
-      type: {type: string, supportedTypes: ['array','bool','float','int','string','popo','mixed','const']},
-      comment: string,
-      default: mixed,
-      itemType: string,
-      itemName: string
-    }
-  }]
+      type: {
+        type: string|null,
+        default: string,
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+      },
+      comment: string|null,
+      default: mixed|null,
+      itemType: string|null,
+      itemName: string|null
+    }]

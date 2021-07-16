@@ -11,6 +11,7 @@ class Config
     protected const CONFIG_SHAPE = [
         'namespace' => "string",
         'outputPath' => "string",
+        'namespaceRoot' => "null|string",
         'extend' => "null|string",
         'implement' => "null|string",
         'comment' => "string",
@@ -20,9 +21,10 @@ class Config
 
     protected string $namespace;
     protected string $outputPath;
-    protected ?string $extend;
-    protected ?string $implement;
-    protected ?string $comment;
+    protected ?string $namespaceRoot = null;
+    protected ?string $extend = null;
+    protected ?string $implement = null;
+    protected ?string $comment = null;
     protected array $default = [];
     protected Config $defaultConfig;
 
@@ -46,6 +48,18 @@ class Config
     public function setOutputPath(string $outputPath): self
     {
         $this->outputPath = $outputPath;
+
+        return $this;
+    }
+
+    public function getNamespaceRoot(): ?string
+    {
+        return $this->namespaceRoot;
+    }
+
+    public function setNamespaceRoot(?string $namespaceRoot): self
+    {
+        $this->namespaceRoot = $namespaceRoot;
 
         return $this;
     }

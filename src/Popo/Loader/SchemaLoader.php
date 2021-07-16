@@ -27,6 +27,9 @@ class SchemaLoader
             $defaultConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] ??= [];
             unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
 
+            $defaultConfig['outputPath'] = $configurator->getOutputPath() ?: $defaultConfig['outputPath'];
+            $defaultConfig['namespace'] = $configurator->getNamespace() ?: $defaultConfig['namespace'];
+
             $result[] = [
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_FILENAME => $configurationFile,
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $defaultConfig,

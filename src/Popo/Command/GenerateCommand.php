@@ -6,6 +6,7 @@ use Popo\PopoConfigurator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function implode;
 
 class GenerateCommand extends AbstractCommand
 {
@@ -15,7 +16,11 @@ class GenerateCommand extends AbstractCommand
 
     const OPTION_SCHEMA_PATH = 'schemaPath';
 
+    const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
+
     const OPTION_OUTPUT_PATH = 'outputPath';
+
+    const OPTION_NAMESPACE = 'namespace';
 
     protected function configure(): void
     {
@@ -25,19 +30,33 @@ class GenerateCommand extends AbstractCommand
             ->setDefinition(
                 [
                     new InputOption(
-                        static::OPTION_OUTPUT_PATH,
-                        'o',
-                        InputOption::VALUE_REQUIRED,
-                        'Output path where the files will be generated',
-                        ''
-                    ),
-                    new InputOption(
                         static::OPTION_SCHEMA_PATH,
                         's',
                         InputOption::VALUE_REQUIRED,
                         'Path to schema file or directory',
                         'popo.yml'
                     ),
+                    new InputOption(
+                        static::OPTION_OUTPUT_PATH,
+                        'o',
+                        InputOption::VALUE_OPTIONAL,
+                        'Output path where the files will be generated. Overrides schema settings when set.',
+                        ''
+                    ),
+                    new InputOption(
+                        static::OPTION_NAMESPACE,
+                        'm',
+                        InputOption::VALUE_OPTIONAL,
+                        'Namespace of generated POPO files. Overrides schema settings when set.',
+                        ''
+                    ),
+                    new InputOption(
+                        static::OPTION_SCHEMA_PATH_FILTER,
+                        'p',
+                        InputOption::VALUE_OPTIONAL,
+                        'Path filter to match POPO schema files.',
+                        'bundles'
+                    )
                 ]
             );
     }
@@ -50,7 +69,7 @@ class GenerateCommand extends AbstractCommand
 
         $result = $this->facade->generate($configurator);
 
-        $output->writeln(\implode("\n", $result->getGeneratedFiles()));
+        $output->writeln(implode("\n", $result->getGeneratedFiles()));
         $output->writeln('All done.');
 
         return 0;
@@ -59,7 +78,15 @@ class GenerateCommand extends AbstractCommand
     protected function buildConfigurator(InputInterface $input, OutputInterface $output): PopoConfigurator
     {
         return (new PopoConfigurator())
-            ->setOutputPath($input->getOption(static::OPTION_OUTPUT_PATH))
-            ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH));
+            ->setOutputPath(
+                $input->hasOption(static::OPTION_OUTPUT_PATH) ? $input->getOption(static::OPTION_OUTPUT_PATH) : null
+            )
+            ->setNamespace(
+                $input->hasOption(static::OPTION_NAMESPACE) ? $input->getOption(static::OPTION_NAMESPACE) : null
+            )
+            ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
+            ->setSchemaPathFilter(
+                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : 'bundles'
+            );
     }
 }

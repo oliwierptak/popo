@@ -83,12 +83,18 @@ class SchemaInspector
             $type === PopoDefinesInterface::PROPERTY_TYPE_MIXED;
     }
 
+    #[Pure] public function isPropertyNullable(Property $property): bool
+    {
+        return $this->isArrayOrMixed($property->getType()) === false ||
+            $this->isPopoProperty($property->getType());
+    }
+
     #[Pure] public function isLiteral(mixed $value): bool
     {
         if (is_string($value) === false) {
             return false;
         }
 
-        return strpos($value, '::') !== false || strpos($value, '::class') !== false;
+        return strpos($value, '::') !== false;
     }
 }

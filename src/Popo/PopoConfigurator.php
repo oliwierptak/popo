@@ -6,8 +6,8 @@ namespace Popo;
 
 class PopoConfigurator
 {
-    protected ?string $namespace;
-    protected string $outputPath;
+    protected ?string $namespace = null;
+    protected ?string $outputPath = null;
     protected string $schemaPath;
     protected ?string $schemaPathFilter = '';
     protected ?string $schemaFilename = '*.popo.yml';
@@ -24,12 +24,12 @@ class PopoConfigurator
         return $this;
     }
 
-    public function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
         return $this->outputPath;
     }
 
-    public function setOutputPath(string $outputPath): self
+    public function setOutputPath(?string $outputPath): self
     {
         $this->outputPath = $outputPath;
 
