@@ -169,7 +169,7 @@ class PopoBundleTest extends TestCase
 
         $this->assertFalse($foo->requireBar()->hasBuzzCollection());
 
-        $foo->requireBar()->addBuzzItem(new Buzz());
+        $foo->requireBar()->addBuzz(new Buzz());
         $this->assertTrue($foo->requireBar()->hasBuzzCollection());
     }
 }

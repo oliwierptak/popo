@@ -361,10 +361,10 @@ EOF;
 return \$this;
 EOF;
 
-        $name = $property->getItemName() ?? $property->getName();
+        $name = $property->getItemName() ?? $property->getName() . 'Item';
 
         $this->class
-            ->addMethod('add' . ucfirst($name) . 'Item')
+            ->addMethod('add' . ucfirst($name))
             ->setPublic()
             ->setReturnType('self')
             ->setBody($body)
