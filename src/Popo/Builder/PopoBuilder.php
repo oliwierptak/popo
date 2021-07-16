@@ -54,7 +54,7 @@ class PopoBuilder extends AbstractBuilder
 
             $shapeProperties[$property->getName()] = $property->getType();
             if ($this->propertyInspector->isPropertyNullable($property)) {
-                $shapeProperties[$property->getName()] = 'null|'.$property->getType();
+                $shapeProperties[$property->getName()] = 'null|' . $property->getType();
             }
 
             if ($this->propertyInspector->isPopoProperty($property->getType())) {
@@ -249,13 +249,16 @@ return \$this->${name} !== null;
 EOF;
 
         if ($this->propertyInspector->isArray($property->getType())) {
+            $name = $property->getItemName() ?? $property->getName();
+            $name = $name . 'Collection';
+
             $body = <<<EOF
 return !empty(\$this->${name});
 EOF;
         }
 
         $this->class
-            ->addMethod('has' . ucfirst($property->getName()))
+            ->addMethod('has' . ucfirst($name))
             ->setPublic()
             ->setReturnType('bool')
             ->setBody($body);
@@ -361,15 +364,17 @@ EOF;
         $name = $property->getItemName() ?? $property->getName();
 
         $this->class
-            ->addMethod('add'.ucfirst($name).'Item')
+            ->addMethod('add' . ucfirst($name) . 'Item')
             ->setPublic()
             ->setReturnType('self')
             ->setBody($body)
             ->addParameter('item')
-            ->setType($this->propertyInspector->generatePopoItemType(
-                $this->schema,
-                $property
-            ));
+            ->setType(
+                $this->propertyInspector->generatePopoItemType(
+                    $this->schema,
+                    $property
+                )
+            );
 
         return $this;
     }
