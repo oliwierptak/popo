@@ -77,6 +77,11 @@ class SchemaInspector
         return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY;
     }
 
+    #[Pure] public function isBool(string $type): bool
+    {
+        return $type === PopoDefinesInterface::PROPERTY_TYPE_BOOL;
+    }
+
     #[Pure] public function isArrayOrMixed(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY ||

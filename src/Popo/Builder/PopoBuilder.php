@@ -103,8 +103,9 @@ class PopoBuilder extends AbstractBuilder
 return \$this->${name};
 EOF;
 
+        $prefix = $this->propertyInspector->isBool($property->getType()) ? 'is' : 'get';
         $this->method = $this->class
-            ->addMethod('get' . ucfirst($property->getName()))
+            ->addMethod($prefix . ucfirst($property->getName()))
             ->setComment($property->getComment())
             ->setPublic()
             ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
