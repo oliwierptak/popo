@@ -1,5 +1,5 @@
 $:
-  namespace: ExampleBundle\BundleApp\Readme
+  namespace: ExampleBundle\AppWithNamespaceRoot\Readme
   namespaceRoot: ExampleBundle\
   outputPath: tests/
 

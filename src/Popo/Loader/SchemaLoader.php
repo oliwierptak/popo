@@ -24,15 +24,12 @@ class SchemaLoader
         foreach ($files as $configurationFile) {
             $data = $this->loadYaml($configurationFile);
 
-            $defaultConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] ??= [];
+            $config = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] ?? [];
             unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
-
-            $defaultConfig['outputPath'] = $configurator->getOutputPath() ?: $defaultConfig['outputPath'];
-            $defaultConfig['namespace'] = $configurator->getNamespace() ?: $defaultConfig['namespace'];
 
             $result[] = [
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_FILENAME => $configurationFile,
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $defaultConfig,
+                PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $config,
                 PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => $data,
 
             ];
@@ -41,11 +38,6 @@ class SchemaLoader
         return $result;
     }
 
-    /**
-     * @param \Popo\PopoConfigurator $configurator
-     *
-     * @return \SplFileInfo[]
-     */
     protected function loadSchemaFiles(PopoConfigurator $configurator): array
     {
         $files = [

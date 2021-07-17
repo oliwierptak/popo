@@ -18,6 +18,8 @@ class GenerateCommand extends AbstractCommand
 
     const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
 
+    const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
+
     const OPTION_OUTPUT_PATH = 'outputPath';
 
     const OPTION_NAMESPACE = 'namespace';
@@ -35,6 +37,13 @@ class GenerateCommand extends AbstractCommand
                         InputOption::VALUE_REQUIRED,
                         'Path to schema file or directory',
                         'popo.yml'
+                    ),
+                    new InputOption(
+                        static::OPTION_SCHEMA_CONFIG_FILENAME,
+                        'c',
+                        InputOption::VALUE_OPTIONAL,
+                        'Path to shared schema configuration',
+                        ''
                     ),
                     new InputOption(
                         static::OPTION_OUTPUT_PATH,
@@ -63,7 +72,7 @@ class GenerateCommand extends AbstractCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): int
     {
-        $configurator = $this->buildConfigurator($input, $output);
+        $configurator = $this->buildConfigurator($input);
 
         $output->writeln('Generating POPO files... ');
 
@@ -75,7 +84,7 @@ class GenerateCommand extends AbstractCommand
         return 0;
     }
 
-    protected function buildConfigurator(InputInterface $input, OutputInterface $output): PopoConfigurator
+    protected function buildConfigurator(InputInterface $input): PopoConfigurator
     {
         return (new PopoConfigurator())
             ->setOutputPath(
@@ -87,6 +96,9 @@ class GenerateCommand extends AbstractCommand
             ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(
                 $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : null
+            )
+            ->setSchemaConfigFilename(
+                $input->hasOption(static::OPTION_SCHEMA_CONFIG_FILENAME) ? $input->getOption(static::OPTION_SCHEMA_CONFIG_FILENAME) : null
             );
     }
 }

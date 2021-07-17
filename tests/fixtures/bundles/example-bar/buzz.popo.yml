@@ -1,9 +1,5 @@
 $:
   namespace: App\Example\Bundle\Fizz
-  outputPath: tests/
-  extend: App\AbstractExample::class
-  implement: App\ExampleInterface::class
-  comment: Popo Example. Auto-generated.
 
 Example:
   Buzz:

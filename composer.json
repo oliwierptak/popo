@@ -32,7 +32,7 @@
     "psr-4": {
       "PopoTestsSuites\\": "tests/suite",
       "App\\": "tests/App",
-      "ExampleBundle\\BundleApp\\": "tests/BundleApp"
+      "ExampleBundle\\AppWithNamespaceRoot\\": "tests/AppWithNamespaceRoot"
     }
   },
   "scripts": {

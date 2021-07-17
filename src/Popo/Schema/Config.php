@@ -9,8 +9,8 @@ use JetBrains\PhpStorm\ArrayShape;
 class Config
 {
     protected const CONFIG_SHAPE = [
-        'namespace' => "string",
-        'outputPath' => "string",
+        'namespace' => "null|string",
+        'outputPath' => "null|string",
         'namespaceRoot' => "null|string",
         'extend' => "null|string",
         'implement' => "null|string",

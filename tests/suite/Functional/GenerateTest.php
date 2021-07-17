@@ -72,7 +72,9 @@ class GenerateTest extends TestCase
 
         $configurator = (new PopoConfigurator())
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/') //"bundle" comes form schemaPaths
-            ->setOutputPath(POPO_TESTS_DIR);
+            ->setOutputPath(POPO_TESTS_DIR)
+            ->setSchemaPathFilter('bundles')
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
 
         $facade->generate($configurator);
 

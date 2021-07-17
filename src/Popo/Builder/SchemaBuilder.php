@@ -19,16 +19,22 @@ class SchemaBuilder
 
     public function build(PopoConfigurator $configurator): array
     {
+        $sharedConfig = $this->generateSharedConfig($configurator);
         $data = $this->loader->load($configurator);
 
         $result = [];
         foreach ($data as $schemaData) {
-            $defaultConfig = (new Config)->fromArray(
-                $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG]
-            );
+            $schemaData = $this->mergeSchemaConfiguration($schemaData, $sharedConfig);
+
+            $defaultConfig = (new Config)->fromArray(array_merge(
+                $sharedConfig,
+                $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? [],
+            ));
 
             foreach ($schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] as $schemaName => $popoCollection) {
                 foreach ($popoCollection as $popoName => $popoData) {
+                    $popoData = $this->mergePropertyConfiguration($popoData, $sharedConfig);
+
                     $popoConfig = $this->buildPopoConfig(
                         $defaultConfig,
                         $popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? []
@@ -47,6 +53,41 @@ class SchemaBuilder
         return $result;
     }
 
+    protected function generateSharedConfig(PopoConfigurator $configurator): mixed
+    {
+        $sharedConfig = [];
+        $schemaConfigFilename = trim((string) $configurator->getSchemaConfigFilename());
+        if ($schemaConfigFilename) {
+            $sharedConfigurator = (new PopoConfigurator())
+                ->setSchemaPath($configurator->getSchemaConfigFilename());
+
+            $sharedConfig = $this->loader->load($sharedConfigurator);
+            $sharedConfig = current($sharedConfig);
+        }
+
+        return $sharedConfig;
+    }
+
+    protected function mergeSchemaConfiguration(array $schemaData, array $sharedConfig): array
+    {
+        $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] = array_merge(
+            $sharedConfig[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? [],
+            $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG] ?? [],
+        );
+
+        return $schemaData;
+    }
+
+    protected function mergePropertyConfiguration(array $schemaData, array $sharedConfig): array
+    {
+        $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] = array_merge(
+            $sharedConfig[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [],
+            $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [],
+        );
+
+        return $schemaData;
+    }
+
     protected function buildPopoConfig(Config $defaultConfig, array $popoData): Config
     {
         return (new Config)->fromArray(
@@ -62,7 +103,7 @@ class SchemaBuilder
         $propertyCollection = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
         $propertyDefaultConfig = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT] ?? [];
 
-        $propertyCollection = array_merge($propertyCollection, $schema->getConfig()->getPropertyCollection());
+        $propertyCollection = array_merge($schema->getConfig()->getPropertyCollection(), $propertyCollection);
         $propertyCollection = $this->sortPropertyCollectionByName($propertyCollection);
 
         $properties = [];

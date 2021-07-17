@@ -1,12 +1,3 @@
-$:
-  namespace: App\Example\Bundle
-  outputPath: tests/
-  extend: App\AbstractExample::class
-  implement: App\ExampleInterface::class
-  comment: Popo Example. Auto-generated.
-  default:
-    title: Hakuna Matata
-
 Example:
   Foo:
     config:
