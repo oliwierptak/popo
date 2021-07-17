@@ -128,7 +128,7 @@ This parameter is optional, but when set it overrides `namespace` configured in 
 
 ### [schema-path-filter]
 
-Additional path filter when `schema-path` is set to a folder. Default value is `bundles`.
+Additional path filter when `schema-path` is set to a folder.
 
 This parameter is optional.
 

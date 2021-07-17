@@ -57,7 +57,7 @@ class SchemaLoader
         if (is_file($configurator->getSchemaPath()) === false) {
             $files = $this->fileLoader->load(
                 $configurator->getSchemaPath(),
-                $configurator->getSchemaPathFilter(),
+                (string) $configurator->getSchemaPathFilter(),
                 $configurator->getSchemaFilename()
             );
         }

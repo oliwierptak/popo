@@ -9,7 +9,7 @@ class PopoConfigurator
     protected ?string $namespace = null;
     protected ?string $outputPath = null;
     protected string $schemaPath;
-    protected ?string $schemaPathFilter = '';
+    protected ?string $schemaPathFilter = null;
     protected ?string $schemaFilename = '*.popo.yml';
 
     public function getNamespace(): ?string

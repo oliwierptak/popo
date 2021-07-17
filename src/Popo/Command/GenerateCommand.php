@@ -55,7 +55,7 @@ class GenerateCommand extends AbstractCommand
                         'p',
                         InputOption::VALUE_OPTIONAL,
                         'Path filter to match POPO schema files.',
-                        'bundles'
+                        ''
                     )
                 ]
             );
@@ -86,7 +86,7 @@ class GenerateCommand extends AbstractCommand
             )
             ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(
-                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : 'bundles'
+                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : null
             );
     }
 }
