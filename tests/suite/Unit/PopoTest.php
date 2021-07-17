@@ -29,10 +29,13 @@ class PopoTest extends TestCase
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
                         'value' => 'Buzzzzz',
+                        'idForAll' => 0,
                     ],
                     'buzzCollection' => [],
+                    'idForAll' => 0,
                 ],
-                'test' => null
+                'test' => null,
+                'idForAll' => 0,
             ],
             $foo->toArray()
         );
@@ -50,10 +53,13 @@ class PopoTest extends TestCase
                 'title' => 'Bar Bar',
                 'buzz' => [
                     'value' => 'Foo Bar Buzz',
+                    'idForAll' => 0,
                 ],
                 'buzzCollection' => [],
+                'idForAll' => 0,
             ],
-            'test' => null
+            'test' => null,
+            'idForAll' => 0,
         ];
 
         $foo->fromArray($expected);

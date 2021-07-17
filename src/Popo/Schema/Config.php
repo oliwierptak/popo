@@ -16,6 +16,7 @@ class Config
         'implement' => "null|string",
         'comment' => "string",
         'default' => "array",
+        'property' => "array",
         'defaultConfig' => Config::class,
     ];
 
@@ -26,6 +27,7 @@ class Config
     protected ?string $implement = null;
     protected ?string $comment = null;
     protected array $default = [];
+    protected array $propertyCollection = [];
     protected Config $defaultConfig;
 
     public function getNamespace(): string
@@ -128,6 +130,18 @@ class Config
         return $this;
     }
 
+    public function getPropertyCollection(): array
+    {
+        return $this->propertyCollection;
+    }
+
+    public function setPropertyCollection(array $propertyCollection): self
+    {
+        $this->propertyCollection = $propertyCollection;
+
+        return $this;
+    }
+
     public function fromArray(
         #[ArrayShape(self::CONFIG_SHAPE)]
         array $data
@@ -139,6 +153,7 @@ class Config
                 'implement' => null,
                 'comment' => null,
                 'default' => [],
+                'property' => [],
             ],
             $data
         );
@@ -150,6 +165,7 @@ class Config
         $this->implement = $data['implement'];
         $this->comment = $data['comment'];
         $this->default = $data['default'];
+        $this->propertyCollection = $data['property'];
         $this->defaultConfig = $this->getDefaultConfig();
 
         return $this;
@@ -166,6 +182,7 @@ class Config
             'implement' => $this->implement,
             'comment' => $this->comment,
             'default' => $this->default,
+            'property' => $this->propertyCollection,
             'defaultConfig' => $this->getDefaultConfig(),
         ];
     }

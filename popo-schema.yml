@@ -5,6 +5,7 @@ $: #shared configuration
   implement: string|null
   comment: string|null
   default: array
+  property: array #shared properties
 
 SchemaName:
   PopoName:

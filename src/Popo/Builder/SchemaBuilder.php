@@ -62,6 +62,9 @@ class SchemaBuilder
         $propertyCollection = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
         $propertyDefaultConfig = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT] ?? [];
 
+        $propertyCollection = array_merge($propertyCollection, $schema->getConfig()->getPropertyCollection());
+        $propertyCollection = $this->sortPropertyCollectionByName($propertyCollection);
+
         $properties = [];
         foreach ($propertyCollection as $propertyData) {
             $properties[] = $this->buildProperty($schema, $propertyData, $propertyDefaultConfig);
@@ -85,5 +88,17 @@ class SchemaBuilder
         $property->setDefault($default);
 
         return $property;
+    }
+
+    protected function sortPropertyCollectionByName(array $propertyCollection): array
+    {
+        usort(
+            $propertyCollection,
+            function (mixed $a, mixed $b) {
+                return strcasecmp($a['name'], $b['name']);
+            }
+        );
+
+        return $propertyCollection;
     }
 }

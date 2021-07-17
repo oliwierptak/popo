@@ -6,6 +6,9 @@ $:
   comment: Popo Example. Auto-generated.
   default:
     title: Hakuna Matata
+  property: [
+    {name: idForAll, type: int, default: 0, comment: This id is for all}
+  ]
 
 Example:
   Foo:
