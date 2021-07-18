@@ -1,5 +1,5 @@
 $:
-  namespace: ExampleBundle\AppWithNamespaceRoot\Readme
+  namespace: ExampleBundle\AppWithNamespaceRoot\Example
   namespaceRoot: ExampleBundle\
   outputPath: tests/
 
@@ -8,6 +8,7 @@ Example:
     property: [
       {name: title},
       {name: bar, type: popo, default: Bar::class},
+      {name: flag, type: bool, default: false},
     ]}}
 
   Bar:

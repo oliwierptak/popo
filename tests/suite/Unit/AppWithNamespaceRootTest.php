@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace PopoTestsSuites\Unit;
 
-use ExampleBundle\AppWithNamespaceRoot\Readme\Bar;
-use ExampleBundle\AppWithNamespaceRoot\Readme\Foo;
+use ExampleBundle\AppWithNamespaceRoot\Example\Bar;
+use ExampleBundle\AppWithNamespaceRoot\Example\Foo;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
@@ -21,8 +21,9 @@ class AppWithNamespaceRootTest extends TestCase
         $this->assertEquals(
             [
                 'title' => null,
+                'flag' => false,
                 'bar' => [
-                    'title' => null
+                    'title' => null,
                 ],
             ],
             $foo->toArray()
@@ -35,6 +36,7 @@ class AppWithNamespaceRootTest extends TestCase
 
         $expected = [
             'title' => 'Lorem Ipsum',
+            'flag' => false,
             'bar' => [
                 'title' => null,
             ],

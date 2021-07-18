@@ -27,7 +27,7 @@ class GenerateTest extends TestCase
         ));
     }
 
-    public function test_generate_from_file(): void
+    public function test_generate_from_popo_file(): void
     {
         $facade = new PopoFacade();
 
@@ -40,7 +40,7 @@ class GenerateTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function test_generate_from_file_readme_example(): void
+    public function test_generate_readme_example(): void
     {
         $facade = new PopoFacade();
 
@@ -53,12 +53,12 @@ class GenerateTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function test_generate_from_file_readme_example_with_namespace_root(): void
+    public function test_generate_example_with_namespace_root(): void
     {
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme-namespace-root.yml')
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-namespace-root.yml')
             ->setOutputPath(POPO_TESTS_DIR);
 
         $facade->generate($configurator);
@@ -71,7 +71,7 @@ class GenerateTest extends TestCase
         $facade = new PopoFacade();
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/') //"bundle" comes form schemaPaths
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
             ->setOutputPath(POPO_TESTS_DIR)
             ->setSchemaPathFilter('bundles')
             ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
