@@ -39,7 +39,7 @@
     "post-autoload-dump": [
       "chmod +x bin/popo"
     ],
-    "tests": [
+    "test": [
       "vendor/bin/phpunit --no-coverage --testdox --testsuite functional,unit"
     ]
   },
