@@ -246,7 +246,7 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null;
+return \$this->${name} !== null || (\$this->${name} !== null && array_key_exists('${name}', \$this->updateMap));
 EOF;
 
         if ($this->propertyInspector->isArray($property->getType())) {
@@ -254,7 +254,7 @@ EOF;
             $name = $name . 'Collection';
 
             $body = <<<EOF
-return !empty(\$this->${name});
+return !empty(\$this->${name}) && array_key_exists('${name}', \$this->updateMap);
 EOF;
         }
 
