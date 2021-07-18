@@ -103,10 +103,17 @@ class AppWithNamespaceRootTest extends TestCase
         $this->assertEquals('abc', $foo->getTitle());
     }
 
-    public function test_boolean_gegter(): void
+    public function test_boolean_getter(): void
     {
         $foo = (new Foo)->setShouldExecute(true);
 
         $this->assertTrue($foo->shouldExecute());
+    }
+
+    public function test_boolean_requester(): void
+    {
+        $foo = (new Foo)->setShouldExecute(true);
+
+        $this->assertTrue($foo->requireShouldExecute());
     }
 }
