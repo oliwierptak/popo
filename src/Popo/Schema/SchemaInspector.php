@@ -100,6 +100,6 @@ class SchemaInspector
             return false;
         }
 
-        return strpos($value, '::') !== false;
+        return strpos($value, '::') !== false || $value[0] === '\\';
     }
 }
