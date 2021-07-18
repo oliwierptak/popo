@@ -21,7 +21,7 @@ class AppWithNamespaceRootTest extends TestCase
         $this->assertEquals(
             [
                 'title' => null,
-                'flag' => false,
+                'shouldExecute' => false,
                 'bar' => [
                     'title' => null,
                 ],
@@ -36,7 +36,7 @@ class AppWithNamespaceRootTest extends TestCase
 
         $expected = [
             'title' => 'Lorem Ipsum',
-            'flag' => false,
+            'shouldExecute' => false,
             'bar' => [
                 'title' => null,
             ],
@@ -101,5 +101,12 @@ class AppWithNamespaceRootTest extends TestCase
         $foo->requireAll();
 
         $this->assertEquals('abc', $foo->getTitle());
+    }
+
+    public function test_boolean_gegter(): void
+    {
+        $foo = (new Foo)->setShouldExecute(true);
+
+        $this->assertTrue($foo->shouldExecute());
     }
 }
