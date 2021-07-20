@@ -17,7 +17,6 @@ class Config
         'comment' => "string",
         'default' => "array",
         'property' => "array",
-        'defaultConfig' => Config::class,
     ];
 
     protected string $namespace;
@@ -28,7 +27,6 @@ class Config
     protected ?string $comment = null;
     protected array $default = [];
     protected array $propertyCollection = [];
-    protected Config $defaultConfig;
 
     public function getNamespace(): string
     {
@@ -114,22 +112,6 @@ class Config
         return $this;
     }
 
-    public function getDefaultConfig(): Config
-    {
-        if (empty($this->defaultConfig)) {
-            $this->defaultConfig = new Config();
-        }
-
-        return $this->defaultConfig;
-    }
-
-    public function setDefaultConfig(Config $defaultConfig): self
-    {
-        $this->defaultConfig = $defaultConfig;
-
-        return $this;
-    }
-
     public function getPropertyCollection(): array
     {
         return $this->propertyCollection;
@@ -166,7 +148,6 @@ class Config
         $this->comment = $data['comment'];
         $this->default = $data['default'];
         $this->propertyCollection = $data['property'];
-        $this->defaultConfig = $this->getDefaultConfig();
 
         return $this;
     }
@@ -183,7 +164,6 @@ class Config
             'comment' => $this->comment,
             'default' => $this->default,
             'property' => $this->propertyCollection,
-            'defaultConfig' => $this->getDefaultConfig(),
         ];
     }
 }

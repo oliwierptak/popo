@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace PopoTestsSuites\Unit;
 
-use App\Example\Bundle\Bar;
-use App\Example\Bundle\Fizz\Buzz;
-use App\Example\Bundle\Foo;
+use App\Example\Shared\Bar;
+use App\Example\Shared\Fizz\Buzz;
+use App\Example\Shared\Foo;
 use App\ExampleInterface;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;

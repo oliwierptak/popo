@@ -12,3 +12,15 @@ Example:
       {name: test, type: mixed},
     ]}}
 
+AnotherExample:
+  $:
+    default:
+      idForAnotherExample: 200 # default is 100 because property value overrides shared values
+    property: [
+      {name: idForAnotherExample, type: int, default: 100, comment: This id is for AnotherExample}
+    ]
+  AnotherFoo:
+    property: [
+      {name: title},
+    ]}}
+

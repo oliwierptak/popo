@@ -2,9 +2,9 @@ Example:
   Bar:
     default:
       title: Lorem Ipsum
-      buzz: \App\Example\Bundle\Fizz\Buzz::class
+      buzz: \App\Example\Shared\Fizz\Buzz::class
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: \App\Example\Bundle\Fizz\Buzz::class, itemName: buzz}
+      {name: buzzCollection, type: array, itemType: \App\Example\Shared\Fizz\Buzz::class, itemName: buzz}
     ]}}

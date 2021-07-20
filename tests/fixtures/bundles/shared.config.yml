@@ -1,5 +1,5 @@
 $:
-  namespace: App\Example\Bundle
+  namespace: App\Example\Shared
   outputPath: tests/
   extend: App\AbstractExample::class
   implement: App\ExampleInterface::class
