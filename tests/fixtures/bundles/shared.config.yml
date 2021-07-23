@@ -8,4 +8,20 @@ $:
     title: Hakuna Matata
   property: [
     {name: idForAll, type: int, default: 0, comment: This id is for all}
-  ]
+  ]}}
+
+Example:
+  $:
+    default:
+      sharedExampleId: 123
+    property: [
+      {name: sharedExampleId, type: int}
+    ]}}
+
+AnotherExample:
+  $:
+    default:
+      anotherTestSharedId: 567
+    property: [
+      {name: anotherTestSharedId, type: int}
+    ]}}

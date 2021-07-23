@@ -8,3 +8,11 @@ Example:
       {name: buzz, type: popo}
       {name: buzzCollection, type: array, itemType: \App\Example\Shared\Fizz\Buzz::class, itemName: buzz}
     ]}}
+
+AnotherExample:
+  AnotherBar:
+    default:
+      title: Another Lorem Ipsum
+    property: [
+      {name: title}
+    ]}}

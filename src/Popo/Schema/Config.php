@@ -8,15 +8,13 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class Config
 {
-    protected const CONFIG_SHAPE = [
+    public const CONFIG_SHAPE = [
         'namespace' => "null|string",
         'outputPath' => "null|string",
         'namespaceRoot' => "null|string",
         'extend' => "null|string",
         'implement' => "null|string",
-        'comment' => "string",
-        'default' => "array",
-        'property' => "array",
+        'comment' => "null|string"
     ];
 
     protected string $namespace;
@@ -25,8 +23,6 @@ class Config
     protected ?string $extend = null;
     protected ?string $implement = null;
     protected ?string $comment = null;
-    protected array $default = [];
-    protected array $propertyCollection = [];
 
     public function getNamespace(): string
     {
@@ -88,18 +84,6 @@ class Config
         return $this;
     }
 
-    public function getDefault(): array
-    {
-        return $this->default;
-    }
-
-    public function setDefault(array $default): self
-    {
-        $this->default = $default;
-
-        return $this;
-    }
-
     public function getComment(): ?string
     {
         return $this->comment;
@@ -108,18 +92,6 @@ class Config
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getPropertyCollection(): array
-    {
-        return $this->propertyCollection;
-    }
-
-    public function setPropertyCollection(array $propertyCollection): self
-    {
-        $this->propertyCollection = $propertyCollection;
 
         return $this;
     }
@@ -134,8 +106,6 @@ class Config
                 'extend' => null,
                 'implement' => null,
                 'comment' => null,
-                'default' => [],
-                'property' => [],
             ],
             $data
         );
@@ -146,8 +116,6 @@ class Config
         $this->extend = $data['extend'];
         $this->implement = $data['implement'];
         $this->comment = $data['comment'];
-        $this->default = $data['default'];
-        $this->propertyCollection = $data['property'];
 
         return $this;
     }
@@ -162,8 +130,6 @@ class Config
             'extend' => $this->extend,
             'implement' => $this->implement,
             'comment' => $this->comment,
-            'default' => $this->default,
-            'property' => $this->propertyCollection,
         ];
     }
 }

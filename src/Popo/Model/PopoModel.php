@@ -8,6 +8,7 @@ use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
 use Popo\PopoConfigurator;
 use Popo\PopoResult;
+use Popo\Schema\ConfigMerger;
 
 class PopoModel
 {
@@ -20,6 +21,7 @@ class PopoModel
     public function generate(PopoConfigurator $configurator): PopoResult
     {
         $result = new PopoResult;
+
         $data = $this->schemaBuilder->build($configurator);
 
         foreach ($data as $schemaName => $schemaCollection) {

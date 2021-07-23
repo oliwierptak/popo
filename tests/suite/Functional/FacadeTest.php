@@ -12,8 +12,23 @@ use const POPO_TESTS_DIR;
 /**
  * @group functional
  */
-class GenerateTest extends TestCase
+class FacadeTest extends TestCase
 {
+    public function test_generate_from_path(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
+            ->setOutputPath(POPO_TESTS_DIR)
+            ->setSchemaPathFilter('bundles')
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+
+        $facade->generate($configurator);
+
+        $this->assertTrue(true);
+    }
+
     public static function setUpBeforeClass(): void
     {
         echo shell_exec(sprintf(
@@ -60,21 +75,6 @@ class GenerateTest extends TestCase
         $configurator = (new PopoConfigurator())
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-namespace-root.yml')
             ->setOutputPath(POPO_TESTS_DIR);
-
-        $facade->generate($configurator);
-
-        $this->assertTrue(true);
-    }
-
-    public function test_generate_from_path(): void
-    {
-        $facade = new PopoFacade();
-
-        $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
-            ->setOutputPath(POPO_TESTS_DIR)
-            ->setSchemaPathFilter('bundles')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
 
         $facade->generate($configurator);
 

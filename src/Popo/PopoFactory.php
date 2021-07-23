@@ -6,7 +6,8 @@ namespace Popo;
 
 use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
-use Popo\Loader\Finder\FileLoader;
+use Popo\Loader\FileLocator;
+use Popo\Loader\Yaml\YamlLoader;
 use Popo\Schema\SchemaInspector;
 use Popo\Model\PopoModel;
 use Popo\Builder\SchemaBuilder;
@@ -33,7 +34,8 @@ class PopoFactory
     protected function createSchemaLoader(): SchemaLoader
     {
         return new SchemaLoader(
-            $this->createFileLoader()
+            $this->createFileLocator(),
+            $this->createLoader()
         );
     }
 
@@ -49,8 +51,13 @@ class PopoFactory
         return new SchemaInspector();
     }
 
-    protected function createFileLoader(): FileLoader
+    protected function createFileLocator(): FileLocator
     {
-        return new FileLoader(Finder::create());
+        return new FileLocator(Finder::create());
+    }
+
+    #[Pure] protected function createLoader(): YamlLoader
+    {
+        return new YamlLoader();
     }
 }

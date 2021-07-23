@@ -18,6 +18,7 @@ class Schema
      */
     #[ArrayShape(self::PROPERTY_SHAPE)]
     protected array $propertyCollection = [];
+    protected array $default = [];
 
     public function getName(): string
     {
@@ -57,6 +58,18 @@ class Schema
     public function setPropertyCollection(#[ArrayShape(self::PROPERTY_SHAPE)] array $propertyCollection): self
     {
         $this->propertyCollection = $propertyCollection;
+
+        return $this;
+    }
+
+    public function getDefault(): array
+    {
+        return $this->default;
+    }
+
+    public function setDefault(array $default): self
+    {
+        $this->default = $default;
 
         return $this;
     }

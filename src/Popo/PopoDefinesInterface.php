@@ -14,8 +14,6 @@ class PopoDefinesInterface
 
     public const CONFIGURATION_SCHEMA_PROPERTY = 'property';
 
-    public const CONFIGURATION_SCHEMA_FILENAME = 'filename';
-
     public const CONFIGURATION_SCHEMA_DEFAULT = 'default';
 
     //property types

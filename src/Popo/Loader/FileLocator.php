@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Popo\Loader\Finder;
+namespace Popo\Loader;
 
 use Symfony\Component\Finder\Finder;
 
-class FileLoader
+class FileLocator
 {
     public function __construct(protected Finder $finder)
     {
     }
 
-    public function load(
+    public function locate(
         string $schemaPath,
         string $schemaPathFilter,
         string $schemaFilename
