@@ -1,6 +1,6 @@
 {
   "name": "popo/generator",
-  "description": "Plain Old PHP Object (POPO) / Value Object (VO) / Data Transfer Object (DTO) Generator. Convert JSON schema to PHP class.",
+  "description": "Plain Old PHP Object (POPO) / Data Class  / Data Transfer Object (DTO) Generator. Convert JSON schema to PHP class.",
   "license": "MIT",
   "type": "library",
   "authors": [
