@@ -150,18 +150,24 @@ For example, each schema folder can contain multiple schema files:
 ## Popo Schema
 
 ```yaml
-$: #shared configuration
+$: #shared configuration for all POPO objects defined below
    namespace: string
    outputPath: string
-   extend: string|null
-   implement: string|null
-   comment: string|null
-   default: array #shared default values
+   namespaceRoot: string|null # if set remaps namespace and outputPath
+   extend: string|null # which class POPO objects should extend from
+   implement: string|null # which interface POPO objects should implement
+   comment: string|null # Class docblock comment
+   default: array # default values
    property: array #shared properties
 
-SchemaName:
-   PopoName:
-      config: array #overrides values from shared configuration, except for 'default'
+SchemaName: #defines shared configuration and POPO objects under SchemaName
+   PopoName: #use $ for configuration that will be shared for all POPO objects in SchemaName
+      namespace: string
+      outputPath: string
+      namespaceRoot: string|null
+      extend: string|null
+      implement: string|null
+      comment: string|null
       default: array #overrides values from shared configuration's 'default'
       property: [{
          name: string,
@@ -170,12 +176,14 @@ SchemaName:
             default: string,
             supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
          },
-         comment: string|null,
-         default: mixed|null,
-         itemType: string|null,
-         itemName: string|null
+         comment: string|null, # Property docblock comment
+         default: mixed, # default value
+         itemType: string|null, # define itemType of a collection
+         itemName: string|null #define singular expression of itemItem
       }]
 ```
+
+See [popo-schema.yml](popo-schema.yml).
 
 ### Property type list
 
