@@ -1,0 +1,12 @@
+$:
+  namespace: App\Example\Popo
+  outputPath: tests/
+  property: [
+    {name: idForAll, type: int, default: 0, comment: This id is for all}
+  ]
+
+Example:
+  FooBar:
+    property: [
+      {name: idForAll, type: int, default: 0, comment: This id is for all}
+    ]}}

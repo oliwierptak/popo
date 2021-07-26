@@ -8,7 +8,6 @@ use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
 use Popo\PopoConfigurator;
 use Popo\PopoResult;
-use Popo\Schema\ConfigMerger;
 
 class PopoModel
 {

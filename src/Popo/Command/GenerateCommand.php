@@ -10,19 +10,19 @@ use function implode;
 
 class GenerateCommand extends AbstractCommand
 {
-    const COMMAND_NAME = 'generate';
+    public const COMMAND_NAME = 'generate';
 
-    const COMMAND_DESCRIPTION = 'Generate POPO files';
+    public const COMMAND_DESCRIPTION = 'Generate POPO files';
 
-    const OPTION_SCHEMA_PATH = 'schemaPath';
+    public const OPTION_SCHEMA_PATH = 'schemaPath';
 
-    const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
+    public const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
 
-    const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
+    public const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
 
-    const OPTION_OUTPUT_PATH = 'outputPath';
+    public const OPTION_OUTPUT_PATH = 'outputPath';
 
-    const OPTION_NAMESPACE = 'namespace';
+    public const OPTION_NAMESPACE = 'namespace';
 
     protected function configure(): void
     {

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Builder;
 
 use Nette\PhpGenerator\Literal;
+use Popo\PopoDefinesInterface;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
 use function ucfirst;
@@ -48,8 +49,8 @@ class PopoBuilder extends AbstractBuilder
 
         foreach ($this->schema->getPropertyCollection() as $property) {
             $metadata[$property->getName()] = [
-                'type' => $property->getType(),
-                'default' => $property->getDefault(),
+                PopoDefinesInterface::SCHEMA_PROPERTY_TYPE => $property->getType(),
+                PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
             ];
 
             $shapeProperties[$property->getName()] = $property->getType();
@@ -67,13 +68,13 @@ class PopoBuilder extends AbstractBuilder
                 );
 
                 $shapeProperties[$property->getName()] = $literalValue;
-                $metadata[$property->getName()]['default'] = $literalValue;
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
             }
             else {
                 if ($this->propertyInspector->isLiteral($property->getDefault())) {
                     $literalValue = new Literal($property->getDefault());
 
-                    $metadata[$property->getName()]['default'] = $literalValue;
+                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
                 }
             }
         }

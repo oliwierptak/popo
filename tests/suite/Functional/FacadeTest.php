@@ -14,6 +14,19 @@ use const POPO_TESTS_DIR;
  */
 class FacadeTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        echo shell_exec(sprintf(
+            'rm -rf %s',
+            POPO_TESTS_DIR . 'App/Example/',
+        ));
+
+        echo shell_exec(sprintf(
+            'rm -rf %s',
+            POPO_TESTS_DIR . 'BundleApp/Readme/',
+        ));
+    }
+
     public function test_generate_from_path(): void
     {
         $facade = new PopoFacade();
@@ -27,19 +40,6 @@ class FacadeTest extends TestCase
         $facade->generate($configurator);
 
         $this->assertTrue(true);
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        echo shell_exec(sprintf(
-            'rm -rf %s',
-            POPO_TESTS_DIR . 'App/Example/',
-        ));
-
-        echo shell_exec(sprintf(
-            'rm -rf %s',
-            POPO_TESTS_DIR . 'BundleApp/Readme/',
-        ));
     }
 
     public function test_generate_from_popo_file(): void

@@ -21,7 +21,7 @@ Example:
 AnotherExample:
   $:
     default:
-      anotherTestSharedId: 567
+      anotherExampleSharedId: 567
     property: [
-      {name: anotherTestSharedId, type: int}
+      {name: anotherExampleSharedId, type: int}
     ]}}

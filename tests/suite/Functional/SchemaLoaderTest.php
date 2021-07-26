@@ -9,6 +9,7 @@ use Popo\Loader\FileLocator;
 use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
+use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use const POPO_TESTS_DIR;
 
@@ -44,7 +45,8 @@ class SchemaLoaderTest extends TestCase
         $this->assertNotEmpty($data);
         $this->assertCount(1, $data);
 
-        $this->assertEmpty($data[0]->getSharedConfig());
+        $this->assertEmpty($data[0]->getSchemaConfig());
+        $this->assertNotEmpty($data[0]->getSharedConfig());
     }
 
     public function test_load_path_with_shared_config(): void
@@ -60,21 +62,21 @@ class SchemaLoaderTest extends TestCase
         $this->assertNotEmpty($data);
         $this->assertCount(3, $data);
 
-        $this->assertEmpty($data[0]->getSharedConfig());
-        $this->assertEmpty($data[1]->getSharedConfig());
-        $this->assertNotEmpty($data[2]->getSharedConfig());
+        $this->assertEmpty($data[0]->getSchemaConfig());
+        $this->assertEmpty($data[1]->getSchemaConfig());
+        $this->assertNotEmpty($data[2]->getSchemaConfig());
     }
 
     public function test_load_should_throw_exception(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Specified path to POPO schema does not exist: "/www/oliwierptak/popo/tests/../tests/fixtures/popos.yml"');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageMatches('@Specified path to POPO schema does not exist: "(.*)tests/fixtures/popos.yml"@i');
 
         $loader = new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader());
 
         $configurator = (new PopoConfigurator())
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popos.yml');
 
-        $data = $loader->load($configurator);
+        $loader->load($configurator);
     }
 }

@@ -22,20 +22,23 @@ class PopoBundleAppTest extends TestCase
 
         $this->assertEquals(
             [
-                'fooId' => null,
-                'title' => 'Hakuna Matata',
-                'value' => ExampleInterface::TEST_BUZZ,
                 'bar' => [
-                    'title' => 'Lorem Ipsum',
                     'buzz' => [
-                        'value' => 'Buzzzzz',
                         'idForAll' => 0,
+                        'sharedExampleId' => 123,
+                        'value' => 'Buzzzzz',
                     ],
                     'buzzCollection' => [],
                     'idForAll' => 0,
+                    'sharedExampleId' => 123,
+                    'title' => 'Lorem Ipsum',
                 ],
-                'test' => null,
+                'fooId' => null,
                 'idForAll' => 0,
+                'sharedExampleId' => 123,
+                'test' => null,
+                'title' => 'Hakuna Matata',
+                'value' => ExampleInterface::TEST_BUZZ,
             ],
             $foo->toArray()
         );
@@ -46,20 +49,23 @@ class PopoBundleAppTest extends TestCase
         $foo = (new Foo);
 
         $expected = [
-            'fooId' => null,
-            'title' => 'Lorem Ipsum',
-            'value' => ExampleInterface::TEST_BUZZ,
             'bar' => [
-                'title' => 'Bar Bar',
                 'buzz' => [
-                    'value' => 'Foo Bar Buzz',
                     'idForAll' => 0,
+                    'sharedExampleId' => 123,
+                    'value' => 'Buzzzzz',
                 ],
                 'buzzCollection' => [],
                 'idForAll' => 0,
+                'sharedExampleId' => 123,
+                'title' => 'Lorem Ipsum',
             ],
-            'test' => null,
+            'fooId' => null,
             'idForAll' => 0,
+            'sharedExampleId' => 123,
+            'test' => null,
+            'title' => 'Hakuna Matata',
+            'value' => ExampleInterface::TEST_BUZZ,
         ];
 
         $foo->fromArray($expected);
@@ -134,14 +140,16 @@ class PopoBundleAppTest extends TestCase
 
         $bar = (new Bar());
 
-        $collection = $bar->requireBuzzCollection();
+        $bar->requireBuzzCollection();
     }
 
     public function test_require_all_collection(): void
     {
-        $bar = (new Bar)->setBuzzCollection([
-            new Buzz
-        ]);
+        $bar = (new Bar)->setBuzzCollection(
+            [
+                new Buzz,
+            ]
+        );
 
         $this->assertNotEmpty($bar->getBuzzCollection());
     }

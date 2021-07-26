@@ -20,7 +20,7 @@ class AnotherPopoTest extends TestCase
         $this->assertEquals(
             [
                 'idForAll' => 0,
-                'idForAnotherExample' => 100,
+                'anotherExampleSharedId' => 567,
                 'title' => 'Hakuna Matata',
             ],
             $foo->toArray()
@@ -33,7 +33,7 @@ class AnotherPopoTest extends TestCase
 
         $expected = [
             'idForAll' => 0,
-            'idForAnotherExample' => 100,
+            'anotherExampleSharedId' => 567,
             'title' => 'Hakuna Matata',
         ];
 
@@ -57,17 +57,18 @@ class AnotherPopoTest extends TestCase
         $foo = (new AnotherFoo);
 
         $this->assertEquals('Hakuna Matata', $foo->getTitle());
-        $this->assertEquals(100, $foo->getIdForAnotherExample());
+        $this->assertEquals(567, $foo->getAnotherExampleSharedId());
+        $this->assertEquals(0, $foo->getIdForAll());
     }
 
     public function test_require_fooId(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Required value of "idForAnotherExample" has not been set');
+        $this->expectExceptionMessage('Required value of "anotherExampleSharedId" has not been set');
 
-        $foo = (new AnotherFoo)->setIdForAnotherExample(null);
+        $foo = (new AnotherFoo)->setAnotherExampleSharedId(null);
 
-        $foo->requireIdForAnotherExample();
+        $foo->requireAnotherExampleSharedId();
     }
 
     public function test_require(): void
@@ -75,15 +76,16 @@ class AnotherPopoTest extends TestCase
         $foo = (new AnotherFoo);
 
         $this->assertEquals('Hakuna Matata', $foo->requireTitle());
-        $this->assertEquals(100, $foo->requireIdForAnotherExample());
+        $this->assertEquals(567, $foo->requireAnotherExampleSharedId());
+        $this->assertEquals(0, $foo->requireIdForAll());
     }
 
     public function test_require_all_exception(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Required value of "idForAnotherExample" has not been set');
+        $this->expectExceptionMessage('Required value of "anotherExampleSharedId" has not been set');
 
-        $foo = (new AnotherFoo)->setIdForAnotherExample(null);
+        $foo = (new AnotherFoo)->setAnotherExampleSharedId(null);
 
         $foo->requireAll();
     }
@@ -91,11 +93,11 @@ class AnotherPopoTest extends TestCase
     public function test_require_all(): void
     {
         $foo = (new AnotherFoo)
-            ->setIdForAnotherExample(1);
+            ->setIdForAll(1);
 
         $foo->requireAll();
 
-        $this->assertEquals(1, $foo->getIdForAnotherExample());
+        $this->assertEquals(1, $foo->getIdForAll());
     }
 
     public function test_has(): void

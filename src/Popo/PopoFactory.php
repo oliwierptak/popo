@@ -8,6 +8,7 @@ use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
 use Popo\Loader\FileLocator;
 use Popo\Loader\Yaml\YamlLoader;
+use Popo\Schema\ConfigMerger;
 use Popo\Schema\SchemaInspector;
 use Popo\Model\PopoModel;
 use Popo\Builder\SchemaBuilder;
@@ -27,7 +28,8 @@ class PopoFactory
     protected function createSchemaBuilder(): SchemaBuilder
     {
         return new SchemaBuilder(
-            $this->createSchemaLoader()
+            $this->createSchemaLoader(),
+            $this->createConfigMerger()
         );
     }
 
@@ -59,5 +61,10 @@ class PopoFactory
     #[Pure] protected function createLoader(): YamlLoader
     {
         return new YamlLoader();
+    }
+
+    #[Pure] private function createConfigMerger(): ConfigMerger
+    {
+        return new ConfigMerger();
     }
 }

@@ -10,6 +10,7 @@ class SchemaFile
 {
     protected SplFileInfo $filename;
     protected array $sharedConfig = [];
+    protected array $schemaConfig = [];
     protected array $data = [];
 
     public function getFilename(): SplFileInfo
@@ -32,6 +33,18 @@ class SchemaFile
     public function setSharedConfig(array $sharedConfig): self
     {
         $this->sharedConfig = $sharedConfig;
+
+        return $this;
+    }
+
+    public function getSchemaConfig(): array
+    {
+        return $this->schemaConfig;
+    }
+
+    public function setSchemaConfig(array $schemaConfig): self
+    {
+        $this->schemaConfig = $schemaConfig;
 
         return $this;
     }

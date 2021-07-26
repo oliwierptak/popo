@@ -12,7 +12,6 @@ class PopoConfigurator
     protected ?string $schemaPathFilter = null;
     protected ?string $schemaFilename = '*.popo.yml';
     protected ?string $schemaConfigFilename = null;
-    protected array $sharedConfig = [];
 
     public function getNamespace(): ?string
     {
@@ -82,18 +81,6 @@ class PopoConfigurator
     public function setSchemaConfigFilename(?string $schemaConfigFilename): self
     {
         $this->schemaConfigFilename = $schemaConfigFilename;
-
-        return $this;
-    }
-
-    public function getSharedConfig(): array
-    {
-        return $this->sharedConfig;
-    }
-
-    public function setSharedConfig(array $sharedConfig): self
-    {
-        $this->sharedConfig = $sharedConfig;
 
         return $this;
     }

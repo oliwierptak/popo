@@ -156,24 +156,24 @@ $: #shared configuration
    extend: string|null
    implement: string|null
    comment: string|null
-   default: array
+   default: array #shared default values
+   property: array #shared properties
 
 SchemaName:
    PopoName:
-     config: array #overrides values from shared configuration, except for 'default'
-     default: array #overrides values from shared configuration's 'default'
-     property: [{ #property list
-        #property definition
-        name: string,
-        type: {
-           type: string|null,
-           default: string,
-           supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-        },
-        comment: string|null,
-        default: mixed|null,
-        itemType: string|null,
-        itemName: string|null
+      config: array #overrides values from shared configuration, except for 'default'
+      default: array #overrides values from shared configuration's 'default'
+      property: [{
+         name: string,
+         type: {
+            type: string|null,
+            default: string,
+            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+         },
+         comment: string|null,
+         default: mixed|null,
+         itemType: string|null,
+         itemName: string|null
       }]
 ```
 
