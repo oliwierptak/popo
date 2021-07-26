@@ -101,6 +101,7 @@ composer require popo/generator --dev
 
     ```sh
     vendor/bin/popo generate -s <schema-path> \
+      [-c <shared-schema-config>] \
       [-o <output-path>] \
       [-m <namespace>] \
       [-p <schema-path-filter>]
@@ -113,6 +114,11 @@ _For example: `bin/popo generate -s tests/fixtures`_
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
 This parameter is required.
+
+#### `[shared-schema-config]`
+
+This parameter is optional, but when set a shared schema configuration will be used for all POPO schemas.
+
 
 #### `[output-path]`
 
@@ -315,7 +321,7 @@ Add popo scrip to composer and run `composer popo` in a project.
 ```
     "scripts": {
         "popo": [
-            "vendor/bin/popo generate -o <output-path> -s <schema-path>"
+            "vendor/bin/popo generate -c <shared-schema-config> -s <schema-path>"
         ]
     },
     "scripts-descriptions": {
