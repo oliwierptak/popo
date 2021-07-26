@@ -151,6 +151,7 @@ For example, each schema folder can contain multiple schema files:
     |         |- bar.popo.yml   
     |         |_ buzz.popo.yml   
     |
+    |-- shared.config.yml
 ```
 
 _Run `bin/popo generate -c tests/fixtures/bundles/shared.config.yml -s tests/fixtures/bundles/` to generate files from this example._
