@@ -108,26 +108,26 @@ composer require popo/generator --dev
 
 _For example: `bin/popo generate -s tests/fixtures`_
 
-### <<schema-path>>
+### `<schema-path>`
 
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
 This parameter is required.
 
-### [output-path]
+### `[output-path]`
 
 Output path where the files will be generated, the namespace folders will be created automatically.
 
 This parameter is optional, but when set it overrides `outputPath` configured in a schema.
 
-### [namespace]
+### `[namespace]`
 
 Namespace of generated POPO files.
 
 This parameter is optional, but when set it overrides `namespace` configured in a schema.
 
 
-### [schema-path-filter]
+### `[schema-path-filter]`
 
 Additional path filter when `schema-path` is set to a folder.
 
