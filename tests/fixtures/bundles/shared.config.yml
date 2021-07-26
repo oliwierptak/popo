@@ -1,8 +1,6 @@
 $:
   namespace: App\Example\Shared
   outputPath: tests/
-  extend: App\AbstractExample::class
-  implement: App\ExampleInterface::class
   comment: Popo Example. Auto-generated.
   default:
     title: Hakuna Matata
@@ -12,6 +10,8 @@ $:
 
 Example:
   $:
+    extend: App\AbstractExample::class
+    implement: App\ExampleInterface::class
     default:
       sharedExampleId: 123
     property: [
@@ -20,6 +20,8 @@ Example:
 
 AnotherExample:
   $:
+    extend: App\AbstractExample::class
+    implement: App\ExampleInterface::class
     default:
       anotherExampleSharedId: 567
     property: [
