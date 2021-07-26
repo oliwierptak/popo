@@ -78,7 +78,7 @@ Output:
 ];
 ```
 
-_Run `bin/popo generate -o tests/ -s tests/fixtures/popo-readme.yml` to generate files from this example._
+_Run `bin/popo generate -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
 ### getter vs requester 
 
@@ -152,6 +152,8 @@ For example, each schema folder can contain multiple schema files:
     |         |_ buzz.popo.yml   
     |
 ```
+
+_Run `bin/popo generate -c tests/fixtures/bundles/shared.config.yml -s tests/fixtures/bundles/` to generate files from this example._
 
 ## Popo Schema
 
@@ -302,7 +304,6 @@ Example:
 ```
 
 _Run `bin/popo generate -o tests/ -s tests/fixtures/popo.yml` to generate files from this schema._
-
 
 
 ### PHP version compatibility
