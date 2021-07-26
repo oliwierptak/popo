@@ -321,7 +321,7 @@ Add popo scrip to composer and run `composer popo` in a project.
 ```
     "scripts": {
         "popo": [
-            "vendor/bin/popo generate -c <shared-schema-config> -s <schema-path>"
+            "vendor/bin/popo generate -s <schema-path>"
         ]
     },
     "scripts-descriptions": {
