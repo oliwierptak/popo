@@ -16,7 +16,7 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     extend: string|null
     implement: string|null
     comment: string|null
-    default: array #overrides values from shared configuration's 'default'
+    default: array
     property: [{
       name: string,
       type: {
