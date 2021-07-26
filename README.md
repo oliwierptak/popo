@@ -10,7 +10,8 @@ The schema supports inheritance, collections and encapsulation of other POPO obj
 
 ### Example
 
-An example schema in YAML format, describing properties and relations of POPO objects.
+Simple schema in YAML format, describing properties and relations of POPO objects.
+
 In this case, `Foo` defines `Bar` as its property.
 
 
@@ -107,7 +108,7 @@ composer require popo/generator --dev
 
 _For example: `bin/popo generate -s tests/fixtures`_
 
-### <schema-path>
+### <<schema-path>>
 
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
