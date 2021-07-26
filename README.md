@@ -161,7 +161,7 @@ $: #shared configuration for all POPO objects defined below
    property: array #shared properties
 
 SchemaName: #defines shared configuration and POPO objects under SchemaName
-   PopoName: #use $ for configuration that will be shared for all POPO objects in SchemaName
+   $: # shared configuration for all POPO objects in SchemaName
       namespace: string
       outputPath: string
       namespaceRoot: string|null
@@ -180,6 +180,28 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
          default: mixed, # default value
          itemType: string|null, # define itemType of a collection
          itemName: string|null #define singular expression of itemItem
+      }]
+
+   PopoName:
+      config:
+         namespace: string
+         outputPath: string
+         namespaceRoot: string|null
+         extend: string|null
+         implement: string|null
+         comment: string|null
+      default: array
+      property: [{
+         name: string,
+         type: {
+            type: string|null,
+            default: string,
+            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+         },
+         comment: string|null,
+         default: mixed,
+         itemType: string|null,
+         itemName: string|null
       }]
 ```
 
@@ -229,60 +251,48 @@ See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/Unit/PopoTest.ph
 #### popo.yml
 
 ```yaml
-$: #shared configuration for all POPO objects defined below
-   namespace: string
-   outputPath: string
-   namespaceRoot: string|null # if set remaps namespace and outputPath
-   extend: string|null # which class POPO objects should extend from
-   implement: string|null # which interface POPO objects should implement
-   comment: string|null # Class docblock comment
-   default: array # default values
-   property: array #shared properties
+$:
+   namespace: App\Example\Popo
+   outputPath: tests/
+   extend: App\AbstractExample::class
+   implement: App\ExampleInterface::class
+   comment: Popo Example. Auto-generated.
+   default:
+      title: Hakuna Matata
+   property: [
+      {name: idForAll, type: int, default: 0, comment: This id is for all}
+   ]
 
-SchemaName: #defines shared configuration and POPO objects under SchemaName
-   $: # shared configuration for all POPO objects in SchemaName
-      namespace: string
-      outputPath: string
-      namespaceRoot: string|null
-      extend: string|null
-      implement: string|null
-      comment: string|null
-      default: array
-      property: [{
-         name: string,
-         type: {
-            type: string|null,
-            default: string,
-            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-         },
-         comment: string|null, # Property docblock comment
-         default: mixed, # default value
-         itemType: string|null, # define itemType of a collection
-         itemName: string|null #define singular expression of itemItem
-      }]
-
-   PopoName:
+Example:
+   Foo:
       config:
-         namespace: string
-         outputPath: string
-         namespaceRoot: string|null
-         extend: string|null
-         implement: string|null
-         comment: string|null
-      default: array
-      property: [{
-         name: string,
-         type: {
-            type: string|null,
-            default: string,
-            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-         },
-         comment: string|null,
-         default: mixed,
-         itemType: string|null,
-         itemName: string|null
-      }]
+         comment: Foo example lorem ipsum
+      default:
+         bar: Bar::class
+      property: [
+         {name: fooId, type: int, comment: Foo ID COMMENT},
+         {name: title},
+         {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
+         {name: bar, type: popo},
+         {name: test, type: mixed},
+      ]}}
 
+   Bar:
+      default:
+         title: Lorem Ipsum
+         buzz: \App\Example\Popo\Fizz\Buzz::class
+      property: [
+         {name: title}
+         {name: buzz, type: popo}
+         {name: buzzCollection, type: array, itemType: \App\Example\Popo\Fizz\Buzz::class, itemName: buzz}
+      ]}}
+
+   Buzz:
+      config:
+         namespace: App\Example\Popo\Fizz
+      property: [
+         {name: value, default: Buzzzzz}
+      ]}}
 ```
 
 _Run `bin/popo generate -o tests/ -s tests/fixtures/popo.yml` to generate files from this schema._
