@@ -9,7 +9,7 @@ $: #shared configuration for all POPO objects defined below
   property: array #shared properties
 
 SchemaName: #defines shared configuration and POPO objects under SchemaName
-  PopoName: #use $ for configuration that will be shared for all POPO objects in SchemaName
+  $: # shared configuration for all POPO objects in SchemaName
     namespace: string
     outputPath: string
     namespaceRoot: string|null
@@ -28,4 +28,26 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
       default: mixed, # default value
       itemType: string|null, # define itemType of a collection
       itemName: string|null #define singular expression of itemItem
+    }]
+
+  PopoName:
+    config:
+      namespace: string
+      outputPath: string
+      namespaceRoot: string|null
+      extend: string|null
+      implement: string|null
+      comment: string|null
+    default: array
+    property: [{
+      name: string,
+      type: {
+        type: string|null,
+        default: string,
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+      },
+      comment: string|null,
+      default: mixed,
+      itemType: string|null,
+      itemName: string|null
     }]
