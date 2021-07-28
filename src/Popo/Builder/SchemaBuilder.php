@@ -42,6 +42,8 @@ class SchemaBuilder
                             (new Config)->fromArray($popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG])
                         );
 
+                    $this->configMerger->updateSchemaConfigFromCommandConfiguration($popoSchema, $configurator);
+
                     $this->validate(
                         $popoSchema,
                         $popoData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY],
@@ -74,13 +76,13 @@ class SchemaBuilder
             return $file;
         }
 
-        $sharedConfig = current(
+        $sharedConfigFile = current(
             $this->loader->load(
                 (new PopoConfigurator)->setSchemaPath($configurator->getSchemaConfigFilename())
             )
         );
 
-        return $this->configMerger->generateSharedConfig($sharedConfig, $data);
+        return $this->configMerger->generateSharedConfig($sharedConfigFile, $data);
     }
 
     protected function buildSchemaPropertyCollection(Schema $schema, array $propertyCollection): Schema

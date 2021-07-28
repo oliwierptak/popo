@@ -8,14 +8,31 @@ use App\Example\Shared\Bar;
 use App\Example\Shared\Fizz\Buzz;
 use App\Example\Shared\Foo;
 use App\ExampleInterface;
-use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
+use Popo\PopoFacade;
+use PopoTestsSuites\AbstractPopoTest;
 use UnexpectedValueException;
 
 /**
  * @group unit
  */
-class PopoBundleAppTest extends TestCase
+class PopoSharedTest extends AbstractPopoTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
+            ->setOutputPath(POPO_TESTS_DIR)
+            ->setSchemaPathFilter('bundles')
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+
+        $facade->generate($configurator);
+    }
+
     public function test_toArray(): void
     {
         $foo = (new Foo());

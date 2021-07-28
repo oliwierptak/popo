@@ -5,14 +5,32 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use App\Example\Shared\AnotherFoo;
-use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
+use Popo\PopoFacade;
+use PopoTestsSuites\AbstractPopoTest;
 use UnexpectedValueException;
 
 /**
  * @group unit
  */
-class AnotherPopoTest extends TestCase
+class AnotherPopoTest extends AbstractPopoTest
 {
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
+            ->setOutputPath(POPO_TESTS_DIR)
+            ->setSchemaPathFilter('bundles')
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+
+        $facade->generate($configurator);
+    }
+
     public function test_toArray(): void
     {
         $foo = (new AnotherFoo());
@@ -108,5 +126,17 @@ class AnotherPopoTest extends TestCase
 
         $foo->setTitle(null);
         $this->assertFalse($foo->hasTitle());
+    }
+
+    public function test_modified_properties(): void
+    {
+        $foo = (new AnotherFoo);
+
+        $this->assertTrue($foo->hasTitle());
+        $this->assertEmpty($foo->listModifiedProperties());
+
+        $foo->setTitle(null);
+        $this->assertFalse($foo->hasTitle());
+        $this->assertEquals(['title'], $foo->listModifiedProperties());
     }
 }

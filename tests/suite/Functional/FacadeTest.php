@@ -4,28 +4,17 @@ declare(strict_types = 1);
 
 namespace PopoTestsSuites\Functional;
 
-use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
+use PopoTestsSuites\AbstractGenerateTest;
+use RuntimeException;
 use const POPO_TESTS_DIR;
 
 /**
  * @group functional
  */
-class FacadeTest extends TestCase
+class FacadeTest extends AbstractGenerateTest
 {
-    public static function setUpBeforeClass(): void
-    {
-        echo shell_exec(sprintf(
-            'rm -rf %s',
-            POPO_TESTS_DIR . 'App/Example/',
-        ));
-
-        echo shell_exec(sprintf(
-            'rm -rf %s',
-            POPO_TESTS_DIR . 'BundleApp/Readme/',
-        ));
-    }
 
     public function test_generate_from_path(): void
     {
@@ -39,7 +28,7 @@ class FacadeTest extends TestCase
 
         $facade->generate($configurator);
 
-        $this->assertTrue(true);
+        $this->assertGenerateFromPath();
     }
 
     public function test_generate_from_popo_file(): void
@@ -52,7 +41,7 @@ class FacadeTest extends TestCase
 
         $facade->generate($configurator);
 
-        $this->assertTrue(true);
+        $this->assertGenerateFromPopoFile();
     }
 
     public function test_generate_readme_example(): void
@@ -65,7 +54,7 @@ class FacadeTest extends TestCase
 
         $facade->generate($configurator);
 
-        $this->assertTrue(true);
+        $this->assertGenerateFromReadmeExample();
     }
 
     public function test_generate_example_with_namespace_root(): void
@@ -78,6 +67,33 @@ class FacadeTest extends TestCase
 
         $facade->generate($configurator);
 
-        $this->assertTrue(true);
+        $this->assertGenerateWithNamespaceRoot();
+    }
+
+    public function test_generate_should_throw_exception(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageMatches('@Specified path to POPO schema does not exist: "(.*)tests/fixtures/popos.yml"@i');
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popos.yml');
+
+        $facade->generate($configurator);
+    }
+
+    public function test_build_invalid(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Property with name "idForAll" is already defined and cannot be used for "Example::FooBar" in "/www/oliwierptak/popo/tests/../tests/fixtures/popo-invalid.yml"');
+
+        $facade = new PopoFacade();
+
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-invalid.yml');
+
+        $facade->generate($configurator);
     }
 }

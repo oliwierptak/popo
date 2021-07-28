@@ -5,13 +5,28 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use App\Example\Readme\Foo;
-use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
+use Popo\PopoFacade;
+use PopoTestsSuites\AbstractPopoTest;
 
 /**
  * @group unit
  */
-class PopoReadmeTest extends TestCase
+class PopoReadmeTest extends AbstractPopoTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+    }
+
     public function test_example_from_array(): void
     {
         $data = [

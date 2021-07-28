@@ -7,6 +7,7 @@ namespace Popo;
 class PopoConfigurator
 {
     protected ?string $namespace = null;
+    protected ?string $namespaceRoot = null;
     protected ?string $outputPath = null;
     protected string $schemaPath;
     protected ?string $schemaPathFilter = null;
@@ -21,6 +22,18 @@ class PopoConfigurator
     public function setNamespace(?string $namespace): self
     {
         $this->namespace = $namespace;
+
+        return $this;
+    }
+
+    public function getNamespaceRoot(): ?string
+    {
+        return $this->namespaceRoot;
+    }
+
+    public function setNamespaceRoot(?string $namespaceRoot): self
+    {
+        $this->namespaceRoot = $namespaceRoot;
 
         return $this;
     }

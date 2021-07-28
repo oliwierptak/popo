@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Schema;
 
 use JetBrains\PhpStorm\Pure;
+use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
 
 class ConfigMerger
@@ -86,4 +87,20 @@ class ConfigMerger
 
         return $popoData;
     }
+
+    public function updateSchemaConfigFromCommandConfiguration(Schema $popoSchema, PopoConfigurator $configurator): Schema
+    {
+        $popoSchema->getConfig()->setNamespace(
+            $configurator->getNamespace() ?? $popoSchema->getConfig()->getNamespace()
+        );
+        $popoSchema->getConfig()->setNamespaceRoot(
+            $configurator->getNamespaceRoot() ?? $popoSchema->getConfig()->getNamespaceRoot()
+        );
+        $popoSchema->getConfig()->setOutputPath(
+            $configurator->getOutputPath() ?? $popoSchema->getConfig()->getOutputPath()
+        );
+
+        return $popoSchema;
+    }
+
 }

@@ -24,6 +24,8 @@ class GenerateCommand extends AbstractCommand
 
     public const OPTION_NAMESPACE = 'namespace';
 
+    public const OPTION_NAMESPACE_ROOT = 'namespaceRoot';
+
     protected function configure(): void
     {
         $this
@@ -43,28 +45,35 @@ class GenerateCommand extends AbstractCommand
                         'c',
                         InputOption::VALUE_OPTIONAL,
                         'Path to shared schema configuration',
-                        ''
+                        null
                     ),
                     new InputOption(
                         static::OPTION_OUTPUT_PATH,
                         'o',
                         InputOption::VALUE_OPTIONAL,
                         'Output path where the files will be generated. Overrides schema settings when set.',
-                        ''
+                        null
                     ),
                     new InputOption(
                         static::OPTION_NAMESPACE,
-                        'm',
+                        'ns',
                         InputOption::VALUE_OPTIONAL,
                         'Namespace of generated POPO files. Overrides schema settings when set.',
-                        ''
+                        null
+                    ),
+                    new InputOption(
+                        static::OPTION_NAMESPACE_ROOT,
+                        'nr',
+                        InputOption::VALUE_OPTIONAL,
+                        'Remaps namespace and outputPath',
+                        null
                     ),
                     new InputOption(
                         static::OPTION_SCHEMA_PATH_FILTER,
                         'p',
                         InputOption::VALUE_OPTIONAL,
                         'Path filter to match POPO schema files.',
-                        ''
+                        null
                     )
                 ]
             );
@@ -78,7 +87,22 @@ class GenerateCommand extends AbstractCommand
 
         $result = $this->facade->generate($configurator);
 
-        $output->writeln(implode("\n", $result->getGeneratedFiles()));
+        if ($output->getVerbosity() <= OutputInterface::VERBOSITY_QUIET) {
+            return 0;
+        }
+
+        $data = [];
+        foreach ($result->getGeneratedFiles() as $item) {
+            $data[] = sprintf(
+                '<fg=yellow>%s:</><fg=green>%s\%s</> -> <fg=green>%s</>',
+                $item['schemaName'],
+                $item['namespace'],
+                $item['popoName'],
+                $item['filename'],
+            );
+        }
+
+        $output->writeln(implode("\n", $data));
         $output->writeln('All done.');
 
         return 0;
@@ -92,6 +116,9 @@ class GenerateCommand extends AbstractCommand
             )
             ->setNamespace(
                 $input->hasOption(static::OPTION_NAMESPACE) ? $input->getOption(static::OPTION_NAMESPACE) : null
+            )
+            ->setNamespaceRoot(
+                $input->hasOption(static::OPTION_NAMESPACE_ROOT) ? $input->getOption(static::OPTION_NAMESPACE_ROOT) : null
             )
             ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(

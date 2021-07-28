@@ -6,14 +6,29 @@ namespace PopoTestsSuites\Unit;
 
 use ExampleBundle\AppWithNamespaceRoot\Example\Bar;
 use ExampleBundle\AppWithNamespaceRoot\Example\Foo;
-use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
+use Popo\PopoFacade;
+use PopoTestsSuites\AbstractPopoTest;
 use UnexpectedValueException;
 
 /**
  * @group unit
  */
-class AppWithNamespaceRootTest extends TestCase
+class AppWithNamespaceRootTest extends AbstractPopoTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-namespace-root.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+    }
+
     public function test_toArray(): void
     {
         $foo = (new Foo());

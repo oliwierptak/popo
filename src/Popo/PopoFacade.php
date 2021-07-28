@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use Popo\Model\PopoGenerateResult;
+
 class PopoFacade implements PopoFacadeInterface
 {
     protected PopoFactory $factory;
@@ -24,7 +26,7 @@ class PopoFacade implements PopoFacadeInterface
         return $this;
     }
 
-    public function generate(PopoConfigurator $configurator): PopoResult
+    public function generate(PopoConfigurator $configurator): PopoGenerateResult
     {
         return $this->getFactory()
             ->createPopoModel()

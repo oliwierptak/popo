@@ -35,7 +35,9 @@ class PopoBuilder extends AbstractBuilder
             ->addFromArrayMethod()
             ->addUpdateMap()
             ->addIsNewMethod()
-            ->addRequireAllMethod();
+            ->addGetModifiedPropertiesMethod()
+            ->addRequireAllMethod()
+            ->addSetupPopoMethod();
 
         $this->save();
 
@@ -153,10 +155,7 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-if (static::METADATA['${name}']['type'] === 'popo' && \$this->${name} === null) {
-    \$popo = static::METADATA['${name}']['default'];
-    \$this->${name} = new \$popo;
-}
+\$this->setupPopoProperty('${name}');
 
 if (%s) {
     throw new UnexpectedValueException('Required value of "${name}" has not been set');
@@ -195,6 +194,21 @@ EOF;
         return $this;
     }
 
+    protected function addGetModifiedPropertiesMethod(): self
+    {
+        $body = <<<EOF
+return array_keys(\$this->updateMap);
+EOF;
+
+        $this->class
+            ->addMethod('listModifiedProperties')
+            ->setPublic()
+            ->setReturnType('array')
+            ->setBody($body);
+
+        return $this;
+    }
+
     protected function addRequireAllMethod(): self
     {
         $body = <<<EOF
@@ -222,7 +236,7 @@ catch (\Throwable \$throwable) {
 EOF;
 
         $require = '';
-        foreach ($this->schema->getPropertyCollection() as $index => $property) {
+        foreach ($this->schema->getPropertyCollection() as $property) {
             $require .= sprintf(
                 $validationBody,
                 ucfirst($property->getName()),
@@ -249,7 +263,7 @@ EOF;
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null || (\$this->${name} !== null && array_key_exists('${name}', \$this->updateMap));
+return \$this->${name} !== null;
 EOF;
 
         if ($this->propertyInspector->isArray($property->getType())) {
@@ -257,7 +271,7 @@ EOF;
             $name = $name . 'Collection';
 
             $body = <<<EOF
-return !empty(\$this->${name}) && array_key_exists('${name}', \$this->updateMap);
+return !empty(\$this->${name});
 EOF;
         }
 
@@ -270,10 +284,29 @@ EOF;
         return $this;
     }
 
+    protected function addSetupPopoMethod(): self
+    {
+        $body = <<<EOF
+if (static::METADATA[\$propertyName]['type'] === 'popo' && \$this->\$propertyName === null) {
+    \$popo = static::METADATA[\$propertyName]['default'];
+    \$this->\$propertyName = new \$popo;
+}
+EOF;
+
+        $this->class
+            ->addMethod('setupPopoProperty')
+            ->setProtected()
+            ->setReturnType('void')
+            ->setBody($body)
+            ->addParameter('propertyName');
+
+        return $this;
+    }
+
     protected function addToArrayMethod(): self
     {
         $body = "\$data = [\n";
-        foreach ($this->schema->getPropertyCollection() as $index => $property) {
+        foreach ($this->schema->getPropertyCollection() as $property) {
             $body .= sprintf(
                 "\t'%s' => \$this->%s,\n",
                 $property->getName(),

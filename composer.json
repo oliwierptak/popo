@@ -32,7 +32,8 @@
     "psr-4": {
       "PopoTestsSuites\\": "tests/suite",
       "App\\": "tests/App",
-      "ExampleBundle\\AppWithNamespaceRoot\\": "tests/AppWithNamespaceRoot"
+      "ExampleBundle\\AppWithNamespaceRoot\\": "tests/AppWithNamespaceRoot",
+      "ExampleBundle\\AppRedefinedNamespace\\": "tests/AppRedefinedNamespace"
     }
   },
   "scripts": {
@@ -41,6 +42,15 @@
     ],
     "test": [
       "vendor/bin/phpunit --no-coverage --testdox --testsuite functional,unit"
+    ],
+    "popo": [
+      "bin/popo generate -q -s tests/fixtures/popo.yml",
+      "bin/popo generate -q -s tests/fixtures/popo-namespace-root.yml",
+      "bin/popo generate -q -s tests/fixtures/popo-readme.yml",
+      "bin/popo generate -q -c tests/fixtures/bundles/shared.config.yml -s tests/fixtures/bundles/"
+    ],
+    "test-c": [
+      "vendor/bin/phpunit --testdox --testsuite functional,unit"
     ]
   },
   "scripts-descriptions": {

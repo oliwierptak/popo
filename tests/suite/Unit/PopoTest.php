@@ -8,14 +8,29 @@ use App\Example\Popo\Bar;
 use App\Example\Popo\Foo;
 use App\Example\Popo\Fizz\Buzz;
 use App\ExampleInterface;
-use PHPUnit\Framework\TestCase;
+use Popo\PopoConfigurator;
+use Popo\PopoFacade;
+use PopoTestsSuites\AbstractPopoTest;
 use UnexpectedValueException;
 
 /**
  * @group unit
  */
-class PopoTest extends TestCase
+class PopoTest extends AbstractPopoTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+    }
+
     public function test_toArray(): void
     {
         $foo = (new Foo());
@@ -134,7 +149,7 @@ class PopoTest extends TestCase
 
         $bar = (new Bar());
 
-        $collection = $bar->requireBuzzCollection();
+        $bar->requireBuzzCollection();
     }
 
     public function test_require_all_collection(): void
@@ -177,5 +192,17 @@ class PopoTest extends TestCase
 
         $foo->requireBar()->addBuzz(new Buzz());
         $this->assertTrue($foo->requireBar()->hasBuzzCollection());
+    }
+
+    public function test_modified_properties(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertTrue($foo->hasTitle());
+        $this->assertEmpty($foo->listModifiedProperties());
+
+        $foo->setTitle(null);
+        $this->assertFalse($foo->hasTitle());
+        $this->assertEquals(['title'], $foo->listModifiedProperties());
     }
 }
