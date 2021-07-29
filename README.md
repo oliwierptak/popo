@@ -239,6 +239,7 @@ The following methods are supported:
 - fromArray
 - toArray
 - requireAll
+- listModifiedProperties
   
 Property specific methods
 - set
