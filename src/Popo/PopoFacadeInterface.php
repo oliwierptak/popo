@@ -10,9 +10,10 @@ interface PopoFacadeInterface
 {
     /**
      * Specification:
-     * - Check if directories set in the configurator exist, creat them if needed.
+     * - Validate, throw exception in case of error.
      * - Generate POPO files based on schema.
-     * - Save POPO files under location based on schema path and namespace.
+     * - Create target directories based on output path and namespace.
+     * - Save POPO files under location based on output path and namespace.
      * - Return instance of PopoGenerateResult
      *
      * @param \Popo\PopoConfigurator $configurator
