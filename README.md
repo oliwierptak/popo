@@ -181,14 +181,14 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
       property: [{
          name: string,
          type: {
-            type: string|null,
+            type: string,
             default: string,
             supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
          },
          comment: string|null, # Property docblock comment
          default: mixed, # default value
-         itemType: string|null, # define itemType of a collection
-         itemName: string|null #define singular expression of itemItem
+         itemType: string|null, # collection item type
+         itemName: string|null # collection item singular name
       }]
 
    PopoName:
@@ -203,7 +203,7 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
       property: [{
          name: string,
          type: {
-            type: string|null,
+            type: string,
             default: string,
             supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
          },
@@ -218,14 +218,14 @@ See [popo-schema.yml](popo-schema.yml).
 
 ### Property type list
 
-- array
-- bool
-- float
-- int
-- string
-- mixed
-- const
-- popo
+- `array`
+- `bool`
+- `float`
+- `int`
+- `string`
+- `mixed`
+- `const`
+- `popo`
 
 
 ### Additional methods
@@ -235,23 +235,25 @@ which ease access to, and offer more insight about the data that they represent.
 
 The following methods are supported:
 
-- isNew
-- fromArray
-- toArray
-- requireAll
-- listModifiedProperties
+- `isNew`
+- `fromArray`
+- `toArray`
+- `requireAll`
+- `listModifiedProperties`
   
-Property specific methods
-- set
-- get
-- require
-- has
-- addCollectionItem
+Property specific methods:
+
+- `set`
+- `get`
+- `require`
+- `has`
+- `addCollectionItem`
 
 
 ### Collection support
 
-Use property's `itemType` and `itemName` to create properties that support array item types.
+Use property's `itemType` and `itemName` to create properties with collection item type support.
+For example using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
 
 
 ### More Examples
@@ -303,6 +305,7 @@ Example:
       property: [
          {name: value, default: Buzzzzz}
       ]}}
+
 ```
 
 _Run `bin/popo generate -o tests/ -s tests/fixtures/popo.yml` to generate files from this schema._

@@ -20,14 +20,14 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     property: [{
       name: string,
       type: {
-        type: string|null,
+        type: string,
         default: string,
         supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
       },
       comment: string|null, # Property docblock comment
       default: mixed, # default value
-      itemType: string|null, # define itemType of a collection
-      itemName: string|null #define singular expression of itemItem
+      itemType: string|null, # collection item type
+      itemName: string|null # collection item singular name
     }]
 
   PopoName:
@@ -42,7 +42,7 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     property: [{
       name: string,
       type: {
-        type: string|null,
+        type: string,
         default: string,
         supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
       },
