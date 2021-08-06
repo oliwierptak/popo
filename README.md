@@ -189,15 +189,14 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     default: array
     property: [{
       name: string
-        type: {
-          type: string
-            default: string
-            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-        },
+      type: 
+        type: string
+        default: string
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
       comment: string|null # Property docblock comment
-        default: mixed # default value
-        itemType: string|null # collection item type
-        itemName: string|null # collection item singular name
+      default: mixed # default value
+      itemType: string|null # collection item type
+      itemName: string|null # collection item singular name
     }]
 
   PopoName:
@@ -211,15 +210,14 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     default: array
     property: [{
       name: string
-        type: {
-          type: string
-            default: string
-            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-        },
+      type:
+        type: string
+        default: string
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
       comment: string|null
-        default: mixed
-        itemType: string|null
-        itemName: string|null
+      default: mixed
+      itemType: string|null
+      itemName: string|null
     }]
 ```
 
