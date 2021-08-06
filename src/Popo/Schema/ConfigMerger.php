@@ -7,100 +7,58 @@ namespace Popo\Schema;
 use JetBrains\PhpStorm\Pure;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
+use function array_replace_recursive;
 
 class ConfigMerger
 {
-    #[Pure] public function mergeGlobalSchema(SchemaFile $globalConfig, string $schemaName): array
+    #[Pure] public function mergeSchemaConfiguration(string $schemaName, SchemaFile $sharedSchemaFile, SchemaFile $schemaFile): array
     {
-        return array_merge_recursive(
-            $globalConfig->getSharedConfig(),
-            $globalConfig->getSchemaConfig()[$schemaName] ?? []
+        $sharedConfig = $this->mergeSchemaFile(
+            $schemaName,
+            $sharedSchemaFile
+        );
+        $fileConfig = $this->mergeSchemaFile(
+            $schemaName,
+            $schemaFile
+        );
+
+        return $this->mergeSchemaDefaults(
+            $sharedConfig,
+            $fileConfig
         );
     }
 
-    public function generateSharedConfig(SchemaFile $sharedConfig, array $data): SchemaFile
+    public function mergeSchemaDefaults(...$data): array
     {
-        $file = (new SchemaFile)->setSharedConfig(
-            [
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => [],
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT => [],
-                PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => [],
-            ]
+        return array_replace_recursive(
+            PopoDefinesInterface::SCHEMA_DEFAULT_DATA,
+            ...$data
         );
+    }
 
-        $sharedConfigData = [];
-        $schemaConfigData = [];
+    #[Pure] public function mergeSchemaFile(string $schemaName, SchemaFile $file): array
+    {
+        return array_replace_recursive(
+            $file->getFileConfig(),
+            $file->getSchemaConfig()[$schemaName] ?? []
+        );
+    }
 
-        foreach ($data as $schemaFile) {
-            $mergedConfig = array_merge_recursive($sharedConfig->getSchemaConfig(), $schemaFile->getSchemaConfig());
-            $schemaConfigData = array_merge($mergedConfig, $schemaConfigData);
-
-            $mergedConfig = array_merge_recursive($sharedConfig->getSharedConfig(), $schemaFile->getSharedConfig());
-            $sharedConfigData = array_merge($mergedConfig, $sharedConfigData);
+    #[Pure] public function mergePopoCollection(
+        string $schemaName,
+        array $popoCollection,
+        array $configData,
+        array $result
+    ): array {
+        foreach ($popoCollection as $popoName => $popoData) {
+            $result[$schemaName][$popoName] = array_replace_recursive(
+                PopoDefinesInterface::SCHEMA_DEFAULT_DATA,
+                $result[$schemaName][$popoName] ?? [],
+                $configData,
+                $popoData
+            );
         }
 
-        return $file
-            ->setSharedConfig($sharedConfigData)
-            ->setSchemaConfig($schemaConfigData);
+        return $result;
     }
-
-    #[Pure] public function mergePopoSchema(SchemaFile $schemaFile, array $schemaConfigData, array $popoData): array
-    {
-        $popoData = $this->mergeSchemaConfiguration(
-            $schemaFile,
-            $schemaConfigData,
-            $popoData,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG
-        );
-        $popoData = $this->mergeSchemaConfiguration(
-            $schemaFile,
-            $schemaConfigData,
-            $popoData,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT
-        );
-        $popoData = $this->mergeSchemaConfiguration(
-            $schemaFile,
-            $schemaConfigData,
-            $popoData,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY
-        );
-
-        return $popoData;
-    }
-
-    #[Pure] public function mergeSchemaConfiguration(
-        SchemaFile $schemaFile,
-        array $globalDefaultConfig,
-        array $popoData,
-        string $key
-    ): array {
-        $mergedConfig[$key] = array_merge(
-            $schemaFile->getSharedConfig()[$key] ?? [],
-            $schemaFile->getSchemaConfig()[$key] ?? []
-        );
-
-        $popoData[$key] = array_merge(
-            $globalDefaultConfig[$key] ?? [],
-            $mergedConfig[$key],
-            $popoData[$key] ?? []
-        );
-
-        return $popoData;
-    }
-
-    public function updateSchemaConfigFromCommandConfiguration(Schema $popoSchema, PopoConfigurator $configurator): Schema
-    {
-        $popoSchema->getConfig()->setNamespace(
-            $configurator->getNamespace() ?? $popoSchema->getConfig()->getNamespace()
-        );
-        $popoSchema->getConfig()->setNamespaceRoot(
-            $configurator->getNamespaceRoot() ?? $popoSchema->getConfig()->getNamespaceRoot()
-        );
-        $popoSchema->getConfig()->setOutputPath(
-            $configurator->getOutputPath() ?? $popoSchema->getConfig()->getOutputPath()
-        );
-
-        return $popoSchema;
-    }
-
 }

@@ -1,21 +1,23 @@
 $: #shared configuration for all POPO objects defined below
-  namespace: string
-  outputPath: string
-  namespaceRoot: string|null # if set remaps namespace and outputPath
-  extend: string|null # which class POPO objects should extend from
-  implement: string|null # which interface POPO objects should implement
-  comment: string|null # Class docblock comment
+  config:
+    namespace: string
+    outputPath: string
+    namespaceRoot: string|null # if set remaps namespace and outputPath
+    extend: string|null # which class POPO objects should extend from
+    implement: string|null # which interface POPO objects should implement
+    comment: string|null # Class docblock comment
   default: array # default values
   property: array #shared properties
 
 SchemaName: #defines shared configuration and POPO objects under SchemaName
   $: # shared configuration for all POPO objects in SchemaName
-    namespace: string
-    outputPath: string
-    namespaceRoot: string|null
-    extend: string|null
-    implement: string|null
-    comment: string|null
+    config:
+      namespace: string
+      outputPath: string
+      namespaceRoot: string|null
+      extend: string|null
+      implement: string|null
+      comment: string|null
     default: array
     property: [{
       name: string,

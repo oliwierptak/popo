@@ -9,7 +9,7 @@ use SplFileInfo;
 class SchemaFile
 {
     protected SplFileInfo $filename;
-    protected array $sharedConfig = [];
+    protected array $fileConfig = [];
     protected array $schemaConfig = [];
     protected array $data = [];
 
@@ -25,14 +25,14 @@ class SchemaFile
         return $this;
     }
 
-    public function getSharedConfig(): array
+    public function getFileConfig(): array
     {
-        return $this->sharedConfig;
+        return $this->fileConfig;
     }
 
-    public function setSharedConfig(array $sharedConfig): self
+    public function setFileConfig(array $fileConfig): self
     {
-        $this->sharedConfig = $sharedConfig;
+        $this->fileConfig = $fileConfig;
 
         return $this;
     }

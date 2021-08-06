@@ -1,14 +1,15 @@
 $:
-  namespace: ExampleBundle\AppWithNamespaceRoot\Example
-  namespaceRoot: ExampleBundle\
-  outputPath: tests/
+  config:
+    namespace: ExampleBundle\AppWithNamespaceRoot\Example
+    namespaceRoot: ExampleBundle\
+    outputPath: tests/
 
 Example:
   Foo:
     property: [
-      {name: title},
-      {name: bar, type: popo, default: Bar::class},
-      {name: shouldExecute, type: bool, default: false},
+      {name: title}
+      {name: bar, type: popo, default: Bar::class}
+      {name: shouldExecute, type: bool, default: false}
     ]}}
 
   Bar:

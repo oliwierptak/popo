@@ -1,0 +1,13 @@
+$:
+  config:
+    namespace: App\Example\Extend
+    outputPath: tests/
+  property: [
+    {name: idForAll, type: int, default: 1, comment: This id is for all}
+  ]
+
+Example:
+  FooBarFirst:
+    property: [
+
+    ]}}

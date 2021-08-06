@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo;
 
 use Popo\Model\PopoGenerateResult;
+use Popo\Model\PopoReportResult;
 
 class PopoFacade implements PopoFacadeInterface
 {
@@ -30,6 +31,13 @@ class PopoFacade implements PopoFacadeInterface
     {
         return $this->getFactory()
             ->createPopoModel()
+            ->generate($configurator);
+    }
+
+    public function report(PopoConfigurator $configurator): PopoReportResult
+    {
+        return $this->getFactory()
+            ->createReportModel()
             ->generate($configurator);
     }
 }

@@ -3,12 +3,12 @@
 
 require_once getcwd().'/vendor/autoload.php';
 
-///use Popo\Command\ConfigureCommand;
 use Popo\Command\GenerateCommand;
+use Popo\Command\ReportCommand;
 use Symfony\Component\Console\Application;
 
 $console = new Application('popo', \Popo\PopoDefinesInterface::VERSION);
 $console->add(new GenerateCommand());
-//$console->add(new ConfigureCommand());
+$console->add(new ReportCommand());
 
 $console->run();

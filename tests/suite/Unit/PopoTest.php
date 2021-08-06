@@ -6,7 +6,7 @@ namespace PopoTestsSuites\Unit;
 
 use App\Example\Popo\Bar;
 use App\Example\Popo\Foo;
-use App\Example\Popo\Fizz\Buzz;
+use App\Example\Popo\Buzz\Buzz;
 use App\ExampleInterface;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
@@ -38,19 +38,22 @@ class PopoTest extends AbstractPopoTest
         $this->assertEquals(
             [
                 'fooId' => null,
-                'title' => 'Hakuna Matata',
+                'title' => 'Example Foo Hakuna Matata',
                 'value' => ExampleInterface::TEST_BUZZ,
                 'bar' => [
                     'title' => 'Lorem Ipsum',
                     'buzz' => [
                         'value' => 'Buzzzzz',
-                        'idForAll' => 0,
+                        'idForAll' => 20,
+                        'idFromExampleSchema' => 20,
                     ],
                     'buzzCollection' => [],
-                    'idForAll' => 0,
+                    'idForAll' => 40,
+                    'idFromExampleSchema' => 20,
                 ],
                 'test' => null,
-                'idForAll' => 0,
+                'idForAll' => 30,
+                'idFromExampleSchema' => 20,
             ],
             $foo->toArray()
         );
@@ -62,19 +65,22 @@ class PopoTest extends AbstractPopoTest
 
         $expected = [
             'fooId' => null,
-            'title' => 'Lorem Ipsum',
+            'title' => 'Example Foo Hakuna Matata',
             'value' => ExampleInterface::TEST_BUZZ,
             'bar' => [
-                'title' => 'Bar Bar',
+                'title' => 'Lorem Ipsum',
                 'buzz' => [
-                    'value' => 'Foo Bar Buzz',
-                    'idForAll' => 0,
+                    'value' => 'Buzzzzz',
+                    'idForAll' => 20,
+                    'idFromExampleSchema' => 20,
                 ],
                 'buzzCollection' => [],
-                'idForAll' => 0,
+                'idForAll' => 40,
+                'idFromExampleSchema' => 20,
             ],
             'test' => null,
-            'idForAll' => 0,
+            'idForAll' => 30,
+            'idFromExampleSchema' => 20,
         ];
 
         $foo->fromArray($expected);
@@ -96,7 +102,7 @@ class PopoTest extends AbstractPopoTest
     {
         $foo = (new Foo);
 
-        $this->assertEquals('Hakuna Matata', $foo->getTitle());
+        $this->assertEquals('Example Foo Hakuna Matata', $foo->getTitle());
         $this->assertEquals('Buzzzzz', $foo->requireBar()->requireBuzz()->getValue());
     }
 
@@ -116,7 +122,7 @@ class PopoTest extends AbstractPopoTest
 
         $this->assertNull($foo->getBar());
         $this->assertInstanceOf(Bar::class, $foo->requireBar());
-        $this->assertEquals('Hakuna Matata', $foo->requireTitle());
+        $this->assertEquals('Example Foo Hakuna Matata', $foo->requireTitle());
         $this->assertEquals(ExampleInterface::TEST_BUZZ, $foo->requireValue());
     }
 

@@ -1,5 +1,6 @@
 $:
-  namespace: App\Example\Shared\Fizz
+  config:
+    namespace: App\Example\Shared\Buzz
 
 Example:
   Buzz:

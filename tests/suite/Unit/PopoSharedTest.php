@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestsSuites\Unit;
 
 use App\Example\Shared\Bar;
-use App\Example\Shared\Fizz\Buzz;
+use App\Example\Shared\Buzz\Buzz;
 use App\Example\Shared\Foo;
 use App\ExampleInterface;
 use Popo\PopoConfigurator;
@@ -28,7 +28,7 @@ class PopoSharedTest extends AbstractPopoTest
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
             ->setOutputPath(POPO_TESTS_DIR)
             ->setSchemaPathFilter('bundles')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
         $facade->generate($configurator);
     }

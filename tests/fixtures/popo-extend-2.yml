@@ -1,6 +1,6 @@
 $:
   config:
-    namespace: App\Example\Invalid
+    namespace: App\Example\Extend
     outputPath: tests/
   property: [
     {name: idForAll, type: int, default: 1, comment: This id is for all}
@@ -10,11 +10,9 @@ Example:
   $:
     property: [
       {name: idForAll, type: int, default: 2, comment: This id is for all}
-      {name: description}
     ]
 
-  FooBar:
+  FooBarSecond:
     property: [
-      {name: idForAll, type: int, default: 3, comment: This id is for all}
-      {name: description}
+
     ]}}

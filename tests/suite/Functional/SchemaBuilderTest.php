@@ -11,7 +11,6 @@ use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
 use Popo\Schema\ConfigMerger;
-use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use const POPO_TESTS_DIR;
 
@@ -20,7 +19,7 @@ use const POPO_TESTS_DIR;
  */
 class SchemaBuilderTest extends TestCase
 {
-    public function test_build(): void
+    public function test_build_popo(): void
     {
         $builder = new SchemaBuilder(
             new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader()),
@@ -28,8 +27,7 @@ class SchemaBuilderTest extends TestCase
         );
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundles/')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo.yml');
 
         $data = $builder->build($configurator);
 
@@ -40,20 +38,23 @@ class SchemaBuilderTest extends TestCase
         $this->assertNotEmpty($data['AnotherExample']);
     }
 
-    public function test_build_invalid(): void
+    public function test_build_project(): void
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Property with name "idForAll" is already defined and cannot be used for "Example::FooBar" in "/www/oliwierptak/popo/tests/../tests/fixtures/popo-invalid.yml"');
-
         $builder = new SchemaBuilder(
             new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader()),
             new ConfigMerger()
         );
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-invalid.yml');
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundles/')
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
-        $builder->build($configurator);
+        $data = $builder->build($configurator);
+
+        $this->assertNotEmpty($data);
+        $this->assertCount(2, $data);
+
+        $this->assertNotEmpty($data['Example']);
+        $this->assertNotEmpty($data['AnotherExample']);
     }
-
 }

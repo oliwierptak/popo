@@ -8,6 +8,7 @@ use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
 use Popo\Loader\FileLocator;
 use Popo\Loader\Yaml\YamlLoader;
+use Popo\Model\ReportModel;
 use Popo\Schema\ConfigMerger;
 use Popo\Schema\SchemaInspector;
 use Popo\Model\PopoModel;
@@ -22,6 +23,13 @@ class PopoFactory
         return new PopoModel(
             $this->createSchemaBuilder(),
             $this->createPopoBuilder(),
+        );
+    }
+
+    public function createReportModel(): ReportModel
+    {
+        return new ReportModel(
+            $this->createSchemaBuilder()
         );
     }
 

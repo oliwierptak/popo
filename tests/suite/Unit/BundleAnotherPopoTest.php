@@ -13,7 +13,7 @@ use UnexpectedValueException;
 /**
  * @group unit
  */
-class AnotherPopoTest extends AbstractPopoTest
+class BundleAnotherPopoTest extends AbstractPopoTest
 {
 
     public static function setUpBeforeClass(): void
@@ -26,7 +26,7 @@ class AnotherPopoTest extends AbstractPopoTest
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
             ->setOutputPath(POPO_TESTS_DIR)
             ->setSchemaPathFilter('bundles')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
         $facade->generate($configurator);
     }
@@ -39,6 +39,8 @@ class AnotherPopoTest extends AbstractPopoTest
             [
                 'idForAll' => 0,
                 'anotherExampleSharedId' => 567,
+                'description' => 'Another Lorem Ipsum',
+                'idForAnotherExample' => 999,
                 'title' => 'Hakuna Matata',
             ],
             $foo->toArray()
@@ -52,6 +54,8 @@ class AnotherPopoTest extends AbstractPopoTest
         $expected = [
             'idForAll' => 0,
             'anotherExampleSharedId' => 567,
+            'description' => 'Another Lorem Ipsum',
+            'idForAnotherExample' => 999,
             'title' => 'Hakuna Matata',
         ];
 

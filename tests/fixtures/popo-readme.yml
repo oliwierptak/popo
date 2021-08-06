@@ -1,12 +1,13 @@
 $:
-  namespace: App\Example\Readme
-  outputPath: tests/
+  config:
+    namespace: App\Example\Readme
+    outputPath: tests/
 
 Example:
   Foo:
     property: [
-      {name: title},
-      {name: bar, type: popo, default: Bar::class},
+      {name: title}
+      {name: bar, type: popo, default: Bar::class}
     ]}}
 
   Bar:

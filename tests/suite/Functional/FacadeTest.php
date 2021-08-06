@@ -7,7 +7,6 @@ namespace PopoTestsSuites\Functional;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
 use PopoTestsSuites\AbstractGenerateTest;
-use RuntimeException;
 use const POPO_TESTS_DIR;
 
 /**
@@ -16,7 +15,7 @@ use const POPO_TESTS_DIR;
 class FacadeTest extends AbstractGenerateTest
 {
 
-    public function test_generate_from_path(): void
+    public function test_generate_bundles(): void
     {
         $facade = new PopoFacade();
 
@@ -24,11 +23,47 @@ class FacadeTest extends AbstractGenerateTest
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/')
             ->setOutputPath(POPO_TESTS_DIR)
             ->setSchemaPathFilter('bundles')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
         $facade->generate($configurator);
 
-        $this->assertGenerateFromPath();
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Shared/Buzz/Buzz.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Shared/AnotherFoo.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Shared/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Shared/Foo.php');
+    }
+
+    public function test_generate_from_path_popo(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Buzz/Buzz.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/AnotherFoo.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Foo.php');
+    }
+
+    public function test_generate_from_path_popo_and_config(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo.yml')
+            ->setOutputPath(POPO_TESTS_DIR)
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/popo.config.yml');
+
+        $facade->generate($configurator);
+
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Buzz/Buzz.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/AnotherFoo.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Foo.php');
     }
 
     public function test_generate_from_popo_file(): void
@@ -41,7 +76,10 @@ class FacadeTest extends AbstractGenerateTest
 
         $facade->generate($configurator);
 
-        $this->assertGenerateFromPopoFile();
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Buzz/Buzz.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/AnotherFoo.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Popo/Foo.php');
     }
 
     public function test_generate_readme_example(): void
@@ -54,7 +92,8 @@ class FacadeTest extends AbstractGenerateTest
 
         $facade->generate($configurator);
 
-        $this->assertGenerateFromReadmeExample();
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Readme/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Readme/Foo.php');
     }
 
     public function test_generate_example_with_namespace_root(): void
@@ -67,33 +106,7 @@ class FacadeTest extends AbstractGenerateTest
 
         $facade->generate($configurator);
 
-        $this->assertGenerateWithNamespaceRoot();
-    }
-
-    public function test_generate_should_throw_exception(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessageMatches('@Specified path to POPO schema does not exist: "(.*)tests/fixtures/popos.yml"@i');
-
-        $facade = new PopoFacade();
-
-        $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popos.yml');
-
-        $facade->generate($configurator);
-    }
-
-    public function test_build_invalid(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Property with name "idForAll" is already defined and cannot be used for "Example::FooBar" in "/www/oliwierptak/popo/tests/../tests/fixtures/popo-invalid.yml"');
-
-        $facade = new PopoFacade();
-
-
-        $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-invalid.yml');
-
-        $facade->generate($configurator);
+        $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Bar.php');
+        $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Foo.php');
     }
 }

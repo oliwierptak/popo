@@ -1,0 +1,34 @@
+$:
+  config:
+    namespace: App\Example\Popo
+    outputPath: tests/
+    comment: Popo Example. Auto-generated.
+  default:
+    idForAll: 0
+  property: [
+    {name: idForAll, type: int, comment: This property is used in ALL schemas in ALL popo files}
+    {name: description}
+  ]}}
+
+Example:
+  $:
+    config:
+      extend: App\AbstractExample::class
+      implement: App\ExampleInterface::class
+    default:
+      sharedExampleId: 123
+    property: [
+      {name: sharedExampleId, type: int, comment: This property is used in ALL schemas under Example schema}
+    ]}}
+
+AnotherExample:
+  $:
+    default:
+      anotherExampleSharedId: 200
+    property: [
+      {name: anotherExampleSharedId, type: int, comment: This propertyn is used in ALL schemas under AnotherExample schema}
+    ]}}
+  AnotherFoo:
+    property: [
+      {name: description, comment: Property from popo.config.yml schema},
+    ]}}

@@ -14,7 +14,7 @@ class Config
         'namespaceRoot' => "null|string",
         'extend' => "null|string",
         'implement' => "null|string",
-        'comment' => "null|string"
+        'comment' => "null|string",
     ];
 
     protected string $namespace;

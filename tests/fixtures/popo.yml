@@ -1,42 +1,74 @@
 $:
-  namespace: App\Example\Popo
-  outputPath: tests/
-  extend: App\AbstractExample::class
-  implement: App\ExampleInterface::class
-  comment: Popo Example. Auto-generated.
+  config:
+    namespace: App\Example\Popo
+    outputPath: tests/
+    #extend: App\AbstractExample::class
+    #implement: App\ExampleInterface::class
+    comment: Popo Example. Auto-generated.
   default:
     title: Hakuna Matata
+    idForAll: 10
   property: [
-    {name: idForAll, type: int, default: 0, comment: This id is for all}
+    {name: idForAll, type: int, comment: This property is used in ALL schemas under CURRENT popo file}
   ]
 
 Example:
+  $:
+    config:
+      comment: Example lorem ipsum
+    default:
+      title: Example Hakuna Matata
+      idForAll: 20
+    property: [
+      {name: idFromExampleSchema, type: int, default: 20, comment: This property is used in ALL schemas under Example schema}
+    ]
   Foo:
     config:
       comment: Foo example lorem ipsum
     default:
+      title: Example Foo Hakuna Matata
       bar: Bar::class
+      idForAll: 30
     property: [
-      {name: fooId, type: int, comment: Foo ID COMMENT},
-      {name: title},
-      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
-      {name: bar, type: popo},
-      {name: test, type: mixed},
+      {name: fooId, type: int, comment: Foo ID COMMENT}
+      {name: title}
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
+      {name: bar, type: popo}
+      {name: test, type: mixed}
     ]}}
 
   Bar:
     default:
       title: Lorem Ipsum
-      buzz: \App\Example\Popo\Fizz\Buzz::class
+      buzz: \App\Example\Popo\Buzz\Buzz::class
+      idForAll: 40
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: \App\Example\Popo\Fizz\Buzz::class, itemName: buzz}
+      {name: buzzCollection, type: array, itemType: \App\Example\Popo\Buzz\Buzz::class, itemName: buzz}
     ]}}
 
   Buzz:
     config:
-      namespace: App\Example\Popo\Fizz
+      namespace: App\Example\Popo\Buzz
     property: [
       {name: value, default: Buzzzzz}
+    ]}}
+
+AnotherExample:
+  $:
+    config:
+      comment: Another example lorem ipsum
+    default:
+      idForAnotherExample: 100
+    property: [
+      {name: idForAnotherExample, type: int, comment: This property is used in ALL schemas under AnotherExample schema}
+      {name: description}
+    ]
+  AnotherFoo:
+    default:
+      idForAnotherExample: 200
+    property: [
+      {name: title}
+      {name: description}
     ]}}

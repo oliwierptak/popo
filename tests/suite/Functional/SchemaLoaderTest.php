@@ -23,14 +23,15 @@ class SchemaLoaderTest extends TestCase
         $loader = new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader());
 
         $configurator = (new PopoConfigurator())
-            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
         $data = $loader->load($configurator);
 
         $this->assertNotEmpty($data);
         $this->assertCount(1, $data);
 
-        $this->assertNotEmpty($data[0]->getSharedConfig());
+        $this->assertNotEmpty($data[0]->getFileConfig());
+        $this->assertNotEmpty($data[0]->getSchemaConfig());
     }
 
     public function test_load_popo_schema(): void
@@ -45,8 +46,8 @@ class SchemaLoaderTest extends TestCase
         $this->assertNotEmpty($data);
         $this->assertCount(1, $data);
 
-        $this->assertEmpty($data[0]->getSchemaConfig());
-        $this->assertNotEmpty($data[0]->getSharedConfig());
+        $this->assertNotEmpty($data[0]->getSchemaConfig());
+        $this->assertNotEmpty($data[0]->getFileConfig());
     }
 
     public function test_load_path_with_shared_config(): void
@@ -55,7 +56,7 @@ class SchemaLoaderTest extends TestCase
 
         $configurator = (new PopoConfigurator())
             ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/bundles/')
-            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/shared.config.yml');
+            ->setSchemaConfigFilename(POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml');
 
         $data = $loader->load($configurator);
 

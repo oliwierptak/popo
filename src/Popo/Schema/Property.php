@@ -6,15 +6,16 @@ namespace Popo\Schema;
 
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\ExpectedValues;
+use Popo\PopoDefinesInterface;
 
 class Property
 {
     protected const PROPERTY_SHAPE = [
         'name' => 'string',
         'type' => 'string',
-        'comment' => 'mixed',
-        'itemType' => 'mixed',
-        'itemName' => 'mixed',
+        'comment' => 'string|null',
+        'itemType' => 'string|null',
+        'itemName' => 'string|null',
         'default' => 'mixed',
     ];
 
@@ -30,7 +31,7 @@ class Property
     ];
 
     protected string $name;
-    protected string $type = 'string';
+    protected string $type = PopoDefinesInterface::PROPERTY_TYPE_STRING;
     protected ?string $comment = null;
     protected ?string $itemType = null;
     protected ?string $itemName = null;
@@ -54,14 +55,7 @@ class Property
         array $data): self
     {
         $data = array_merge(
-            [
-                'name' => null,
-                'type' => 'string',
-                'comment' => null,
-                'itemType' => null,
-                'itemName' => null,
-                'default' => null,
-            ],
+            PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT_DATA,
             $data
         );
 

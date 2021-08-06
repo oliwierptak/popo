@@ -5,23 +5,24 @@ Example:
     default:
       bar: Bar::class
     property: [
-      {name: fooId, type: int, comment: Foo ID COMMENT},
-      {name: title},
-      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ},
-      {name: bar, type: popo},
-      {name: test, type: mixed},
+      {name: fooId, type: int, comment: Foo ID COMMENT}
+      {name: title}
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
+      {name: bar, type: popo}
+      {name: test, type: mixed}
     ]}}
 
 AnotherExample:
   $:
-    comment: Another example lorem ipsum
+    config:
+      comment: Another example lorem ipsum
     default:
-      idForAnotherExample: 200 # default is 100 because property value overrides shared values
+      anotherExampleSharedId: 567
     property: [
-      {name: idForAnotherExample, type: int, default: 100, comment: This id is for AnotherExample}
+      {name: idForAnotherExample, type: int, default: 999, comment: This id is for AnotherExample}
     ]
   AnotherFoo:
     property: [
-      {name: title},
+      {name: title}
     ]}}
 

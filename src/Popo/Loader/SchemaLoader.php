@@ -31,26 +31,23 @@ class SchemaLoader
         foreach ($files as $configurationFile) {
             $schemaConfig = [];
             $data = $this->loader->load($configurationFile);
+            $fileConfig = $this->extractConfig($data);
+            $data = $this->removeOptionSymbol($data);
 
-            $extractedConfigData = $this->extractSharedSchemaConfiguration($data);
-
-            foreach ($extractedConfigData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA] as $schemaName => $schemaData) {
+            foreach ($data as $schemaName => $schemaData) {
                 if ($this->hasSchemaConfigOption($schemaData)) {
-                    $schemaConfig[$schemaName] = $this->extractSharedSchemaConfiguration($schemaData);
-
-                    unset($schemaConfig[$schemaName][PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA]);
-                    unset($extractedConfigData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA][$schemaName][PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
+                    $schemaConfig[$schemaName] = $this->extractConfig($schemaData);
+                    $data[$schemaName] = $this->removeOptionSymbol($schemaData);
                 }
             }
 
-            $schemaFileData = $extractedConfigData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA];
-            unset($extractedConfigData[PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA]);
-
             $result[] = (new SchemaFile)
                 ->setFilename($configurationFile)
-                ->setSharedConfig($extractedConfigData)
+                ->setFileConfig($fileConfig)
                 ->setSchemaConfig($schemaConfig)
-                ->setData($schemaFileData);
+                ->setData(
+                    $this->remapSchemaProperties($data)
+                );
         }
 
         return $result;
@@ -80,30 +77,6 @@ class SchemaLoader
         return $files;
     }
 
-    #[ArrayShape([
-        PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => "array",
-        PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT => "array",
-        PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA => "array",
-        PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => "array",
-    ])] protected function extractSharedSchemaConfiguration(
-        array $data
-    ): array {
-        $config = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION] ?? [];
-        $defaults = $config[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT] ?? [];
-        $properties = $config[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
-
-        unset($config[PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT]);
-        unset($config[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY]);
-        unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION]);
-
-        return [
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG => $config,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT => $defaults,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_DATA => $data,
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY => $properties,
-        ];
-    }
-
     protected function validate(PopoConfigurator $configurator): void
     {
         $this->validatePath($configurator->getSchemaPath());
@@ -122,8 +95,52 @@ class SchemaLoader
     protected function hasSchemaConfigOption(array $schemaData): bool
     {
         return array_key_exists(
-            PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION,
+            PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL,
             $schemaData,
         );
+    }
+
+    protected function remapSchemaProperties(array $schemaFileData): array
+    {
+        foreach ($schemaFileData as $schemaName => $popoCollection) {
+            foreach ($popoCollection as $popoName => $popoData) {
+                $schemaFileData[$schemaName][$popoName][PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] = $this
+                    ->remapProperties($popoData);
+            }
+        }
+
+        return $schemaFileData;
+    }
+
+    protected function remapProperties(array $data): array
+    {
+        $propertyDataCollection = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
+
+        $properties = [];
+        foreach ($propertyDataCollection as $propertyData) {
+            $properties[$propertyData[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY_NAME]] = $propertyData;
+        }
+
+        return $properties;
+    }
+
+    protected function extractConfig($data): array
+    {
+        $fileConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL] ?? [];
+        $fileConfig[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] = $this->remapProperties($fileConfig);
+
+        return $fileConfig;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function removeOptionSymbol(array $data): array
+    {
+        unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL]);
+
+        return $data;
     }
 }

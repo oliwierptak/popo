@@ -2,17 +2,17 @@ Example:
   Bar:
     default:
       title: Lorem Ipsum
-      buzz: \App\Example\Shared\Fizz\Buzz::class
+      buzz: \App\Example\Shared\Buzz\Buzz::class
     property: [
       {name: title}
       {name: buzz, type: popo}
-      {name: buzzCollection, type: array, itemType: \App\Example\Shared\Fizz\Buzz::class, itemName: buzz}
+      {name: buzzCollection, type: array, itemType: \App\Example\Shared\Buzz\Buzz::class, itemName: buzz}
     ]}}
 
 AnotherExample:
-  AnotherBar:
+  AnotherFoo:
     default:
-      title: Another Lorem Ipsum
+      description: Another Lorem Ipsum
     property: [
-      {name: title}
+      {name: description}
     ]}}
