@@ -102,7 +102,7 @@ composer require popo/generator --dev
       [-c <shared-schema-config>] \
       [-o <output-path>] \
       [-nm <namespace>] \
-      [-nr <namespaceRoot>] \
+      [-nr <namespace-root>] \
       [-p <schema-path-filter>]
     ```
 
@@ -130,12 +130,12 @@ Namespace of generated POPO files.
 
 This parameter is optional, but when set it overrides `namespace` configured in a schema.
 
-#### `[namespaceRoot]`
+#### `[namespace-root]`
 
 This parameter is optional, but when set it allow set mapping between `namespace` and `outputPath`.
 
-For example, the configuration below would remove `ExampleBundle` from the file path,
-when generating files under `outputPath` directory.
+For example, the configuration below would remove `ExampleBundle` from the file path, when generating files
+under `outputPath` directory.
 
 ```yaml
  namespace: ExampleBundle\AppWithNamespaceRoot\Example
@@ -189,15 +189,15 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     default: array
     property: [{
       name: string
-      type: {
-        type: string
-        default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-      },
+        type: {
+          type: string
+            default: string
+            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+        },
       comment: string|null # Property docblock comment
-      default: mixed # default value
-      itemType: string|null # collection item type
-      itemName: string|null # collection item singular name
+        default: mixed # default value
+        itemType: string|null # collection item type
+        itemName: string|null # collection item singular name
     }]
 
   PopoName:
@@ -211,15 +211,15 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
     default: array
     property: [{
       name: string
-      type: {
-        type: string
-        default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-      },
+        type: {
+          type: string
+            default: string
+            supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+        },
       comment: string|null
-      default: mixed
-      itemType: string|null
-      itemName: string|null
+        default: mixed
+        itemType: string|null
+        itemName: string|null
     }]
 ```
 
@@ -229,77 +229,77 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
 
 ```yaml
 $:
-   config:
-      namespace: App\Example\Popo
-      outputPath: tests/
-      comment: Popo Example. Auto-generated.
-   default:
-      title: Hakuna Matata
-      idForAll: 10
-   property: [
-      {name: idForAll, type: int, comment: This property is used in ALL schemas under CURRENT popo file}
-   ]
+  config:
+    namespace: App\Example\Popo
+    outputPath: tests/
+    comment: Popo Example. Auto-generated.
+  default:
+    title: Hakuna Matata
+    idForAll: 10
+  property: [
+    {name: idForAll, type: int, comment: This property is used in ALL schemas under CURRENT popo file}
+  ]
 
 Example:
-   $:
-      config:
-         comment: Example lorem ipsum
-      default:
-         title: Example Hakuna Matata
-         idForAll: 20
-      property: [
-         {name: idFromExampleSchema, type: int, default: 20, comment: This property is used in ALL schemas under Example schema}
-      ]
-   Foo:
-      config:
-         comment: Foo example lorem ipsum
-      default:
-         title: Example Foo Hakuna Matata
-         bar: Bar::class
-         idForAll: 30
-      property: [
-         {name: fooId, type: int, comment: Foo ID COMMENT}
-         {name: title}
-         {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
-         {name: bar, type: popo}
-         {name: test, type: mixed}
-      ]}}
+  $:
+    config:
+      comment: Example lorem ipsum
+    default:
+      title: Example Hakuna Matata
+      idForAll: 20
+    property: [
+      {name: idFromExampleSchema, type: int, default: 20, comment: This property is used in ALL schemas under Example schema}
+    ]
+  Foo:
+    config:
+      comment: Foo example lorem ipsum
+    default:
+      title: Example Foo Hakuna Matata
+      bar: Bar::class
+      idForAll: 30
+    property: [
+      {name: fooId, type: int, comment: Foo ID COMMENT}
+      {name: title}
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
+      {name: bar, type: popo}
+      {name: test, type: mixed}
+    ]}}
 
-   Bar:
-      default:
-         title: Lorem Ipsum
-         buzz: \App\Example\Popo\Buzz\Buzz::class
-         idForAll: 40
-      property: [
-         {name: title}
-         {name: buzz, type: popo}
-         {name: buzzCollection, type: array, itemType: \App\Example\Popo\Buzz\Buzz::class, itemName: buzz}
-      ]}}
+  Bar:
+    default:
+      title: Lorem Ipsum
+      buzz: \App\Example\Popo\Buzz\Buzz::class
+      idForAll: 40
+    property: [
+      {name: title}
+      {name: buzz, type: popo}
+      {name: buzzCollection, type: array, itemType: \App\Example\Popo\Buzz\Buzz::class, itemName: buzz}
+    ]}}
 
-   Buzz:
-      config:
-         namespace: App\Example\Popo\Buzz
-      property: [
-         {name: value, default: Buzzzzz}
-      ]}}
+  Buzz:
+    config:
+      namespace: App\Example\Popo\Buzz
+    property: [
+      {name: value, default: Buzzzzz}
+    ]}}
 
 AnotherExample:
-   $:
-      config:
-         comment: Another example lorem ipsum
-      default:
-         idForAnotherExample: 100
-      property: [
-         {name: idForAnotherExample, type: int, comment: This property is used in ALL schemas under AnotherExample schema}
-         {name: description}
-      ]
-   AnotherFoo:
-      default:
-         idForAnotherExample: 200
-      property: [
-         {name: title}
-         {name: description}
-      ]}}
+  $:
+    config:
+      comment: Another example lorem ipsum
+    default:
+      idForAnotherExample: 100
+    property: [
+      {name: idForAnotherExample, type: int, comment: This property is used in ALL schemas under AnotherExample schema}
+      {name: description}
+    ]
+  AnotherFoo:
+    default:
+      idForAnotherExample: 200
+    property: [
+      {name: title}
+      {name: description}
+    ]}}
 ```
 
 _Run `bin/popo generate-s tests/fixtures/popo.yml` to generate files from this schema._
@@ -317,89 +317,89 @@ Shared schema between all POPO objects under `tests/fixtures/bundles/`.
 
 ```yaml
 $:
-   config:
-      namespace: App\Example\Shared
-      outputPath: tests/
-      comment: Popo Example. Auto-generated.
-   default:
-      title: Hakuna Matata
-   property: [
-      {name: idForAll, type: int, default: 0, comment: This id is for all}
-   ]}}
+  config:
+    namespace: App\Example\Shared
+    outputPath: tests/
+    comment: Popo Example. Auto-generated.
+  default:
+    title: Hakuna Matata
+  property: [
+    {name: idForAll, type: int, default: 0, comment: This id is for all}
+  ]}}
 
 Example:
-   $:
-      config:
-         extend: App\AbstractExample::class
-         implement: App\ExampleInterface::class
-      default:
-         sharedExampleId: 123
-      property: [
-         {name: sharedExampleId, type: int}
-      ]}}
+  $:
+    config:
+      extend: App\AbstractExample::class
+      implement: App\ExampleInterface::class
+    default:
+      sharedExampleId: 123
+    property: [
+      {name: sharedExampleId, type: int}
+    ]}}
 
 AnotherExample:
-   $:
-      default:
-         anotherExampleSharedId: 100
-      property: [
-         {name: anotherExampleSharedId, type: int}
-      ]}}
+  $:
+    default:
+      anotherExampleSharedId: 100
+    property: [
+      {name: anotherExampleSharedId, type: int}
+    ]}}
 ```
 
 #### tests/fixtures/bundles/example-foo/foo.popo.yml
 
 ```yaml
 Example:
-   Foo:
-      config:
-         comment: Foo example lorem ipsum
-      default:
-         bar: Bar::class
-      property: [
-         {name: fooId, type: int, comment: Foo ID COMMENT}
-         {name: title}
-         {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
-         {name: bar, type: popo}
-         {name: test, type: mixed}
-      ]}}
+  Foo:
+    config:
+      comment: Foo example lorem ipsum
+    default:
+      bar: Bar::class
+    property: [
+      {name: fooId, type: int, comment: Foo ID COMMENT}
+      {name: title}
+      {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
+      {name: bar, type: popo}
+      {name: test, type: mixed}
+    ]}}
 
 AnotherExample:
-   $:
-      config:
-         comment: Another example lorem ipsum
-      default:
-         anotherExampleSharedId: 567
-      property: [
-         {name: idForAnotherExample, type: int, default: 999, comment: This id is for AnotherExample}
-      ]
-   AnotherFoo:
-      property: [
-         {name: title}
-      ]}}
+  $:
+    config:
+      comment: Another example lorem ipsum
+    default:
+      anotherExampleSharedId: 567
+    property: [
+      {name: idForAnotherExample, type: int, default: 999, comment: This id is for AnotherExample}
+    ]
+  AnotherFoo:
+    property: [
+      {name: title}
+    ]}}
 ```
 
 #### tests/fixtures/bundles/example-bar/bar.popo.yml
 
 ```yaml
 Example:
-   Bar:
-      default:
-         title: Lorem Ipsum
-         buzz: \App\Example\Shared\Buzz\Buzz::class
-      property: [
-         {name: title}
-         {name: buzz, type: popo}
-         {name: buzzCollection, type: array, itemType: \App\Example\Shared\Buzz\Buzz::class, itemName: buzz}
-      ]}}
+  Bar:
+    default:
+      title: Lorem Ipsum
+      buzz: \App\Example\Shared\Buzz\Buzz::class
+    property: [
+      {name: title}
+      {name: buzz, type: popo}
+      {name: buzzCollection, type: array, itemType: \App\Example\Shared\Buzz\Buzz::class, itemName: buzz}
+    ]}}
 
 AnotherExample:
-   AnotherFoo:
-      default:
-         description: Another Lorem Ipsum
-      property: [
-         {name: description}
-      ]}}
+  AnotherFoo:
+    default:
+      description: Another Lorem Ipsum
+    property: [
+      {name: description}
+    ]}}
 ```
 
 _Run `bin/popo generate -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/` to generate files from
