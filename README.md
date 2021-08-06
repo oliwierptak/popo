@@ -296,7 +296,6 @@ AnotherExample:
       idForAnotherExample: 200
     property: [
       {name: title}
-      {name: description}
     ]}}
 ```
 
