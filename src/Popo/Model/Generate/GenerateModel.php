@@ -6,7 +6,6 @@ namespace Popo\Model\Generate;
 
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
-use Popo\Model\Generate\GenerateResult;
 use Popo\PopoConfigurator;
 
 class GenerateModel
@@ -20,7 +19,6 @@ class GenerateModel
     public function generate(PopoConfigurator $configurator): GenerateResult
     {
         $result = new GenerateResult;
-
         $data = $this->schemaBuilder->build($configurator);
 
         foreach ($data as $schemaName => $schemaCollection) {

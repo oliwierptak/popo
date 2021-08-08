@@ -37,24 +37,22 @@ class ReportModel
         $sharedSchemaFileConfig = [];
 
         foreach ($sharedFileConfig as $dataItem) {
-            $result->add(
-                (new ReportResultItem())
-                    ->setName($dataItem['name'])
-                    ->setData($dataItem)
-                    ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
-                    ->markAsFileConfig()
+            $result->add((new ReportResultItem())
+                ->setName($dataItem['name'])
+                ->setData($dataItem)
+                ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
+                ->markAsFileConfig()
             );
         }
 
         foreach ($data as $schemaFile) {
             $fileConfig = $schemaFile->getFileConfig()['property'] ?? [];
             foreach ($fileConfig as $dataItem) {
-                $result->add(
-                    (new ReportResultItem())
-                        ->setName($dataItem['name'])
-                        ->setData($dataItem)
-                        ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                        ->markAsFileConfig()
+                $result->add((new ReportResultItem())
+                    ->setName($dataItem['name'])
+                    ->setData($dataItem)
+                    ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                    ->markAsFileConfig()
                 );
             }
 
@@ -64,26 +62,24 @@ class ReportModel
                         ->getSchemaConfig()[$schemaName]['property'] ?? [];
 
                 foreach ($schemaConfig as $dataItem) {
-                    $result->add(
-                        (new ReportResultItem())
-                            ->setName($dataItem['name'])
-                            ->setData($dataItem)
-                            ->setSchemaName($schemaName)
-                            ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                            ->markAsSchemaConfig()
+                    $result->add((new ReportResultItem())
+                        ->setName($dataItem['name'])
+                        ->setData($dataItem)
+                        ->setSchemaName($schemaName)
+                        ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                        ->markAsSchemaConfig()
                     );
                 }
 
                 foreach ($popoCollection as $popoName => $popoData) {
                     foreach ($popoData['property'] as $propertyData) {
-                        $result->add(
-                            (new ReportResultItem())
-                                ->setName($propertyData['name'])
-                                ->setData($propertyData)
-                                ->setPopoName($popoName)
-                                ->setSchemaName($schemaName)
-                                ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                                ->markAsPropertyConfig()
+                        $result->add((new ReportResultItem())
+                            ->setName($propertyData['name'])
+                            ->setData($propertyData)
+                            ->setPopoName($popoName)
+                            ->setSchemaName($schemaName)
+                            ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                            ->markAsPropertyConfig()
                         );
                     }
                 }
