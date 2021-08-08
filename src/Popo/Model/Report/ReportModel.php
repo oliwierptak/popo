@@ -18,7 +18,7 @@ class ReportModel
 
     public function generate(PopoConfigurator $configurator): ReportResult
     {
-        $data = $this->loader->loadReport($configurator);
+        $data = $this->loader->load($configurator, false);
         $sharedSchemaFile = $this->loader->loadSharedConfig($configurator->getSchemaConfigFilename());
 
         return $this->generateReport($data, $sharedSchemaFile);
