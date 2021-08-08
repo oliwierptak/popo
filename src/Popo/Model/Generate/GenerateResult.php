@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Model;
+namespace Popo\Model\Generate;
 
 use JetBrains\PhpStorm\ArrayShape;
 
-class PopoGenerateResult
+class GenerateResult
 {
     protected const ITEM_SHAPE = [
         'filename' => 'string',

@@ -81,15 +81,13 @@ class GenerateCommand extends AbstractCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): int
     {
-        $configurator = $this->buildConfigurator($input);
-
-        $output->writeln('Generating POPO files... ');
-
-        $result = $this->facade->generate($configurator);
-
         if ($output->getVerbosity() <= OutputInterface::VERBOSITY_QUIET) {
             return 0;
         }
+
+        $configurator = $this->buildConfigurator($input);
+        $output->writeln('Generating POPO files... ');
+        $result = $this->facade->generate($configurator);
 
         $data = [];
         foreach ($result->getGeneratedFiles() as $item) {

@@ -24,7 +24,7 @@ class SchemaBuilder
     {
         $result = [];
         $data = $this->loader->load($configurator);
-        $sharedSchemaFile = $this->loadSharedConfig($configurator);
+        $sharedSchemaFile = $this->loader->loadSharedConfig($configurator->getSchemaConfigFilename());
         $tree = $this->generateSchemaTree($data, $sharedSchemaFile);
 
         foreach ($tree as $schemaName => $popoCollection) {
@@ -50,22 +50,6 @@ class SchemaBuilder
         }
 
         return $result;
-    }
-
-    protected function loadSharedConfig(PopoConfigurator $configurator): SchemaFile
-    {
-        $file = (new SchemaFile)->setFileConfig(PopoDefinesInterface::SCHEMA_DEFAULT_DATA);
-
-        $schemaConfigFilename = trim((string) $configurator->getSchemaConfigFilename());
-        if ($schemaConfigFilename === '') {
-            return $file;
-        }
-
-        return current(
-            $this->loader->load(
-                (new PopoConfigurator)->setSchemaPath($configurator->getSchemaConfigFilename())
-            )
-        );
     }
 
     /**
@@ -94,59 +78,6 @@ class SchemaBuilder
                     $schemaConfigData,
                     $result
                 );
-            }
-        }
-
-        return $result;
-    }
-
-    public function generateSchemaReport(PopoConfigurator $configurator): array
-    {
-        $sharedSchemaFile = $this->loadSharedConfig($configurator);
-        $data = $this->loader->load($configurator);
-
-        return $this->generateReport($data, $sharedSchemaFile);
-    }
-
-    /**
-     * @param SchemaFile[] $data
-     * @param \Popo\Schema\SchemaFile $sharedSchemaFile
-     *
-     * @return array
-     */
-    protected function generateReport(array $data, SchemaFile $sharedSchemaFile): array
-    {
-        $result = [];
-
-        foreach ($data as $schemaFile) {
-            $fileConfig = $schemaFile->getFileConfig()['property'] ?? [];
-            $schemaCollection = array_merge($sharedSchemaFile->getData(), $schemaFile->getData());
-
-            foreach ($schemaCollection as $schemaName => $popoCollection) {
-                $schemaConfigData = array_merge(
-                    $sharedSchemaFile->getSchemaConfig()[$schemaName]['property'] ?? [],
-                    $schemaFile->getSchemaConfig()[$schemaName]['property'] ?? []
-                );
-
-                foreach ($popoCollection as $popoName => $popoData) {
-                    foreach ($popoData['property'] as $propertyData) {
-                        $result[$schemaName][$popoName][$propertyData['name']][] = 'property-config:' . $schemaFile
-                                ->getFilename()
-                                ->getPathname();
-                    }
-
-                    foreach ($fileConfig as $dataItem) {
-                        $result[$schemaName][$popoName][$dataItem['name']][] = 'file-config:' . $schemaFile
-                                ->getFilename()
-                                ->getPathname();
-                    }
-
-                    foreach ($schemaConfigData as $dataItem) {
-                        $result[$schemaName][$popoName][$dataItem['name']][] = 'schema-config:' . $schemaFile
-                                ->getFilename()
-                                ->getPathname();
-                    }
-                }
             }
         }
 

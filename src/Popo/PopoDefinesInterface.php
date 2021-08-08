@@ -10,6 +10,12 @@ class PopoDefinesInterface
 {
     public const VERSION = 5;
 
+    public const VALIDATION_TYPE_FILE_CONFIG = 'file-config';
+
+    public const VALIDATION_TYPE_SCHEMA_CONFIG = 'schema-config';
+
+    public const VALIDATION_TYPE_PROPERTY_CONFIG = 'property-config';
+
     public const CONFIGURATION_SCHEMA_OPTION_SYMBOL = '$';
 
     public const CONFIGURATION_SCHEMA_CONFIG = 'config';

@@ -28,19 +28,19 @@ class ConfigMerger
         );
     }
 
-    public function mergeSchemaDefaults(...$data): array
-    {
-        return array_replace_recursive(
-            PopoDefinesInterface::SCHEMA_DEFAULT_DATA,
-            ...$data
-        );
-    }
-
     #[Pure] public function mergeSchemaFile(string $schemaName, SchemaFile $file): array
     {
         return array_replace_recursive(
             $file->getFileConfig(),
             $file->getSchemaConfig()[$schemaName] ?? []
+        );
+    }
+
+    public function mergeSchemaDefaults(...$data): array
+    {
+        return array_replace_recursive(
+            PopoDefinesInterface::SCHEMA_DEFAULT_DATA,
+            ...$data
         );
     }
 

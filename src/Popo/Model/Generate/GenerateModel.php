@@ -2,13 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Model;
+namespace Popo\Model\Generate;
 
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
+use Popo\Model\Generate\GenerateResult;
 use Popo\PopoConfigurator;
 
-class PopoModel
+class GenerateModel
 {
     public function __construct(
         protected SchemaBuilder $schemaBuilder,
@@ -16,9 +17,9 @@ class PopoModel
     ) {
     }
 
-    public function generate(PopoConfigurator $configurator): PopoGenerateResult
+    public function generate(PopoConfigurator $configurator): GenerateResult
     {
-        $result = new PopoGenerateResult;
+        $result = new GenerateResult;
 
         $data = $this->schemaBuilder->build($configurator);
 

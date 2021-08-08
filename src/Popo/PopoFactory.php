@@ -8,19 +8,19 @@ use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
 use Popo\Loader\FileLocator;
 use Popo\Loader\Yaml\YamlLoader;
-use Popo\Model\ReportModel;
+use Popo\Model\Report\ReportModel;
 use Popo\Schema\ConfigMerger;
 use Popo\Schema\SchemaInspector;
-use Popo\Model\PopoModel;
+use Popo\Model\Generate\GenerateModel;
 use Popo\Builder\SchemaBuilder;
 use Popo\Loader\SchemaLoader;
 use Symfony\Component\Finder\Finder;
 
 class PopoFactory
 {
-    public function createPopoModel(): PopoModel
+    public function createPopoModel(): GenerateModel
     {
-        return new PopoModel(
+        return new GenerateModel(
             $this->createSchemaBuilder(),
             $this->createPopoBuilder(),
         );
@@ -29,7 +29,7 @@ class PopoFactory
     public function createReportModel(): ReportModel
     {
         return new ReportModel(
-            $this->createSchemaBuilder()
+            $this->createSchemaLoader()
         );
     }
 

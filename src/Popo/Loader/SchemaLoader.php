@@ -23,6 +23,56 @@ class SchemaLoader
      *
      * @return SchemaFile[]
      */
+    #[ArrayShape([SchemaFile::class])] public function loadReport(PopoConfigurator $configurator): array
+    {
+        $result = [];
+        $files = $this->loadSchemaFiles($configurator);
+
+        foreach ($files as $configurationFile) {
+            $schemaConfig = [];
+            $data = $this->loader->load($configurationFile);
+            $fileConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL] ?? [];
+            $data = $this->removeOptionSymbol($data);
+
+            foreach ($data as $schemaName => $schemaData) {
+                if ($this->hasSchemaConfigOption($schemaData)) {
+                    $schemaConfig[$schemaName] = $schemaData[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL] ?? [];
+                    $data[$schemaName] = $this->removeOptionSymbol($schemaData);
+                }
+            }
+
+            $result[] = (new SchemaFile)
+                ->setFilename($configurationFile)
+                ->setFileConfig($fileConfig)
+                ->setSchemaConfig($schemaConfig)
+                ->setData(
+                    $data
+                );
+        }
+
+        return $result;
+    }
+
+    public function loadSharedConfig(?string $schemaConfigFilename): SchemaFile
+    {
+        $file = (new SchemaFile)->setFileConfig(PopoDefinesInterface::SCHEMA_DEFAULT_DATA);
+
+        if (trim((string)$schemaConfigFilename) === '') {
+            return $file;
+        }
+
+        return current(
+            $this->load(
+                (new PopoConfigurator)->setSchemaPath($schemaConfigFilename)
+            )
+        );
+    }
+
+    /**
+     * @param \Popo\PopoConfigurator $configurator
+     *
+     * @return SchemaFile[]
+     */
     #[ArrayShape([SchemaFile::class])] public function load(PopoConfigurator $configurator): array
     {
         $result = [];

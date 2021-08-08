@@ -6,7 +6,6 @@ use Popo\PopoConfigurator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use function implode;
 
 class ReportCommand extends AbstractCommand
 {
@@ -47,7 +46,7 @@ class ReportCommand extends AbstractCommand
                         InputOption::VALUE_OPTIONAL,
                         'Path filter to match POPO schema files.',
                         null
-                    )
+                    ),
                 ]
             );
     }
@@ -60,32 +59,30 @@ class ReportCommand extends AbstractCommand
 
         $configurator = $this->buildConfigurator($input);
         $output->writeln('POPO Schema Report');
+        $output->writeln('');
+
         $result = $this->facade->report($configurator);
 
-        foreach ($result->getData() as $schemaName => $popoCollection) {
-            foreach ($popoCollection as $popoName => $propertyCollection) {
-                foreach ($propertyCollection as $propertyName => $propertyLocations) {
-                    $colorSchemaName = (count($propertyLocations) === 1) ? 'yellow' : 'bright-yellow';
-                    $colorPropertyName = (count($propertyLocations) === 1) ? 'yellow' : 'bright-yellow';
+        /**
+         * @var \Popo\Model\Report\ReportResultItem[] $reportItems
+         */
+        foreach ($result->getData() as $propertyName => $reportItems) {
+            $output->writeln(
+                sprintf(
+                    "<fg=yellow>%s</>",
+                    $propertyName,
+                )
+            );
 
-                    $output->writeln(sprintf(
-                        "<fg=${colorSchemaName}>%s::%s::</><fg=${colorPropertyName}>%s</>",
-                        $schemaName,
-                        $popoName,
-                        $propertyName,
-                    ));
-
-                    foreach ($propertyLocations as $index => $location) {
-                        $tokens = explode(':',$location);
-                        $output->writeln(sprintf(
-                            ' - <fg=cyan>%s</><fg=gray>:</> <fg=green>%s</>',
-                            $tokens[0],
-                            $tokens[1],
-                        ));
-                    }
-
-                    $output->writeln('');
-                }
+            foreach ($reportItems as $reportItem) {
+                $output->writeln(
+                    sprintf(
+                        " <fg=gray>%s</> <fg=green>%s</> - <fg=cyan>%s</>",
+                        $reportItem->getType(),
+                        $reportItem->getSchemaName() . ($reportItem->getPopoName() ? '::' . $reportItem->getPopoName() : ''),
+                        $reportItem->getSchemaFilename()
+                    )
+                );
             }
         }
 
@@ -97,10 +94,14 @@ class ReportCommand extends AbstractCommand
         return (new PopoConfigurator())
             ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(
-                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : null
+                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(
+                    static::OPTION_SCHEMA_PATH_FILTER
+                ) : null
             )
             ->setSchemaConfigFilename(
-                $input->hasOption(static::OPTION_SCHEMA_CONFIG_FILENAME) ? $input->getOption(static::OPTION_SCHEMA_CONFIG_FILENAME) : null
+                $input->hasOption(static::OPTION_SCHEMA_CONFIG_FILENAME) ? $input->getOption(
+                    static::OPTION_SCHEMA_CONFIG_FILENAME
+                ) : null
             );
     }
 }
