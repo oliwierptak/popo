@@ -1,4 +1,4 @@
-$: #shared configuration for all POPO objects defined below
+$: # file-config, shared configuration for all POPO objects in current schema file
   config:
     namespace: string
     outputPath: string
@@ -9,8 +9,8 @@ $: #shared configuration for all POPO objects defined below
   default: array # default values
   property: array #shared properties
 
-SchemaName: #defines shared configuration and POPO objects under SchemaName
-  $: # shared configuration for all POPO objects in SchemaName
+SchemaName: # schema-config
+  $: # shared configuration for all POPO objects in SchemaName, in all schema files
     config:
       namespace: string
       outputPath: string
@@ -31,7 +31,7 @@ SchemaName: #defines shared configuration and POPO objects under SchemaName
       itemName: string|null # collection item singular name
     }]
 
-  PopoName:
+  PopoName: # popo-config
     config:
       namespace: string
       outputPath: string

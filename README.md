@@ -93,7 +93,9 @@ composer require popo/generator --dev
 
 ## Usage
 
-1. Define schema, see [tests/fixtures](tests/fixtures/) for examples.
+### Generate command
+
+1. Define schema file, see [tests/fixtures](tests/fixtures/) for examples.
 
 2. Generate POPO files, run:
 
@@ -108,29 +110,29 @@ composer require popo/generator --dev
 
 _For example: `bin/popo generate -s tests/fixtures/popo.yml`_
 
-#### `<schema-path>`
+### `<schema-path>`
 
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
 This parameter is required.
 
-#### `[schema-config-filename]`
+### `[schema-config-filename]`
 
 This parameter is optional, but when set a shared schema configuration will be used for all POPO schemas.
 
-#### `[output-path]`
+### `[output-path]`
 
 Output path where the files will be generated, the namespace folders will be created automatically.
 
 This parameter is optional, but when set it overrides `outputPath` configured in a schema.
 
-#### `[namespace]`
+### `[namespace]`
 
 Namespace of generated POPO files.
 
 This parameter is optional, but when set it overrides `namespace` configured in a schema.
 
-#### `[namespace-root]`
+### `[namespace-root]`
 
 This parameter is optional, but when set it allow set mapping between `namespace` and `outputPath`.
 
@@ -139,16 +141,16 @@ under `outputPath` directory.
 
 ```yaml
  namespace: ExampleBundle\AppWithNamespaceRoot\Example
- namespaceRoot: ExampleBundle\
+ namespaceRoot: ExampleBundle
 ```
 
-#### `[schema-path-filter]`
+### `[schema-path-filter]`
 
 Additional path filter when `schema-path` is set to a folder.
 
 This parameter is optional.
 
-For example, each schema folder can contain multiple schema files:
+Each schema folder can contain multiple schema files, for example:
 
 ```
 <bundles>
@@ -160,8 +162,11 @@ For example, each schema folder can contain multiple schema files:
     |         |- bar.popo.yml   
     |         |_ buzz.popo.yml   
     |
-    |-- shared.config.yml
+    |-- global.config.yml
 ```
+
+_Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml ` to generate files from this example._
+
 
 ### Report Command
 
@@ -179,42 +184,14 @@ For example, report for `tests/fixtures/popo-readme.yml` file.
 bar
  popo-config Example::Foo - tests/fixtures/popo-readme.yml
 title
- popo-config Example::Foo - tests/fixtures/popo-readme.yml
  popo-config Example::Bar - tests/fixtures/popo-readme.yml
+ popo-config Example::Foo - tests/fixtures/popo-readme.yml
 ```
 
 _Run `bin/popo report -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
 
 ## POPO Schema
-
-POPO Schema can be defined and extended on few levels, and it can be defined in multiple files.
-
-The `popo-config` values override `schema-config` values, and `schema-config` values overwrite `file-config` values.
-
-On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
-
-
-![](doc/popo_schema.png)
-
-### `file-config` 
-
-The configuration was defined as a `SchemaFile` property.
-It will be used by all POPO objects in current file.
-
-
-### `schema-config`
-
-The configuration was defined as a `Schema` property.
-It will be used by all POPO objects in current file, under given schema.
-
-
-### `popo-config`
-
-The configuration was defined as a POPO property.
-It will be used by one specific POPO objects in current file, under given schema.
-
-
 
 ```yaml
 $: # file-config
@@ -271,6 +248,33 @@ SchemaName: # schema-config
       itemName: string|null
     }]
 ```
+
+POPO Schema can be defined and extended on few levels, and it can be defined in multiple files.
+
+The `popo-config` values override `schema-config` values, and `schema-config` values overwrite `file-config` values.
+
+On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
+
+
+![](doc/popo_schema.png)
+
+### `file-config` 
+
+The configuration was defined as a `SchemaFile` property.
+It will be used by all POPO objects in _current_ file.
+
+
+### `schema-config`
+
+The configuration was defined as a `Schema` property.
+It will be used by all POPO objects in _all_ files, under given schema.
+
+
+### `popo-config`
+
+The configuration was defined as a POPO property.
+It will be used by one specific POPO objects in _current_ file, under given schema.
+
 
 See [tests/fixtures](tests/fixtures/) for schema examples.
 
