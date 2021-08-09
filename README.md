@@ -163,7 +163,7 @@ For example, each schema folder can contain multiple schema files:
     |-- shared.config.yml
 ```
 
-### Report 
+### Report Command
 
 The `report` command shows list of defined / inherited properties.
 
@@ -173,15 +173,18 @@ vendor/bin/popo report -s <schema-path> \
   -p [schema-path-filter]
 ```
 
-#### `<schema-path>`
+For example, report for `tests/fixtures/popo-readme.yml` file. 
 
-This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
+```
+bar
+ popo-config Example::Foo - tests/fixtures/popo-readme.yml
+title
+ popo-config Example::Foo - tests/fixtures/popo-readme.yml
+ popo-config Example::Bar - tests/fixtures/popo-readme.yml
+```
 
-This parameter is required.
+_Run `bin/popo report -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
-#### `[schema-config-filename]`
-
-This parameter is optional, but when set a shared schema configuration will be used for all POPO schemas.
 
 ## POPO Schema
 
