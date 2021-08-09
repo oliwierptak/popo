@@ -167,11 +167,11 @@ For example, each schema folder can contain multiple schema files:
 
 The `report` command shows list of defined / inherited properties.
 
-    ```sh
-    vendor/bin/popo report -s <schema-path> \
-      -c [schema-config-filename] \
-      -p [schema-path-filter]
-    ```
+```sh
+vendor/bin/popo report -s <schema-path> \
+  -c [schema-config-filename] \
+  -p [schema-path-filter]
+```
 
 #### `<schema-path>`
 
