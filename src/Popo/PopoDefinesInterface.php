@@ -14,7 +14,7 @@ class PopoDefinesInterface
 
     public const VALIDATION_TYPE_SCHEMA_CONFIG = 'schema-config';
 
-    public const VALIDATION_TYPE_PROPERTY_CONFIG = 'property-config';
+    public const VALIDATION_TYPE_POPO_CONFIG = 'popo-config';
 
     public const CONFIGURATION_SCHEMA_OPTION_SYMBOL = '$';
 

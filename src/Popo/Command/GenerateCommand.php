@@ -38,7 +38,7 @@ class GenerateCommand extends AbstractCommand
                         's',
                         InputOption::VALUE_REQUIRED,
                         'Path to schema file or directory',
-                        'popo.yml'
+                        null
                     ),
                     new InputOption(
                         static::OPTION_SCHEMA_CONFIG_FILENAME,

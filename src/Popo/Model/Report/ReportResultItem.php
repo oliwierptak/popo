@@ -103,7 +103,7 @@ class ReportResultItem
 
     public function markAsPropertyConfig(): self
     {
-        $this->type = PopoDefinesInterface::VALIDATION_TYPE_PROPERTY_CONFIG;
+        $this->type = PopoDefinesInterface::VALIDATION_TYPE_POPO_CONFIG;
 
         return $this;
     }
