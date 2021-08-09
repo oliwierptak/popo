@@ -256,7 +256,7 @@ The `popo-config` values override `schema-config` values, and `schema-config` va
 On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
 
 
-![](doc/popo_schema.png | width=400)
+![](doc/popo_schema.png){:width="400px"}
 
 ### `file-config` 
 
