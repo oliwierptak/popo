@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Schema;
 
 use JetBrains\PhpStorm\Pure;
-use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
 use function array_replace_recursive;
 

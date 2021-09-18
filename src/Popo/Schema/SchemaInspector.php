@@ -34,7 +34,7 @@ class SchemaInspector
         return $property->getType();
     }
 
-    public function generatePopoItemType(Schema $schema, Property $property, bool $stripClass = true): string
+    public function generatePopoItemType(Schema $schema, Property $property): string
     {
         if ($this->isLiteral($property->getItemType())) {
             $namespace = $this->expandNamespaceForParameter($schema);
@@ -42,14 +42,14 @@ class SchemaInspector
             $value = $property->getItemType();
             $class = sprintf(
                 '%s',
-                $stripClass ? str_replace('::class', '', $value) : $value
+                str_replace('::class', '', $value)
             );
 
             if ($value[0] !== '\\') {
                 $class = sprintf(
                     '%s\\%s',
                     $namespace,
-                    $stripClass ? str_replace('::class', '', $value) : $value
+                    str_replace('::class', '', $value)
                 );
             }
 

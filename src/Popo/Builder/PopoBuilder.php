@@ -438,7 +438,7 @@ EOF;
             if ($this->propertyInspector->isLiteral($property->getItemType())) {
                 $returnType = $this->propertyInspector->generatePopoItemType(
                     $this->schema,
-                    $property,
+                    $property
                 );
             }
             $this->method->setComment(sprintf('@return %s[]', $returnType));
