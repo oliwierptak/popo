@@ -118,7 +118,7 @@ class GenerateCommand extends AbstractCommand
             ->setNamespaceRoot(
                 $input->hasOption(static::OPTION_NAMESPACE_ROOT) ? $input->getOption(static::OPTION_NAMESPACE_ROOT) : null
             )
-            ->setSchemaPath($input->getOption(static::OPTION_SCHEMA_PATH))
+            ->setSchemaPath((string)$input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(
                 $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : null
             )
