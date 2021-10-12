@@ -15,8 +15,9 @@ In this case, `Foo` defines `Bar` as its property.
 
 ```yaml
 $:
-  namespace: App\Example\Readme
-  outputPath: tests/
+  config:
+    namespace: App\Example\Readme
+    outputPath: tests/
 
 Example:
   Foo:
