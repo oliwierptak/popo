@@ -1,6 +1,6 @@
 {
   "name": "popo/generator",
-  "description": "Plain Old PHP Object (POPO) / Data Class  / Data Transfer Object (DTO) Generator. Convert JSON schema to PHP class.",
+  "description": "Plain Old PHP Object (POPO) / Data Structure  / Data Transfer Object (DTO) Generator. Convert YAML schema to PHP class.",
   "license": "MIT",
   "type": "library",
   "authors": [
@@ -12,7 +12,6 @@
   "prefer-stable": true,
   "require": {
     "php": "^8",
-    "ext-json": "*",
     "ext-ctype": "*",
     "symfony/finder": "^5",
     "symfony/console": "^5",
@@ -38,7 +37,8 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "chmod +x bin/popo"
+      "chmod +x bin/popo",
+      "chmod +x bin/docker-popo"
     ],
     "test": [
       "vendor/bin/phpunit --no-coverage --testdox --testsuite functional,unit"

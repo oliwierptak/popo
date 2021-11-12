@@ -1,0 +1,1 @@
+docker container run -it --rm  -v "$(pwd):/app/" -w/app oliwierptak/popo bin/popo ${@}

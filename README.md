@@ -11,7 +11,7 @@ The schema supports inheritance, collections and encapsulation of other POPO obj
 
 Simple schema in YAML format, describing properties and relations of POPO objects.
 
-In this case, `Foo` defines `Bar` as its property.
+In this case, `Foo` defines `Bar` as its property, and they are both defined under `Example` schema name.
 
 ```yaml
 $:
@@ -79,7 +79,7 @@ Output:
 ];
 ```
 
-_Run `bin/popo generate -s tests/fixtures/popo-readme.yml` to generate files from this example._
+_Run `bin/popo generate -s tests/fixtures/popo-readme.yml` or `docker-popo generate -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
 ### getter vs requester
 
@@ -92,24 +92,41 @@ method `getBar()` simply returns Bar's property value.
 composer require popo/generator --dev
 ```
 
+Note: The installation can be skipped when using docker, see _Docker support_ section.
+
 ## Usage
+
+You can either use it as composer dependency or as docker command.
 
 ### Generate command
 
 1. Define schema file, see [tests/fixtures](tests/fixtures/) for examples.
 
 2. Generate POPO files, run:
+   - with composer
+   
+      ```sh
+      vendor/bin/popo generate -s <schema-path> \
+        -c [schema-config-filename] \
+        -o [output-path] \
+        -nm [namespace] \
+        -nr [namespace-root] \
+        -p [schema-path-filter]
+      ```
+   - with docker
+      ```sh
+      docker-popo generate -s <schema-path> \
+        -c [schema-config-filename] \
+        -o [output-path] \
+        -nm [namespace] \
+        -nr [namespace-root] \
+        -p [schema-path-filter]     
+     ```
+   
 
-    ```sh
-    vendor/bin/popo generate -s <schema-path> \
-      -c [schema-config-filename] \
-      -o [output-path] \
-      -nm [namespace] \
-      -nr [namespace-root] \
-      -p [schema-path-filter]
-    ```
+_For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo generate -s tests/fixtures/popo.yml`._
 
-_For example: `bin/popo generate -s tests/fixtures/popo.yml`_
+## Command line arguments
 
 ### `<schema-path>`
 
@@ -166,7 +183,7 @@ Each schema folder can contain multiple schema files, for example:
     |-- global.config.yml
 ```
 
-_Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml ` to generate files from this example._
+_Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` or `docker-popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` to generate files from this example._
 
 
 ### Report Command
@@ -189,7 +206,7 @@ title
  popo-config Example::Foo - tests/fixtures/popo-readme.yml
 ```
 
-_Run `bin/popo report -s tests/fixtures/popo-readme.yml` to generate files from this example._
+_Run `bin/popo report -s tests/fixtures/popo-readme.yml` or `docker-popo report -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
 
 ## POPO Schema
@@ -334,10 +351,33 @@ Add popo scrip to composer and run `composer popo` in a project.
 ```
     "scripts": {
         "popo": [
-            "vendor/bin/popo generate -s <schema-path>"
+            "bin/popo generate -s <schema-path>"
         ]
     },
     "scripts-descriptions": {
         "popo": "Generate POPO files"
     }
 ```
+
+### Docker support
+
+With docker you can generate files without installing `POPO` as dependency in the project.
+
+```
+docker container run -it --rm  -v "$(pwd):/app/" -w/app oliwierptak/popo bin/popo
+```
+
+You can either run the command directly, or create an alias, e.g.:
+
+```
+alias docker-popo='docker container run -it --rm  -v "$(pwd):/app/" -w/app oliwierptak/popo bin/popo ${@}'
+```
+
+For example:
+
+```
+docker-popo generate -s tests/fixtures/popo.yml
+docker-popo report -s tests/fixtures/popo.yml
+``` 
+
+See also: [bin/docker-popo](bin/docker-popo).
