@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace PopoTestSuite\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Schema\Property;

@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Functional;
+namespace PopoTestSuite;
 
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestsSuites\AbstractGenerateTest;
-use const POPO_TESTS_DIR;
+use PopoTestSuiteHelper\AbstractGenerateTest;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group functional
@@ -108,5 +108,18 @@ class FacadeTest extends AbstractGenerateTest
 
         $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Bar.php');
         $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Foo.php');
+    }
+
+    public function test_inheritance(): void
+    {
+        $facade = new PopoFacade();
+
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-inheritance.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $facade->generate($configurator);
+
+        $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Inheritance/FooBar.php');
     }
 }

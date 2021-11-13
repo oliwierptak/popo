@@ -2,5 +2,5 @@
 
 namespace Popo;
 
-\define('POPO_APPLICATION_DIR', __DIR__ . '/../');
-\define('POPO_TESTS_DIR', POPO_APPLICATION_DIR . 'tests/');
+\define('Popo\\POPO_APPLICATION_DIR', __DIR__ . '/../');
+\define('Popo\\POPO_TESTS_DIR', POPO_APPLICATION_DIR . 'tests/');

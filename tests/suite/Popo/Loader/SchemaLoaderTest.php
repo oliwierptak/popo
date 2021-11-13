@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Functional;
+namespace PopoTestSuite\Loader;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Loader\FileLocator;
@@ -11,7 +11,7 @@ use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
 use RuntimeException;
 use Symfony\Component\Finder\Finder;
-use const POPO_TESTS_DIR;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group functional

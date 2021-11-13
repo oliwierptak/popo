@@ -29,7 +29,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "PopoTestsSuites\\": "tests/suite",
+      "AppTestSuite\\": "tests/suite/App",
+      "PopoTestSuite\\": "tests/suite/Popo",
+      "PopoTestSuiteHelper\\": "tests/suite-helper",
       "App\\": "tests/App",
       "ExampleBundle\\AppWithNamespaceRoot\\": "tests/AppWithNamespaceRoot",
       "ExampleBundle\\AppRedefinedNamespace\\": "tests/AppRedefinedNamespace"
@@ -41,7 +43,10 @@
       "chmod +x bin/docker-popo"
     ],
     "test": [
-      "vendor/bin/phpunit --no-coverage --testdox --testsuite functional,unit"
+      "vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
+    ],
+    "test-c": [
+      "vendor/bin/phpunit --testdox --group unit,functional"
     ],
     "report": [
       "bin/popo report -s tests/fixtures/popo.yml",
@@ -54,15 +59,13 @@
       "bin/popo generate -q -s tests/fixtures/popo-namespace-root.yml",
       "bin/popo generate -q -s tests/fixtures/popo-readme.yml",
       "bin/popo generate -q -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
-    ],
-    "test-c": [
-      "vendor/bin/phpunit --testdox --testsuite functional,unit"
     ]
   },
   "scripts-descriptions": {
     "popo": "Generate POPO files"
   },
   "bin": [
-    "bin/popo"
+    "bin/popo",
+    "bin/docker-popo"
   ]
 }

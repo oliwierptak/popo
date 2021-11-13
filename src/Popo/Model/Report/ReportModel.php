@@ -39,7 +39,6 @@ class ReportModel
         foreach ($sharedFileConfig as $dataItem) {
             $result->add((new ReportResultItem())
                 ->setName($dataItem['name'])
-                ->setData($dataItem)
                 ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
                 ->markAsFileConfig()
             );
@@ -50,7 +49,6 @@ class ReportModel
             foreach ($fileConfig as $dataItem) {
                 $result->add((new ReportResultItem())
                     ->setName($dataItem['name'])
-                    ->setData($dataItem)
                     ->setSchemaFilename($schemaFile->getFilename()->getPathname())
                     ->markAsFileConfig()
                 );
@@ -64,7 +62,6 @@ class ReportModel
                 foreach ($schemaConfig as $dataItem) {
                     $result->add((new ReportResultItem())
                         ->setName($dataItem['name'])
-                        ->setData($dataItem)
                         ->setSchemaName($schemaName)
                         ->setSchemaFilename($schemaFile->getFilename()->getPathname())
                         ->markAsSchemaConfig()
@@ -75,7 +72,6 @@ class ReportModel
                     foreach ($popoData['property'] as $propertyData) {
                         $result->add((new ReportResultItem())
                             ->setName($propertyData['name'])
-                            ->setData($propertyData)
                             ->setPopoName($popoName)
                             ->setSchemaName($schemaName)
                             ->setSchemaFilename($schemaFile->getFilename()->getPathname())
@@ -90,7 +86,6 @@ class ReportModel
             foreach ($items as $dataItem) {
                 $result->add((new ReportResultItem())
                     ->setName($dataItem['name'])
-                    ->setData($dataItem)
                     ->setSchemaName($schemaName)
                     ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
                     ->markAsSchemaConfig()

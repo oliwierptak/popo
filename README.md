@@ -334,7 +334,7 @@ using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `ad
 
 #### More Examples
 
-See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/Unit/PopoTest.php) for more usage examples.
+See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php) for more usage examples.
 
 ### PHP version compatibility
 

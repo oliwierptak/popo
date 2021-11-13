@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace PopoTestSuite\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Schema\Property;
@@ -10,13 +10,29 @@ use Popo\Schema\Property;
 /**
  * @group unit
  */
-class PropertySchemaTest extends TestCase
+class PropertyTest extends TestCase
 {
+    public function test_setters_getters(): void
+    {
+        $property = (new Property)
+            ->setName('FooBar')
+            ->setType('bool')
+            ->setItemType('Buzz::class')
+            ->setItemName('BuzzItem')
+            ->setComment('Lorem ipsum');
+
+        $this->assertEquals('FooBar', $property->getName());
+        $this->assertEquals('bool', $property->getType());
+        $this->assertEquals('Lorem ipsum', $property->getComment());
+        $this->assertEquals('Buzz::class', $property->getItemType());
+        $this->assertEquals('BuzzItem', $property->getItemName());
+    }
+
     public function test_array_partial(): void
     {
-        $propertySchema = new Property();
+        $property = new Property();
 
-        $propertySchema->fromArray(
+        $property->fromArray(
             [
                 'name' => 'foo',
             ]
@@ -32,15 +48,15 @@ class PropertySchemaTest extends TestCase
                 'default' => null,
 
             ],
-            $propertySchema->toArray()
+            $property->toArray()
         );
     }
 
     public function test_array_full(): void
     {
-        $propertySchema = new Property();
+        $property = new Property();
 
-        $propertySchema->fromArray(
+        $property->fromArray(
             [
                 'name' => 'records',
                 'type' => 'array',
@@ -61,7 +77,7 @@ class PropertySchemaTest extends TestCase
                 'default' => [],
 
             ],
-            $propertySchema->toArray()
+            $property->toArray()
         );
     }
 }

@@ -2,14 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace AppTestSuite;
 
 use ExampleBundle\AppWithNamespaceRoot\Example\Bar;
 use ExampleBundle\AppWithNamespaceRoot\Example\Foo;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestsSuites\AbstractPopoTest;
+use PopoTestSuiteHelper\AbstractPopoTest;
 use UnexpectedValueException;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit

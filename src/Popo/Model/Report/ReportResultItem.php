@@ -12,7 +12,6 @@ class ReportResultItem
     protected string $type;
     protected string $schemaName = '$';
     protected string $popoName = '$';
-    protected array $data = [];
     protected string $schemaFilename;
 
     public function getName(): string
@@ -30,13 +29,6 @@ class ReportResultItem
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
     }
 
     public function getSchemaName(): ?string
@@ -59,18 +51,6 @@ class ReportResultItem
     public function setPopoName(?string $popoName): self
     {
         $this->popoName = $popoName;
-
-        return $this;
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    public function setData(array $data): self
-    {
-        $this->data = $data;
 
         return $this;
     }

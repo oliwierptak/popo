@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace AppTestSuite;
 
 use App\Example\Popo\Bar;
 use App\Example\Popo\Foo;
@@ -10,8 +10,9 @@ use App\Example\Popo\Buzz\Buzz;
 use App\ExampleInterface;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestsSuites\AbstractPopoTest;
+use PopoTestSuiteHelper\AbstractPopoTest;
 use UnexpectedValueException;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit

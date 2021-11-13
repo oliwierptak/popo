@@ -2,12 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace AppTestSuite;
 
 use App\Example\Readme\Foo;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestsSuites\AbstractPopoTest;
+use PopoTestSuiteHelper\AbstractPopoTest;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit

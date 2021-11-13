@@ -2,9 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites;
+namespace PopoTestSuiteHelper;
 
 use PHPUnit\Framework\TestCase;
+
+use const \Popo\POPO_TESTS_DIR;
 
 abstract class AbstractGenerateTest extends TestCase
 {

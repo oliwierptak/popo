@@ -11,13 +11,13 @@ class ReportCommand extends AbstractCommand
 {
     public const COMMAND_NAME = 'report';
 
-    public const COMMAND_DESCRIPTION = 'Report information about POPO schema configuration';
+    protected const COMMAND_DESCRIPTION = 'Report information about POPO schema configuration';
 
-    public const OPTION_SCHEMA_PATH = 'schemaPath';
+    protected const OPTION_SCHEMA_PATH = 'schemaPath';
 
-    public const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
+    protected const OPTION_SCHEMA_PATH_FILTER = 'schemaPathFilter';
 
-    public const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
+    protected const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
 
     protected function configure(): void
     {

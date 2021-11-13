@@ -2,18 +2,18 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Functional;
+namespace PopoTestSuite\Command;
 
 use Popo\Command\GenerateCommand;
-use PopoTestsSuites\AbstractGenerateTest;
+use PopoTestSuiteHelper\AbstractGenerateTest;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use const POPO_TESTS_DIR;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group functional
  */
-class CommandTest extends AbstractGenerateTest
+class GenerateCommandTest extends AbstractGenerateTest
 {
     protected function getCommandTester(): CommandTester
     {
@@ -117,19 +117,6 @@ class CommandTest extends AbstractGenerateTest
             [
                 'command' => GenerateCommand::COMMAND_NAME,
                 '--schemaPath' => POPO_TESTS_DIR . 'fixtures/popos.yml',
-            ]
-        );
-
-        $this->assertEquals(1, $result);
-    }
-
-    public function AA__test_build_invalid(): void
-    {
-        $result = $this->getCommandTester()->execute(
-            [
-                'command' => GenerateCommand::COMMAND_NAME,
-                '--schemaPath' => POPO_TESTS_DIR . 'fixtures/popo-invalid.yml',
-                '--outputPath' => POPO_TESTS_DIR,
             ]
         );
 

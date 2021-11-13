@@ -2,14 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Unit;
+namespace AppTestSuite;
 
 use App\Example\Extend\FooBarFirst;
 use App\Example\Extend\FooBarSecond;
 use App\Example\Extend\FooBarThird;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestsSuites\AbstractPopoTest;
+use PopoTestSuiteHelper\AbstractPopoTest;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit

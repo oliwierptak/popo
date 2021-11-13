@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites\Functional;
+namespace PopoTestSuite\Builder;
 
 use PHPUnit\Framework\TestCase;
 use Popo\Builder\SchemaBuilder;
@@ -12,7 +12,7 @@ use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
 use Popo\Schema\ConfigMerger;
 use Symfony\Component\Finder\Finder;
-use const POPO_TESTS_DIR;
+use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group functional

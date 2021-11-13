@@ -24,13 +24,6 @@ class GenerateResult
         return $this->generatedFiles;
     }
 
-    public function setGeneratedFiles(#[ArrayShape(self::ITEM_SHAPE)] array $generatedFiles): self
-    {
-        $this->generatedFiles = $generatedFiles;
-
-        return $this;
-    }
-
     public function add(#[ArrayShape(self::ITEM_SHAPE)] array $item): self
     {
         $this->generatedFiles[] = $item;

@@ -79,7 +79,7 @@ class PopoConfigurator
         return $this->schemaFilename;
     }
 
-    public function setSchemaFilename(?string $schemaFilename): self
+    public function setSchemaFilename(string $schemaFilename): self
     {
         $this->schemaFilename = $schemaFilename;
 

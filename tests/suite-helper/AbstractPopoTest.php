@@ -2,7 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace PopoTestsSuites;
+namespace PopoTestSuiteHelper;
+
+use const \Popo\POPO_TESTS_DIR;
 
 use PHPUnit\Framework\TestCase;
 
