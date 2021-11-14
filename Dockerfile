@@ -16,11 +16,11 @@ RUN curl -sS https://getcomposer.org/installer | php \
 RUN composer self-update
 
 
-ADD ./ /popo/
-RUN rm -rf /popo/tests/logs/coverage/
-RUN rm -rf /popo/tests/logs/coverage.xml
-RUN rm -rf /popo/tests/App/Example/
-RUN rm -rf /popo/tests/AppRedefinedNamespace/Example/
-RUN rm -rf /popo/tests/AppWithNamespaceRoot/Example/
+ADD ./ /popo-app/
+RUN rm -rf /popo-app/tests/logs/coverage/
+RUN rm -rf /popo-app/tests/logs/coverage.xml
+RUN rm -rf /popo-app/tests/App/Example/
+RUN rm -rf /popo-app/tests/AppRedefinedNamespace/Example/
+RUN rm -rf /popo-app/tests/AppWithNamespaceRoot/Example/
 
-WORKDIR /popo
+WORKDIR /popo-app/
