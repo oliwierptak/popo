@@ -381,5 +381,3 @@ docker-popo report -s tests/fixtures/popo.yml
 ``` 
 
 See also: [bin/docker-popo](bin/docker-popo).
-
-Note: Use different 
