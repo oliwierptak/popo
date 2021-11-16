@@ -136,7 +136,7 @@ This parameter can either be a path to YAML file, or to a directory, under where
 
 This parameter is required.
 
-_Note:_ To provide multiple values use comma as a separator, eg. `s tests/bundles/,tests/projects/`.
+_Note:_ To provide multiple values use comma as a separator, eg. `-s tests/bundles/,tests/projects/`.
 
 ### `[schema-config-filename]`
 
