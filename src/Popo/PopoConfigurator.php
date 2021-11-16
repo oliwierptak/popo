@@ -11,7 +11,7 @@ class PopoConfigurator
     protected ?string $outputPath = null;
     protected string $schemaPath;
     protected ?string $schemaPathFilter = null;
-    protected ?string $schemaFilename = '*.popo.yml';
+    protected ?string $schemaFilenameMask = '*.popo.yml';
     protected ?string $schemaConfigFilename = null;
 
     public function getNamespace(): ?string
@@ -74,14 +74,14 @@ class PopoConfigurator
         return $this;
     }
 
-    public function getSchemaFilename(): ?string
+    public function getSchemaFilenameMask(): ?string
     {
-        return $this->schemaFilename;
+        return $this->schemaFilenameMask;
     }
 
-    public function setSchemaFilename(string $schemaFilename): self
+    public function setSchemaFilenameMask(string $schemaFilenameMask): self
     {
-        $this->schemaFilename = $schemaFilename;
+        $this->schemaFilenameMask = $schemaFilenameMask;
 
         return $this;
     }

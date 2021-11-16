@@ -20,6 +20,8 @@ class GenerateCommand extends AbstractCommand
 
     public const OPTION_SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
 
+    public const OPTION_SCHEMA_FILENAME_MASK = 'schemaFilenameMask';
+
     public const OPTION_OUTPUT_PATH = 'outputPath';
 
     public const OPTION_NAMESPACE = 'namespace';
@@ -74,7 +76,14 @@ class GenerateCommand extends AbstractCommand
                         InputOption::VALUE_OPTIONAL,
                         'Path filter to match POPO schema files.',
                         null
-                    )
+                    ),
+                    new InputOption(
+                        static::OPTION_SCHEMA_FILENAME_MASK,
+                        'm',
+                        InputOption::VALUE_OPTIONAL,
+                        'Schema filename mask.',
+                        '*.popo.yml'
+                    ),
                 ]
             );
     }
@@ -116,14 +125,25 @@ class GenerateCommand extends AbstractCommand
                 $input->hasOption(static::OPTION_NAMESPACE) ? $input->getOption(static::OPTION_NAMESPACE) : null
             )
             ->setNamespaceRoot(
-                $input->hasOption(static::OPTION_NAMESPACE_ROOT) ? $input->getOption(static::OPTION_NAMESPACE_ROOT) : null
+                $input->hasOption(static::OPTION_NAMESPACE_ROOT) ? $input->getOption(
+                    static::OPTION_NAMESPACE_ROOT
+                ) : null
             )
-            ->setSchemaPath((string)$input->getOption(static::OPTION_SCHEMA_PATH))
+            ->setSchemaPath((string) $input->getOption(static::OPTION_SCHEMA_PATH))
             ->setSchemaPathFilter(
-                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(static::OPTION_SCHEMA_PATH_FILTER) : null
+                $input->hasOption(static::OPTION_SCHEMA_PATH_FILTER) ? $input->getOption(
+                    static::OPTION_SCHEMA_PATH_FILTER
+                ) : null
             )
             ->setSchemaConfigFilename(
-                $input->hasOption(static::OPTION_SCHEMA_CONFIG_FILENAME) ? $input->getOption(static::OPTION_SCHEMA_CONFIG_FILENAME) : null
+                $input->hasOption(static::OPTION_SCHEMA_CONFIG_FILENAME) ? $input->getOption(
+                    static::OPTION_SCHEMA_CONFIG_FILENAME
+                ) : null
+            )
+            ->setSchemaFilenameMask(
+                $input->hasOption(static::OPTION_SCHEMA_FILENAME_MASK) ? $input->getOption(
+                    static::OPTION_SCHEMA_FILENAME_MASK
+                ) : '*.popo.yml'
             );
     }
 }

@@ -9,8 +9,8 @@ class PopoConfiguratorTest extends TestCase
 {
     public function testSetSchemaFilename()
     {
-        $configurator = (new PopoConfigurator)->setSchemaFilename('*.schema.yml');
+        $configurator = (new PopoConfigurator)->setSchemaFilenameMask('*.schema.yml');
 
-        $this->assertEquals('*.schema.yml', $configurator->getSchemaFilename());
+        $this->assertEquals('*.schema.yml', $configurator->getSchemaFilenameMask());
     }
 }

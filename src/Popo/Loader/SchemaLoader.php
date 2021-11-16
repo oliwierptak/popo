@@ -86,7 +86,7 @@ class SchemaLoader
             $files = $this->fileLocator->locate(
                 $configurator->getSchemaPath(),
                 (string) $configurator->getSchemaPathFilter(),
-                $configurator->getSchemaFilename()
+                $configurator->getSchemaFilenameMask()
             );
         }
 

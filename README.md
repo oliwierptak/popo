@@ -111,7 +111,8 @@ You can either use it as composer dependency or as docker command.
         -o [output-path] \
         -nm [namespace] \
         -nr [namespace-root] \
-        -p [schema-path-filter]
+        -p [schema-path-filter] \
+        -m [schema-filename-mask]
       ```
    - with docker
       ```sh
@@ -120,7 +121,8 @@ You can either use it as composer dependency or as docker command.
         -o [output-path] \
         -nm [namespace] \
         -nr [namespace-root] \
-        -p [schema-path-filter]     
+        -p [schema-path-filter] \
+        -m [schema-filename-mask]     
      ```
    
 
@@ -184,6 +186,13 @@ Each schema folder can contain multiple schema files, for example:
 ```
 
 _Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` or `docker-popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` to generate files from this example._
+
+
+### `[schema-filename-mask]`
+
+Filename mask used to locate schema files when using `schema-path-filter`.
+
+Default is `*.popo.yml`.
 
 
 ### Report Command
