@@ -32,7 +32,7 @@ class GenerateCommandTest extends AbstractGenerateTest
                 'command' => GenerateCommand::COMMAND_NAME,
                 '--namespace' => 'ExampleBundle\\AppRedefinedNamespace\\Example',
                 '--namespaceRoot' => 'ExampleBundle\\',
-                '--schemaPath' => POPO_TESTS_DIR . 'fixtures/',
+                '--schemaPath' => POPO_TESTS_DIR . 'fixtures/,'.POPO_TESTS_DIR . 'fixtures/',
                 '--outputPath' => POPO_TESTS_DIR,
                 '--schemaPathFilter' => 'bundles',
                 '--schemaConfigFilename' => POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml',

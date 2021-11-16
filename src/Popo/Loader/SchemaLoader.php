@@ -22,7 +22,7 @@ class SchemaLoader
     {
         $file = (new SchemaFile)->setFileConfig(PopoDefinesInterface::SCHEMA_DEFAULT_DATA);
 
-        if (trim((string)$schemaConfigFilename) === '') {
+        if (trim((string) $schemaConfigFilename) === '') {
             return $file;
         }
 
@@ -39,11 +39,13 @@ class SchemaLoader
      *
      * @return SchemaFile[]
      */
-    #[ArrayShape([SchemaFile::class])] public function load(PopoConfigurator $configurator, bool $remapProperties = true): array
-    {
+    #[ArrayShape([SchemaFile::class])] public function load(
+        PopoConfigurator $configurator,
+        bool $remapProperties = true
+    ): array {
         $result = [];
         $files = $this->loadSchemaFiles($configurator);
-
+        
         foreach ($files as $configurationFile) {
             $schemaConfig = [];
             $data = $this->loader->load($configurationFile);
@@ -78,16 +80,18 @@ class SchemaLoader
     {
         $this->validate($configurator);
 
-        $files = [
-            new SplFileInfo($configurator->getSchemaPath()),
-        ];
-
-        if (is_file($configurator->getSchemaPath()) === false) {
-            $files = $this->fileLocator->locate(
-                $configurator->getSchemaPath(),
-                (string) $configurator->getSchemaPathFilter(),
-                $configurator->getSchemaFilenameMask()
-            );
+        $files = [];
+        foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
+            if (is_file($configurator->getSchemaPath()) === false) {
+                $files = array_merge($files, $this->fileLocator->locate(
+                    $path,
+                    (string) $configurator->getSchemaPathFilter(),
+                    $configurator->getSchemaFilenameMask()
+                ));
+            }
+            else {
+                $files[] = new SplFileInfo($path);
+            }
         }
 
         return $files;
@@ -95,7 +99,10 @@ class SchemaLoader
 
     protected function validate(PopoConfigurator $configurator): void
     {
-        $this->validatePath($configurator->getSchemaPath());
+        foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
+            $this->validatePath($path);
+        }
+
         if (trim((string) $configurator->getSchemaConfigFilename()) !== '') {
             $this->validatePath($configurator->getSchemaConfigFilename());
         }
@@ -160,5 +167,10 @@ class SchemaLoader
         unset($data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL]);
 
         return $data;
+    }
+
+    protected function extractPaths(string $path): array
+    {
+        return \explode(',', $path) ?? [];
     }
 }
