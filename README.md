@@ -112,7 +112,8 @@ You can either use it as composer dependency or as docker command.
         -nm [namespace] \
         -nr [namespace-root] \
         -p [schema-path-filter] \
-        -m [schema-filename-mask]
+        -m [schema-filename-mask] \
+        -ig [ignore-non-existing-schema-folder]
       ```
    - with docker
       ```sh
@@ -122,7 +123,8 @@ You can either use it as composer dependency or as docker command.
         -nm [namespace] \
         -nr [namespace-root] \
         -p [schema-path-filter] \
-        -m [schema-filename-mask]     
+        -m [schema-filename-mask] \
+        -ig [ignore-non-existing-schema-folder]
      ```
    
 
@@ -196,6 +198,12 @@ Filename mask used to locate schema files when using `schema-path-filter`.
 
 Default is `*.popo.yml`.
 
+
+### `[ignore-non-existing-schema-folder]`
+
+Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma. 
+
+Default is `false`.
 
 ### Report Command
 

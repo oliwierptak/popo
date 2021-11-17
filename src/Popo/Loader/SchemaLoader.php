@@ -4,18 +4,20 @@ declare(strict_types = 1);
 
 namespace Popo\Loader;
 
+use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
 use Popo\Schema\SchemaFile;
-use RuntimeException;
 use SplFileInfo;
 use function array_key_exists;
 
 class SchemaLoader
 {
-    public function __construct(protected FileLocator $fileLocator, protected LoaderInterface $loader)
-    {
+    public function __construct(
+        protected FileLocator $fileLocator,
+        protected LoaderInterface $loader
+    ) {
     }
 
     public function loadSharedConfig(?string $schemaConfigFilename): SchemaFile
@@ -45,7 +47,7 @@ class SchemaLoader
     ): array {
         $result = [];
         $files = $this->loadSchemaFiles($configurator);
-        
+
         foreach ($files as $configurationFile) {
             $schemaConfig = [];
             $data = $this->loader->load($configurationFile);
@@ -82,14 +84,17 @@ class SchemaLoader
 
         $files = [];
         foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
-            if (is_file($configurator->getSchemaPath()) === false) {
-                $files = array_merge($files, $this->fileLocator->locate(
-                    $path,
-                    (string) $configurator->getSchemaPathFilter(),
-                    $configurator->getSchemaFilenameMask()
-                ));
+            if (is_dir($path)) {
+                $files = array_merge(
+                    $files,
+                    $this->fileLocator->locate(
+                        $path,
+                        (string) $configurator->getSchemaPathFilter(),
+                        $configurator->getSchemaFilenameMask()
+                    )
+                );
             }
-            else {
+            else if (is_file($path)) {
                 $files[] = new SplFileInfo($path);
             }
         }
@@ -100,7 +105,9 @@ class SchemaLoader
     protected function validate(PopoConfigurator $configurator): void
     {
         foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
-            $this->validatePath($path);
+            if ($configurator->isIgnoreNonExistingSchemaFolder() === false) {
+                $this->validatePath($path);
+            }
         }
 
         if (trim((string) $configurator->getSchemaConfigFilename()) !== '') {
@@ -110,8 +117,10 @@ class SchemaLoader
 
     protected function validatePath(string $path): void
     {
-        if (is_file($path) === false && is_dir($path) === false) {
-            throw new RuntimeException(sprintf('Specified path to POPO schema does not exist: "%s"', $path));
+        $info = new SplFileInfo($path);
+
+        if ($info->isReadable() === false) {
+            throw new InvalidArgumentException(sprintf('Specified path to POPO schema does not exist: "%s"', $path));
         }
     }
 

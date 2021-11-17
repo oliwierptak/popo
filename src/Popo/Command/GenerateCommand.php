@@ -28,6 +28,8 @@ class GenerateCommand extends AbstractCommand
 
     public const OPTION_NAMESPACE_ROOT = 'namespaceRoot';
 
+    public const OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER = 'ignoreNonExistingSchemaFolder';
+
     protected function configure(): void
     {
         $this
@@ -83,6 +85,13 @@ class GenerateCommand extends AbstractCommand
                         InputOption::VALUE_OPTIONAL,
                         'Schema filename mask.',
                         '*.popo.yml'
+                    ),
+                    new InputOption(
+                        static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER,
+                        'ig',
+                        InputOption::VALUE_OPTIONAL,
+                        'When set to false an exception will be thrown in case missing schemaPath folder',
+                        false
                     ),
                 ]
             );
@@ -144,6 +153,11 @@ class GenerateCommand extends AbstractCommand
                 $input->hasOption(static::OPTION_SCHEMA_FILENAME_MASK) ? $input->getOption(
                     static::OPTION_SCHEMA_FILENAME_MASK
                 ) : '*.popo.yml'
+            )
+            ->setIgnoreNonExistingSchemaFolder(
+                (bool) ($input->hasOption(static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER) ? $input->getOption(
+                    static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER
+                ) : false)
             );
     }
 }

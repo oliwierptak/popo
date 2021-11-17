@@ -110,7 +110,6 @@ class GenerateCommandTest extends AbstractGenerateTest
         $this->assertEquals(0, $result);
         $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Bar.php');
         $this->assertFileExists(POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/Foo.php');
-
     }
 
     public function test_generate_should_throw_exception(): void
@@ -118,10 +117,23 @@ class GenerateCommandTest extends AbstractGenerateTest
         $result = $this->getCommandTester()->execute(
             [
                 'command' => GenerateCommand::COMMAND_NAME,
-                '--schemaPath' => POPO_TESTS_DIR . 'fixtures/popos.yml',
+                '--schemaPath' => '/foo/bar/fixtures/popos.yml',
             ]
         );
 
         $this->assertEquals(1, $result);
+    }
+
+    public function test_generate_should_not_throw_exception_when_ignoring_missing_schema(): void
+    {
+        $result = $this->getCommandTester()->execute(
+            [
+                'command' => GenerateCommand::COMMAND_NAME,
+                '--schemaPath' => POPO_TESTS_DIR . 'fixtures/popos.yml,'.POPO_TESTS_DIR . 'fixtures/popos.yml',
+                '--ignoreNonExistingSchemaFolder' => true
+            ]
+        );
+
+        $this->assertEquals(0, $result);
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace PopoTestSuite\Loader;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Popo\Loader\FileLocator;
 use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
-use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use const Popo\POPO_TESTS_DIR;
 
@@ -70,7 +70,7 @@ class SchemaLoaderTest extends TestCase
 
     public function test_load_should_throw_exception(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('@Specified path to POPO schema does not exist: "(.*)tests/fixtures/popos.yml"@i');
 
         $loader = new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader());
