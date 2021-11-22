@@ -36,7 +36,9 @@ class GenerateCommandTest extends AbstractGenerateTest
                 '--outputPath' => POPO_TESTS_DIR,
                 '--schemaPathFilter' => 'bundles',
                 '--schemaConfigFilename' => POPO_TESTS_DIR . 'fixtures/bundles/project.config.yml',
+                '--ignoreNonExistingSchemaFolder' => false,
                 '--schemaFilenameMask' => '*.popo.yml',
+                '--php74CompatibleOutput' => true,
             ]
         );
 

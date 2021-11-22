@@ -30,7 +30,7 @@ class PopoFacade implements PopoFacadeInterface
     public function generate(PopoConfigurator $configurator): GenerateResult
     {
         return $this->getFactory()
-            ->createPopoModel()
+            ->createPopoModel($configurator)
             ->generate($configurator);
     }
 

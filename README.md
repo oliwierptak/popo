@@ -106,25 +106,11 @@ You can either use it as composer dependency or as docker command.
    - with composer
    
       ```sh
-      vendor/bin/popo generate -s <schema-path> \
-        -c [schema-config-filename] \
-        -o [output-path] \
-        -nm [namespace] \
-        -nr [namespace-root] \
-        -p [schema-path-filter] \
-        -m [schema-filename-mask] \
-        -ig [ignore-non-existing-schema-folder]
+      vendor/bin/popo generate -s <schema-path> -o <output-path>
       ```
    - with docker
       ```sh
-      docker-popo generate -s <schema-path> \
-        -c [schema-config-filename] \
-        -o [output-path] \
-        -nm [namespace] \
-        -nr [namespace-root] \
-        -p [schema-path-filter] \
-        -m [schema-filename-mask] \
-        -ig [ignore-non-existing-schema-folder]
+      docker-popo generate -s <schema-path> -o <output-path>     
      ```
    
 
@@ -132,7 +118,27 @@ _For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo gen
 
 ## Command line arguments
 
-### `<schema-path>`
+```
+Options:
+  -s, --schemaPath=SCHEMAPATH                                           Path to schema file or directory
+  -c, --schemaConfigFilename[=SCHEMACONFIGFILENAME]                     Path to shared schema configuration
+  -o, --outputPath[=OUTPUTPATH]                                         Output path where the files will be generated. Overrides schema settings when set.
+  -p, --schemaPathFilter[=SCHEMAPATHFILTER]                             Path filter to match POPO schema files.
+  -m, --schemaFilenameMask[=SCHEMAFILENAMEMASK]                         Schema filename mask. [default: "*.popo.yml"]
+  -h, --help                                                            Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                                                           Do not output any message
+  -V, --version                                                         Display this application version
+      --ansi|--no-ansi                                                  Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                                                  Do not ask any interactive question
+  -ns, --namespace[=NAMESPACE]                                          Namespace of generated POPO files. Overrides schema settings when set.
+  -nr, --namespaceRoot[=NAMESPACEROOT]                                  Remaps namespace and outputPath
+  -ig, --ignoreNonExistingSchemaFolder[=IGNORENONEXISTINGSCHEMAFOLDER]  When set, an exception will not be thrown in case missing schemaPath folder [default: false]
+  -pco74, --php74CompatibleOutput[=PHP74COMPATIBLEOUTPUT]               When set, the generated files will be compatible with PHP v7.4.x [default: false]
+  -v|vv|vvv, --verbose                                                  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+```
+
+
+### `--schemaPath`
 
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
@@ -140,23 +146,23 @@ This parameter is required.
 
 _Note:_ To provide multiple values use comma as a separator, eg. `-s tests/bundles/,tests/projects/`.
 
-### `[schema-config-filename]`
+### `--schemaConfigFilename`
 
 This parameter is optional, but when set a shared schema configuration will be used for all POPO schemas.
 
-### `[output-path]`
+### `--outputPath`
 
 Output path where the files will be generated, the namespace folders will be created automatically.
 
 This parameter is optional, but when set it overrides `outputPath` configured in a schema.
 
-### `[namespace]`
+### `--namespace`
 
 Namespace of generated POPO files.
 
 This parameter is optional, but when set it overrides `namespace` configured in a schema.
 
-### `[namespace-root]`
+### `--namespaceRoot`
 
 This parameter is optional, but when set it allow set mapping between `namespace` and `outputPath`.
 
@@ -168,7 +174,7 @@ under `outputPath` directory.
  namespaceRoot: ExampleBundle
 ```
 
-### `[schema-path-filter]`
+### `--schemaPathFilter`
 
 Additional path filter when `schema-path` is set to a folder.
 
@@ -192,16 +198,22 @@ Each schema folder can contain multiple schema files, for example:
 _Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` or `docker-popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` to generate files from this example._
 
 
-### `[schema-filename-mask]`
+### `--schemaFilenameMask`
 
 Filename mask used to locate schema files when using `schema-path-filter`.
 
 Default is `*.popo.yml`.
 
 
-### `[ignore-non-existing-schema-folder]`
+### `--ignoreNonExistingSchemaFolder`
 
 Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma. 
+
+Default is `false`.
+
+### `--php74CompatibleOutput`
+
+Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma.
 
 Default is `false`.
 

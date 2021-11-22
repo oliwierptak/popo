@@ -6,6 +6,7 @@ namespace Popo;
 
 use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
+use Popo\Builder\PopoBuilder8;
 use Popo\Loader\FileLocator;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\Model\Report\ReportModel;
@@ -18,11 +19,11 @@ use Symfony\Component\Finder\Finder;
 
 class PopoFactory
 {
-    public function createPopoModel(): GenerateModel
+    public function createPopoModel(PopoConfigurator $configurator): GenerateModel
     {
         return new GenerateModel(
             $this->createSchemaBuilder(),
-            $this->createPopoBuilder(),
+            $this->createPopoBuilder($configurator),
         );
     }
 
@@ -49,9 +50,15 @@ class PopoFactory
         );
     }
 
-    #[Pure] protected function createPopoBuilder(): PopoBuilder
+    #[Pure] protected function createPopoBuilder(PopoConfigurator $configurator): PopoBuilder
     {
-        return new PopoBuilder(
+        if ($configurator->isPhp74Compatible()) {
+            return new PopoBuilder(
+                $this->createValueTypeWriter()
+            );
+        }
+
+        return new PopoBuilder8(
             $this->createValueTypeWriter()
         );
     }

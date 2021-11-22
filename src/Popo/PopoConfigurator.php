@@ -14,6 +14,7 @@ class PopoConfigurator
     protected ?string $schemaFilenameMask = '*.popo.yml';
     protected ?string $schemaConfigFilename = null;
     protected bool $ignoreNonExistingSchemaFolder = false;
+    protected bool $php74Compatible = true;
 
     public function getNamespace(): ?string
     {
@@ -107,6 +108,18 @@ class PopoConfigurator
     public function setIgnoreNonExistingSchemaFolder(bool $ignoreNonExistingSchemaFolder): self
     {
         $this->ignoreNonExistingSchemaFolder = $ignoreNonExistingSchemaFolder;
+
+        return $this;
+    }
+
+    public function isPhp74Compatible(): bool
+    {
+        return $this->php74Compatible;
+    }
+
+    public function setPhp74Compatible(bool $php74Compatible): self
+    {
+        $this->php74Compatible = $php74Compatible;
 
         return $this;
     }

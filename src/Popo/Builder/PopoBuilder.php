@@ -46,52 +46,10 @@ class PopoBuilder extends AbstractBuilder
 
     protected function addMetadataShapeConstant(): self
     {
-        $shapeProperties = [];
-        $metadata = [];
-
-        foreach ($this->schema->getPropertyCollection() as $property) {
-            $metadata[$property->getName()] = [
-                PopoDefinesInterface::SCHEMA_PROPERTY_TYPE => $property->getType(),
-                PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
-            ];
-
-            $shapeProperties[$property->getName()] = $property->getType();
-            if ($this->propertyInspector->isPropertyNullable($property)) {
-                $shapeProperties[$property->getName()] = 'null|' . $property->getType();
-            }
-
-            if ($this->propertyInspector->isPopoProperty($property->getType())) {
-                $literalValue = new Literal(
-                    $this->propertyInspector->generatePopoType(
-                        $this->schema,
-                        $property,
-                        false
-                    )
-                );
-
-                $shapeProperties[$property->getName()] = $literalValue;
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
-            }
-            else {
-                if ($this->propertyInspector->isLiteral($property->getDefault())) {
-                    $literalValue = new Literal($property->getDefault());
-
-                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
-                }
-            }
-        }
-
-        $this->class
-            ->addConstant(
-                'SHAPE_PROPERTIES',
-                $shapeProperties
-            )
-            ->setProtected();
-
         $this->class
             ->addConstant(
                 'METADATA',
-                $metadata
+                $this->generateMetadataProperties()
             )
             ->setProtected();
 
@@ -332,10 +290,6 @@ EOF;
 
         $this->class
             ->addMethod('toArray')
-            ->addAttribute(
-                'JetBrains\PhpStorm\ArrayShape',
-                [new Literal('self::SHAPE_PROPERTIES')]
-            )
             ->setPublic()
             ->setReturnType('array')
             ->setBody($body);
@@ -373,11 +327,7 @@ EOF;
             ->setReturnType('self')
             ->setBody($body)
             ->addParameter('data')
-            ->setType('array')
-            ->addAttribute(
-                'JetBrains\PhpStorm\ArrayShape',
-                [new Literal('self::SHAPE_PROPERTIES')]
-            );
+            ->setType('array');
 
         return $this;
     }
@@ -445,5 +395,64 @@ EOF;
         }
 
         return $property;
+    }
+
+    protected function generateMetadataProperties(): array
+    {
+        $metadata = [];
+
+        foreach ($this->schema->getPropertyCollection() as $property) {
+            $metadata[$property->getName()] = [
+                PopoDefinesInterface::SCHEMA_PROPERTY_TYPE => $property->getType(),
+                PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
+            ];
+
+            if ($this->propertyInspector->isPopoProperty($property->getType())) {
+                $literalValue = new Literal(
+                    $this->propertyInspector->generatePopoType(
+                        $this->schema,
+                        $property,
+                        false
+                    )
+                );
+
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
+            }
+            else {
+                if ($this->propertyInspector->isLiteral($property->getDefault())) {
+                    $literalValue = new Literal($property->getDefault());
+
+                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
+                }
+            }
+        }
+
+        return $metadata;
+    }
+
+    protected function generateShapeProperties(): array
+    {
+        $shapeProperties = [];
+
+        foreach ($this->schema->getPropertyCollection() as $property) {
+            $shapeProperties[$property->getName()] = $property->getType();
+            if ($this->propertyInspector->isPropertyNullable($property)) {
+                $shapeProperties[$property->getName()] = 'null|' . $property->getType();
+            }
+
+            if ($this->propertyInspector->isPopoProperty($property->getType())) {
+                $literalValue = new Literal(
+                    $this->propertyInspector->generatePopoType(
+                        $this->schema,
+                        $property,
+                        false
+                    )
+                );
+
+                $shapeProperties[$property->getName()] = $literalValue;
+            }
+        }
+
+        return $shapeProperties;
     }
 }

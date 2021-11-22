@@ -30,6 +30,8 @@ class GenerateCommand extends AbstractCommand
 
     public const OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER = 'ignoreNonExistingSchemaFolder';
 
+    public const OPTION_PHP74_COMPATIBLE_OUTPUT = 'php74CompatibleOutput';
+
     protected function configure(): void
     {
         $this
@@ -90,7 +92,14 @@ class GenerateCommand extends AbstractCommand
                         static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER,
                         'ig',
                         InputOption::VALUE_OPTIONAL,
-                        'When set to false an exception will be thrown in case missing schemaPath folder',
+                        'When set, an exception will not be thrown in case missing schemaPath folder',
+                        false
+                    ),
+                    new InputOption(
+                        static::OPTION_PHP74_COMPATIBLE_OUTPUT,
+                        'pco74',
+                        InputOption::VALUE_OPTIONAL,
+                        'When set, the generated files will be compatible with PHP v7.4.x',
                         false
                     ),
                 ]
@@ -157,6 +166,11 @@ class GenerateCommand extends AbstractCommand
             ->setIgnoreNonExistingSchemaFolder(
                 (bool) ($input->hasOption(static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER) ? $input->getOption(
                     static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER
+                ) : false)
+            )
+            ->setPhp74Compatible(
+                (bool) ($input->hasOption(static::OPTION_PHP74_COMPATIBLE_OUTPUT) ? $input->getOption(
+                    static::OPTION_PHP74_COMPATIBLE_OUTPUT
                 ) : false)
             );
     }
