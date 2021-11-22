@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 class Schema
 {
     protected const PROPERTY_SHAPE = [Property::class];
@@ -16,7 +14,7 @@ class Schema
     /**
      * @var \Popo\Schema\Property[]
      */
-    #[ArrayShape(self::PROPERTY_SHAPE)]
+    
     protected array $propertyCollection = [];
     protected array $default = [];
 
@@ -44,7 +42,7 @@ class Schema
         return $this;
     }
 
-    #[ArrayShape(self::PROPERTY_SHAPE)]
+    
     public function getPropertyCollection(): array
     {
         return $this->propertyCollection;
@@ -55,7 +53,7 @@ class Schema
      *
      * @return $this
      */
-    public function setPropertyCollection(#[ArrayShape(self::PROPERTY_SHAPE)] array $propertyCollection): self
+    public function setPropertyCollection( array $propertyCollection): self
     {
         $this->propertyCollection = $propertyCollection;
 

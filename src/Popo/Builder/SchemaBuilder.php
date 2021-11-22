@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use JetBrains\PhpStorm\Pure;
 use Popo\Loader\SchemaLoader;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
@@ -16,8 +15,13 @@ use Popo\Schema\SchemaFile;
 
 class SchemaBuilder
 {
-    public function __construct(protected SchemaLoader $loader, protected ConfigMerger $configMerger)
+    protected SchemaLoader $loader;
+    protected ConfigMerger $configMerger;
+
+    public function __construct(SchemaLoader $loader, ConfigMerger $configMerger)
     {
+        $this->loader = $loader;
+        $this->configMerger = $configMerger;
     }
 
     public function build(PopoConfigurator $configurator): array
@@ -58,7 +62,7 @@ class SchemaBuilder
      *
      * @return array
      */
-    #[Pure] protected function generateSchemaTree(array $data, SchemaFile $sharedSchemaFile): array
+    protected function generateSchemaTree(array $data, SchemaFile $sharedSchemaFile): array
     {
         $result = [];
 

@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 class Config
 {
     protected const CONFIG_SHAPE = [
@@ -97,7 +95,6 @@ class Config
     }
 
     public function fromArray(
-        #[ArrayShape(self::CONFIG_SHAPE)]
         array $data
     ): self {
         $data = array_merge(
@@ -120,7 +117,6 @@ class Config
         return $this;
     }
 
-    #[ArrayShape(self::CONFIG_SHAPE)]
     public function toArray(): array
     {
         return [

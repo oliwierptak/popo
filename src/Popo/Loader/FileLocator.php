@@ -6,8 +6,11 @@ use Symfony\Component\Finder\Finder;
 
 class FileLocator
 {
-    public function __construct(protected Finder $finder)
+    protected Finder $finder;
+
+    public function __construct(Finder $finder)
     {
+        $this->finder = $finder;
     }
 
     public function locate(

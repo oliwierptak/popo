@@ -10,10 +10,13 @@ use Popo\PopoConfigurator;
 
 class GenerateModel
 {
-    public function __construct(
-        protected SchemaBuilder $schemaBuilder,
-        protected PopoBuilder $popoBuilder
-    ) {
+    protected SchemaBuilder $schemaBuilder;
+    protected PopoBuilder $popoBuilder;
+
+    public function __construct(SchemaBuilder $schemaBuilder, PopoBuilder $popoBuilder)
+    {
+        $this->schemaBuilder = $schemaBuilder;
+        $this->popoBuilder = $popoBuilder;
     }
 
     public function generate(PopoConfigurator $configurator): GenerateResult
@@ -30,7 +33,7 @@ class GenerateModel
                     'filename' => $filename,
                     'schemaName' => $schemaName,
                     'popoName' => $popoName,
-                    'namespace' => $popoSchema->getConfig()->getNamespace()
+                    'namespace' => $popoSchema->getConfig()->getNamespace(),
                 ]);
             }
         }

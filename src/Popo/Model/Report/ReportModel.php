@@ -12,8 +12,11 @@ use function uksort;
 
 class ReportModel
 {
-    public function __construct(protected SchemaLoader $loader)
+    protected SchemaLoader $loader;
+
+    public function __construct(SchemaLoader $loader)
     {
+        $this->loader = $loader;
     }
 
     public function generate(PopoConfigurator $configurator): ReportResult
@@ -37,20 +40,22 @@ class ReportModel
         $sharedSchemaFileConfig = [];
 
         foreach ($sharedFileConfig as $dataItem) {
-            $result->add((new ReportResultItem())
-                ->setName($dataItem['name'])
-                ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
-                ->markAsFileConfig()
+            $result->add(
+                (new ReportResultItem())
+                    ->setName($dataItem['name'])
+                    ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
+                    ->markAsFileConfig()
             );
         }
 
         foreach ($data as $schemaFile) {
             $fileConfig = $schemaFile->getFileConfig()['property'] ?? [];
             foreach ($fileConfig as $dataItem) {
-                $result->add((new ReportResultItem())
-                    ->setName($dataItem['name'])
-                    ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                    ->markAsFileConfig()
+                $result->add(
+                    (new ReportResultItem())
+                        ->setName($dataItem['name'])
+                        ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                        ->markAsFileConfig()
                 );
             }
 
@@ -60,22 +65,24 @@ class ReportModel
                         ->getSchemaConfig()[$schemaName]['property'] ?? [];
 
                 foreach ($schemaConfig as $dataItem) {
-                    $result->add((new ReportResultItem())
-                        ->setName($dataItem['name'])
-                        ->setSchemaName($schemaName)
-                        ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                        ->markAsSchemaConfig()
+                    $result->add(
+                        (new ReportResultItem())
+                            ->setName($dataItem['name'])
+                            ->setSchemaName($schemaName)
+                            ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                            ->markAsSchemaConfig()
                     );
                 }
 
                 foreach ($popoCollection as $popoName => $popoData) {
                     foreach ($popoData['property'] as $propertyData) {
-                        $result->add((new ReportResultItem())
-                            ->setName($propertyData['name'])
-                            ->setPopoName($popoName)
-                            ->setSchemaName($schemaName)
-                            ->setSchemaFilename($schemaFile->getFilename()->getPathname())
-                            ->markAsPropertyConfig()
+                        $result->add(
+                            (new ReportResultItem())
+                                ->setName($propertyData['name'])
+                                ->setPopoName($popoName)
+                                ->setSchemaName($schemaName)
+                                ->setSchemaFilename($schemaFile->getFilename()->getPathname())
+                                ->markAsPropertyConfig()
                         );
                     }
                 }
@@ -84,11 +91,12 @@ class ReportModel
 
         foreach ($sharedSchemaFileConfig as $schemaName => $items) {
             foreach ($items as $dataItem) {
-                $result->add((new ReportResultItem())
-                    ->setName($dataItem['name'])
-                    ->setSchemaName($schemaName)
-                    ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
-                    ->markAsSchemaConfig()
+                $result->add(
+                    (new ReportResultItem())
+                        ->setName($dataItem['name'])
+                        ->setSchemaName($schemaName)
+                        ->setSchemaFilename($sharedSchemaFile->getFilename()->getPathname())
+                        ->markAsSchemaConfig()
                 );
             }
         }

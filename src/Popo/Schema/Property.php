@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Schema;
 
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\ExpectedValues;
 use Popo\PopoDefinesInterface;
 
 class Property
@@ -16,7 +15,7 @@ class Property
         'comment' => 'string|null',
         'itemType' => 'string|null',
         'itemName' => 'string|null',
-        'default' => 'mixed',
+        'default' => '',
     ];
 
     protected const EXPECTED_TYPE_VALUES = [
@@ -25,7 +24,7 @@ class Property
         'float',
         'int',
         'string',
-        'mixed',
+        '',
         'const',
         'popo',
     ];
@@ -35,9 +34,9 @@ class Property
     protected ?string $comment = null;
     protected ?string $itemType = null;
     protected ?string $itemName = null;
-    protected mixed $default = null;
+    /** @var mixed */
+    protected $default = null;
 
-    #[ArrayShape(self::PROPERTY_SHAPE)]
     public function toArray(): array
     {
         return [
@@ -51,9 +50,8 @@ class Property
     }
 
     public function fromArray(
-        #[ArrayShape(self::PROPERTY_SHAPE)]
-        array $data): self
-    {
+        array $data
+    ): self {
         $data = array_merge(
             PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT_DATA,
             $data
@@ -81,16 +79,15 @@ class Property
         return $this;
     }
 
-    #[ExpectedValues(self::EXPECTED_TYPE_VALUES)]
     public function getType(): string
     {
         return $this->type;
     }
 
     public function setType(
-        #[ExpectedValues(self::EXPECTED_TYPE_VALUES)]
-        string $type): self
-    {
+
+        string $type
+    ): self {
         $this->type = $type;
 
         return $this;
@@ -108,12 +105,20 @@ class Property
         return $this;
     }
 
-    public function getDefault(): mixed
+    /**
+     * @return mixed|null
+     */
+    public function getDefault()
     {
         return $this->default;
     }
 
-    public function setDefault(mixed $default): self
+    /**
+     * @param mixed|null $default
+     *
+     * @return $this
+     */
+    public function setDefault($default): self
     {
         $this->default = $default;
 

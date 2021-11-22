@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use JetBrains\PhpStorm\Pure;
 use Popo\PopoDefinesInterface;
 
 class SchemaInspector
@@ -67,34 +66,39 @@ class SchemaInspector
         );
     }
 
-    #[Pure] public function isPopoProperty(string $type): bool
+    public function isPopoProperty(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
     }
 
-    #[Pure] public function isArray(string $type): bool
+    public function isArray(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY;
     }
 
-    #[Pure] public function isBool(string $type): bool
+    public function isBool(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_BOOL;
     }
 
-    #[Pure] public function isArrayOrMixed(string $type): bool
+    public function isArrayOrMixed(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY ||
             $type === PopoDefinesInterface::PROPERTY_TYPE_MIXED;
     }
 
-    #[Pure] public function isPropertyNullable(Property $property): bool
+    public function isPropertyNullable(Property $property): bool
     {
         return $this->isArrayOrMixed($property->getType()) === false ||
             $this->isPopoProperty($property->getType());
     }
 
-    #[Pure] public function isLiteral(mixed $value): bool
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function isLiteral($value): bool
     {
         if (is_string($value) === false) {
             return false;

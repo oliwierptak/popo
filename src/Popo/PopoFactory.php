@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use JetBrains\PhpStorm\Pure;
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\PopoBuilder8;
 use Popo\Loader\FileLocator;
@@ -50,7 +49,7 @@ class PopoFactory
         );
     }
 
-    #[Pure] protected function createPopoBuilder(PopoConfigurator $configurator): PopoBuilder
+    protected function createPopoBuilder(PopoConfigurator $configurator): PopoBuilder
     {
         if ($configurator->isPhp74Compatible()) {
             return new PopoBuilder(
@@ -63,7 +62,7 @@ class PopoFactory
         );
     }
 
-    #[Pure] protected function createValueTypeWriter(): SchemaInspector
+    protected function createValueTypeWriter(): SchemaInspector
     {
         return new SchemaInspector();
     }
@@ -73,12 +72,12 @@ class PopoFactory
         return new FileLocator(Finder::create());
     }
 
-    #[Pure] protected function createLoader(): YamlLoader
+    protected function createLoader(): YamlLoader
     {
         return new YamlLoader();
     }
 
-    #[Pure] private function createConfigMerger(): ConfigMerger
+    private function createConfigMerger(): ConfigMerger
     {
         return new ConfigMerger();
     }

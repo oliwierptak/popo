@@ -25,12 +25,13 @@ abstract class AbstractBuilder
     protected PhpNamespace $namespace;
     protected ClassType $class;
     protected Method $method;
+    protected SchemaInspector $propertyInspector;
 
     abstract public function build(Schema $schema): string;
 
-    public function __construct(
-        protected SchemaInspector $propertyInspector
-    ) {
+    public function __construct(SchemaInspector $propertyInspector)
+    {
+        $this->propertyInspector = $propertyInspector;
     }
 
     protected function buildSchema(Schema $schema): self
@@ -141,7 +142,7 @@ abstract class AbstractBuilder
 
             $handle = fopen($filename, 'w');
             if ($handle === false) {
-                throw new \RuntimeException('Could not open file: "'.$filename.'" for writing');
+                throw new \RuntimeException('Could not open file: "' . $filename . '" for writing');
             }
             fwrite($handle, $this->print());
         }
@@ -156,10 +157,10 @@ abstract class AbstractBuilder
     {
         $path = rtrim($this->schema->getConfig()->getOutputPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $namespace = $this->schema->getConfig()->getNamespace();
-        $namespaceRoot = trim((string)$this->schema->getConfig()->getNamespaceRoot());
+        $namespaceRoot = trim((string) $this->schema->getConfig()->getNamespaceRoot());
 
         if ($namespaceRoot !== '') {
-            $namespace = str_replace($namespaceRoot, '' , $namespace);
+            $namespace = str_replace($namespaceRoot, '', $namespace);
         }
         $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
 

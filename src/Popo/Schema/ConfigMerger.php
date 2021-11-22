@@ -4,13 +4,12 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use JetBrains\PhpStorm\Pure;
 use Popo\PopoDefinesInterface;
 use function array_replace_recursive;
 
 class ConfigMerger
 {
-    #[Pure] public function mergeSchemaConfiguration(string $schemaName, SchemaFile $sharedSchemaFile, SchemaFile $schemaFile): array
+    public function mergeSchemaConfiguration(string $schemaName, SchemaFile $sharedSchemaFile, SchemaFile $schemaFile): array
     {
         $sharedConfig = $this->mergeSchemaFile(
             $schemaName,
@@ -27,7 +26,7 @@ class ConfigMerger
         );
     }
 
-    #[Pure] public function mergeSchemaFile(string $schemaName, SchemaFile $file): array
+    public function mergeSchemaFile(string $schemaName, SchemaFile $file): array
     {
         return array_replace_recursive(
             $file->getFileConfig(),
@@ -43,7 +42,7 @@ class ConfigMerger
         );
     }
 
-    #[Pure] public function mergePopoCollection(
+    public function mergePopoCollection(
         string $schemaName,
         array $popoCollection,
         array $configData,

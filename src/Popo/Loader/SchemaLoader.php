@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Popo\Loader;
 
 use InvalidArgumentException;
-use JetBrains\PhpStorm\ArrayShape;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
 use Popo\Schema\SchemaFile;
@@ -14,10 +13,13 @@ use function array_key_exists;
 
 class SchemaLoader
 {
-    public function __construct(
-        protected FileLocator $fileLocator,
-        protected LoaderInterface $loader
-    ) {
+    protected FileLocator $fileLocator;
+    protected LoaderInterface $loader;
+
+    public function __construct(FileLocator $fileLocator, LoaderInterface $loader)
+    {
+        $this->fileLocator = $fileLocator;
+        $this->loader = $loader;
     }
 
     public function loadSharedConfig(?string $schemaConfigFilename): SchemaFile
@@ -41,7 +43,7 @@ class SchemaLoader
      *
      * @return SchemaFile[]
      */
-    #[ArrayShape([SchemaFile::class])] public function load(
+    public function load(
         PopoConfigurator $configurator,
         bool $remapProperties = true
     ): array {
@@ -94,8 +96,10 @@ class SchemaLoader
                     )
                 );
             }
-            else if (is_file($path)) {
-                $files[] = new SplFileInfo($path);
+            else {
+                if (is_file($path)) {
+                    $files[] = new SplFileInfo($path);
+                }
             }
         }
 
