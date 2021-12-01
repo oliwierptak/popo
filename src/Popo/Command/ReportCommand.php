@@ -53,10 +53,6 @@ class ReportCommand extends AbstractCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): int
     {
-        if ($output->getVerbosity() <= OutputInterface::VERBOSITY_QUIET) {
-            return 0;
-        }
-
         $configurator = $this->buildConfigurator($input);
         $output->writeln('POPO Schema Report');
         $output->writeln('');

@@ -22,10 +22,7 @@ abstract class AbstractCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $factory = new PopoFactory();
-
         $this->facade = new PopoFacade();
-        $this->facade->setFactory($factory);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
