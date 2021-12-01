@@ -116,25 +116,21 @@ You can either use it as composer dependency or as docker command.
 
 _For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo generate -s tests/fixtures/popo.yml`._
 
-## Command line arguments
+## Command line options
 
 ```
+Usage:
+  generate [options]
+
 Options:
   -s, --schemaPath=SCHEMAPATH                                           Path to schema file or directory
   -c, --schemaConfigFilename[=SCHEMACONFIGFILENAME]                     Path to shared schema configuration
   -o, --outputPath[=OUTPUTPATH]                                         Output path where the files will be generated. Overrides schema settings when set.
   -p, --schemaPathFilter[=SCHEMAPATHFILTER]                             Path filter to match POPO schema files.
   -m, --schemaFilenameMask[=SCHEMAFILENAMEMASK]                         Schema filename mask. [default: "*.popo.yml"]
-  -h, --help                                                            Display help for the given command. When no command is given display help for the list command
-  -q, --quiet                                                           Do not output any message
-  -V, --version                                                         Display this application version
-      --ansi|--no-ansi                                                  Force (or disable --no-ansi) ANSI output
-  -n, --no-interaction                                                  Do not ask any interactive question
   -ns, --namespace[=NAMESPACE]                                          Namespace of generated POPO files. Overrides schema settings when set.
   -nr, --namespaceRoot[=NAMESPACEROOT]                                  Remaps namespace and outputPath
   -ig, --ignoreNonExistingSchemaFolder[=IGNORENONEXISTINGSCHEMAFOLDER]  When set, an exception will not be thrown in case missing schemaPath folder [default: false]
-  -pco74, --php74CompatibleOutput[=PHP74COMPATIBLEOUTPUT]               When set, the generated files will be compatible with PHP v7.4.x [default: false]
-  -v|vv|vvv, --verbose                                                  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 ```
 
 
@@ -208,12 +204,6 @@ Default is `*.popo.yml`.
 ### `--ignoreNonExistingSchemaFolder`
 
 Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma. 
-
-Default is `false`.
-
-### `--php74CompatibleOutput`
-
-Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma.
 
 Default is `false`.
 
