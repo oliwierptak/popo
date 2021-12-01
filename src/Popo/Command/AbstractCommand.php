@@ -4,7 +4,6 @@ namespace Popo\Command;
 
 use Popo\PopoDefinesInterface;
 use Popo\PopoFacade;
-use Popo\PopoFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

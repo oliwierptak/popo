@@ -25,13 +25,18 @@ abstract class AbstractBuilder
     protected PhpNamespace $namespace;
     protected ClassType $class;
     protected Method $method;
-    protected SchemaInspector $propertyInspector;
+    protected SchemaInspector $schemaInspector;
+    /**
+     * @var \Popo\PluginInterface[]
+     */
+    protected array $pluginCollection = [];
 
     abstract public function build(Schema $schema): string;
 
-    public function __construct(SchemaInspector $propertyInspector)
+    public function __construct(SchemaInspector $schemaInspector, array $pluginCollection)
     {
-        $this->propertyInspector = $propertyInspector;
+        $this->schemaInspector = $schemaInspector;
+        $this->pluginCollection = $pluginCollection;
     }
 
     protected function buildSchema(Schema $schema): self
@@ -68,16 +73,16 @@ abstract class AbstractBuilder
     protected function addProperty(Property $property): self
     {
         $value = $property->getDefault();
-        if ($this->propertyInspector->isPopoProperty($property->getType())) {
+        if ($this->schemaInspector->isPopoProperty($property->getType())) {
             $value = null;
         }
         else {
-            if ($this->propertyInspector->isLiteral($property->getDefault())) {
+            if ($this->schemaInspector->isLiteral($property->getDefault())) {
                 $value = new Literal($property->getDefault());
             }
         }
 
-        if ($value === null && $this->propertyInspector->isArray($property->getType())) {
+        if ($value === null && $this->schemaInspector->isArray($property->getType())) {
             $value = [];
         }
 
@@ -85,8 +90,8 @@ abstract class AbstractBuilder
             ->addProperty($property->getName(), $value)
             ->setComment($property->getComment())
             ->setProtected()
-            ->setNullable($this->propertyInspector->isPropertyNullable($property))
-            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
+            ->setNullable($this->schemaInspector->isPropertyNullable($property))
+            ->setType($this->schemaInspector->generatePopoType($this->schema, $property))
             ->setComment($property->getComment());
 
         return $this;
@@ -94,11 +99,11 @@ abstract class AbstractBuilder
 
     protected function addParameter(Property $property): self
     {
-        $nullable = $this->propertyInspector->isPropertyNullable($property);
+        $nullable = $this->schemaInspector->isPropertyNullable($property);
 
         $this->method
             ->addParameter($property->getName())
-            ->setType($this->propertyInspector->generatePopoType($this->schema, $property))
+            ->setType($this->schemaInspector->generatePopoType($this->schema, $property))
             ->setNullable($nullable);
 
         return $this;
@@ -170,5 +175,12 @@ abstract class AbstractBuilder
             $namespace,
             $this->schema->getName()
         );
+    }
+
+    public function runPlugins(): void
+    {
+        foreach ($this->pluginCollection as $plugin) {
+            $plugin->run($this->class, $this->schema);
+        }
     }
 }

@@ -4,6 +4,12 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use Popo\Plugin\FromArrayPlugin;
+use Popo\Plugin\IsNewPlugin;
+use Popo\Plugin\ListModifiedPropertiesPlugin;
+use Popo\Plugin\RequireAllPlugin;
+use Popo\Plugin\ToArrayPlugin;
+
 class PopoConfigurator
 {
     protected ?string $namespace = null;
@@ -14,7 +20,16 @@ class PopoConfigurator
     protected ?string $schemaFilenameMask = '*.popo.yml';
     protected ?string $schemaConfigFilename = null;
     protected bool $ignoreNonExistingSchemaFolder = false;
-    protected bool $php74Compatible = true;
+    /**
+     * @var string[]
+     */
+    protected array $pluginClasses = [
+        ToArrayPlugin::class,
+        FromArrayPlugin::class,
+        IsNewPlugin::class,
+        ListModifiedPropertiesPlugin::class,
+        RequireAllPlugin::class
+    ];
 
     public function getNamespace(): ?string
     {
@@ -112,14 +127,21 @@ class PopoConfigurator
         return $this;
     }
 
-    public function isPhp74Compatible(): bool
+    public function getPluginClasses(): array
     {
-        return $this->php74Compatible;
+        return $this->pluginClasses;
     }
 
-    public function setPhp74Compatible(bool $php74Compatible): self
+    public function setPluginClasses(array $plugins): self
     {
-        $this->php74Compatible = $php74Compatible;
+        $this->pluginClasses = $plugins;
+
+        return $this;
+    }
+
+    public function addPluginClass(string $pluginClassName): self
+    {
+        $this->pluginClasses[] = $pluginClassName;
 
         return $this;
     }

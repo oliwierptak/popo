@@ -30,21 +30,18 @@ class PopoBuilder extends AbstractBuilder
         $this
             ->addImplement()
             ->addExtend()
-            ->addMetadataShapeConstant()
-            ->addToArrayMethod()
-            ->addFromArrayMethod()
+            ->addMetadata()
             ->addUpdateMap()
-            ->addIsNewMethod()
-            ->addGetModifiedPropertiesMethod()
-            ->addRequireAllMethod()
             ->addSetupPopoMethod();
+
+        $this->runPlugins();
 
         $this->save();
 
         return $this->generateFilename();
     }
 
-    protected function addMetadataShapeConstant(): self
+    protected function addMetadata(): self
     {
         $this->class
             ->addConstant(
@@ -64,14 +61,14 @@ class PopoBuilder extends AbstractBuilder
 return \$this->${name};
 EOF;
 
-        $name = $this->propertyInspector->isBool($property->getType()) ?
+        $name = $this->schemaInspector->isBool($property->getType()) ?
             '' . $property->getName() : 'get' . ucfirst($property->getName());
 
         $this->method = $this->class
             ->addMethod($name)
             ->setComment($property->getComment())
             ->setPublic()
-            ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
+            ->setReturnType($this->schemaInspector->generatePopoType($this->schema, $property))
             ->setBody(
                 sprintf(
                     $body,
@@ -79,7 +76,7 @@ EOF;
                 )
             );
 
-        if ($this->propertyInspector->isArrayOrMixed($property->getType()) === false) {
+        if ($this->schemaInspector->isArrayOrMixed($property->getType()) === false) {
             $this->method->setReturnNullable();
         }
 
@@ -121,7 +118,7 @@ if (%s) {
 return \$this->${name};
 EOF;
 
-        $condition = $this->propertyInspector->isArray($property->getType())
+        $condition = $this->schemaInspector->isArray($property->getType())
             ? "empty(\$this->${name})"
             : "\$this->${name} === null";
 
@@ -131,86 +128,7 @@ EOF;
             ->addMethod('require' . ucfirst($property->getName()))
             ->setComment($property->getComment())
             ->setPublic()
-            ->setReturnType($this->propertyInspector->generatePopoType($this->schema, $property))
-            ->setBody($body);
-
-        return $this;
-    }
-
-    protected function addIsNewMethod(): self
-    {
-        $body = <<<EOF
-return empty(\$this->updateMap) === true;
-EOF;
-
-        $this->class
-            ->addMethod('isNew')
-            ->setPublic()
-            ->setReturnType('bool')
-            ->setBody($body);
-
-        return $this;
-    }
-
-    protected function addGetModifiedPropertiesMethod(): self
-    {
-        $body = <<<EOF
-return array_keys(\$this->updateMap);
-EOF;
-
-        $this->class
-            ->addMethod('listModifiedProperties')
-            ->setPublic()
-            ->setReturnType('array')
-            ->setBody($body);
-
-        return $this;
-    }
-
-    protected function addRequireAllMethod(): self
-    {
-        $body = <<<EOF
-\$errors = [];
-
-%s
-
-if (empty(\$errors) === false) {
-    throw new UnexpectedValueException(
-        implode("\\n", \$errors)
-    );
-}
-
-return \$this;
-EOF;
-
-        $validationBody = <<<EOF
-try {
-    \$this->require%s();
-}
-catch (\Throwable \$throwable) {
-    \$errors['%s'] = \$throwable->getMessage();
-}
-
-EOF;
-
-        $require = '';
-        foreach ($this->schema->getPropertyCollection() as $property) {
-            $require .= sprintf(
-                $validationBody,
-                ucfirst($property->getName()),
-                $property->getName()
-            );
-        }
-
-        $body = sprintf(
-            $body,
-            rtrim($require, "\n")
-        );
-
-        $this->class
-            ->addMethod('requireAll')
-            ->setPublic()
-            ->setReturnType('self')
+            ->setReturnType($this->schemaInspector->generatePopoType($this->schema, $property))
             ->setBody($body);
 
         return $this;
@@ -224,7 +142,7 @@ EOF;
 return \$this->${name} !== null;
 EOF;
 
-        if ($this->propertyInspector->isArray($property->getType())) {
+        if ($this->schemaInspector->isArray($property->getType())) {
             $name = $property->getItemName() ?? $property->getName();
             $name = $name . 'Collection';
 
@@ -261,80 +179,9 @@ EOF;
         return $this;
     }
 
-    protected function addToArrayMethod(): self
-    {
-        $body = "\$data = [\n";
-        foreach ($this->schema->getPropertyCollection() as $property) {
-            $body .= sprintf(
-                "\t'%s' => \$this->%s,\n",
-                $property->getName(),
-                $property->getName()
-            );
-        }
-
-        $body .= <<<EOF
-];
-
-array_walk(
-    \$data,
-    function (&\$value, \$name) use (\$data) {
-        \$popo = static::METADATA[\$name]['default'];
-        if (static::METADATA[\$name]['type'] === 'popo') {
-            \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$popo)->toArray();
-        }
-    }
-);
-
-return \$data;
-EOF;
-
-        $this->class
-            ->addMethod('toArray')
-            ->setPublic()
-            ->setReturnType('array')
-            ->setBody($body);
-
-        return $this;
-    }
-
-    protected function addFromArrayMethod(): self
-    {
-        $body = <<<EOF
-foreach (static::METADATA as \$name => \$meta) {
-    \$value = \$data[\$name] ?? \$this->\$name ?? null;
-    \$popoValue = \$meta['default'];
-
-    if (\$popoValue !== null && \$meta['type'] === 'popo') {
-        \$popo = new \$popoValue;
-
-        if (is_array(\$value)) {
-            \$popo->fromArray(\$value);
-        }
-
-        \$value = \$popo;
-    }
-
-    \$this->\$name = \$value;
-    \$this->updateMap[\$name] = true;
-}
-
-return \$this;
-EOF;
-
-        $this->class
-            ->addMethod('fromArray')
-            ->setPublic()
-            ->setReturnType('self')
-            ->setBody($body)
-            ->addParameter('data')
-            ->setType('array');
-
-        return $this;
-    }
-
     protected function addAddItemMethod(Property $property): self
     {
-        if ($property->getItemType() === null || $this->propertyInspector->isArray($property->getType()) === false) {
+        if ($property->getItemType() === null || $this->schemaInspector->isArray($property->getType()) === false) {
             return $this;
         }
 
@@ -357,7 +204,7 @@ EOF;
             ->setBody($body)
             ->addParameter('item')
             ->setType(
-                $this->propertyInspector->generatePopoItemType(
+                $this->schemaInspector->generatePopoItemType(
                     $this->schema,
                     $property
                 )
@@ -385,8 +232,8 @@ EOF;
     {
         if ($property->getItemType()) {
             $returnType = $property->getItemType();
-            if ($this->propertyInspector->isLiteral($property->getItemType())) {
-                $returnType = $this->propertyInspector->generatePopoItemType(
+            if ($this->schemaInspector->isLiteral($property->getItemType())) {
+                $returnType = $this->schemaInspector->generatePopoItemType(
                     $this->schema,
                     $property
                 );
@@ -407,9 +254,9 @@ EOF;
                 PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
             ];
 
-            if ($this->propertyInspector->isPopoProperty($property->getType())) {
+            if ($this->schemaInspector->isPopoProperty($property->getType())) {
                 $literalValue = new Literal(
-                    $this->propertyInspector->generatePopoType(
+                    $this->schemaInspector->generatePopoType(
                         $this->schema,
                         $property,
                         false
@@ -419,7 +266,7 @@ EOF;
                 $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
             }
             else {
-                if ($this->propertyInspector->isLiteral($property->getDefault())) {
+                if ($this->schemaInspector->isLiteral($property->getDefault())) {
                     $literalValue = new Literal($property->getDefault());
 
                     $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
@@ -428,31 +275,5 @@ EOF;
         }
 
         return $metadata;
-    }
-
-    protected function generateShapeProperties(): array
-    {
-        $shapeProperties = [];
-
-        foreach ($this->schema->getPropertyCollection() as $property) {
-            $shapeProperties[$property->getName()] = $property->getType();
-            if ($this->propertyInspector->isPropertyNullable($property)) {
-                $shapeProperties[$property->getName()] = 'null|' . $property->getType();
-            }
-
-            if ($this->propertyInspector->isPopoProperty($property->getType())) {
-                $literalValue = new Literal(
-                    $this->propertyInspector->generatePopoType(
-                        $this->schema,
-                        $property,
-                        false
-                    )
-                );
-
-                $shapeProperties[$property->getName()] = $literalValue;
-            }
-        }
-
-        return $shapeProperties;
     }
 }

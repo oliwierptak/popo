@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use LogicException;
 use Popo\Builder\PopoBuilder;
-use Popo\Builder\PopoBuilder8;
 use Popo\Loader\FileLocator;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\Model\Report\ReportModel;
@@ -15,6 +15,7 @@ use Popo\Model\Generate\GenerateModel;
 use Popo\Builder\SchemaBuilder;
 use Popo\Loader\SchemaLoader;
 use Symfony\Component\Finder\Finder;
+use function class_exists;
 
 class PopoFactory
 {
@@ -51,18 +52,13 @@ class PopoFactory
 
     protected function createPopoBuilder(PopoConfigurator $configurator): PopoBuilder
     {
-        if ($configurator->isPhp74Compatible()) {
-            return new PopoBuilder(
-                $this->createValueTypeWriter()
-            );
-        }
-
-        return new PopoBuilder8(
-            $this->createValueTypeWriter()
+        return new PopoBuilder(
+            $this->createSchemaInspector(),
+            $this->createPlugins($configurator)
         );
     }
 
-    protected function createValueTypeWriter(): SchemaInspector
+    protected function createSchemaInspector(): SchemaInspector
     {
         return new SchemaInspector();
     }
@@ -77,8 +73,24 @@ class PopoFactory
         return new YamlLoader();
     }
 
-    private function createConfigMerger(): ConfigMerger
+    protected function createConfigMerger(): ConfigMerger
     {
         return new ConfigMerger();
+    }
+
+    protected function createPlugins(PopoConfigurator $configurator): array
+    {
+        $result = [];
+        foreach ($configurator->getPluginClasses() as $pluginClassName) {
+            if (!class_exists($pluginClassName)) {
+                throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
+            }
+
+            $result[] = new $pluginClassName(
+                $this->createSchemaInspector()
+            );
+        }
+
+        return $result;
     }
 }
