@@ -342,7 +342,7 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 Apart from the typical setters and getters POPO objects have additional helper methods which ease access to, and offer
 more insight about the data that they represent.
 
-The following methods are supported:
+The following methods are supported by plugins:
 
 - `isNew`
 - `fromArray`
@@ -357,6 +357,27 @@ Property specific methods:
 - `require`
 - `has`
 - `addCollectionItem`
+
+### Plugins
+
+Adding new behaviour can be achieved with plugins, for example:
+
+```php
+$configurator = (new \Popo\PopoConfigurator)
+    ->addPluginClass(PluginClass1:class)
+    ->addPluginClass(PluginClass2:class)
+    ->addPluginClass(PluginClass3:class);
+```
+
+```php
+interface PluginInterface
+{
+    public function run(ClassType $class, Schema $schema): ClassType;
+}
+```
+
+See [src/Popo/Plugin](src/Popo/Plugin).
+
 
 ### Collection support
 
