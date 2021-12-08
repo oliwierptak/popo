@@ -5,20 +5,15 @@ declare(strict_types = 1);
 namespace Popo\Builder;
 
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
-use Popo\Schema\SchemaInspector;
+use Popo\Plugin\BuilderPluginInterface;
 use Popo\Schema\Property;
 use Popo\Schema\Schema;
-use function fwrite;
-use function pathinfo;
-use const DIRECTORY_SEPARATOR;
-use const PATHINFO_DIRNAME;
+use Popo\Schema\SchemaInspector;
 
-abstract class AbstractBuilder
+abstract class AbstractBuilder implements BuilderPluginInterface
 {
     protected Schema $schema;
     protected PhpFile $file;
@@ -26,17 +21,56 @@ abstract class AbstractBuilder
     protected ClassType $class;
     protected Method $method;
     protected SchemaInspector $schemaInspector;
+    protected FileWriter $fileWriter;
     /**
-     * @var \Popo\PluginInterface[]
+     * @var \Popo\Plugin\ClassPluginInterface[]
      */
-    protected array $pluginCollection = [];
+    protected array $classPluginCollection = [];
+    /**
+     * @var \Popo\Plugin\PropertyPluginInterface[]
+     */
+    protected array $propertyMethodPluginCollection = [];
 
+    /**
+     * @throws \Throwable
+     */
     abstract public function build(Schema $schema): string;
 
-    public function __construct(SchemaInspector $schemaInspector, array $pluginCollection)
-    {
+    public function __construct(
+        SchemaInspector $schemaInspector,
+        FileWriter $fileWriter,
+        array $classPluginCollection,
+        array $propertyMethodPluginCollection
+    ) {
         $this->schemaInspector = $schemaInspector;
-        $this->pluginCollection = $pluginCollection;
+        $this->fileWriter = $fileWriter;
+        $this->classPluginCollection = $classPluginCollection;
+        $this->propertyMethodPluginCollection = $propertyMethodPluginCollection;
+    }
+
+    public function getSchema(): Schema
+    {
+        return $this->schema;
+    }
+
+    public function getFile(): PhpFile
+    {
+        return $this->file;
+    }
+
+    public function getNamespace(): PhpNamespace
+    {
+        return $this->namespace;
+    }
+
+    public function getClass(): ClassType
+    {
+        return $this->class;
+    }
+
+    public function getSchemaInspector(): SchemaInspector
+    {
+        return $this->schemaInspector;
     }
 
     protected function buildSchema(Schema $schema): self
@@ -70,117 +104,17 @@ abstract class AbstractBuilder
         return $this;
     }
 
-    protected function addProperty(Property $property): self
+    protected function runClassPlugins(): void
     {
-        $value = $property->getDefault();
-        if ($this->schemaInspector->isPopoProperty($property->getType())) {
-            $value = null;
-        }
-        else {
-            if ($this->schemaInspector->isLiteral($property->getDefault())) {
-                $value = new Literal($property->getDefault());
-            }
-        }
-
-        if ($value === null && $this->schemaInspector->isArray($property->getType())) {
-            $value = [];
-        }
-
-        $this->class
-            ->addProperty($property->getName(), $value)
-            ->setComment($property->getComment())
-            ->setProtected()
-            ->setNullable($this->schemaInspector->isPropertyNullable($property))
-            ->setType($this->schemaInspector->generatePopoType($this->schema, $property))
-            ->setComment($property->getComment());
-
-        return $this;
-    }
-
-    protected function addParameter(Property $property): self
-    {
-        $nullable = $this->schemaInspector->isPropertyNullable($property);
-
-        $this->method
-            ->addParameter($property->getName())
-            ->setType($this->schemaInspector->generatePopoType($this->schema, $property))
-            ->setNullable($nullable);
-
-        return $this;
-    }
-
-    protected function addExtend(): self
-    {
-        if ($this->schema->getConfig()->getExtend() !== null) {
-            $extend = str_replace('::class', '', $this->schema->getConfig()->getExtend());
-            $this->class->addExtend($extend);
-        }
-
-        return $this;
-    }
-
-    protected function addImplement(): self
-    {
-        if ($this->schema->getConfig()->getImplement() !== null) {
-            $implement = str_replace('::class', '', $this->schema->getConfig()->getImplement());
-            $this->class->addImplement($implement);
-        }
-
-        return $this;
-    }
-
-    public function print(): string
-    {
-        return (new PsrPrinter)->printFile($this->file);
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    public function save(): void
-    {
-        $handle = null;
-        try {
-            $filename = $this->generateFilename();
-
-            @mkdir(pathinfo($filename, PATHINFO_DIRNAME), 0775, true);
-
-            $handle = fopen($filename, 'w');
-            if ($handle === false) {
-                throw new \RuntimeException('Could not open file: "' . $filename . '" for writing');
-            }
-            fwrite($handle, $this->print());
-        }
-        finally {
-            if ($handle) {
-                fclose($handle);
-            }
+        foreach ($this->classPluginCollection as $plugin) {
+            $plugin->run($this);
         }
     }
 
-    public function generateFilename(): string
+    protected function runPropertyMethodPlugins(Property $property): void
     {
-        $path = rtrim($this->schema->getConfig()->getOutputPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $namespace = $this->schema->getConfig()->getNamespace();
-        $namespaceRoot = trim((string) $this->schema->getConfig()->getNamespaceRoot());
-
-        if ($namespaceRoot !== '') {
-            $namespace = str_replace($namespaceRoot, '', $namespace);
-        }
-        $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
-
-        return sprintf(
-            '%s/%s/%s.php',
-            rtrim($path, DIRECTORY_SEPARATOR),
-            $namespace,
-            $this->schema->getName()
-        );
-    }
-
-    public function runPlugins(): void
-    {
-        foreach ($this->pluginCollection as $plugin) {
-            $plugin->run($this->class, $this->schema);
+        foreach ($this->propertyMethodPluginCollection as $plugin) {
+            $plugin->run($this, $property);
         }
     }
 }

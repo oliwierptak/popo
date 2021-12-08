@@ -4,11 +4,22 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use Popo\Plugin\FromArrayPlugin;
-use Popo\Plugin\IsNewPlugin;
-use Popo\Plugin\ListModifiedPropertiesPlugin;
-use Popo\Plugin\RequireAllPlugin;
-use Popo\Plugin\ToArrayPlugin;
+use Popo\Plugin\ClassPlugin\ExtendClassPlugin;
+use Popo\Plugin\ClassPlugin\FromArrayClassPlugin;
+use Popo\Plugin\ClassPlugin\ImplementClassPlugin;
+use Popo\Plugin\ClassPlugin\IsNewClassPlugin;
+use Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin;
+use Popo\Plugin\ClassPlugin\MetadataClassPlugin;
+use Popo\Plugin\ClassPlugin\PopoMethodClassPlugin;
+use Popo\Plugin\ClassPlugin\RequireAllClassPlugin;
+use Popo\Plugin\ClassPlugin\ToArrayClassPlugin;
+use Popo\Plugin\ClassPlugin\UpdateMapClassPlugin;
+use Popo\Plugin\PropertyMethodPlugin\AddItemPropertyMethodPlugin;
+use Popo\Plugin\PropertyMethodPlugin\AddPropertyMethodPlugin;
+use Popo\Plugin\PropertyMethodPlugin\GetPropertyMethodPlugin;
+use Popo\Plugin\PropertyMethodPlugin\HasPropertyMethodPlugin;
+use Popo\Plugin\PropertyMethodPlugin\RequirePropertyMethodPlugin;
+use Popo\Plugin\PropertyMethodPlugin\SetPropertyMethodPlugin;
 
 class PopoConfigurator
 {
@@ -23,12 +34,28 @@ class PopoConfigurator
     /**
      * @var string[]
      */
-    protected array $pluginClasses = [
-        ToArrayPlugin::class,
-        FromArrayPlugin::class,
-        IsNewPlugin::class,
-        ListModifiedPropertiesPlugin::class,
-        RequireAllPlugin::class
+    protected array $classPluginCollection = [
+        ToArrayClassPlugin::class,
+        FromArrayClassPlugin::class,
+        IsNewClassPlugin::class,
+        ListModifiedPropertiesClassPlugin::class,
+        RequireAllClassPlugin::class,
+        ImplementClassPlugin::class,
+        ExtendClassPlugin::class,
+        MetadataClassPlugin::class,
+        UpdateMapClassPlugin::class,
+        PopoMethodClassPlugin::class
+    ];
+    /**
+     * @var string[]
+     */
+    protected array $propertyMethodPluginCollection = [
+        AddPropertyMethodPlugin::class,
+        SetPropertyMethodPlugin::class,
+        GetPropertyMethodPlugin::class,
+        RequirePropertyMethodPlugin::class,
+        HasPropertyMethodPlugin::class,
+        AddItemPropertyMethodPlugin::class,
     ];
 
     public function getNamespace(): ?string
@@ -127,21 +154,40 @@ class PopoConfigurator
         return $this;
     }
 
-    public function getPluginClasses(): array
+    public function getClassPluginCollection(): array
     {
-        return $this->pluginClasses;
+        return $this->classPluginCollection;
     }
 
-    public function setPluginClasses(array $plugins): self
+    public function setClassPluginCollection(array $plugins): self
     {
-        $this->pluginClasses = $plugins;
+        $this->classPluginCollection = $plugins;
 
         return $this;
     }
 
-    public function addPluginClass(string $pluginClassName): self
+    public function addClassPluginClass(string $pluginClassName): self
     {
-        $this->pluginClasses[] = $pluginClassName;
+        $this->classPluginCollection[] = $pluginClassName;
+
+        return $this;
+    }
+
+    public function getPropertyMethodPluginCollection(): array
+    {
+        return $this->propertyMethodPluginCollection;
+    }
+
+    public function setPropertyMethodPluginCollection(array $propertyMethodPluginCollection): self
+    {
+        $this->propertyMethodPluginCollection = $propertyMethodPluginCollection;
+
+        return $this;
+    }
+
+    public function addPropertyMethodPluginClass(string $pluginClassName): self
+    {
+        $this->propertyMethodPluginCollection[] = $pluginClassName;
 
         return $this;
     }

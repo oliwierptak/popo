@@ -2,15 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin;
+namespace Popo\Plugin\ClassPlugin;
 
-use Nette\PhpGenerator\ClassType;
-use Popo\PluginInterface;
-use Popo\Schema\Schema;
+use Popo\Plugin\BuilderPluginInterface;
+use Popo\Plugin\ClassPluginInterface;
 
-class FromArrayPlugin implements PluginInterface
+class FromArrayClassPlugin implements ClassPluginInterface
 {
-    public function run(ClassType $class, Schema $schema): ClassType
+    public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
 foreach (static::METADATA as \$name => \$meta) {
@@ -34,14 +33,12 @@ foreach (static::METADATA as \$name => \$meta) {
 return \$this;
 EOF;
 
-        $class
+        $builder->getClass()
             ->addMethod('fromArray')
             ->setPublic()
             ->setReturnType('self')
             ->setBody($body)
             ->addParameter('data')
             ->setType('array');
-
-        return $class;
     }
 }

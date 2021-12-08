@@ -6,7 +6,7 @@ namespace Popo\Schema;
 
 use Popo\PopoDefinesInterface;
 
-class SchemaInspector
+class SchemaInspector implements SchemaInspectorInterface
 {
     public function generatePopoType(Schema $schema, Property $property, bool $stripClass = true): string
     {

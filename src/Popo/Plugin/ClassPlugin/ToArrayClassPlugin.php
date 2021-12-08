@@ -2,18 +2,17 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin;
+namespace Popo\Plugin\ClassPlugin;
 
-use Nette\PhpGenerator\ClassType;
-use Popo\PluginInterface;
-use Popo\Schema\Schema;
+use Popo\Plugin\BuilderPluginInterface;
+use Popo\Plugin\ClassPluginInterface;
 
-class ToArrayPlugin implements PluginInterface
+class ToArrayClassPlugin implements ClassPluginInterface
 {
-    public function run(ClassType $class, Schema $schema): ClassType
+    public function run(BuilderPluginInterface $builder): void
     {
         $body = "\$data = [\n";
-        foreach ($schema->getPropertyCollection() as $property) {
+        foreach ($builder->getSchema()->getPropertyCollection() as $property) {
             $body .= sprintf(
                 "\t'%s' => \$this->%s,\n",
                 $property->getName(),
@@ -37,12 +36,10 @@ array_walk(
 return \$data;
 EOF;
 
-        $class
+        $builder->getClass()
             ->addMethod('toArray')
             ->setPublic()
             ->setReturnType('array')
             ->setBody($body);
-
-        return $class;
     }
 }

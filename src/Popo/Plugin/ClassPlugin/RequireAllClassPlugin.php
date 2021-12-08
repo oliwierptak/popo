@@ -2,15 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin;
+namespace Popo\Plugin\ClassPlugin;
 
-use Nette\PhpGenerator\ClassType;
-use Popo\PluginInterface;
-use Popo\Schema\Schema;
+use Popo\Plugin\BuilderPluginInterface;
+use Popo\Plugin\ClassPluginInterface;
 
-class RequireAllPlugin implements PluginInterface
+class RequireAllClassPlugin implements ClassPluginInterface
 {
-    public function run(ClassType $class, Schema $schema): ClassType
+    public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
 \$errors = [];
@@ -37,7 +36,7 @@ catch (\Throwable \$throwable) {
 EOF;
 
         $require = '';
-        foreach ($schema->getPropertyCollection() as $property) {
+        foreach ($builder->getSchema()->getPropertyCollection() as $property) {
             $require .= sprintf(
                 $validationBody,
                 ucfirst($property->getName()),
@@ -50,12 +49,10 @@ EOF;
             rtrim($require, "\n")
         );
 
-        $class
+        $builder->getClass()
             ->addMethod('requireAll')
             ->setPublic()
             ->setReturnType('self')
             ->setBody($body);
-
-        return $class;
     }
 }

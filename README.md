@@ -327,12 +327,12 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 - `const`
 - `popo`
 
-### Additional methods
+## Additional functionality
 
 Apart from the typical setters and getters POPO objects have additional helper methods which ease access to, and offer
 more insight about the data that they represent.
 
-The following methods are supported by plugins:
+The following methods are supported by `class` plugins:
 
 - `isNew`
 - `fromArray`
@@ -340,7 +340,7 @@ The following methods are supported by plugins:
 - `requireAll`
 - `listModifiedProperties`
 
-Property specific methods:
+The following methods are supported by `property` plugins:
 
 - `set`
 - `get`
@@ -348,37 +348,47 @@ Property specific methods:
 - `has`
 - `addCollectionItem`
 
-### Plugins
-
-Adding new behaviour can be achieved with plugins, for example:
-
-```php
-$configurator = (new \Popo\PopoConfigurator)
-    ->addPluginClass(PluginClass1:class)
-    ->addPluginClass(PluginClass2:class)
-    ->addPluginClass(PluginClass3:class);
-```
-
-```php
-interface PluginInterface
-{
-    public function run(ClassType $class, Schema $schema): ClassType;
-}
-```
-
-See [src/Popo/Plugin](src/Popo/Plugin).
-
-
 ### Collection support
 
 Use property's `itemType` and `itemName` to create properties with collection item type support. For example
 using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
 
+
+
+## Plugins
+
+Adding new behaviour can be achieved with plugins, for example:
+
+```php
+$configurator = (new \Popo\PopoConfigurator)
+    ->addClassPluginClass(PluginClass1:class)
+    ->addPluginClass(PluginClass2:class)
+    ->addPropertyMethodPluginClass(PluginMethod1::class)
+    ->addPropertyMethodPluginClass(PluginMethod2::class)
+    ...
+```
+
+```php
+interface ClassPluginInterface
+{
+    public function run(BuilderPluginInterface $builder): void;
+}
+```
+
+```php
+interface PropertyPluginInterface
+{
+    public function run(BuilderPluginInterface $builder, Property $property): void;
+}
+```
+
+See [src/Popo/Plugin](src/Popo/Plugin).
+
 #### More Examples
 
 See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php) for more usage examples.
 
-### PHP version compatibility
+## PHP version compatibility
 
 - POPO `v1.x` - PHP 7.2+
 - POPO `v2.x` - PHP 7.2+
@@ -386,7 +396,7 @@ See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php
 - POPO `v4.x` - PHP 7.4+
 - POPO `v5.x` - PHP 7.4+
 
-### Composer script
+###= Composer script
 
 Add popo scrip to composer and run `composer popo` in a project.
 
@@ -401,7 +411,7 @@ Add popo scrip to composer and run `composer popo` in a project.
     }
 ```
 
-### Docker support
+## Docker support
 
 With docker you can generate files without installing `POPO` as dependency in the project.
 
