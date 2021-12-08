@@ -83,8 +83,10 @@ _Run `bin/popo generate -s tests/fixtures/popo-readme.yml` or `docker-popo gener
 
 ### getter vs requester
 
-The method `requireBar()` automatically creates instance of Bar in case where the value has not been set yet, while the
-method `getBar()` simply returns Bar's property value.
+Getter methods wil just return a value, while requester methods will throw `UnexpectedValueException` when the requested value has not been set, or it's null. 
+
+_Note_: For `popo` type properties, the requester automatically creates instance of `popo` objects.
+
 
 ## Installation
 
