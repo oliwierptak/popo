@@ -24,11 +24,12 @@ SchemaName: # schema-config
       type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
       comment: string|null, # Property docblock comment
       default: mixed, # default value
       itemType: string|null, # collection item type
-      itemName: string|null # collection item singular name
+      itemName: string|null, # collection item singular name
+      extra: {timezone: ..., format: ...} #for datetime property
     }]
 
   PopoName: # popo-config
@@ -45,9 +46,10 @@ SchemaName: # schema-config
       type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
       comment: string|null,
       default: mixed,
       itemType: string|null,
-      itemName: string|null
+      itemName: string|null,
+      extra: {timezone: ..., format: ...} #for datetime property
     }]

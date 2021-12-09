@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Schema;
 
 use Popo\PopoDefinesInterface;
+use function in_array;
 
 class SchemaInspector implements SchemaInspectorInterface
 {
@@ -28,6 +29,10 @@ class SchemaInspector implements SchemaInspectorInterface
             }
 
             return $class;
+        }
+
+        if ($this->isDateTimeProperty($property->getType())) {
+            return '\DateTime';
         }
 
         return $property->getType();
@@ -71,6 +76,11 @@ class SchemaInspector implements SchemaInspectorInterface
         return $type === PopoDefinesInterface::PROPERTY_TYPE_POPO;
     }
 
+    public function isDateTimeProperty(string $type): bool
+    {
+        return $type === PopoDefinesInterface::PROPERTY_TYPE_DATETIME;
+    }
+
     public function isArray(string $type): bool
     {
         return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY;
@@ -83,14 +93,23 @@ class SchemaInspector implements SchemaInspectorInterface
 
     public function isArrayOrMixed(string $type): bool
     {
-        return $type === PopoDefinesInterface::PROPERTY_TYPE_ARRAY ||
-            $type === PopoDefinesInterface::PROPERTY_TYPE_MIXED;
+        return in_array($type, [
+            PopoDefinesInterface::PROPERTY_TYPE_ARRAY,
+            PopoDefinesInterface::PROPERTY_TYPE_MIXED,
+        ]);
     }
 
     public function isPropertyNullable(Property $property): bool
     {
-        return $this->isArrayOrMixed($property->getType()) === false ||
-            $this->isPopoProperty($property->getType());
+        if ($this->isArrayOrMixed($property->getType())) {
+            return false;
+        }
+
+        if ($this->isBool($property->getType())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -105,5 +124,10 @@ class SchemaInspector implements SchemaInspectorInterface
         }
 
         return strpos($value, '::') !== false || $value[0] === '\\';
+    }
+
+    public function hasExtra(Property $property): bool
+    {
+        return !empty($property->getExtra());
     }
 }

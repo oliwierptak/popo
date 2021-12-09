@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Popo\PopoDefinesInterface;
 
 class Property
@@ -16,6 +15,7 @@ class Property
         'itemType' => 'string|null',
         'itemName' => 'string|null',
         'default' => '',
+        'extra' => '',
     ];
 
     protected const EXPECTED_TYPE_VALUES = [
@@ -36,6 +36,8 @@ class Property
     protected ?string $itemName = null;
     /** @var mixed */
     protected $default = null;
+    /** @var mixed */
+    protected $extra = null;
 
     public function toArray(): array
     {
@@ -46,6 +48,7 @@ class Property
             'itemType' => $this->itemType,
             'itemName' => $this->itemName,
             'default' => $this->default,
+            'extra' => $this->extra,
         ];
     }
 
@@ -63,6 +66,7 @@ class Property
         $this->itemType = $data['itemType'];
         $this->itemName = $data['itemName'];
         $this->default = $data['default'];
+        $this->extra = $data['extra'];
 
         return $this;
     }
@@ -145,6 +149,21 @@ class Property
     public function setItemName(?string $itemName): self
     {
         $this->itemName = $itemName;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    public function setExtra($extra): self
+    {
+        $this->extra = $extra;
 
         return $this;
     }

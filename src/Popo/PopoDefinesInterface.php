@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 class PopoDefinesInterface
 {
     public const VERSION = 5;
@@ -30,6 +28,8 @@ class PopoDefinesInterface
 
     public const SCHEMA_PROPERTY_TYPE = 'type';
 
+    public const SCHEMA_PROPERTY_EXTRA = 'extra';
+
     //property types
     public const PROPERTY_TYPE_ARRAY = 'array';
 
@@ -47,6 +47,12 @@ class PopoDefinesInterface
 
     public const PROPERTY_TYPE_POPO = 'popo';
 
+    public const PROPERTY_TYPE_DATETIME = 'datetime';
+
+    public const PROPERTY_TYPE_EXTRA_TIMEZONE = 'timezone';
+
+    public const PROPERTY_TYPE_EXTRA_FORMAT = 'format';
+
     public const SCHEMA_KEYS = [
         PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG,
         PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT,
@@ -61,7 +67,7 @@ class PopoDefinesInterface
 
     public const SCHEMA_CONFIGURATION_DEFAULT_DATA = [
         'namespace' => 'Popo',
-        'outputPath' => '/tmp',
+        'outputPath' => null,
         'namespaceRoot' => null,
         'extend' => null,
         'implement' => null,
@@ -75,5 +81,6 @@ class PopoDefinesInterface
         'itemType' => null,
         'itemName' => null,
         'default' => null,
+        'extra' => null,
     ];
 }

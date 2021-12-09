@@ -2,25 +2,24 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin\PropertyMethodPlugin;
+namespace Popo\Plugin\PropertyPlugin;
 
 use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
 use Popo\Schema\Property;
 
-class AddPropertyMethodPlugin implements PropertyPluginInterface
+class DefinePropertyPlugin implements PropertyPluginInterface
 {
     public function run(BuilderPluginInterface $builder, Property $property): void
     {
         $value = $property->getDefault();
-        if ($builder->getSchemaInspector()->isPopoProperty($property->getType())) {
+        if ($builder->getSchemaInspector()->isPopoProperty($property->getType()) ||
+            $builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
             $value = null;
         }
-        else {
-            if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
-                $value = new Literal($property->getDefault());
-            }
+        else if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
+            $value = new Literal($property->getDefault());
         }
 
         if ($value === null && $builder->getSchemaInspector()->isArray($property->getType())) {

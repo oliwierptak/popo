@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin\PropertyMethodPlugin;
+namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
@@ -16,6 +16,7 @@ class RequirePropertyMethodPlugin implements PropertyPluginInterface
 
         $body = <<<EOF
 \$this->setupPopoProperty('${name}');
+\$this->setupDateTimeProperty('${name}');
 
 if (%s) {
     throw new UnexpectedValueException('Required value of "${name}" has not been set');

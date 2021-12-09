@@ -22,8 +22,19 @@ foreach (static::METADATA as \$name => \$meta) {
         if (is_array(\$value)) {
             \$popo->fromArray(\$value);
         }
-
+        
         \$value = \$popo;
+    }
+    
+    if (\$meta['type'] === 'datetime') {
+        \$datetime = (new \DateTime(\$popoValue));
+        \$timezone = \$meta['timezone'] ?? null;
+        if (\$timezone !== null) {
+            \$timezone = new \DateTimeZone(\$timezone);
+            \$datetime->setTimezone(\$timezone);
+        }
+        
+        \$value = \$datetime;
     }
 
     \$this->\$name = \$value;

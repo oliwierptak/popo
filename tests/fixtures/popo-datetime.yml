@@ -1,0 +1,16 @@
+$:
+  config:
+    namespace: App\Example\DateTime
+    outputPath: tests/
+
+Example:
+  Foo:
+    property: [
+      {name: title}
+      {name: bar, type: popo, default: Bar::class}
+    ]}}
+
+  Bar:
+    property: [
+      {name: modified, type: datetime, default: "2022-01-01 15:22:17", extra: {timezone: "Europe/Paris", format: "D, d M y H:i:s O"}}
+    ]}}

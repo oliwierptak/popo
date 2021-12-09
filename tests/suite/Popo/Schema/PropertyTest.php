@@ -46,6 +46,7 @@ class PropertyTest extends TestCase
                 'itemType' => null,
                 'itemName' => null,
                 'default' => null,
+                'extra' => null,
 
             ],
             $property->toArray()
@@ -64,6 +65,7 @@ class PropertyTest extends TestCase
                 'itemType' => 'string',
                 'itemName' => 'record',
                 'default' => [],
+                'extra' => null,
             ]
         );
 
@@ -75,6 +77,7 @@ class PropertyTest extends TestCase
                 'itemType' => 'string',
                 'itemName' => 'record',
                 'default' => [],
+                'extra' => null,
 
             ],
             $property->toArray()

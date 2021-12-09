@@ -235,7 +235,7 @@ _Run `bin/popo report -s tests/fixtures/popo-readme.yml` or `docker-popo report 
 ## POPO Schema
 
 ```yaml
-$: # file-config
+$: # file-config, shared configuration for all POPO objects in current schema file
   config:
     namespace: string
     outputPath: string
@@ -247,7 +247,7 @@ $: # file-config
   property: array #shared properties
 
 SchemaName: # schema-config
-  $: # shared configuration for all POPO objects in SchemaName
+  $: # shared configuration for all POPO objects in SchemaName, in all schema files
     config:
       namespace: string
       outputPath: string
@@ -257,15 +257,16 @@ SchemaName: # schema-config
       comment: string|null
     default: array
     property: [{
-      name: string
-      type: 
+      name: string,
+      type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-      comment: string|null # Property docblock comment
-      default: mixed # default value
-      itemType: string|null # collection item type
-      itemName: string|null # collection item singular name
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
+        comment: string|null, # Property docblock comment
+      default: mixed, # default value
+      itemType: string|null, # collection item type
+      itemName: string|null, # collection item singular name
+      extra: {timezone: ..., format: ...} #for datetime property
     }]
 
   PopoName: # popo-config
@@ -278,15 +279,16 @@ SchemaName: # schema-config
       comment: string|null
     default: array
     property: [{
-      name: string
+      name: string,
       type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo']
-      comment: string|null
-      default: mixed
-      itemType: string|null
-      itemName: string|null
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
+        comment: string|null,
+      default: mixed,
+      itemType: string|null,
+      itemName: string|null,
+      extra: {timezone: ..., format: ...} #for datetime property
     }]
 ```
 
@@ -328,6 +330,7 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 - `mixed`
 - `const`
 - `popo`
+- `datetime`
 
 ## Additional functionality
 

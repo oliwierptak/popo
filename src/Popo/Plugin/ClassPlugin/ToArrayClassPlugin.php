@@ -26,9 +26,21 @@ class ToArrayClassPlugin implements ClassPluginInterface
 array_walk(
     \$data,
     function (&\$value, \$name) use (\$data) {
-        \$popo = static::METADATA[\$name]['default'];
         if (static::METADATA[\$name]['type'] === 'popo') {
+            \$popo = static::METADATA[\$name]['default'];
             \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$popo)->toArray();
+        }
+        
+        if (static::METADATA[\$name]['type'] === 'datetime') {
+            \$value = static::METADATA[\$name]['default'];
+            \$datetime = (new \DateTime(\$value));
+            \$timezone = static::METADATA[\$name]['extra']['timezone'] ?? null;
+            if (\$timezone !== null) {
+                \$timezone = new \DateTimeZone(\$timezone);
+                \$datetime->setTimezone(\$timezone);
+            }
+            
+            \$value = \$datetime->format(static::METADATA[\$name]['format']);
         }
     }
 );

@@ -8,6 +8,7 @@ use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\ClassPluginInterface;
 use Popo\PopoDefinesInterface;
+use Popo\Schema\PropertyExtraTimezone;
 
 class MetadataClassPlugin implements ClassPluginInterface
 {
@@ -31,6 +32,22 @@ class MetadataClassPlugin implements ClassPluginInterface
                 PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
             ];
 
+            if ($builder->getSchemaInspector()->hasExtra($property)) {
+                if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
+                    $extra = new PropertyExtraTimezone($property->getExtra());
+                    $metadata[$property->getName(
+                    )][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
+
+                    if ($extra->hasTimezone()) {
+                        $metadata[$property->getName(
+                        )][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
+                    }
+                }
+                else {
+                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_EXTRA] = $property->getExtra();
+                }
+            }
+
             if ($builder->getSchemaInspector()->isPopoProperty($property->getType())) {
                 $literalValue = new Literal(
                     $builder->getSchemaInspector()->generatePopoType(
@@ -41,13 +58,19 @@ class MetadataClassPlugin implements ClassPluginInterface
                 );
 
                 $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
+                continue;
             }
-            else {
-                if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
-                    $literalValue = new Literal($property->getDefault());
 
-                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
-                }
+            if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault(
+                );
+                continue;
+            }
+
+            if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
+                $literalValue = new Literal($property->getDefault());
+
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
             }
         }
 

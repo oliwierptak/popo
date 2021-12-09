@@ -55,10 +55,11 @@
       "bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
     ],
     "popo": [
-      "bin/popo generate -q -s tests/fixtures/popo.yml",
-      "bin/popo generate -q -s tests/fixtures/popo-namespace-root.yml",
-      "bin/popo generate -q -s tests/fixtures/popo-readme.yml",
-      "bin/popo generate -q -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
+      "bin/popo generate -s tests/fixtures/popo.yml",
+      "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
+      "bin/popo generate -s tests/fixtures/popo-readme.yml",
+      "bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
     ]
   },
   "scripts-descriptions": {

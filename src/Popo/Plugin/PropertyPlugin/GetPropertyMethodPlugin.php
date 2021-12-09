@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin\PropertyMethodPlugin;
+namespace Popo\Plugin\PropertyPlugin;
 
 use Nette\PhpGenerator\Method;
 use Popo\Plugin\BuilderPluginInterface;

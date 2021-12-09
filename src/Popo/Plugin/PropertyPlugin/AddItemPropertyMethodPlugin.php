@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Plugin\PropertyMethodPlugin;
+namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;

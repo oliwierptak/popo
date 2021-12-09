@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo;
 
+use Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin;
 use Popo\Plugin\ClassPlugin\ExtendClassPlugin;
 use Popo\Plugin\ClassPlugin\FromArrayClassPlugin;
 use Popo\Plugin\ClassPlugin\ImplementClassPlugin;
@@ -14,12 +15,12 @@ use Popo\Plugin\ClassPlugin\PopoMethodClassPlugin;
 use Popo\Plugin\ClassPlugin\RequireAllClassPlugin;
 use Popo\Plugin\ClassPlugin\ToArrayClassPlugin;
 use Popo\Plugin\ClassPlugin\UpdateMapClassPlugin;
-use Popo\Plugin\PropertyMethodPlugin\AddItemPropertyMethodPlugin;
-use Popo\Plugin\PropertyMethodPlugin\AddPropertyMethodPlugin;
-use Popo\Plugin\PropertyMethodPlugin\GetPropertyMethodPlugin;
-use Popo\Plugin\PropertyMethodPlugin\HasPropertyMethodPlugin;
-use Popo\Plugin\PropertyMethodPlugin\RequirePropertyMethodPlugin;
-use Popo\Plugin\PropertyMethodPlugin\SetPropertyMethodPlugin;
+use Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin;
+use Popo\Plugin\PropertyPlugin\DefinePropertyPlugin;
+use Popo\Plugin\PropertyPlugin\GetPropertyMethodPlugin;
+use Popo\Plugin\PropertyPlugin\HasPropertyMethodPlugin;
+use Popo\Plugin\PropertyPlugin\RequirePropertyMethodPlugin;
+use Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin;
 
 class PopoConfigurator
 {
@@ -44,13 +45,14 @@ class PopoConfigurator
         ExtendClassPlugin::class,
         MetadataClassPlugin::class,
         UpdateMapClassPlugin::class,
-        PopoMethodClassPlugin::class
+        PopoMethodClassPlugin::class,
+        DateTimeMethodClassPlugin::class
     ];
     /**
      * @var string[]
      */
     protected array $propertyMethodPluginCollection = [
-        AddPropertyMethodPlugin::class,
+        DefinePropertyPlugin::class,
         SetPropertyMethodPlugin::class,
         GetPropertyMethodPlugin::class,
         RequirePropertyMethodPlugin::class,
