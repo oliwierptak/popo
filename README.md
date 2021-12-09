@@ -353,6 +353,14 @@ The following methods are supported by `property` plugins:
 - `has`
 - `addCollectionItem`
 
+_Note:_ Plugins can be disabled wth:
+
+```php
+$configurator = (new \Popo\PopoConfigurator)
+    ->setClassPluginCollection([])
+    ->setPropertyMethodPluginCollection([]);
+```
+
 ### Collection support
 
 Use property's `itemType` and `itemName` to create properties with collection item type support. For example
