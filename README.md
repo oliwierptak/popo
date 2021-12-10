@@ -47,7 +47,7 @@ $data = [
 $foo = (new Foo)->fromArray($data);
 
 echo $foo->getTitle();
-echo $foo->getBar()->getTitle();
+echo $foo->requireBar()->getTitle();
 ```
 
 Output:
@@ -118,7 +118,7 @@ You can either use it as composer dependency or as docker command.
 
 _For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo generate -s tests/fixtures/popo.yml`._
 
-## Command line options
+### Command line options
 
 ```
 Usage:
@@ -136,7 +136,7 @@ Options:
 ```
 
 
-### `--schemaPath`
+#### `--schemaPath`
 
 This parameter can either be a path to YAML file, or to a directory, under where YAML configuration files are stored.
 
@@ -144,23 +144,23 @@ This parameter is required.
 
 _Note:_ To provide multiple values use comma as a separator, eg. `-s tests/bundles/,tests/projects/`.
 
-### `--schemaConfigFilename`
+#### `--schemaConfigFilename`
 
 This parameter is optional, but when set a shared schema configuration will be used for all POPO schemas.
 
-### `--outputPath`
+#### `--outputPath`
 
 Output path where the files will be generated, the namespace folders will be created automatically.
 
 This parameter is optional, but when set it overrides `outputPath` configured in a schema.
 
-### `--namespace`
+#### `--namespace`
 
 Namespace of generated POPO files.
 
 This parameter is optional, but when set it overrides `namespace` configured in a schema.
 
-### `--namespaceRoot`
+#### `--namespaceRoot`
 
 This parameter is optional, but when set it allow set mapping between `namespace` and `outputPath`.
 
@@ -172,7 +172,7 @@ under `outputPath` directory.
  namespaceRoot: ExampleBundle
 ```
 
-### `--schemaPathFilter`
+#### `--schemaPathFilter`
 
 Additional path filter when `schema-path` is set to a folder.
 
@@ -196,14 +196,14 @@ Each schema folder can contain multiple schema files, for example:
 _Run `bin/popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` or `docker-popo generate -s tests/fixtures/ -p bundles -c tests/fixtures/bundles/project.config.yml` to generate files from this example._
 
 
-### `--schemaFilenameMask`
+#### `--schemaFilenameMask`
 
 Filename mask used to locate schema files when using `schema-path-filter`.
 
 Default is `*.popo.yml`.
 
 
-### `--ignoreNonExistingSchemaFolder`
+#### `--ignoreNonExistingSchemaFolder`
 
 Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma. 
 
@@ -300,19 +300,19 @@ On top of that, there is a `global-config` that is defined when using `--schemaC
 
 <img src="doc/popo_schema.png" width="400" />
 
-### `file-config` 
+#### `file-config` 
 
 The configuration was defined as a `SchemaFile` property.
 It will be used by all POPO objects in _current_ file.
 
 
-### `schema-config`
+#### `schema-config`
 
 The configuration was defined as a `Schema` property.
 It will be used by all POPO objects in _all_ files, under given schema.
 
 
-### `popo-config`
+#### `popo-config`
 
 The configuration was defined as a POPO property.
 It will be used by one specific POPO objects in _current_ file, under given schema.
@@ -320,7 +320,7 @@ It will be used by one specific POPO objects in _current_ file, under given sche
 
 See [tests/fixtures](tests/fixtures/) for schema examples.
 
-### Property type list
+## Property type list
 
 - `array`
 - `bool`
@@ -332,7 +332,7 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 - `popo`
 - `datetime`
 
-## Additional functionality
+## Additional functionality with plugins
 
 Apart from the typical setters and getters POPO objects have additional helper methods which ease access to, and offer
 more insight about the data that they represent.
@@ -360,13 +360,6 @@ $configurator = (new \Popo\PopoConfigurator)
     ->setClassPluginCollection([])
     ->setPropertyMethodPluginCollection([]);
 ```
-
-### Collection support
-
-Use property's `itemType` and `itemName` to create properties with collection item type support. For example
-using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
-
-
 
 ## Plugins
 
@@ -397,7 +390,12 @@ interface PropertyPluginInterface
 
 See [src/Popo/Plugin](src/Popo/Plugin).
 
-#### More Examples
+## Collection support
+
+Use property's `itemType` and `itemName` to create properties with collection item type support. For example
+using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
+
+## More Examples
 
 See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php) for more usage examples.
 
@@ -409,7 +407,7 @@ See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php
 - POPO `v4.x` - PHP 7.4+
 - POPO `v5.x` - PHP 7.4+, PHP 8
 
-###= Composer script
+## Composer script
 
 Add popo scrip to composer and run `composer popo` in a project.
 
