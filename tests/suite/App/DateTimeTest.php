@@ -48,6 +48,32 @@ class DateTimeTest extends AbstractPopoTest
         $this->assertEquals('Europe/Paris', $modified->getTimezone()->getName());
     }
 
+    public function test_toArray_update_datetime(): void
+    {
+        $timestamp = time() - 2000;
+        $expectedModified = new \DateTime();
+        $expectedModified->setTimestamp($timestamp);
+        $expectedModified->setTimezone(new \DateTimeZone('Europe/Paris'));
+
+        $foo = new Foo;
+
+        $foo
+            ->setTitle('Example Foo Hakuna Matata')
+            ->requireBar()
+            ->requireModified()
+            ->setTimestamp($timestamp);
+
+        $this->assertEquals(
+            [
+                'title' => 'Example Foo Hakuna Matata',
+                'bar' => [
+                    'modified' => $expectedModified->format('D, d M y H:i:s O'),
+                ],
+            ],
+            $foo->toArray()
+        );
+    }
+
     public function test_toArray(): void
     {
         $foo = (new Foo())->setTitle('Example Foo Hakuna Matata');
@@ -61,6 +87,31 @@ class DateTimeTest extends AbstractPopoTest
             ],
             $foo->toArray()
         );
+    }
+
+    public function test_fromArray_update_timestamp(): void
+    {
+        $timestamp = time() - 2000;
+        $expectedModified = new \DateTime();
+        $expectedModified->setTimestamp($timestamp);
+        $expectedModified->setTimezone(new \DateTimeZone('Europe/Paris'));
+
+        $foo = new Foo;
+        $foo
+            ->setTitle('Example Foo Hakuna Matata')
+            ->requireBar()
+            ->setModified($expectedModified);
+
+        $expected = [
+            'title' => 'Example Foo Hakuna Matata',
+            'bar' => [
+                'modified' => $expectedModified->format('D, d M y H:i:s O'),
+            ],
+        ];
+
+        $foo->fromArray($expected);
+
+        $this->assertEquals($expected, $foo->toArray());
     }
 
     public function test_fromArray(): void

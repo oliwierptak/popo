@@ -27,14 +27,15 @@ foreach (static::METADATA as \$name => \$meta) {
     }
     
     if (\$meta['type'] === 'datetime') {
-        \$datetime = (new \DateTime(\$popoValue));
-        \$timezone = \$meta['timezone'] ?? null;
-        if (\$timezone !== null) {
-            \$timezone = new \DateTimeZone(\$timezone);
-            \$datetime->setTimezone(\$timezone);
+        if ((\$value instanceof \DateTime) === false) {
+            \$datetime = new \DateTime(\$data[\$name] ?? \$meta['default']);
+            \$timezone = \$meta['extra']['timezone'] ?? null;
+            if (\$timezone !== null) {
+                \$timezone = new \DateTimeZone(\$timezone);
+                \$datetime->setTimezone(\$timezone);
+            }
+            \$value = \$datetime;
         }
-        
-        \$value = \$datetime;
     }
 
     \$this->\$name = \$value;

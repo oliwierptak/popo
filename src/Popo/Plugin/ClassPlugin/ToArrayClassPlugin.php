@@ -32,15 +32,17 @@ array_walk(
         }
         
         if (static::METADATA[\$name]['type'] === 'datetime') {
-            \$value = static::METADATA[\$name]['default'];
-            \$datetime = (new \DateTime(\$value));
-            \$timezone = static::METADATA[\$name]['extra']['timezone'] ?? null;
-            if (\$timezone !== null) {
-                \$timezone = new \DateTimeZone(\$timezone);
-                \$datetime->setTimezone(\$timezone);
+            if ((\$value instanceof \DateTime) === false) {
+                \$datetime = new \DateTime(static::METADATA[\$name]['default']);
+                \$timezone = static::METADATA[\$name]['extra']['timezone'] ?? null;
+                if (\$timezone !== null) {
+                    \$timezone = new \DateTimeZone(\$timezone);
+                    \$datetime->setTimezone(\$timezone);
+                }
+                \$value = \$datetime;
             }
             
-            \$value = \$datetime->format(static::METADATA[\$name]['format']);
+            \$value = \$value->format(static::METADATA[\$name]['format']);            
         }
     }
 );
