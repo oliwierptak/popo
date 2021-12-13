@@ -1,14 +1,18 @@
 #!/usr/bin/env php
 <?php
 
-require_once getcwd().'/vendor/autoload.php';
+require_once getcwd() . '/vendor/autoload.php';
 
 use Popo\Command\GenerateCommand;
+use Popo\Command\CreateSchemaCommand;
 use Popo\Command\ReportCommand;
 use Symfony\Component\Console\Application;
 
 $console = new Application('popo', \Popo\PopoDefinesInterface::VERSION);
-$console->add(new GenerateCommand());
-$console->add(new ReportCommand());
+$console->addCommands([
+    new GenerateCommand(),
+    new CreateSchemaCommand(),
+    new ReportCommand(),
+]);
 
 $console->run();

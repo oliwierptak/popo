@@ -3,6 +3,7 @@
 namespace Popo\Command;
 
 use Popo\PopoConfigurator;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -82,7 +83,7 @@ class ReportCommand extends AbstractCommand
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function buildConfigurator(InputInterface $input): PopoConfigurator

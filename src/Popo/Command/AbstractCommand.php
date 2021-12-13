@@ -32,7 +32,7 @@ abstract class AbstractCommand extends Command
             return $this->executeCommand($input, $output);
         } catch (Throwable $exception) {
             $output->writeln(sprintf('<fg=red>ERROR</> <fg=white>%s</>', $exception->getMessage()));
-            return 1;
+            return Command::FAILURE;
         }
     }
 }
