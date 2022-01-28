@@ -6,7 +6,7 @@ namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class SetPropertyMethodPlugin implements PropertyPluginInterface
 {
@@ -31,7 +31,7 @@ class SetPropertyMethodPlugin implements PropertyPluginInterface
 
         $method
             ->addParameter($property->getName())
-            ->setType($builder->getSchemaInspector()->generatePopoType($builder->getSchema(), $property))
+            ->setType($builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property))
             ->setNullable($nullable);
     }
 }

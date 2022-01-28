@@ -93,7 +93,7 @@ class GenerateCommand extends AbstractCommand
                         InputOption::VALUE_OPTIONAL,
                         'When set, an exception will not be thrown in case missing schemaPath folder',
                         false
-                    )
+                    ),
                 ]
             );
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Schema;
+namespace Popo\Schema\Config;
 
 class Config
 {

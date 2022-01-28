@@ -6,7 +6,7 @@ namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class HasPropertyMethodPlugin implements PropertyPluginInterface
 {

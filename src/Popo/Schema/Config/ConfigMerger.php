@@ -2,15 +2,19 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Schema;
+namespace Popo\Schema\Config;
 
 use Popo\PopoDefinesInterface;
+use Popo\Schema\File\SchemaFile;
 use function array_replace_recursive;
 
 class ConfigMerger
 {
-    public function mergeSchemaConfiguration(string $schemaName, SchemaFile $sharedSchemaFile, SchemaFile $schemaFile): array
-    {
+    public function mergeSchemaConfiguration(
+        string $schemaName,
+        SchemaFile $sharedSchemaFile,
+        SchemaFile $schemaFile
+    ): array {
         $sharedConfig = $this->mergeSchemaFile(
             $schemaName,
             $sharedSchemaFile

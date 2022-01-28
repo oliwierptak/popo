@@ -9,9 +9,10 @@ use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Popo\Plugin\BuilderPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Generator\SchemaGeneratorInterface;
+use Popo\Schema\Inspector\SchemaInspectorInterface;
+use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
-use Popo\Schema\SchemaInspector;
 
 abstract class AbstractBuilder implements BuilderPluginInterface
 {
@@ -20,7 +21,8 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     protected PhpNamespace $namespace;
     protected ClassType $class;
     protected Method $method;
-    protected SchemaInspector $schemaInspector;
+    protected SchemaInspectorInterface $schemaInspector;
+    protected SchemaGeneratorInterface $schemaGenerator;
     protected FileWriter $fileWriter;
     /**
      * @var \Popo\Plugin\ClassPluginInterface[]
@@ -37,12 +39,14 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     abstract public function build(Schema $schema): string;
 
     public function __construct(
-        SchemaInspector $schemaInspector,
+        SchemaInspectorInterface $schemaInspector,
+        SchemaGeneratorInterface $schemaGenerator,
         FileWriter $fileWriter,
         array $classPluginCollection,
         array $propertyMethodPluginCollection
     ) {
         $this->schemaInspector = $schemaInspector;
+        $this->schemaGenerator = $schemaGenerator;
         $this->fileWriter = $fileWriter;
         $this->classPluginCollection = $classPluginCollection;
         $this->propertyMethodPluginCollection = $propertyMethodPluginCollection;
@@ -68,9 +72,14 @@ abstract class AbstractBuilder implements BuilderPluginInterface
         return $this->class;
     }
 
-    public function getSchemaInspector(): SchemaInspector
+    public function getSchemaInspector(): SchemaInspectorInterface
     {
         return $this->schemaInspector;
+    }
+
+    public function getSchemaGenerator(): SchemaGeneratorInterface
+    {
+        return $this->schemaGenerator;
     }
 
     protected function buildSchema(Schema $schema): self

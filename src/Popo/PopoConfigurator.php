@@ -46,12 +46,12 @@ class PopoConfigurator
         MetadataClassPlugin::class,
         UpdateMapClassPlugin::class,
         PopoMethodClassPlugin::class,
-        DateTimeMethodClassPlugin::class
+        DateTimeMethodClassPlugin::class,
     ];
     /**
      * @var string[]
      */
-    protected array $propertyMethodPluginCollection = [
+    protected array $propertyPluginCollection = [
         DefinePropertyPlugin::class,
         SetPropertyMethodPlugin::class,
         GetPropertyMethodPlugin::class,
@@ -175,21 +175,21 @@ class PopoConfigurator
         return $this;
     }
 
-    public function getPropertyMethodPluginCollection(): array
+    public function getPropertyPluginCollection(): array
     {
-        return $this->propertyMethodPluginCollection;
+        return $this->propertyPluginCollection;
     }
 
-    public function setPropertyMethodPluginCollection(array $propertyMethodPluginCollection): self
+    public function setPropertyPluginCollection(array $propertyPluginCollection): self
     {
-        $this->propertyMethodPluginCollection = $propertyMethodPluginCollection;
+        $this->propertyPluginCollection = $propertyPluginCollection;
 
         return $this;
     }
 
     public function addPropertyMethodPluginClass(string $pluginClassName): self
     {
-        $this->propertyMethodPluginCollection[] = $pluginClassName;
+        $this->propertyPluginCollection[] = $pluginClassName;
 
         return $this;
     }

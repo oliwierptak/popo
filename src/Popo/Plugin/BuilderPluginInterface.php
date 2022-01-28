@@ -7,8 +7,9 @@ namespace Popo\Plugin;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
+use Popo\Schema\Generator\SchemaGeneratorInterface;
+use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Popo\Schema\Schema;
-use Popo\Schema\SchemaInspector;
 
 interface BuilderPluginInterface
 {
@@ -20,5 +21,7 @@ interface BuilderPluginInterface
 
     public function getClass(): ClassType;
 
-    public function getSchemaInspector(): SchemaInspector;
+    public function getSchemaInspector(): SchemaInspectorInterface;
+
+    public function getSchemaGenerator(): SchemaGeneratorInterface;
 }

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo;
 
-use LogicException;
 use Popo\Builder\FileWriter;
 use Popo\Builder\PopoBuilder;
 use Popo\Builder\SchemaBuilder;
@@ -13,13 +12,35 @@ use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\Model\Generate\GenerateModel;
 use Popo\Model\Report\ReportModel;
-use Popo\Schema\ConfigMerger;
-use Popo\Schema\SchemaInspector;
+use Popo\Plugin\PluginContainer;
+use Popo\Plugin\PluginContainerInterface;
+use Popo\Schema\Config\ConfigMerger;
+use Popo\Schema\Generator\SchemaGenerator;
+use Popo\Schema\Generator\SchemaGeneratorInterface;
+use Popo\Schema\Inspector\SchemaInspector;
+use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Symfony\Component\Finder\Finder;
-use function class_exists;
 
 class PopoFactory
 {
+    protected PluginContainerInterface $pluginContainer;
+
+    protected function getPluginContainer(): PluginContainerInterface
+    {
+        if (empty($this->pluginContainer)) {
+            $this->pluginContainer = new PluginContainer();
+        }
+
+        return $this->pluginContainer;
+    }
+
+    public function setPluginContainer(PluginContainerInterface $pluginContainer): self
+    {
+        $this->pluginContainer = $pluginContainer;
+
+        return $this;
+    }
+
     public function createPopoModel(PopoConfigurator $configurator): GenerateModel
     {
         return new GenerateModel(
@@ -55,15 +76,23 @@ class PopoFactory
     {
         return new PopoBuilder(
             $this->createSchemaInspector(),
+            $this->createSchemaGenerator(),
             $this->createFileWriter(),
-            $this->createClassPlugins($configurator),
-            $this->createPropertyMethodClassPlugins($configurator),
+            $this->getPluginContainer()->createClassPlugins($configurator),
+            $this->getPluginContainer()->createPropertyPlugins($configurator),
         );
     }
 
-    protected function createSchemaInspector(): SchemaInspector
+    protected function createSchemaInspector(): SchemaInspectorInterface
     {
         return new SchemaInspector();
+    }
+
+    protected function createSchemaGenerator(): SchemaGeneratorInterface
+    {
+        return new SchemaGenerator(
+            $this->createSchemaInspector()
+        );
     }
 
     protected function createFileLocator(): FileLocator
@@ -79,34 +108,6 @@ class PopoFactory
     protected function createConfigMerger(): ConfigMerger
     {
         return new ConfigMerger();
-    }
-
-    protected function createClassPlugins(PopoConfigurator $configurator): array
-    {
-        $result = [];
-        foreach ($configurator->getClassPluginCollection() as $pluginClassName) {
-            if (!class_exists($pluginClassName)) {
-                throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
-            }
-
-            $result[] = new $pluginClassName();
-        }
-
-        return $result;
-    }
-
-    protected function createPropertyMethodClassPlugins(PopoConfigurator $configurator): array
-    {
-        $result = [];
-        foreach ($configurator->getPropertyMethodPluginCollection() as $pluginClassName) {
-            if (!class_exists($pluginClassName)) {
-                throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
-            }
-
-            $result[] = new $pluginClassName();
-        }
-
-        return $result;
     }
 
     protected function createFileWriter(): FileWriter

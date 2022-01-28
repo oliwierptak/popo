@@ -8,7 +8,7 @@ use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\ClassPluginInterface;
 use Popo\PopoDefinesInterface;
-use Popo\Schema\PropertyExtraTimezone;
+use Popo\Schema\Property\PropertyExtraTimezone;
 
 class MetadataClassPlugin implements ClassPluginInterface
 {
@@ -50,7 +50,7 @@ class MetadataClassPlugin implements ClassPluginInterface
 
             if ($builder->getSchemaInspector()->isPopoProperty($property->getType())) {
                 $literalValue = new Literal(
-                    $builder->getSchemaInspector()->generatePopoType(
+                    $builder->getSchemaGenerator()->generatePopoType(
                         $builder->getSchema(),
                         $property,
                         false

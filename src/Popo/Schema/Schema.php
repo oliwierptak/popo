@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace Popo\Schema;
 
+use Popo\Schema\Config\Config;
+use Popo\Schema\Property\Property;
+
 class Schema
 {
     protected const PROPERTY_SHAPE = [Property::class];
@@ -12,9 +15,9 @@ class Schema
     protected string $schemaName;
     protected Config $config;
     /**
-     * @var \Popo\Schema\Property[]
+     * @var \Popo\Schema\Property\Property[]
      */
-    
+
     protected array $propertyCollection = [];
     protected array $default = [];
 
@@ -42,18 +45,17 @@ class Schema
         return $this;
     }
 
-    
     public function getPropertyCollection(): array
     {
         return $this->propertyCollection;
     }
 
     /**
-     * @param \Popo\Schema\Property[] $propertyCollection
+     * @param \Popo\Schema\Property\Property[] $propertyCollection
      *
      * @return $this
      */
-    public function setPropertyCollection( array $propertyCollection): self
+    public function setPropertyCollection(array $propertyCollection): self
     {
         $this->propertyCollection = $propertyCollection;
 

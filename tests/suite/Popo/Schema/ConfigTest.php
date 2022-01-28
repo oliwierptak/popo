@@ -5,8 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestSuite\Schema;
 
 use PHPUnit\Framework\TestCase;
-use Popo\Schema\Config;
-use Popo\Schema\Property;
+use Popo\Schema\Config\Config;
 
 /**
  * @group unit

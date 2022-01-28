@@ -358,7 +358,7 @@ _Note:_ Plugins can be disabled wth:
 ```php
 $configurator = (new \Popo\PopoConfigurator)
     ->setClassPluginCollection([])
-    ->setPropertyMethodPluginCollection([]);
+    ->setPropertyPluginCollection([]);
 ```
 
 ## Plugins

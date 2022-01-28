@@ -6,7 +6,7 @@ namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class RequirePropertyMethodPlugin implements PropertyPluginInterface
 {
@@ -34,7 +34,7 @@ EOF;
             ->addMethod('require' . ucfirst($property->getName()))
             ->setComment($property->getComment())
             ->setPublic()
-            ->setReturnType($builder->getSchemaInspector()->generatePopoType($builder->getSchema(), $property))
+            ->setReturnType($builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property))
             ->setBody($body);
     }
 }

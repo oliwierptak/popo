@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace PopoTestSuite\Schema;
 
 use PHPUnit\Framework\TestCase;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
 
 /**
@@ -18,7 +18,7 @@ class SchemaTest extends TestCase
         $property = (new Property)
             ->fromArray(
                 [
-                    'name' => 'fooId'
+                    'name' => 'fooId',
                 ]
             );
 

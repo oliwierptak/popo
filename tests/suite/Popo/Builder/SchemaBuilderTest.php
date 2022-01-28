@@ -10,7 +10,7 @@ use Popo\Loader\FileLocator;
 use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
-use Popo\Schema\ConfigMerger;
+use Popo\Schema\Config\ConfigMerger;
 use Symfony\Component\Finder\Finder;
 use const Popo\POPO_TESTS_DIR;
 

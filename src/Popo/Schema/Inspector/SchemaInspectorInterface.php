@@ -2,15 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace Popo\Schema;
+namespace Popo\Schema\Inspector;
+
+use Popo\Schema\Property\Property;
 
 interface SchemaInspectorInterface
 {
-    public function generatePopoType(Schema $schema, Property $property, bool $stripClass = true): string;
-
-    public function generatePopoItemType(Schema $schema, Property $property): string;
-
     public function isPopoProperty(string $type): bool;
+
+    public function isDateTimeProperty(string $type): bool;
 
     public function isArray(string $type): bool;
 
@@ -20,10 +20,7 @@ interface SchemaInspectorInterface
 
     public function isPropertyNullable(Property $property): bool;
 
-    /**
-     * @param mixed $value
-     *
-     * @return bool
-     */
     public function isLiteral($value): bool;
+
+    public function hasExtra(Property $property): bool;
 }

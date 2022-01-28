@@ -7,7 +7,7 @@ namespace Popo\Plugin\PropertyPlugin;
 use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class DefinePropertyPlugin implements PropertyPluginInterface
 {
@@ -18,8 +18,10 @@ class DefinePropertyPlugin implements PropertyPluginInterface
             $builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
             $value = null;
         }
-        else if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
-            $value = new Literal($property->getDefault());
+        else {
+            if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
+                $value = new Literal($property->getDefault());
+            }
         }
 
         if ($value === null && $builder->getSchemaInspector()->isArray($property->getType())) {
@@ -31,7 +33,7 @@ class DefinePropertyPlugin implements PropertyPluginInterface
             ->setComment($property->getComment())
             ->setProtected()
             ->setNullable($builder->getSchemaInspector()->isPropertyNullable($property))
-            ->setType($builder->getSchemaInspector()->generatePopoType($builder->getSchema(), $property))
+            ->setType($builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property))
             ->setComment($property->getComment());
     }
 }

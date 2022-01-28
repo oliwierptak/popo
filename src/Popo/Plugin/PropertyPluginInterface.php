@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Plugin;
 
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 interface PropertyPluginInterface
 {

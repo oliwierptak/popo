@@ -6,7 +6,7 @@ namespace Popo\Plugin\PropertyPlugin;
 
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class AddItemPropertyMethodPlugin implements PropertyPluginInterface
 {
@@ -36,7 +36,7 @@ EOF;
             ->setBody($body)
             ->addParameter('item')
             ->setType(
-                $builder->getSchemaInspector()->generatePopoItemType(
+                $builder->getSchemaGenerator()->generatePopoItemType(
                     $builder->getSchema(),
                     $property
                 )

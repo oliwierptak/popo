@@ -6,7 +6,7 @@ namespace Popo\Model\Report;
 
 use Popo\Loader\SchemaLoader;
 use Popo\PopoConfigurator;
-use Popo\Schema\SchemaFile;
+use Popo\Schema\File\SchemaFile;
 use function strcasecmp;
 use function uksort;
 
@@ -28,8 +28,8 @@ class ReportModel
     }
 
     /**
-     * @param SchemaFile[] $data
-     * @param \Popo\Schema\SchemaFile $sharedSchemaFile
+     * @param \Popo\Schema\File\SchemaFile[] $data
+     * @param \Popo\Schema\File\SchemaFile $sharedSchemaFile
      *
      * @return \Popo\Model\Report\ReportResult
      */

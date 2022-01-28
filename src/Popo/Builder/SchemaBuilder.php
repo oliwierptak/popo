@@ -7,11 +7,11 @@ namespace Popo\Builder;
 use Popo\Loader\SchemaLoader;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
-use Popo\Schema\Config;
-use Popo\Schema\ConfigMerger;
+use Popo\Schema\Config\Config;
+use Popo\Schema\Config\ConfigMerger;
+use Popo\Schema\File\SchemaFile;
+use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
-use Popo\Schema\Property;
-use Popo\Schema\SchemaFile;
 
 class SchemaBuilder
 {
@@ -57,8 +57,8 @@ class SchemaBuilder
     }
 
     /**
-     * @param SchemaFile[] $data
-     * @param \Popo\Schema\SchemaFile $sharedSchemaFile
+     * @param \Popo\Schema\File\SchemaFile[] $data
+     * @param \Popo\Schema\File\SchemaFile $sharedSchemaFile
      *
      * @return array
      */

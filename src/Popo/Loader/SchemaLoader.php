@@ -7,7 +7,7 @@ namespace Popo\Loader;
 use InvalidArgumentException;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
-use Popo\Schema\SchemaFile;
+use Popo\Schema\File\SchemaFile;
 use SplFileInfo;
 use function array_key_exists;
 

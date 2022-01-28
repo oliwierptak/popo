@@ -7,7 +7,7 @@ namespace Popo\Plugin\PropertyPlugin;
 use Nette\PhpGenerator\Method;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
-use Popo\Schema\Property;
+use Popo\Schema\Property\Property;
 
 class GetPropertyMethodPlugin implements PropertyPluginInterface
 {
@@ -26,7 +26,7 @@ EOF;
             ->addMethod($name)
             ->setComment($property->getComment())
             ->setPublic()
-            ->setReturnType($builder->getSchemaInspector()->generatePopoType($builder->getSchema(), $property))
+            ->setReturnType($builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property))
             ->setBody(
                 sprintf(
                     $body,
@@ -46,7 +46,7 @@ EOF;
         if ($property->getItemType()) {
             $returnType = $property->getItemType();
             if ($builder->getSchemaInspector()->isLiteral($property->getItemType())) {
-                $returnType = $builder->getSchemaInspector()->generatePopoItemType(
+                $returnType = $builder->getSchemaGenerator()->generatePopoItemType(
                     $builder->getSchema(),
                     $property
                 );
