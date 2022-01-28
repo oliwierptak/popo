@@ -187,7 +187,7 @@ class PopoConfigurator
         return $this;
     }
 
-    public function addPropertyMethodPluginClass(string $pluginClassName): self
+    public function addPropertyPluginClass(string $pluginClassName): self
     {
         $this->propertyPluginCollection[] = $pluginClassName;
 

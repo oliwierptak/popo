@@ -368,9 +368,9 @@ Adding new behaviour can be achieved with plugins, for example:
 ```php
 $configurator = (new \Popo\PopoConfigurator)
     ->addClassPluginClass(PluginClass1:class)
-    ->addPluginClass(PluginClass2:class)
-    ->addPropertyMethodPluginClass(PluginMethod1::class)
-    ->addPropertyMethodPluginClass(PluginMethod2::class)
+    ->addClassPluginClass(PluginClass2:class)
+    ->addPropertyPluginClass(PluginProperty1::class)
+    ->addPropertyPluginClass(PluginProperty2::class)
     ...
 ```
 
