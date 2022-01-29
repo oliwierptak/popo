@@ -44,7 +44,6 @@ class CreateSchemaCommand extends AbstractCommand
      */
     protected function executeCommand(InputInterface $input, OutputInterface $output): int
     {
-        $yn = '<fg=gray>[</><fg=white>y</><fg=gray>/n]</>';
         $configurator = new PopoConfigurator();
         $output->writeln('');
         $helper = $this->getHelper('question');
@@ -54,7 +53,7 @@ class CreateSchemaCommand extends AbstractCommand
         $configurator->setSchemaPath($helper->ask($input, $output, $question));
 
         $question = new Question('<fg=green>namespace</> <fg=gray>[Popo]</>: ', 'Popo');
-        $question->setAutocompleterValues(['\Popo']);
+        $question->setAutocompleterValues(['Popo']);
         $namespace = $helper->ask($input, $output, $question);
         $configurator->setNamespace($namespace);
 
@@ -90,7 +89,7 @@ class CreateSchemaCommand extends AbstractCommand
       
   BarItem:
     property: [
-      {name: id, type: integer}
+      {name: id, type: int}
       {name: title, default: A bar item}
     ]}}
 ',
@@ -119,9 +118,7 @@ class CreateSchemaCommand extends AbstractCommand
             }
         }
 
-        $h = fopen($configurator->getSchemaPath(), 'w');
-        fputs($h, $generatedSchema);
-        fclose($h);
+        $this->saveSchemaFile($configurator, $generatedSchema);
 
         $output->writeln('');
         $output->writeln('<fg=green>Saved schema file under</>: ' . $configurator->getSchemaPath());
@@ -131,6 +128,25 @@ class CreateSchemaCommand extends AbstractCommand
 
         $configurator->setSchemaFilenameMask('*.yml');
 
+        return $this->runCommand($configurator, $output);
+    }
+
+    protected function saveSchemaFile(PopoConfigurator $configurator, string $generatedSchema): void
+    {
+        $handle = fopen($configurator->getSchemaPath(), 'w');
+        fputs($handle, $generatedSchema);
+        fclose($handle);
+    }
+
+    /**
+     * @param \Popo\PopoConfigurator $configurator
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return int
+     * @throws \Exception
+     */
+    protected function runCommand(PopoConfigurator $configurator, OutputInterface $output): int
+    {
         $command = $this->getApplication()->find(GenerateCommand::COMMAND_NAME);
 
         $arguments = [
@@ -141,19 +157,5 @@ class CreateSchemaCommand extends AbstractCommand
         $parameters = new ArrayInput($arguments);
 
         return $command->run($parameters, $output);
-    }
-
-    protected function generateFooProperties(): string
-    {
-        return '';
-    }
-
-    protected function generateBarProperties(): string
-    {
-        return '
-    {name: id, type: integer}
-    {name: title, default: Lorem Ipsum}
-    {name: bar, type: popo, default: Bar::class}
-        ';
     }
 }
