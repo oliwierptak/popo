@@ -11,22 +11,18 @@ class PluginContainer implements PluginContainerInterface
 {
     public function createClassPlugins(PopoConfigurator $configurator): array
     {
-        $result = [];
-        foreach ($configurator->getClassPluginCollection() as $pluginClassName) {
-            if (!class_exists($pluginClassName)) {
-                throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
-            }
-
-            $result[] = new $pluginClassName();
-        }
-
-        return $result;
+        return $this->createPluginCollection($configurator->getClassPluginCollection());
     }
 
     public function createPropertyPlugins(PopoConfigurator $configurator): array
     {
+        return $this->createPluginCollection($configurator->getPropertyPluginCollection());
+    }
+
+    protected function createPluginCollection(array $pluginClassNames): array
+    {
         $result = [];
-        foreach ($configurator->getPropertyPluginCollection() as $pluginClassName) {
+        foreach ($pluginClassNames as $pluginClassName) {
             if (!class_exists($pluginClassName)) {
                 throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
             }
