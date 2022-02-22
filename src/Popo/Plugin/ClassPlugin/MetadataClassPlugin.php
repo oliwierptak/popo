@@ -62,8 +62,12 @@ class MetadataClassPlugin implements ClassPluginInterface
             }
 
             if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault(
-                );
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault();
+                continue;
+            }
+
+            if ($builder->getSchemaInspector()->isBool($property->getType())) {
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = (bool) $property->getDefault();
                 continue;
             }
 
