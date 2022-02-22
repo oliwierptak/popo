@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace AppTestSuite;
 
 use App\Example\Popo\Bar;
-use App\Example\Popo\Foo;
 use App\Example\Popo\Buzz\Buzz;
+use App\Example\Popo\Foo;
 use App\ExampleInterface;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
@@ -52,7 +52,8 @@ class PopoTest extends AbstractPopoTest
                     'idForAll' => 40,
                     'idFromExampleSchema' => 20,
                 ],
-                'test' => null,
+                'isTest' => true,
+                'isTestWithoutDefault' => false,
                 'idForAll' => 30,
                 'idFromExampleSchema' => 20,
             ],
@@ -79,7 +80,8 @@ class PopoTest extends AbstractPopoTest
                 'idForAll' => 40,
                 'idFromExampleSchema' => 20,
             ],
-            'test' => null,
+            'isTest' => true,
+            'isTestWithoutDefault' => false,
             'idForAll' => 30,
             'idFromExampleSchema' => 20,
         ];
@@ -141,8 +143,7 @@ class PopoTest extends AbstractPopoTest
     public function test_require_all(): void
     {
         $foo = (new Foo)
-            ->setFooId(1)
-            ->setTest('abc');
+            ->setFooId(1);
 
         $foo->requireAll();
 
@@ -162,7 +163,7 @@ class PopoTest extends AbstractPopoTest
     public function test_require_all_collection(): void
     {
         $bar = (new Bar)->setBuzzCollection([
-            new Buzz
+            new Buzz,
         ]);
 
         $this->assertNotEmpty($bar->getBuzzCollection());
@@ -211,5 +212,21 @@ class PopoTest extends AbstractPopoTest
         $foo->setTitle(null);
         $this->assertFalse($foo->hasTitle());
         $this->assertEquals(['title'], $foo->listModifiedProperties());
+    }
+
+    public function test_default_bool_value(): void
+    {
+        $foo = (new Foo);
+
+        $this->assertTrue($foo->isTest());
+        $this->assertFalse($foo->isTestWithoutDefault());
+    }
+
+    public function test_default_array_value(): void
+    {
+        $bar = (new Bar);
+
+        $this->assertIsArray($bar->getBuzzCollection());
+        $this->assertEmpty($bar->getBuzzCollection());
     }
 }

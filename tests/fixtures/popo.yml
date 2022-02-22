@@ -34,7 +34,8 @@ Example:
       {name: title}
       {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
       {name: bar, type: popo}
-      {name: test}
+      {name: isTest, type: bool, default: true}
+      {name: isTestWithoutDefault, type: bool}
     ]}}
 
   Bar:

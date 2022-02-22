@@ -24,6 +24,10 @@ class DefinePropertyPlugin implements PropertyPluginInterface
             }
         }
 
+        if ($builder->getSchemaInspector()->isBool($property->getType())) {
+            $value = (bool) $value;
+        }
+
         if ($value === null && $builder->getSchemaInspector()->isArray($property->getType())) {
             $value = [];
         }
