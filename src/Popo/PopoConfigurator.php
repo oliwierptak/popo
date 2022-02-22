@@ -11,6 +11,7 @@ use Popo\Plugin\ClassPlugin\ImplementClassPlugin;
 use Popo\Plugin\ClassPlugin\IsNewClassPlugin;
 use Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin;
 use Popo\Plugin\ClassPlugin\MetadataClassPlugin;
+use Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin;
 use Popo\Plugin\ClassPlugin\PopoMethodClassPlugin;
 use Popo\Plugin\ClassPlugin\RequireAllClassPlugin;
 use Popo\Plugin\ClassPlugin\ToArrayClassPlugin;
@@ -37,6 +38,7 @@ class PopoConfigurator
      */
     protected array $classPluginCollection = [
         ToArrayClassPlugin::class,
+        ModifiedToArrayClassPlugin::class,
         FromArrayClassPlugin::class,
         IsNewClassPlugin::class,
         ListModifiedPropertiesClassPlugin::class,

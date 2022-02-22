@@ -61,6 +61,24 @@ class PopoTest extends AbstractPopoTest
         );
     }
 
+    public function test_modifiedArray(): void
+    {
+        $foo = (new Foo)->fromArray([
+            'title' => 'Aaaa bbb ccccc',
+            'isTest' => false,
+            'idFromExampleSchema' => 111,
+        ]);
+
+        $this->assertEquals(
+            [
+                'title' => 'Aaaa bbb ccccc',
+                'isTest' => false,
+                'idFromExampleSchema' => 111,
+            ],
+            $foo->modifiedToArray()
+        );
+    }
+
     public function test_fromArray(): void
     {
         $foo = (new Foo);
@@ -212,6 +230,19 @@ class PopoTest extends AbstractPopoTest
         $foo->setTitle(null);
         $this->assertFalse($foo->hasTitle());
         $this->assertEquals(['title'], $foo->listModifiedProperties());
+    }
+
+    public function test_modified_properties_from_array(): void
+    {
+        $foo = (new Foo)->fromArray(
+            [
+                'title' => 'Aaaa bbb ccccc',
+                'isTest' => false,
+                'idFromExampleSchema' => 111,
+            ],
+        );
+
+        $this->assertEquals(['idFromExampleSchema', 'isTest', 'title'], $foo->listModifiedProperties());
     }
 
     public function test_default_bool_value(): void

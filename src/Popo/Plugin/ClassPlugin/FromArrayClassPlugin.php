@@ -39,7 +39,9 @@ foreach (static::METADATA as \$name => \$meta) {
     }
 
     \$this->\$name = \$value;
-    \$this->updateMap[\$name] = true;
+    if (\array_key_exists(\$name, \$data)) {
+        \$this->updateMap[\$name] = true;
+    }
 }
 
 return \$this;

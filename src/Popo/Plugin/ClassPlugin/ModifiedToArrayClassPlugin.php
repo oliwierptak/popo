@@ -7,18 +7,21 @@ namespace Popo\Plugin\ClassPlugin;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\ClassPluginInterface;
 
-class ListModifiedPropertiesClassPlugin implements ClassPluginInterface
+class ModifiedToArrayClassPlugin implements ClassPluginInterface
 {
     public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
-\$sorted = \array_keys(\$this->updateMap);
-sort(\$sorted, \SORT_STRING);
-return \$sorted;
+\$data = \$this->toArray();
+\$modifiedProperties = \$this->listModifiedProperties();
+
+return \array_filter(\$data, function (\$key) use (\$modifiedProperties) {
+    return \in_array(\$key, \$modifiedProperties);
+}, \ARRAY_FILTER_USE_KEY);
 EOF;
 
         $builder->getClass()
-            ->addMethod('listModifiedProperties')
+            ->addMethod('modifiedToArray')
             ->setPublic()
             ->setReturnType('array')
             ->setBody($body);
