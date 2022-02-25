@@ -8,8 +8,14 @@ use Popo\PopoDefinesInterface;
 
 class PropertyExtraTimezone
 {
+    /**
+     * @var array<string, string>
+     */
     protected array $data = [];
 
+    /**
+     * @param array<string> $data
+     */
     public function __construct(array $data)
     {
         $this->data = $data;

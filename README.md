@@ -332,6 +332,12 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 - `popo`
 - `datetime`
 
+## Collection support
+
+Use property's `itemType` and `itemName` to create properties with collection item type support. For example
+using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
+
+
 ## Additional functionality with plugins
 
 Apart from the typical setters and getters POPO objects have additional helper methods which ease access to, and offer
@@ -342,6 +348,7 @@ The following methods are supported by `class` plugins:
 - `isNew`
 - `fromArray`
 - `toArray`
+- `modifiedToArray`
 - `requireAll`
 - `listModifiedProperties`
 
@@ -361,12 +368,62 @@ $configurator = (new \Popo\PopoConfigurator)
     ->setPropertyPluginCollection([]);
 ```
 
-## Plugins
+## Generating Code with Plugins
 
-Adding new behaviour can be achieved with plugins, for example:
+POPO generation process is split into four parts:
+
+- PHP file header code generation
+- Namespace code generation
+- Class methods code generation
+- Properties and property methods code generation
+
+Each part has corresponding set of plugins.
+
+- #### Popo\Plugin\PhpFilePluginInterface
+  Generates code related to PHP header, e.g. strict type, file comments.
+  ```php
+    interface PhpFilePluginInterface
+    {
+        public function run(PhpFile $file, Schema $schema): PhpFile;
+    }
+    ```
+
+- #### Popo\Plugin\NamespacePluginInterface
+  Generates code related to namespace, e.g. aliases, use statements.
+
+    ```php
+    interface NamespacePluginInterface
+    {
+        public function run(PhpNamespace $namespace): PhpNamespace;
+    }
+    ```
+
+- #### Popo\Plugin\ClassPluginInterface
+  Generates code related to class methods, e.g. `toArray()`, `isNew()`, `extends` or `implements` keywords.
+
+    ```php
+    interface ClassPluginInterface
+    {
+        public function run(BuilderPluginInterface $builder): void;
+    }
+    ```
+
+- #### Popo\Plugin\PropertyPluginInterface
+  Generates code related to properties and their methods, e.g. `hasFoo()`, `getFoo()`, `requireFoo()`.
+  
+    ```php
+    interface PropertyPluginInterface
+    {
+        public function run(BuilderPluginInterface $builder, Property $property): void;
+    }
+    ```
+
+#### Example of plugin setup:
 
 ```php
 $configurator = (new \Popo\PopoConfigurator)
+    ->addPhpFilePluginClass(PhpFilePluginClass::class)
+    ->addNamespacePluginClass(NamespacePluginClass::class)
     ->addClassPluginClass(PluginClass1:class)
     ->addClassPluginClass(PluginClass2:class)
     ->addPropertyPluginClass(PluginProperty1::class)
@@ -374,26 +431,8 @@ $configurator = (new \Popo\PopoConfigurator)
     ...
 ```
 
-```php
-interface ClassPluginInterface
-{
-    public function run(BuilderPluginInterface $builder): void;
-}
-```
-
-```php
-interface PropertyPluginInterface
-{
-    public function run(BuilderPluginInterface $builder, Property $property): void;
-}
-```
 
 See [src/Popo/Plugin](src/Popo/Plugin).
-
-## Collection support
-
-Use property's `itemType` and `itemName` to create properties with collection item type support. For example
-using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
 
 ## More Examples
 

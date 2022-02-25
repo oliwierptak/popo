@@ -4,23 +4,38 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Popo\Schema\Schema;
+use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 
 class PopoBuilder extends AbstractBuilder
 {
-    /**
-     * @throws \Throwable
-     */
-    public function build(Schema $schema): string
+    protected function buildPhpFile(): self
     {
-        $this->buildSchema($schema);
+        $this->file = new PhpFile();
 
-        foreach ($schema->getPropertyCollection() as $property) {
-            $this->runPropertyMethodPlugins($property);
-        }
+        return $this;
+    }
 
-        $this->runClassPlugins();
+    protected function buildNamespace(): self
+    {
+        $this->namespace = new PhpNamespace(
+            $this->schema->getConfig()->getNamespace()
+        );
 
-        return $this->fileWriter->save($this->file, $schema);
+        $this->file->addNamespace($this->namespace);
+
+        return $this;
+    }
+
+    protected function buildProperties(): self
+    {
+        return $this;
+    }
+
+    protected function buildClass(): self
+    {
+        $this->class = $this->namespace->addClass($this->schema->getName());
+
+        return $this;
     }
 }

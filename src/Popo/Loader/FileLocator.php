@@ -13,6 +13,13 @@ class FileLocator
         $this->finder = $finder;
     }
 
+    /**
+     * @param string $schemaPath
+     * @param string $schemaPathFilter
+     * @param string $schemaFilename
+     *
+     * @return array<int, \Symfony\Component\Finder\SplFileInfo>
+     */
     public function locate(
         string $schemaPath,
         string $schemaPathFilter,

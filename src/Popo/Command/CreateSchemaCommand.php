@@ -13,6 +13,9 @@ use Symfony\Component\Console\Question\Question;
 use function file_exists;
 use function fputs;
 
+/**
+ * @method \Symfony\Component\Console\Application getApplication()
+ */
 class CreateSchemaCommand extends AbstractCommand
 {
     public const COMMAND_NAME = 'create-schema';
@@ -133,9 +136,16 @@ class CreateSchemaCommand extends AbstractCommand
 
     protected function saveSchemaFile(PopoConfigurator $configurator, string $generatedSchema): void
     {
-        $handle = fopen($configurator->getSchemaPath(), 'w');
-        fputs($handle, $generatedSchema);
-        fclose($handle);
+        $handle = null;
+        try {
+            $handle = fopen($configurator->getSchemaPath(), 'w');
+            /** @phpstan-ignore-next-line */
+            fputs($handle, $generatedSchema);
+        }
+        finally {
+            /** @phpstan-ignore-next-line */
+            fclose($handle);
+        }
     }
 
     /**

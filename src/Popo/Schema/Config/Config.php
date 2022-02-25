@@ -94,6 +94,11 @@ class Config
         return $this;
     }
 
+    /**
+     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null} $data
+     *
+     * @return $this
+     */
     public function fromArray(
         array $data
     ): self {
@@ -107,9 +112,9 @@ class Config
             $data
         );
 
-        $this->namespace = $data['namespace'];
+        $this->namespace = (string) $data['namespace'];
         $this->namespaceRoot = $data['namespaceRoot'];
-        $this->outputPath = $data['outputPath'];
+        $this->outputPath = (string) $data['outputPath'];
         $this->extend = $data['extend'];
         $this->implement = $data['implement'];
         $this->comment = $data['comment'];
@@ -117,6 +122,9 @@ class Config
         return $this;
     }
 
+    /**
+     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null}
+     */
     public function toArray(): array
     {
         return [

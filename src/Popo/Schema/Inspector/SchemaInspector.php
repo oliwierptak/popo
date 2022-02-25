@@ -64,4 +64,9 @@ class SchemaInspector implements SchemaInspectorInterface
     {
         return !empty($property->getExtra());
     }
+
+    public function hasDefault(Property $property): bool
+    {
+        return !empty($property->getDefault());
+    }
 }

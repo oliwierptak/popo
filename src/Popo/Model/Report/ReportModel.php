@@ -36,7 +36,7 @@ class ReportModel
     protected function generateReport(array $data, SchemaFile $sharedSchemaFile): ReportResult
     {
         $result = new ReportResult;
-        $sharedFileConfig = $sharedSchemaFile->getFileConfig()['property'] ?? [];
+        $sharedFileConfig = (array)$sharedSchemaFile->getFileConfig()['property'];
         $sharedSchemaFileConfig = [];
 
         foreach ($sharedFileConfig as $dataItem) {

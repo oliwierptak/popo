@@ -74,6 +74,9 @@ class PopoDefinesInterface
         'comment' => null,
     ];
 
+    /**
+     * @var array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|null, extra: mixed|null}
+     */
     public const SCHEMA_PROPERTY_DEFAULT_DATA = [
         'name' => null,
         'type' => self::PROPERTY_TYPE_STRING,

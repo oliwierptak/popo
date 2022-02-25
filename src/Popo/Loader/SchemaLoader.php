@@ -32,16 +32,16 @@ class SchemaLoader
 
         return current(
             $this->load(
-                (new PopoConfigurator)->setSchemaPath($schemaConfigFilename)
+                (new PopoConfigurator)->setSchemaPath((string) $schemaConfigFilename)
             )
-        );
+        ) ?: $file;
     }
 
     /**
      * @param \Popo\PopoConfigurator $configurator
      * @param bool $remapProperties
      *
-     * @return SchemaFile[]
+     * @return \Popo\Schema\File\SchemaFile[]
      */
     public function load(
         PopoConfigurator $configurator,
@@ -92,7 +92,7 @@ class SchemaLoader
                     $this->fileLocator->locate(
                         $path,
                         (string) $configurator->getSchemaPathFilter(),
-                        $configurator->getSchemaFilenameMask()
+                        (string) $configurator->getSchemaFilenameMask()
                     )
                 );
             }
@@ -115,7 +115,7 @@ class SchemaLoader
         }
 
         if (trim((string) $configurator->getSchemaConfigFilename()) !== '') {
-            $this->validatePath($configurator->getSchemaConfigFilename());
+            $this->validatePath((string)$configurator->getSchemaConfigFilename());
         }
     }
 
@@ -128,6 +128,11 @@ class SchemaLoader
         }
     }
 
+    /**
+     * @param array<string, mixed> $schemaData
+     *
+     * @return bool
+     */
     protected function hasSchemaConfigOption(array $schemaData): bool
     {
         return array_key_exists(
@@ -136,6 +141,11 @@ class SchemaLoader
         );
     }
 
+    /**
+     * @param array<string, mixed> $schemaFileData
+     *
+     * @return array<string, mixed>
+     */
     protected function remapSchemaProperties(array $schemaFileData): array
     {
         foreach ($schemaFileData as $schemaName => $popoCollection) {
@@ -148,6 +158,11 @@ class SchemaLoader
         return $schemaFileData;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @return array<int|string, mixed>
+     */
     protected function remapProperties(array $data): array
     {
         $propertyDataCollection = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY] ?? [];
@@ -160,6 +175,12 @@ class SchemaLoader
         return $properties;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @param bool $remap
+     *
+     * @return array<string, mixed>
+     */
     protected function extractConfig(array $data, bool $remap): array
     {
         $fileConfig = $data[PopoDefinesInterface::CONFIGURATION_SCHEMA_OPTION_SYMBOL] ?? [];
@@ -171,9 +192,9 @@ class SchemaLoader
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      *
-     * @return array
+     * @return array<string, mixed>
      */
     protected function removeOptionSymbol(array $data): array
     {
@@ -182,8 +203,13 @@ class SchemaLoader
         return $data;
     }
 
+    /**
+     * @param string $path
+     *
+     * @return array<int, string>
+     */
     protected function extractPaths(string $path): array
     {
-        return \explode(',', $path) ?? [];
+        return \explode(',', $path);
     }
 }

@@ -7,12 +7,12 @@ namespace Popo\Model\Report;
 class ReportResult
 {
     /**
-     * @var \Popo\Model\Report\ReportResultItem[]
+     * @var array<string, array<\Popo\Model\Report\ReportResultItem>>
      */
     protected array $data = [];
 
     /**
-     * @return \Popo\Model\Report\ReportResultItem[]
+     * @return array<string, array<\Popo\Model\Report\ReportResultItem>>
      */
     public function getData(): array
     {
@@ -20,7 +20,7 @@ class ReportResult
     }
 
     /**
-     * @param \Popo\Model\Report\ReportResultItem[] $data
+     * @param array<string, array<\Popo\Model\Report\ReportResultItem>> $data
      *
      * @return $this
      */

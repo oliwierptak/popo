@@ -9,16 +9,16 @@ use Popo\Schema\Property\Property;
 
 class Schema
 {
-    protected const PROPERTY_SHAPE = [Property::class];
-
     protected string $name;
     protected string $schemaName;
     protected Config $config;
     /**
-     * @var \Popo\Schema\Property\Property[]
+     * @var array<string, \Popo\Schema\Property\Property>
      */
-
     protected array $propertyCollection = [];
+    /**
+     * @var array<string, mixed>
+     */
     protected array $default = [];
 
     public function getName(): string
@@ -45,13 +45,16 @@ class Schema
         return $this;
     }
 
+    /**
+     * @return array<string, \Popo\Schema\Property\Property>
+     */
     public function getPropertyCollection(): array
     {
         return $this->propertyCollection;
     }
 
     /**
-     * @param \Popo\Schema\Property\Property[] $propertyCollection
+     * @param array<string, \Popo\Schema\Property\Property> $propertyCollection
      *
      * @return $this
      */
@@ -62,11 +65,26 @@ class Schema
         return $this;
     }
 
+    public function addPropertyCollectionItem(Property $property): self
+    {
+        $this->propertyCollection[$property->getItemName()] = $property;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function getDefault(): array
     {
         return $this->default;
     }
 
+    /**
+     * @param array<string, mixed> $default
+     *
+     * @return $this
+     */
     public function setDefault(array $default): self
     {
         $this->default = $default;

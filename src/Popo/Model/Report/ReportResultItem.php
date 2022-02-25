@@ -36,7 +36,7 @@ class ReportResultItem
         return $this->schemaName;
     }
 
-    public function setSchemaName(?string $schemaName): self
+    public function setSchemaName(string $schemaName): self
     {
         $this->schemaName = $schemaName;
 
@@ -48,7 +48,7 @@ class ReportResultItem
         return $this->popoName;
     }
 
-    public function setPopoName(?string $popoName): self
+    public function setPopoName(string $popoName): self
     {
         $this->popoName = $popoName;
 

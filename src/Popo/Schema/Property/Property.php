@@ -8,16 +8,6 @@ use Popo\PopoDefinesInterface;
 
 class Property
 {
-    protected const PROPERTY_SHAPE = [
-        'name' => 'string',
-        'type' => 'string',
-        'comment' => 'string|null',
-        'itemType' => 'string|null',
-        'itemName' => 'string|null',
-        'default' => '',
-        'extra' => '',
-    ];
-
     protected const EXPECTED_TYPE_VALUES = [
         'array',
         'bool',
@@ -34,11 +24,14 @@ class Property
     protected ?string $comment = null;
     protected ?string $itemType = null;
     protected ?string $itemName = null;
-    /** @var mixed */
+    /** @var mixed|string|null */
     protected $default = null;
-    /** @var mixed */
+    /** @var mixed|string|null */
     protected $extra = null;
 
+    /**
+     * @return array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null}
+     */
     public function toArray(): array
     {
         return [
@@ -52,9 +45,13 @@ class Property
         ];
     }
 
-    public function fromArray(
-        array $data
-    ): self {
+    /**
+     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null} $data
+     *
+     * @return $this
+     */
+    public function fromArray(array $data): self
+    {
         $data = array_merge(
             PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT_DATA,
             $data
@@ -88,10 +85,8 @@ class Property
         return $this->type;
     }
 
-    public function setType(
-
-        string $type
-    ): self {
+    public function setType(string $type): self
+    {
         $this->type = $type;
 
         return $this;
@@ -110,7 +105,7 @@ class Property
     }
 
     /**
-     * @return mixed|null
+     * @return mixed|string|null
      */
     public function getDefault()
     {
@@ -161,6 +156,11 @@ class Property
         return $this->extra;
     }
 
+    /**
+     * @param mixed|null $extra
+     *
+     * @return $this
+     */
     public function setExtra($extra): self
     {
         $this->extra = $extra;

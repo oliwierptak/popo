@@ -10,6 +10,13 @@ use function array_replace_recursive;
 
 class ConfigMerger
 {
+    /**
+     * @param string $schemaName
+     * @param \Popo\Schema\File\SchemaFile $sharedSchemaFile
+     * @param \Popo\Schema\File\SchemaFile $schemaFile
+     *
+     * @return array<int|string, mixed>
+     */
     public function mergeSchemaConfiguration(
         string $schemaName,
         SchemaFile $sharedSchemaFile,
@@ -30,6 +37,12 @@ class ConfigMerger
         );
     }
 
+    /**
+     * @param string $schemaName
+     * @param \Popo\Schema\File\SchemaFile $file
+     *
+     * @return array<string, mixed>
+     */
     public function mergeSchemaFile(string $schemaName, SchemaFile $file): array
     {
         return array_replace_recursive(
@@ -38,6 +51,11 @@ class ConfigMerger
         );
     }
 
+    /**
+     * @param array<string,mixed> $data
+     *
+     * @return array<string,mixed>
+     */
     public function mergeSchemaDefaults(...$data): array
     {
         return array_replace_recursive(
@@ -46,6 +64,14 @@ class ConfigMerger
         );
     }
 
+    /**
+     * @param string $schemaName
+     * @param array<string, mixed> $popoCollection
+     * @param array<int|string, mixed> $configData
+     * @param array<string, string> $result
+     *
+     * @return array<string, string>
+     */
     public function mergePopoCollection(
         string $schemaName,
         array $popoCollection,

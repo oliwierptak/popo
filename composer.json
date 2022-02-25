@@ -20,7 +20,10 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
-    "symfony/var-dumper": "^5|^6"
+    "symfony/var-dumper": "^5|^6",
+    "phpstan/phpstan": "^1.4",
+    "phpmd/phpmd": "^2.11",
+    "everon/coding-standard": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -59,11 +62,18 @@
       "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
       "bin/popo generate -s tests/fixtures/popo-readme.yml",
       "bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-1.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-2.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-3.yml",
       "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
+    ],
+    "phpstan": [
+      "vendor/bin/phpstan analyse -c phpstan.neon"
     ]
   },
   "scripts-descriptions": {
-    "popo": "Generate POPO files"
+    "popo": "Generate POPO files",
+    "phpstan": "Run phpstan"
   },
   "bin": [
     "bin/popo",

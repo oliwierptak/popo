@@ -11,6 +11,7 @@ use Popo\Schema\Property\Property;
 
 class GetPropertyMethodPlugin implements PropertyPluginInterface
 {
+    //@return array<array{filename: string, schemaName: string, popoName: string, namespace: string}>
     public function run(BuilderPluginInterface $builder, Property $property): void
     {
         $name = $property->getName();

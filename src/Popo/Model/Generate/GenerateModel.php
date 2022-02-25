@@ -4,19 +4,19 @@ declare(strict_types = 1);
 
 namespace Popo\Model\Generate;
 
-use Popo\Builder\PopoBuilder;
+use Popo\Builder\PopoGenerator;
 use Popo\Builder\SchemaBuilder;
 use Popo\PopoConfigurator;
 
 class GenerateModel
 {
     protected SchemaBuilder $schemaBuilder;
-    protected PopoBuilder $popoBuilder;
+    protected PopoGenerator $popoGenerator;
 
-    public function __construct(SchemaBuilder $schemaBuilder, PopoBuilder $popoBuilder)
+    public function __construct(SchemaBuilder $schemaBuilder, PopoGenerator $popoGenerator)
     {
         $this->schemaBuilder = $schemaBuilder;
-        $this->popoBuilder = $popoBuilder;
+        $this->popoGenerator = $popoGenerator;
     }
 
     public function generate(PopoConfigurator $configurator): GenerateResult
@@ -26,13 +26,12 @@ class GenerateModel
 
         foreach ($data as $schemaName => $schemaCollection) {
             foreach ($schemaCollection as $popoName => $popoSchema) {
-                /** @var \Popo\Schema\Schema $popoSchema */
-                $filename = $this->popoBuilder->build($popoSchema);
+                $filename = $this->popoGenerator->generate($popoSchema);
 
                 $result->add([
                     'filename' => $filename,
                     'schemaName' => $schemaName,
-                    'popoName' => $popoName,
+                    'popoName' => (string) $popoName,
                     'namespace' => $popoSchema->getConfig()->getNamespace(),
                 ]);
             }

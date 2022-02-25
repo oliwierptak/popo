@@ -9,9 +9,9 @@ use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Popo\Plugin\BuilderPluginInterface;
+use Popo\Plugin\PluginContainerInterface;
 use Popo\Schema\Generator\SchemaGeneratorInterface;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
-use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
 
 abstract class AbstractBuilder implements BuilderPluginInterface
@@ -23,33 +23,79 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     protected Method $method;
     protected SchemaInspectorInterface $schemaInspector;
     protected SchemaGeneratorInterface $schemaGenerator;
-    protected FileWriter $fileWriter;
-    /**
-     * @var \Popo\Plugin\ClassPluginInterface[]
-     */
-    protected array $classPluginCollection = [];
-    /**
-     * @var \Popo\Plugin\PropertyPluginInterface[]
-     */
-    protected array $propertyMethodPluginCollection = [];
-
-    /**
-     * @throws \Throwable
-     */
-    abstract public function build(Schema $schema): string;
+    protected PluginContainerInterface $pluginContainer;
 
     public function __construct(
         SchemaInspectorInterface $schemaInspector,
         SchemaGeneratorInterface $schemaGenerator,
-        FileWriter $fileWriter,
-        array $classPluginCollection,
-        array $propertyMethodPluginCollection
+        PluginContainerInterface $pluginContainer
     ) {
         $this->schemaInspector = $schemaInspector;
         $this->schemaGenerator = $schemaGenerator;
-        $this->fileWriter = $fileWriter;
-        $this->classPluginCollection = $classPluginCollection;
-        $this->propertyMethodPluginCollection = $propertyMethodPluginCollection;
+        $this->pluginContainer = $pluginContainer;
+    }
+
+    abstract protected function buildPhpFile(): self;
+
+    abstract protected function buildNamespace(): self;
+
+    abstract protected function buildProperties(): self;
+
+    abstract protected function buildClass(): self;
+
+    public function build(Schema $schema): BuilderPluginInterface
+    {
+        $this->schema = $schema;
+
+        $this
+            ->buildPhpFile()
+            ->runPhpFilePlugins()
+            ->buildNamespace()
+            ->runNamespacePlugins()
+            ->buildClass()
+            ->runClassPlugins()
+            ->buildProperties()
+            ->runPropertyPlugins();
+
+        return $this;
+    }
+
+    protected function runPhpFilePlugins(): self
+    {
+        foreach ($this->pluginContainer->createPhpFilePlugin() as $plugin) {
+            $this->file = $plugin->run($this->file, $this->schema);
+        }
+
+        return $this;
+    }
+
+    protected function runNamespacePlugins(): self
+    {
+        foreach ($this->pluginContainer->createNamespacePlugin() as $plugin) {
+            $this->namespace = $plugin->run($this->namespace);
+        }
+
+        return $this;
+    }
+
+    protected function runClassPlugins(): self
+    {
+        foreach ($this->pluginContainer->createClassPlugins() as $plugin) {
+            $plugin->run($this);
+        }
+
+        return $this;
+    }
+
+    protected function runPropertyPlugins(): self
+    {
+        foreach ($this->schema->getPropertyCollection() as $property) {
+            foreach ($this->pluginContainer->createPropertyPlugins() as $plugin) {
+                $plugin->run($this, $property);
+            }
+        }
+
+        return $this;
     }
 
     public function getSchema(): Schema
@@ -80,50 +126,5 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     public function getSchemaGenerator(): SchemaGeneratorInterface
     {
         return $this->schemaGenerator;
-    }
-
-    protected function buildSchema(Schema $schema): self
-    {
-        $this->schema = $schema;
-
-        $this->file = new PhpFile();
-        $this->file->setStrictTypes();
-
-        if ($schema->getConfig()->getComment() !== null) {
-            $this->file->addComment($schema->getConfig()->getComment());
-        }
-
-        $this->namespace = $this->file->addNamespace(
-            new PhpNamespace(
-                $schema->getConfig()->getNamespace()
-            )
-        );
-
-        $this->buildClass();
-
-        return $this;
-    }
-
-    protected function buildClass(): self
-    {
-        $this->namespace->addUse('UnexpectedValueException');
-
-        $this->class = $this->namespace->addClass($this->schema->getName());
-
-        return $this;
-    }
-
-    protected function runClassPlugins(): void
-    {
-        foreach ($this->classPluginCollection as $plugin) {
-            $plugin->run($this);
-        }
-    }
-
-    protected function runPropertyMethodPlugins(Property $property): void
-    {
-        foreach ($this->propertyMethodPluginCollection as $plugin) {
-            $plugin->run($this, $property);
-        }
     }
 }

@@ -16,6 +16,9 @@ use Popo\Plugin\ClassPlugin\PopoMethodClassPlugin;
 use Popo\Plugin\ClassPlugin\RequireAllClassPlugin;
 use Popo\Plugin\ClassPlugin\ToArrayClassPlugin;
 use Popo\Plugin\ClassPlugin\UpdateMapClassPlugin;
+use Popo\Plugin\NamespacePlugin\UseUnexpectedValueException;
+use Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin;
+use Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin;
 use Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin;
 use Popo\Plugin\PropertyPlugin\DefinePropertyPlugin;
 use Popo\Plugin\PropertyPlugin\GetPropertyMethodPlugin;
@@ -33,6 +36,19 @@ class PopoConfigurator
     protected ?string $schemaFilenameMask = '*.popo.yml';
     protected ?string $schemaConfigFilename = null;
     protected bool $ignoreNonExistingSchemaFolder = false;
+    /**
+     * @var array<string>
+     */
+    protected array $phpFilePluginCollection = [
+        StrictTypesPhpFilePlugin::class,
+        CommentPhpFilePlugin::class
+    ];
+    /**
+     * @var string[]
+     */
+    protected array $namespacePluginCollection = [
+        UseUnexpectedValueException::class,
+    ];
     /**
      * @var string[]
      */
@@ -158,11 +174,73 @@ class PopoConfigurator
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getPhpFilePluginCollection(): array
+    {
+        return $this->phpFilePluginCollection;
+    }
+
+    /**
+     * @param array<string> $plugins
+     *
+     * @return $this
+     */
+    public function setPhpFilePluginCollection(array $plugins): self
+    {
+        $this->phpFilePluginCollection = $plugins;
+
+        return $this;
+    }
+
+    public function addPhpFilePluginClass(string $pluginClassName): self
+    {
+        $this->phpFilePluginCollection[] = $pluginClassName;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getNamespacePluginCollection(): array
+    {
+        return $this->namespacePluginCollection;
+    }
+
+    /**
+     * @param array<string> $plugins
+     *
+     * @return $this
+     */
+    public function setNamespaceCollection(array $plugins): self
+    {
+        $this->namespacePluginCollection = $plugins;
+
+        return $this;
+    }
+
+    public function addNamespacePluginClass(string $pluginClassName): self
+    {
+        $this->namespacePluginCollection[] = $pluginClassName;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getClassPluginCollection(): array
     {
         return $this->classPluginCollection;
     }
 
+    /**
+     * @param array<string> $plugins
+     *
+     * @return $this
+     */
     public function setClassPluginCollection(array $plugins): self
     {
         $this->classPluginCollection = $plugins;
@@ -177,11 +255,19 @@ class PopoConfigurator
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getPropertyPluginCollection(): array
     {
         return $this->propertyPluginCollection;
     }
 
+    /**
+     * @param array<string> $propertyPluginCollection
+     *
+     * @return $this
+     */
     public function setPropertyPluginCollection(array $propertyPluginCollection): self
     {
         $this->propertyPluginCollection = $propertyPluginCollection;

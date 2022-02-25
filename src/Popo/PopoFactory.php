@@ -6,6 +6,7 @@ namespace Popo;
 
 use Popo\Builder\FileWriter;
 use Popo\Builder\PopoBuilder;
+use Popo\Builder\PopoGenerator;
 use Popo\Builder\SchemaBuilder;
 use Popo\Loader\FileLocator;
 use Popo\Loader\SchemaLoader;
@@ -23,29 +24,11 @@ use Symfony\Component\Finder\Finder;
 
 class PopoFactory
 {
-    protected PluginContainerInterface $pluginContainer;
-
-    protected function getPluginContainer(): PluginContainerInterface
-    {
-        if (empty($this->pluginContainer)) {
-            $this->pluginContainer = new PluginContainer();
-        }
-
-        return $this->pluginContainer;
-    }
-
-    public function setPluginContainer(PluginContainerInterface $pluginContainer): self
-    {
-        $this->pluginContainer = $pluginContainer;
-
-        return $this;
-    }
-
     public function createPopoModel(PopoConfigurator $configurator): GenerateModel
     {
         return new GenerateModel(
             $this->createSchemaBuilder(),
-            $this->createPopoBuilder($configurator),
+            $this->createPopoGenerator($configurator),
         );
     }
 
@@ -72,14 +55,20 @@ class PopoFactory
         );
     }
 
+    protected function createPopoGenerator(PopoConfigurator $configurator): PopoGenerator
+    {
+        return new PopoGenerator(
+            $this->createPopoBuilder($configurator),
+            $this->createFileWriter()
+        );
+    }
+
     protected function createPopoBuilder(PopoConfigurator $configurator): PopoBuilder
     {
         return new PopoBuilder(
             $this->createSchemaInspector(),
             $this->createSchemaGenerator(),
-            $this->createFileWriter(),
-            $this->getPluginContainer()->createClassPlugins($configurator),
-            $this->getPluginContainer()->createPropertyPlugins($configurator),
+            $this->createPluginContainer($configurator),
         );
     }
 
@@ -113,5 +102,10 @@ class PopoFactory
     protected function createFileWriter(): FileWriter
     {
         return new FileWriter();
+    }
+
+    protected function createPluginContainer(PopoConfigurator $configurator): PluginContainerInterface
+    {
+        return new PluginContainer($configurator);
     }
 }

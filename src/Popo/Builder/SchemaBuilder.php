@@ -24,6 +24,11 @@ class SchemaBuilder
         $this->configMerger = $configMerger;
     }
 
+    /**
+     * @param \Popo\PopoConfigurator $configurator
+     *
+     * @return array<string, array<int|string, \Popo\Schema\Schema>>
+     */
     public function build(PopoConfigurator $configurator): array
     {
         $result = [];
@@ -60,7 +65,7 @@ class SchemaBuilder
      * @param \Popo\Schema\File\SchemaFile[] $data
      * @param \Popo\Schema\File\SchemaFile $sharedSchemaFile
      *
-     * @return array
+     * @return array<string, mixed>
      */
     protected function generateSchemaTree(array $data, SchemaFile $sharedSchemaFile): array
     {
@@ -105,6 +110,12 @@ class SchemaBuilder
         return $popoSchema;
     }
 
+    /**
+     * @param \Popo\Schema\Schema $schema
+     * @param array<array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null}> $propertyCollection
+     *
+     * @return \Popo\Schema\Schema
+     */
     protected function buildSchemaPropertyCollection(Schema $schema, array $propertyCollection): Schema
     {
         $properties = [];
@@ -117,6 +128,12 @@ class SchemaBuilder
         return $schema;
     }
 
+    /**
+     * @param \Popo\Schema\Schema $schema
+     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null} $propertyData
+     *
+     * @return \Popo\Schema\Property\Property
+     */
     private function buildProperty(Schema $schema, array $propertyData): Property
     {
         $property = (new Property)

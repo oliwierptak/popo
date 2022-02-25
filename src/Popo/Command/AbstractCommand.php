@@ -19,6 +19,12 @@ abstract class AbstractCommand extends Command
 
     abstract protected function executeCommand(InputInterface $input, OutputInterface $output): int;
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->facade = new PopoFacade();

@@ -25,7 +25,8 @@ class SchemaTest extends TestCase
         $schema = (new Schema)
             ->setSchemaName('Example')
             ->setName('Foo')
-            ->setPropertyCollection(['fooId' => $property]);
+            ->setPropertyCollection(['fooId' => $property])
+            ->addPropertyCollectionItem($property);
         $schema
             ->getConfig()->setExtend('fooBar');
 

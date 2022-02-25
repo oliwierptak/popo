@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class PopoConfiguratorTest extends TestCase
 {
-    public function test_set_schema_filename()
+    public function test_set_schema_filename(): void
     {
         $configurator = (new PopoConfigurator)->setSchemaFilenameMask('*.schema.yml');
 

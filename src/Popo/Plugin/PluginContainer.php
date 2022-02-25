@@ -9,16 +9,51 @@ use Popo\PopoConfigurator;
 
 class PluginContainer implements PluginContainerInterface
 {
-    public function createClassPlugins(PopoConfigurator $configurator): array
+    protected PopoConfigurator $configurator;
+
+    public function __construct(PopoConfigurator $configurator)
     {
-        return $this->createPluginCollection($configurator->getClassPluginCollection());
+        $this->configurator = $configurator;
     }
 
-    public function createPropertyPlugins(PopoConfigurator $configurator): array
+    /**
+     * @return array<\Popo\Plugin\PhpFilePluginInterface>
+     */
+    public function createPhpFilePlugin(): array
     {
-        return $this->createPluginCollection($configurator->getPropertyPluginCollection());
+        return $this->createPluginCollection($this->configurator->getPhpFilePluginCollection());
     }
 
+    /**
+     * @return array<\Popo\Plugin\NamespacePluginInterface>
+     */
+    public function createNamespacePlugin(): array
+    {
+        return $this->createPluginCollection($this->configurator->getNamespacePluginCollection());
+    }
+
+    /**
+     * @return array<\Popo\Plugin\ClassPluginInterface>
+     */
+    public function createClassPlugins(): array
+    {
+        return $this->createPluginCollection($this->configurator->getClassPluginCollection());
+    }
+
+    /**
+     * @return array<\Popo\Plugin\PropertyPluginInterface>
+     */
+    public function createPropertyPlugins(): array
+    {
+        return $this->createPluginCollection($this->configurator->getPropertyPluginCollection());
+    }
+
+    /**
+     * @param array<string> $pluginClassNames
+     *
+     * @phpstan-ignore-next-line
+     * @return array
+     */
     protected function createPluginCollection(array $pluginClassNames): array
     {
         $result = [];

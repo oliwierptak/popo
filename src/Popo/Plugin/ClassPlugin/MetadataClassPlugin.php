@@ -22,6 +22,11 @@ class MetadataClassPlugin implements ClassPluginInterface
             ->setProtected();
     }
 
+    /**
+     * @param \Popo\Plugin\BuilderPluginInterface $builder
+     *
+     * @return array<string, array<string, mixed>>
+     */
     protected function generateMetadataProperties(BuilderPluginInterface $builder): array
     {
         $metadata = [];
@@ -34,13 +39,11 @@ class MetadataClassPlugin implements ClassPluginInterface
 
             if ($builder->getSchemaInspector()->hasExtra($property)) {
                 if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
-                    $extra = new PropertyExtraTimezone($property->getExtra());
-                    $metadata[$property->getName(
-                    )][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
+                    $extra = new PropertyExtraTimezone((array)$property->getExtra());
+                    $metadata[$property->getName()][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
 
                     if ($extra->hasTimezone()) {
-                        $metadata[$property->getName(
-                        )][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
+                        $metadata[$property->getName()][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
                     }
                 }
                 else {

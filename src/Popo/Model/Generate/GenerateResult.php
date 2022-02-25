@@ -6,20 +6,24 @@ namespace Popo\Model\Generate;
 
 class GenerateResult
 {
-    protected const ITEM_SHAPE = [
-        'filename' => 'string',
-        'schemaName' => 'string',
-        'popoName' => 'string',
-        'namespace' => 'string',
-    ];
-
+    /**
+     * @var array<array{filename: string, schemaName: string, popoName: string, namespace: string}>
+     */
     protected array $generatedFiles = [];
 
+    /**
+     * @return array<array{filename: string, schemaName: string, popoName: string, namespace: string}>
+     */
     public function getGeneratedFiles(): array
     {
         return $this->generatedFiles;
     }
 
+    /**
+     * @param array{filename: string, schemaName: string, popoName: string, namespace: string} $item
+     *
+     * @return $this
+     */
     public function add(array $item): self
     {
         $this->generatedFiles[] = $item;

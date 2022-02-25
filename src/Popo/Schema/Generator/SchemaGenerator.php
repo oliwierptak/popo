@@ -22,7 +22,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
         if ($this->schemaInspector->isPopoProperty($property->getType())) {
             $namespace = $this->expandNamespaceForParameter($schema);
 
-            $value = $property->getDefault();
+            $value = (string)$property->getDefault();
             $class = sprintf(
                 '%s',
                 $stripClass ? str_replace('::class', '', $value) : $value
@@ -51,7 +51,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
         if ($this->schemaInspector->isLiteral($property->getItemType())) {
             $namespace = $this->expandNamespaceForParameter($schema);
 
-            $value = $property->getItemType();
+            $value = (string) $property->getItemType();
             $class = sprintf(
                 '%s',
                 str_replace('::class', '', $value)
@@ -68,7 +68,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
             return $class;
         }
 
-        return $property->getItemType();
+        return (string) $property->getItemType();
     }
 
     protected function expandNamespaceForParameter(Schema $schema): string

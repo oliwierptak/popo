@@ -10,9 +10,6 @@ use Popo\Schema\Schema;
 
 class FileWriter
 {
-    /**
-     * @throws \Throwable
-     */
     public function save(PhpFile $file, Schema $schema): string
     {
         $handle = null;
