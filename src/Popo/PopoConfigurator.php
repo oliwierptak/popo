@@ -16,7 +16,7 @@ use Popo\Plugin\ClassPlugin\PopoMethodClassPlugin;
 use Popo\Plugin\ClassPlugin\RequireAllClassPlugin;
 use Popo\Plugin\ClassPlugin\ToArrayClassPlugin;
 use Popo\Plugin\ClassPlugin\UpdateMapClassPlugin;
-use Popo\Plugin\NamespacePlugin\UseUnexpectedValueException;
+use Popo\Plugin\NamespacePlugin\UseUnexpectedValueExceptionPlugin;
 use Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin;
 use Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin;
 use Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin;
@@ -47,7 +47,7 @@ class PopoConfigurator
      * @var string[]
      */
     protected array $namespacePluginCollection = [
-        UseUnexpectedValueException::class,
+        UseUnexpectedValueExceptionPlugin::class,
     ];
     /**
      * @var string[]
