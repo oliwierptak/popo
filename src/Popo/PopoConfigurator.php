@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @SuppressWarnings(PHPMD)
+ * @phpcs:ignoreFile
+ */
+
+declare(strict_types=1);
+
 namespace Popo;
 
 use UnexpectedValueException;

@@ -12,9 +12,7 @@ class StrictTypesPhpFilePlugin implements PhpFilePluginInterface
 {
     public function run(PhpFile $file, Schema $schema): PhpFile
     {
-        if ($schema->getConfig()->getComment() !== null) {
-            $file->addComment($schema->getConfig()->getComment());
-        }
+        $file->setStrictTypes(true);
 
         return $file;
     }

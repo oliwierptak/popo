@@ -2,7 +2,6 @@ $:
   config:
     namespace: Popo
     outputPath: src/
-  default:
     comment: |
       @SuppressWarnings(PHPMD)
       @phpcs:ignoreFile
