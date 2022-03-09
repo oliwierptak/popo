@@ -105,15 +105,15 @@ class CreateSchemaCommand extends AbstractCommand
         $output->writeln($generatedSchema);
 
         $question = new ConfirmationQuestion(
-            '<fg=green>Save schema under: \'' . $configurator->getSchemaPath() . '\'?</> <fg=gray>[y/n]</>', true
+            '<fg=green>Save schema under: \'' . $configurator->requireSchemaPath() . '\'?</> <fg=gray>[y/n]</>', true
         );
         if (!$helper->ask($input, $output, $question)) {
             return Command::SUCCESS;
         }
 
-        if (file_exists($configurator->getSchemaPath())) {
+        if (file_exists($configurator->requireSchemaPath())) {
             $question = new ConfirmationQuestion(
-                '<fg=yellow>Schema file under: \'' . $configurator->getSchemaPath(
+                '<fg=yellow>Schema file under: \'' . $configurator->requireSchemaPath(
                 ) . '\' already exists. Overwrite?</> <fg=gray>[</><fg=white>y</><fg=gray>/n]</>', true
             );
             if (!$helper->ask($input, $output, $question)) {
@@ -124,10 +124,10 @@ class CreateSchemaCommand extends AbstractCommand
         $this->saveSchemaFile($configurator, $generatedSchema);
 
         $output->writeln('');
-        $output->writeln('<fg=green>Saved schema file under</>: ' . $configurator->getSchemaPath());
+        $output->writeln('<fg=green>Saved schema file under</>: ' . $configurator->requireSchemaPath());
 
         $output->writeln('');
-        $output->writeln('<fg=green>Run</>: vendor/bin/popo generate -s ' . $configurator->getSchemaPath());
+        $output->writeln('<fg=green>Run</>: vendor/bin/popo generate -s ' . $configurator->requireSchemaPath());
 
         $configurator->setSchemaFilenameMask('*.yml');
 
@@ -138,7 +138,7 @@ class CreateSchemaCommand extends AbstractCommand
     {
         $handle = null;
         try {
-            $handle = fopen($configurator->getSchemaPath(), 'w');
+            $handle = fopen($configurator->requireSchemaPath(), 'w');
             /** @phpstan-ignore-next-line */
             fputs($handle, $generatedSchema);
         }
@@ -160,8 +160,8 @@ class CreateSchemaCommand extends AbstractCommand
         $command = $this->getApplication()->find(GenerateCommand::COMMAND_NAME);
 
         $arguments = [
-            '-s' => $configurator->getSchemaPath(),
-            '-o' => $configurator->getOutputPath(),
+            '-s' => $configurator->requireSchemaPath(),
+            '-o' => $configurator->requireOutputPath(),
         ];
 
         $parameters = new ArrayInput($arguments);

@@ -7,3 +7,4 @@ parameters:
 		- tests/bootstrap.php
 	excludePaths:
 		- tests/*
+		- src/Popo/PopoConfigurator.php

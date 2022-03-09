@@ -85,7 +85,7 @@ class SchemaLoader
         $this->validate($configurator);
 
         $files = [];
-        foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
+        foreach ($this->extractPaths($configurator->requireSchemaPath()) as $path) {
             if (is_dir($path)) {
                 $files = array_merge(
                     $files,
@@ -108,13 +108,13 @@ class SchemaLoader
 
     protected function validate(PopoConfigurator $configurator): void
     {
-        foreach ($this->extractPaths($configurator->getSchemaPath()) as $path) {
-            if ($configurator->isIgnoreNonExistingSchemaFolder() === false) {
+        foreach ($this->extractPaths($configurator->requireSchemaPath()) as $path) {
+            if ($configurator->shouldIgnoreNonExistingSchemaFolder() === false) {
                 $this->validatePath($path);
             }
         }
 
-        if (trim((string) $configurator->getSchemaConfigFilename()) !== '') {
+        if ($configurator->hasSchemaConfigFilename()) {
             $this->validatePath((string)$configurator->getSchemaConfigFilename());
         }
     }

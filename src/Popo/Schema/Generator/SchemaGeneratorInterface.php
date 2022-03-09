@@ -9,6 +9,11 @@ use Popo\Schema\Schema;
 
 interface SchemaGeneratorInterface
 {
+    /**
+     * @return mixed
+     */
+    public function generateDefaultTypeValue(Property $property);
+
     public function generatePopoType(Schema $schema, Property $property, bool $stripClass = true): string;
 
     public function generatePopoItemType(Schema $schema, Property $property): string;

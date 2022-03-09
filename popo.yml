@@ -1,0 +1,51 @@
+$:
+  config:
+    namespace: Popo
+    outputPath: src/
+  default:
+    comment: |
+      @SuppressWarnings(PHPMD)
+      @phpcs:ignoreFile
+
+Popo:
+  PopoConfigurator:
+    default:
+      phpFilePluginCollection:
+        - \Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin::class
+        - \Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin::class
+      namespacePluginCollection:
+        - \Popo\Plugin\NamespacePlugin\UseUnexpectedValueExceptionPlugin::class
+      classPluginCollection:
+        - \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\IsNewClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\MetadataClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\PopoMethodClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\RequireAllClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\UpdateMapClassPlugin::class
+      propertyPluginCollection:
+        - \Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\DefinePropertyPlugin::class
+        - \Popo\Plugin\PropertyPlugin\GetPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\HasPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\RequirePropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin::class
+    property: [
+      {name: schemaPath}
+      {name: namespace}
+      {name: namespaceRoot}
+      {name: outputPath}
+      {name: phpFilePluginCollection, type: array, itemType: string, itemName: phpFilePluginClass}
+      {name: namespacePluginCollection, type: array, itemType: string, itemName: namespacePluginClass}
+      {name: classPluginCollection, type: array, itemType: string, itemName: classPluginClass}
+      {name: propertyPluginCollection, type: array, itemType: string, itemName: propertyPluginClass}
+      {name: schemaConfigFilename}
+      {name: schemaPathFilter}
+      {name: schemaFilenameMask, default: '*.popo.yml'}
+      {name: shouldIgnoreNonExistingSchemaFolder, type: bool}
+    ]}}

@@ -151,7 +151,7 @@ class GenerateCommand extends AbstractCommand
                     static::OPTION_SCHEMA_FILENAME_MASK
                 ) : '*.popo.yml'
             )
-            ->setIgnoreNonExistingSchemaFolder(
+            ->setShouldIgnoreNonExistingSchemaFolder(
                 (bool) ($input->hasOption(static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER) ? $input->getOption(
                     static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER
                 ) : false)

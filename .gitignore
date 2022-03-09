@@ -4,3 +4,4 @@ vendor
 !.gitignore
 .DS_Store
 phpunit.xml
+composer.lock

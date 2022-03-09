@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Plugin\PropertyPlugin;
 
-use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PropertyPluginInterface;
 use Popo\Schema\Property\Property;
@@ -13,24 +12,7 @@ class DefinePropertyPlugin implements PropertyPluginInterface
 {
     public function run(BuilderPluginInterface $builder, Property $property): void
     {
-        $value = $property->getDefault();
-        if ($builder->getSchemaInspector()->isPopoProperty($property->getType()) ||
-            $builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
-            $value = null;
-        }
-        else {
-            if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
-                $value = new Literal($property->getDefault());
-            }
-        }
-
-        if ($builder->getSchemaInspector()->isBool($property->getType())) {
-            $value = (bool) $value;
-        }
-
-        if ($value === null && $builder->getSchemaInspector()->isArray($property->getType())) {
-            $value = [];
-        }
+        $value = $builder->getSchemaGenerator()->generateDefaultTypeValue($property);
 
         $builder->getClass()
             ->addProperty($property->getName(), $value)

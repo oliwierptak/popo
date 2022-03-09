@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Generator;
 
+use Nette\PhpGenerator\Literal;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
@@ -15,6 +16,40 @@ class SchemaGenerator implements SchemaGeneratorInterface
     public function __construct(SchemaInspectorInterface $schemaInspector)
     {
         $this->schemaInspector = $schemaInspector;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function generateDefaultTypeValue(Property $property)
+    {
+        $value = $property->getDefault();
+        if ($this->schemaInspector->isPopoProperty($property->getType()) ||
+            $this->schemaInspector->isDateTimeProperty($property->getType())) {
+            $value = null;
+        }
+        else {
+            if ($this->schemaInspector->isLiteral($property->getDefault())) {
+                $value = new Literal($property->getDefault());
+            }
+        }
+
+        if ($this->schemaInspector->isBool($property->getType())) {
+            $value = (bool) $value;
+        }
+
+        if ($this->schemaInspector->isArray($property->getType())) {
+            $value = [];
+            foreach ($property->getDefault() ?? [] as $key => $defaultValue) {
+                if ($this->schemaInspector->isLiteral($defaultValue)) {
+                    $defaultValue = new Literal($defaultValue);
+                }
+
+                $value[$key] = $defaultValue;
+            }
+        }
+
+        return $value;
     }
 
     public function generatePopoType(Schema $schema, Property $property, bool $stripClass = true): string

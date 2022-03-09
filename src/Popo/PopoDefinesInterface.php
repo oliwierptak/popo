@@ -6,7 +6,7 @@ namespace Popo;
 
 class PopoDefinesInterface
 {
-    public const VERSION = 5;
+    public const VERSION = 6;
 
     public const VALIDATION_TYPE_FILE_CONFIG = 'file-config';
 

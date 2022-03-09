@@ -22,8 +22,7 @@
     "phpunit/phpunit": "^9",
     "symfony/var-dumper": "^5|^6",
     "phpstan/phpstan": "^1.4",
-    "phpmd/phpmd": "^2.11",
-    "everon/coding-standard": "^2.0"
+    "phpmd/phpmd": "^2.11"
   },
   "autoload": {
     "psr-4": {
@@ -52,12 +51,14 @@
       "vendor/bin/phpunit --testdox --group unit,functional"
     ],
     "report": [
+      "bin/popo report -s tests/popo.yml",
       "bin/popo report -s tests/fixtures/popo.yml",
       "bin/popo report -s tests/fixtures/popo-namespace-root.yml",
       "bin/popo report -s tests/fixtures/popo-readme.yml",
       "bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
     ],
     "popo": [
+      "bin/popo generate -s popo.yml",
       "bin/popo generate -s tests/fixtures/popo.yml",
       "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
       "bin/popo generate -s tests/fixtures/popo-readme.yml",
@@ -69,6 +70,15 @@
     ],
     "phpstan": [
       "vendor/bin/phpstan analyse -c phpstan.neon"
+    ],
+    "cs-fix": [
+      "vendor/bin/phpcbf -q --standard=.phpcs.xml ${1-src}"
+    ],
+    "cs-check": [
+      "vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=.phpcs.xml ${1-src}"
+    ],
+    "cs-list": [
+      "vendor/bin/phpcs -e --standard=.phpcs.xml"
     ]
   },
   "scripts-descriptions": {

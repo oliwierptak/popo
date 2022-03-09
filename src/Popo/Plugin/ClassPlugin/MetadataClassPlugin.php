@@ -64,6 +64,21 @@ class MetadataClassPlugin implements ClassPluginInterface
                 continue;
             }
 
+            if ($builder->getSchemaInspector()->isArray($property->getType())) {
+                $values = [];
+
+                foreach ($property->getDefault() ?? [] as $key => $defaultValue) {
+                    if ($builder->getSchemaInspector()->isLiteral($defaultValue)) {
+                        $defaultValue = new Literal($defaultValue);
+                    }
+
+                    $values[$key] = $defaultValue;
+                }
+
+                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $values;
+                continue;
+            }
+
             if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
                 $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault();
                 continue;
