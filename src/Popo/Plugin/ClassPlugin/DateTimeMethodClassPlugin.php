@@ -18,7 +18,7 @@ if (static::METADATA[\$propertyName]['type'] === 'datetime' && \$this->\$propert
     \$timezone = static::METADATA[\$propertyName]['timezone'] ?? null;
     if (\$timezone !== null) {
         \$timezone = new \DateTimeZone(\$timezone);
-        \$datetime->setTimezone(\$timezone);
+        \$datetime = new \DateTime(\$value, \$timezone);
     }    
     \$this->\$propertyName = \$datetime;
 }

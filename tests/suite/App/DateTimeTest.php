@@ -6,6 +6,8 @@ namespace AppTestSuite;
 
 use App\Example\DateTime\Bar;
 use App\Example\DateTime\Foo;
+use DateTime;
+use DateTimeZone;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
 use PopoTestSuiteHelper\AbstractPopoTest;
@@ -48,12 +50,25 @@ class DateTimeTest extends AbstractPopoTest
         $this->assertEquals('Europe/Paris', $modified->getTimezone()->getName());
     }
 
+    public function test_timezone_change(): void
+    {
+        $result = ini_set('date.timezone', 'UTC');
+        $foo = (new Foo())->setTitle('Example Foo Hakuna Matata');
+
+        $modified = $foo->requireBar()->requireModified();
+
+        $this->assertEquals('Europe/Paris', $modified->getTimezone()->getName());
+        $this->assertEquals(1641046937, $modified->getTimestamp());
+
+        ini_set('date.timezone', $result);
+    }
+
     public function test_toArray_update_datetime(): void
     {
         $timestamp = time() - 2000;
-        $expectedModified = new \DateTime();
-        $expectedModified->setTimestamp($timestamp);
-        $expectedModified->setTimezone(new \DateTimeZone('Europe/Paris'));
+
+        $expectedModified = new DateTime("@${timestamp}");
+        $expectedModified->setTimezone(new DateTimeZone('Europe/Paris'));
 
         $foo = new Foo;
 
@@ -92,9 +107,9 @@ class DateTimeTest extends AbstractPopoTest
     public function test_fromArray_update_timestamp(): void
     {
         $timestamp = time() - 2000;
-        $expectedModified = new \DateTime();
+        $expectedModified = new DateTime();
         $expectedModified->setTimestamp($timestamp);
-        $expectedModified->setTimezone(new \DateTimeZone('Europe/Paris'));
+        $expectedModified->setTimezone(new DateTimeZone('Europe/Paris'));
 
         $foo = new Foo;
         $foo
@@ -145,7 +160,7 @@ class DateTimeTest extends AbstractPopoTest
         $foo = (new Foo)->setTitle('Example Foo Hakuna Matata');
 
         $this->assertEquals('Example Foo Hakuna Matata', $foo->getTitle());
-        $this->assertInstanceOf(\DateTime::class, $foo->requireBar()->requireModified());
+        $this->assertInstanceOf(DateTime::class, $foo->requireBar()->requireModified());
     }
 
     public function test_require_title(): void

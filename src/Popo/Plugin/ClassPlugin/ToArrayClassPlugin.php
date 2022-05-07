@@ -34,10 +34,10 @@ array_walk(
         if (static::METADATA[\$name]['type'] === 'datetime') {
             if ((\$value instanceof \DateTime) === false) {
                 \$datetime = new \DateTime(static::METADATA[\$name]['default']);
-                \$timezone = static::METADATA[\$name]['extra']['timezone'] ?? null;
+                \$timezone = static::METADATA[\$name]['timezone'] ?? null;
                 if (\$timezone !== null) {
                     \$timezone = new \DateTimeZone(\$timezone);
-                    \$datetime->setTimezone(\$timezone);
+                    \$datetime = new \DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'], \$timezone);
                 }
                 \$value = \$datetime;
             }
