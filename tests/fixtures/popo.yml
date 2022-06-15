@@ -36,7 +36,7 @@ Example:
       {name: bar, type: popo}
       {name: isTest, type: bool, default: true}
       {name: isTestWithoutDefault, type: bool}
-    ]}}
+    ]
 
   Bar:
     default:
@@ -47,14 +47,14 @@ Example:
       {name: title}
       {name: buzz, type: popo}
       {name: buzzCollection, type: array, itemType: \App\Example\Popo\Buzz\Buzz::class, itemName: buzz}
-    ]}}
+    ]
 
   Buzz:
     config:
       namespace: App\Example\Popo\Buzz
     property: [
       {name: value, default: Buzzzzz}
-    ]}}
+    ]
 
 AnotherExample:
   $:
@@ -72,4 +72,4 @@ AnotherExample:
     property: [
       {name: title}
       {name: description}
-    ]}}
+    ]

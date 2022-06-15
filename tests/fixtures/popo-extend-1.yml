@@ -8,6 +8,4 @@ $:
 
 Example:
   FooBarFirst:
-    property: [
-
-    ]}}
+    property: []

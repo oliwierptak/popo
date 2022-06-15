@@ -17,4 +17,4 @@ Example:
     property: [
       {name: idForAll, type: int, default: 3, comment: This id is for FooBar only}
       {name: description}
-    ]}}
+    ]

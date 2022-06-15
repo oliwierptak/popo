@@ -15,4 +15,4 @@ Example:
   Bar:
     property: [
       {name: title}
-    ]}}
+    ]

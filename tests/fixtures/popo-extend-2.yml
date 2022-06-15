@@ -13,6 +13,4 @@ Example:
     ]
 
   FooBarSecond:
-    property: [
-
-    ]}}
+    property: []

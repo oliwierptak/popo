@@ -24,12 +24,12 @@ Example:
     property: [
       {name: title}
       {name: bar, type: popo, default: Bar::class}
-    ]}}
+    ]
 
   Bar:
     property: [
       {name: title}
-    ]}}
+    ]
 ```
 
 #### Instantiate hierarchy of objects from an array.

@@ -8,7 +8,7 @@ $:
   property: [
     {name: idForAll, type: int, comment: This property is used in ALL schemas in ALL popo files}
     {name: description}
-  ]}}
+  ]
 
 Example:
   $:
@@ -19,7 +19,7 @@ Example:
       sharedExampleId: 123
     property: [
       {name: sharedExampleId, type: int, comment: This property is used in ALL schemas under Example schema}
-    ]}}
+    ]
 
 AnotherExample:
   $:
@@ -27,8 +27,8 @@ AnotherExample:
       anotherExampleSharedId: 200
     property: [
       {name: anotherExampleSharedId, type: int, comment: This propertyn is used in ALL schemas under AnotherExample schema}
-    ]}}
+    ]
   AnotherFoo:
     property: [
-      {name: description, comment: Property from popo.config.yml schema},
-    ]}}
+      {name: description, comment: Property from popo.config.yml schema}
+    ]
