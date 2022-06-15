@@ -13,7 +13,7 @@ class ExtendClassPlugin implements ClassPluginInterface
     {
         if ($builder->getSchema()->getConfig()->getExtend() !== null) {
             $extend = str_replace('::class', '', $builder->getSchema()->getConfig()->getExtend());
-            $builder->getClass()->addExtend($extend);
+            $builder->getClass()->setExtends($extend);
         }
     }
 }

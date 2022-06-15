@@ -1,4 +1,4 @@
-FROM php:7.4-cli
+FROM php:8.0-cli
 
 RUN apt-get upgrade -y && apt-get update \
     && apt-get install -y \
