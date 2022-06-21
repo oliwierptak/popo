@@ -57,6 +57,10 @@ class SchemaInspector implements SchemaInspectorInterface
             return false;
         }
 
+        if (trim($value) === '') {
+            return false;
+        }
+
         return strpos($value, '::') !== false || $value[0] === '\\';
     }
 
