@@ -13,13 +13,16 @@ class DefinePropertyPlugin implements PropertyPluginInterface
     public function run(BuilderPluginInterface $builder, Property $property): void
     {
         $value = $builder->getSchemaGenerator()->generateDefaultTypeValue($property);
+        $type = $builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property);
+        $isNullable = $builder->getSchemaInspector()->isPropertyNullable($property);
+        $type = $isNullable ? '?'.$type : $type;
 
         $builder->getClass()
             ->addProperty($property->getName(), $value)
             ->setComment($property->getComment())
             ->setProtected()
-            ->setNullable($builder->getSchemaInspector()->isPropertyNullable($property))
-            ->setType($builder->getSchemaGenerator()->generatePopoType($builder->getSchema(), $property))
+            ->setNullable($isNullable)
+            ->setType($type)
             ->setComment($property->getComment());
     }
 }

@@ -113,7 +113,7 @@ class PopoConfigurator
             $timezone = static::METADATA[$propertyName]['timezone'] ?? null;
             if ($timezone !== null) {
                 $timezone = new \DateTimeZone($timezone);
-                $datetime->setTimezone($timezone);
+                $datetime = new \DateTime($value, $timezone);
             }
             $this->$propertyName = $datetime;
         }
@@ -138,10 +138,10 @@ class PopoConfigurator
             if ($meta['type'] === 'datetime') {
                 if (($value instanceof \DateTime) === false) {
                     $datetime = new \DateTime($data[$name] ?? $meta['default']);
-                    $timezone = $meta['extra']['timezone'] ?? null;
+                    $timezone = $meta['timezone'] ?? null;
                     if ($timezone !== null) {
                         $timezone = new \DateTimeZone($timezone);
-                        $datetime->setTimezone($timezone);
+                        $datetime = new \DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
                     }
                     $value = $datetime;
                 }
@@ -300,10 +300,10 @@ class PopoConfigurator
                 if (static::METADATA[$name]['type'] === 'datetime') {
                     if (($value instanceof \DateTime) === false) {
                         $datetime = new \DateTime(static::METADATA[$name]['default']);
-                        $timezone = static::METADATA[$name]['extra']['timezone'] ?? null;
+                        $timezone = static::METADATA[$name]['timezone'] ?? null;
                         if ($timezone !== null) {
                             $timezone = new \DateTimeZone($timezone);
-                            $datetime->setTimezone($timezone);
+                            $datetime = new \DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
                         }
                         $value = $datetime;
                     }
