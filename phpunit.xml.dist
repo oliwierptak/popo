@@ -8,6 +8,10 @@
         <include>
             <directory suffix=".php">./src</directory>
         </include>
+        <exclude>
+            <file>src/Popo/PopoConfigurator.php</file>
+            <file>src/Popo/Command/CreateSchemaCommand.php</file>
+        </exclude>
         <report>
             <clover outputFile="./tests/logs/coverage.xml"/>
             <html outputDirectory="./tests/logs/coverage"/>
