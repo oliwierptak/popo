@@ -19,9 +19,9 @@ use const Popo\POPO_TESTS_DIR;
  */
 class PopoTest extends AbstractPopoTest
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $facade = new PopoFacade();
 
