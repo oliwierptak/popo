@@ -9,32 +9,67 @@ declare(strict_types=1);
 
 namespace Popo;
 
+use DateTime;
+use DateTimeZone;
+use Throwable;
 use UnexpectedValueException;
+
+use function array_filter;
+use function array_key_exists;
+use function array_keys;
+use function in_array;
+use function sort;
+
+use const ARRAY_FILTER_USE_KEY;
+use const SORT_STRING;
 
 class PopoConfigurator
 {
     protected const METADATA = [
-        'schemaPath' => ['type' => 'string', 'default' => null],
-        'namespace' => ['type' => 'string', 'default' => null],
-        'namespaceRoot' => ['type' => 'string', 'default' => null],
-        'outputPath' => ['type' => 'string', 'default' => null],
+        'schemaPath' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'schemaPath',
+        ],
+        'namespace' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'namespace',
+        ],
+        'namespaceRoot' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'namespaceRoot',
+        ],
+        'outputPath' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'outputPath',
+        ],
         'phpFilePluginCollection' => [
             'type' => 'array',
             'default' => [
                 \Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin::class,
                 \Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin::class,
             ],
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'phpFilePluginCollection',
         ],
         'namespacePluginCollection' => [
             'type' => 'array',
-            'default' => [\Popo\Plugin\NamespacePlugin\UseUnexpectedValueExceptionPlugin::class],
+            'default' => [\Popo\Plugin\NamespacePlugin\UseStatementPlugin::class],
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'namespacePluginCollection',
         ],
         'classPluginCollection' => [
             'type' => 'array',
             'default' => [
                 \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
-                \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\IsNewClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin::class,
@@ -42,9 +77,18 @@ class PopoConfigurator
                 \Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\PopoMethodClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\RequireAllClassPlugin::class,
-                \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\UpdateMapClassPlugin::class,
+                \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class,
+                \Popo\Plugin\ClassPlugin\FromMappedArrayClassPlugin::class,
+                \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class,
+                \Popo\Plugin\ClassPlugin\ToMappedArrayClassPlugin::class,
+                \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayLowercasePlugin::class,
+                \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class,
+                \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class,
+                \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class,
             ],
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'classPluginCollection',
         ],
         'propertyPluginCollection' => [
             'type' => 'array',
@@ -56,11 +100,45 @@ class PopoConfigurator
                 \Popo\Plugin\PropertyPlugin\RequirePropertyMethodPlugin::class,
                 \Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin::class,
             ],
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'propertyPluginCollection',
         ],
-        'schemaConfigFilename' => ['type' => 'string', 'default' => null],
-        'schemaPathFilter' => ['type' => 'string', 'default' => null],
-        'schemaFilenameMask' => ['type' => 'string', 'default' => '*.popo.yml'],
-        'shouldIgnoreNonExistingSchemaFolder' => ['type' => 'bool', 'default' => false],
+        'mappingPolicyPluginCollection' => [
+            'type' => 'array',
+            'default' => [
+                'none' => \Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::class,
+                'lower' => \Popo\Plugin\MappingPolicy\LowerMappingPolicyPlugin::class,
+                'upper' => \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::class,
+                'snake-to-camel' => \Popo\Plugin\MappingPolicy\SnakeToCamelMappingPolicyPlugin::class,
+                'camel-to-snake' => \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::class,
+            ],
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'mappingPolicyPluginCollection',
+        ],
+        'schemaConfigFilename' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'schemaConfigFilename',
+        ],
+        'schemaPathFilter' => [
+            'type' => 'string',
+            'default' => null,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'schemaPathFilter',
+        ],
+        'schemaFilenameMask' => [
+            'type' => 'string',
+            'default' => '*.popo.yml',
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'schemaFilenameMask',
+        ],
+        'shouldIgnoreNonExistingSchemaFolder' => [
+            'type' => 'bool',
+            'default' => false,
+            'mappingPolicy' => ['none'],
+            'mappingPolicyValue' => 'shouldIgnoreNonExistingSchemaFolder',
+        ],
     ];
 
     protected array $updateMap = [];
@@ -74,12 +152,11 @@ class PopoConfigurator
         \Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin::class,
     ];
 
-    protected array $namespacePluginCollection = [\Popo\Plugin\NamespacePlugin\UseUnexpectedValueExceptionPlugin::class];
+    protected array $namespacePluginCollection = [\Popo\Plugin\NamespacePlugin\UseStatementPlugin::class];
 
     protected array $classPluginCollection = [
         \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
-        \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,
         \Popo\Plugin\ClassPlugin\IsNewClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin::class,
@@ -87,8 +164,15 @@ class PopoConfigurator
         \Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin::class,
         \Popo\Plugin\ClassPlugin\PopoMethodClassPlugin::class,
         \Popo\Plugin\ClassPlugin\RequireAllClassPlugin::class,
-        \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class,
         \Popo\Plugin\ClassPlugin\UpdateMapClassPlugin::class,
+        \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class,
+        \Popo\Plugin\ClassPlugin\FromMappedArrayClassPlugin::class,
+        \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class,
+        \Popo\Plugin\ClassPlugin\ToMappedArrayClassPlugin::class,
+        \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayLowercasePlugin::class,
+        \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class,
+        \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class,
+        \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class,
     ];
 
     protected array $propertyPluginCollection = [
@@ -100,6 +184,14 @@ class PopoConfigurator
         \Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin::class,
     ];
 
+    protected array $mappingPolicyPluginCollection = [
+        'none' => \Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::class,
+        'lower' => \Popo\Plugin\MappingPolicy\LowerMappingPolicyPlugin::class,
+        'upper' => \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::class,
+        'snake-to-camel' => \Popo\Plugin\MappingPolicy\SnakeToCamelMappingPolicyPlugin::class,
+        'camel-to-snake' => \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::class,
+    ];
+
     protected ?string $schemaConfigFilename = null;
     protected ?string $schemaPathFilter = null;
     protected ?string $schemaFilenameMask = '*.popo.yml';
@@ -109,51 +201,14 @@ class PopoConfigurator
     {
         if (static::METADATA[$propertyName]['type'] === 'datetime' && $this->$propertyName === null) {
             $value = static::METADATA[$propertyName]['default'];
-            $datetime = new \DateTime($value);
+            $datetime = new DateTime($value);
             $timezone = static::METADATA[$propertyName]['timezone'] ?? null;
             if ($timezone !== null) {
-                $timezone = new \DateTimeZone($timezone);
-                $datetime = new \DateTime($value, $timezone);
+                $timezone = new DateTimeZone($timezone);
+                $datetime = new DateTime($value, $timezone);
             }
             $this->$propertyName = $datetime;
         }
-    }
-
-    public function fromArray(array $data): self
-    {
-        foreach (static::METADATA as $name => $meta) {
-            $value = $data[$name] ?? $this->$name ?? null;
-            $popoValue = $meta['default'];
-
-            if ($popoValue !== null && $meta['type'] === 'popo') {
-                $popo = new $popoValue;
-
-                if (is_array($value)) {
-                    $popo->fromArray($value);
-                }
-
-                $value = $popo;
-            }
-
-            if ($meta['type'] === 'datetime') {
-                if (($value instanceof \DateTime) === false) {
-                    $datetime = new \DateTime($data[$name] ?? $meta['default']);
-                    $timezone = $meta['timezone'] ?? null;
-                    if ($timezone !== null) {
-                        $timezone = new \DateTimeZone($timezone);
-                        $datetime = new \DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
-                    }
-                    $value = $datetime;
-                }
-            }
-
-            $this->$name = $value;
-            if (\array_key_exists($name, $data)) {
-                $this->updateMap[$name] = true;
-            }
-        }
-
-        return $this;
     }
 
     public function isNew(): bool
@@ -163,8 +218,8 @@ class PopoConfigurator
 
     public function listModifiedProperties(): array
     {
-        $sorted = \array_keys($this->updateMap);
-        sort($sorted, \SORT_STRING);
+        $sorted = array_keys($this->updateMap);
+        sort($sorted, SORT_STRING);
         return $sorted;
     }
 
@@ -173,9 +228,9 @@ class PopoConfigurator
         $data = $this->toArray();
         $modifiedProperties = $this->listModifiedProperties();
 
-        return \array_filter($data, function ($key) use ($modifiedProperties) {
-            return \in_array($key, $modifiedProperties);
-        }, \ARRAY_FILTER_USE_KEY);
+        return array_filter($data, function ($key) use ($modifiedProperties) {
+            return in_array($key, $modifiedProperties);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     protected function setupPopoProperty($propertyName): void
@@ -193,73 +248,79 @@ class PopoConfigurator
         try {
             $this->requireSchemaPath();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['schemaPath'] = $throwable->getMessage();
         }
         try {
             $this->requireNamespace();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['namespace'] = $throwable->getMessage();
         }
         try {
             $this->requireNamespaceRoot();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['namespaceRoot'] = $throwable->getMessage();
         }
         try {
             $this->requireOutputPath();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['outputPath'] = $throwable->getMessage();
         }
         try {
             $this->requirePhpFilePluginCollection();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['phpFilePluginCollection'] = $throwable->getMessage();
         }
         try {
             $this->requireNamespacePluginCollection();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['namespacePluginCollection'] = $throwable->getMessage();
         }
         try {
             $this->requireClassPluginCollection();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['classPluginCollection'] = $throwable->getMessage();
         }
         try {
             $this->requirePropertyPluginCollection();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['propertyPluginCollection'] = $throwable->getMessage();
+        }
+        try {
+            $this->requireMappingPolicyPluginCollection();
+        }
+        catch (Throwable $throwable) {
+            $errors['mappingPolicyPluginCollection'] = $throwable->getMessage();
         }
         try {
             $this->requireSchemaConfigFilename();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['schemaConfigFilename'] = $throwable->getMessage();
         }
         try {
             $this->requireSchemaPathFilter();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['schemaPathFilter'] = $throwable->getMessage();
         }
         try {
             $this->requireSchemaFilenameMask();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['schemaFilenameMask'] = $throwable->getMessage();
         }
         try {
             $this->requireShouldIgnoreNonExistingSchemaFolder();
         }
-        catch (\Throwable $throwable) {
+        catch (Throwable $throwable) {
             $errors['shouldIgnoreNonExistingSchemaFolder'] = $throwable->getMessage();
         }
 
@@ -272,48 +333,227 @@ class PopoConfigurator
         return $this;
     }
 
-    public function toArray(): array
+    public function fromArray(array $data): self
     {
-        $data = [
-            'schemaPath' => $this->schemaPath,
-            'namespace' => $this->namespace,
-            'namespaceRoot' => $this->namespaceRoot,
-            'outputPath' => $this->outputPath,
-            'phpFilePluginCollection' => $this->phpFilePluginCollection,
-            'namespacePluginCollection' => $this->namespacePluginCollection,
-            'classPluginCollection' => $this->classPluginCollection,
-            'propertyPluginCollection' => $this->propertyPluginCollection,
-            'schemaConfigFilename' => $this->schemaConfigFilename,
-            'schemaPathFilter' => $this->schemaPathFilter,
-            'schemaFilenameMask' => $this->schemaFilenameMask,
-            'shouldIgnoreNonExistingSchemaFolder' => $this->shouldIgnoreNonExistingSchemaFolder,
+        $metadata = [
+            'schemaPath' => 'schemaPath',
+            'namespace' => 'namespace',
+            'namespaceRoot' => 'namespaceRoot',
+            'outputPath' => 'outputPath',
+            'phpFilePluginCollection' => 'phpFilePluginCollection',
+            'namespacePluginCollection' => 'namespacePluginCollection',
+            'classPluginCollection' => 'classPluginCollection',
+            'propertyPluginCollection' => 'propertyPluginCollection',
+            'mappingPolicyPluginCollection' => 'mappingPolicyPluginCollection',
+            'schemaConfigFilename' => 'schemaConfigFilename',
+            'schemaPathFilter' => 'schemaPathFilter',
+            'schemaFilenameMask' => 'schemaFilenameMask',
+            'shouldIgnoreNonExistingSchemaFolder' => 'shouldIgnoreNonExistingSchemaFolder',
         ];
 
-        array_walk(
-            $data,
-            function (&$value, $name) use ($data) {
-                if (static::METADATA[$name]['type'] === 'popo') {
-                    $popo = static::METADATA[$name]['default'];
-                    $value = $this->$name !== null ? $this->$name->toArray() : (new $popo)->toArray();
+        foreach ($metadata as $name => $mappedName) {
+            $meta = static::METADATA[$name];
+            $value = $data[$mappedName] ?? $this->$name ?? null;
+            $popoValue = $meta['default'];
+
+            if ($popoValue !== null && $meta['type'] === 'popo') {
+                $popo = new $popoValue;
+
+                if (is_array($value)) {
+                    $popo->fromArray($value);
                 }
 
-                if (static::METADATA[$name]['type'] === 'datetime') {
-                    if (($value instanceof \DateTime) === false) {
-                        $datetime = new \DateTime(static::METADATA[$name]['default']);
-                        $timezone = static::METADATA[$name]['timezone'] ?? null;
-                        if ($timezone !== null) {
-                            $timezone = new \DateTimeZone($timezone);
-                            $datetime = new \DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
-                        }
-                        $value = $datetime;
-                    }
+                $value = $popo;
+            }
 
-                    $value = $value->format(static::METADATA[$name]['format']);
+            if ($meta['type'] === 'datetime') {
+                if (($value instanceof DateTime) === false) {
+                    $datetime = new DateTime($data[$name] ?? $meta['default']);
+                    $timezone = $meta['timezone'] ?? null;
+                    if ($timezone !== null) {
+                        $timezone = new DateTimeZone($timezone);
+                        $datetime = new DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
+                    }
+                    $value = $datetime;
                 }
             }
-        );
+
+            $this->$name = $value;
+            if (array_key_exists($mappedName, $data)) {
+                $this->updateMap[$name] = true;
+            }
+        }
+
+        return $this;
+    }
+
+    public function fromMappedArray(array $data, ...$mappings): self
+    {
+        $result = [];
+        foreach (static::METADATA as $name => $propertyMetadata) {
+            $mappingPolicyValue = $propertyMetadata['mappingPolicyValue'];
+            $inputKey = $this->mapKeyName($mappings, $mappingPolicyValue);
+            $value = $data[$inputKey] ?? null;
+
+            if (static::METADATA[$name]['type'] === 'popo') {
+                $popo = static::METADATA[$name]['default'];
+                $value = $this->$name !== null
+                    ? $this->$name->fromMappedArray($value ?? [], ...$mappings)
+                    : (new $popo)->fromMappedArray($value ?? [], ...$mappings);
+                $value = $value->toArray();
+            }
+
+            $result[$mappingPolicyValue] = $value;
+        }
+
+        $this->fromArray($result);
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        $metadata = [
+            'schemaPath' => 'schemaPath',
+            'namespace' => 'namespace',
+            'namespaceRoot' => 'namespaceRoot',
+            'outputPath' => 'outputPath',
+            'phpFilePluginCollection' => 'phpFilePluginCollection',
+            'namespacePluginCollection' => 'namespacePluginCollection',
+            'classPluginCollection' => 'classPluginCollection',
+            'propertyPluginCollection' => 'propertyPluginCollection',
+            'mappingPolicyPluginCollection' => 'mappingPolicyPluginCollection',
+            'schemaConfigFilename' => 'schemaConfigFilename',
+            'schemaPathFilter' => 'schemaPathFilter',
+            'schemaFilenameMask' => 'schemaFilenameMask',
+            'shouldIgnoreNonExistingSchemaFolder' => 'shouldIgnoreNonExistingSchemaFolder',
+        ];
+
+        $data = [];
+        foreach ($metadata as $name => $mappedName) {
+            $value = $this->$name;
+
+            if (static::METADATA[$name]['type'] === 'popo') {
+                $popo = static::METADATA[$name]['default'];
+                $value = $this->$name !== null ? $this->$name->toArray() : (new $popo)->toArray();
+            }
+
+            if (static::METADATA[$name]['type'] === 'datetime') {
+                if (($value instanceof DateTime) === false) {
+                    $datetime = new DateTime(static::METADATA[$name]['default']);
+                    $timezone = static::METADATA[$name]['timezone'] ?? null;
+                    if ($timezone !== null) {
+                        $timezone = new DateTimeZone($timezone);
+                        $datetime = new DateTime($this->$name ?? static::METADATA[$name]['default'], $timezone);
+                    }
+                    $value = $datetime;
+                }
+
+                $value = $value->format(static::METADATA[$name]['format']);
+            }
+
+            $data[$mappedName] = $value;
+        }
 
         return $data;
+    }
+
+    public function toMappedArray(...$mappings): array
+    {
+        return $this->map($this->toArray(), $mappings);
+    }
+
+    protected function map(array $data, array $mappings): array
+    {
+        $result = [];
+        foreach (static::METADATA as $name => $propertyMetadata) {
+            $value = $data[$propertyMetadata['mappingPolicyValue']];
+
+            if (static::METADATA[$name]['type'] === 'popo') {
+                $popo = static::METADATA[$name]['default'];
+                $value = $this->$name !== null ? $this->$name->toMappedArray(...$mappings) : (new $popo)->toMappedArray(...$mappings);
+            }
+
+            $key = $this->mapKeyName($mappings, $propertyMetadata['mappingPolicyValue']);
+            $result[$key] = $value;
+        }
+
+        return $result;
+    }
+
+    protected function mapKeyName(array $mappings, string $key): string
+    {
+        static $mappingPolicy = [];
+
+        if (empty($mappingPolicy)) {
+
+            $mappingPolicy['none'] =
+                static function (string $key): string {
+                    return $key;
+                };
+
+            $mappingPolicy['lower'] =
+                static function (string $key): string {
+                    return mb_strtolower($key);
+                };
+
+            $mappingPolicy['upper'] =
+                static function (string $key): string {
+                    return mb_strtoupper($key);
+                };
+
+            $mappingPolicy['snake-to-camel'] =
+                static function (string $key): string {
+                    $stringTokens = explode('_', mb_strtolower($key));
+                $camelizedString = array_shift($stringTokens);
+                foreach ($stringTokens as $token) {
+                    $camelizedString .= ucfirst($token);
+                }
+
+                return $camelizedString;
+                };
+
+            $mappingPolicy['camel-to-snake'] =
+                static function (string $key): string {
+                    $camelizedStringTokens = preg_split('/(?<=[^A-Z])(?=[A-Z])/', $key);
+                if ($camelizedStringTokens !== false && count($camelizedStringTokens) > 0) {
+                    $key = mb_strtolower(implode('_', $camelizedStringTokens));
+                }
+
+                return $key;
+                };
+
+        }
+
+        foreach ($mappings as $mappingIndex => $mappingType) {
+            if (!array_key_exists($mappingType, $mappingPolicy)) {
+                continue;
+            }
+
+            $key = $mappingPolicy[$mappingType]($key);
+        }
+
+        return $key;
+    }
+
+    public function toArrayLower(): array
+    {
+        return $this->toMappedArray('lower');
+    }
+
+    public function toArrayUpper(): array
+    {
+        return $this->toMappedArray('upper');
+    }
+
+    public function toArraySnakeToCamel(): array
+    {
+        return $this->toMappedArray('snake-to-camel');
+    }
+
+    public function toArrayCamelToSnake(): array
+    {
+        return $this->toMappedArray('camel-to-snake');
     }
 
     public function getSchemaPath(): ?string
@@ -570,6 +810,44 @@ class PopoConfigurator
     public function setPropertyPluginCollection(array $propertyPluginCollection): self
     {
         $this->propertyPluginCollection = $propertyPluginCollection; $this->updateMap['propertyPluginCollection'] = true; return $this;
+    }
+
+    public function addMappingPolicyPluginClass(string $item): self
+    {
+        $this->mappingPolicyPluginCollection[] = $item;
+
+        $this->updateMap['mappingPolicyPluginCollection'] = true;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMappingPolicyPluginCollection(): array
+    {
+        return $this->mappingPolicyPluginCollection;
+    }
+
+    public function hasMappingPolicyPluginClassCollection(): bool
+    {
+        return !empty($this->mappingPolicyPluginClassCollection);
+    }
+
+    public function requireMappingPolicyPluginCollection(): array
+    {
+        $this->setupPopoProperty('mappingPolicyPluginCollection');
+        $this->setupDateTimeProperty('mappingPolicyPluginCollection');
+
+        if (empty($this->mappingPolicyPluginCollection)) {
+            throw new UnexpectedValueException('Required value of "mappingPolicyPluginCollection" has not been set');
+        }
+        return $this->mappingPolicyPluginCollection;
+    }
+
+    public function setMappingPolicyPluginCollection(array $mappingPolicyPluginCollection): self
+    {
+        $this->mappingPolicyPluginCollection = $mappingPolicyPluginCollection; $this->updateMap['mappingPolicyPluginCollection'] = true; return $this;
     }
 
     public function getSchemaConfigFilename(): ?string

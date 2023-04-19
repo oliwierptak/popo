@@ -11,7 +11,7 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php": "^7.4|^8",
+    "php": "^8",
     "ext-ctype": "*",
     "symfony/finder": "^5|^6",
     "symfony/console": "^5|^6",
@@ -22,7 +22,10 @@
     "phpunit/phpunit": "^9",
     "symfony/var-dumper": "^5|^6",
     "phpstan/phpstan": "^1.4",
-    "phpmd/phpmd": "^2.11"
+    "phpmd/phpmd": "^2.13",
+    "bvanhoekelen/performance": "^2.5",
+    "squizlabs/php_codesniffer": "^3.7",
+    "everon/coding-standard": "^3.0"
   },
   "autoload": {
     "psr-4": {
@@ -32,6 +35,8 @@
   "autoload-dev": {
     "psr-4": {
       "AppTestSuite\\": "tests/suite/App",
+      "PopoTestArrayable\\": "tests/suite/Arrayable",
+      "PopoTestPerformance\\": "tests/suite/Performance",
       "PopoTestSuite\\": "tests/suite/Popo",
       "PopoTestSuiteHelper\\": "tests/suite-helper",
       "App\\": "tests/App",
@@ -45,7 +50,7 @@
       "chmod +x bin/docker-popo"
     ],
     "test": [
-      "vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
+      "XDEBUG_MODE=off vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
     ],
     "test-c": [
       "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox --group unit,functional"
@@ -60,12 +65,14 @@
     "popo": [
       "bin/popo generate -s popo.yml",
       "bin/popo generate -s tests/fixtures/popo.yml",
-      "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
-      "bin/popo generate -s tests/fixtures/popo-readme.yml",
       "bin/popo generate -s tests/fixtures/popo-datetime.yml",
       "bin/popo generate -s tests/fixtures/popo-extend-1.yml",
       "bin/popo generate -s tests/fixtures/popo-extend-2.yml",
       "bin/popo generate -s tests/fixtures/popo-extend-3.yml",
+      "bin/popo generate -s tests/fixtures/popo-inheritance.yml",
+      "bin/popo generate -s tests/fixtures/popo-mapping-policy.yml",
+      "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
+      "bin/popo generate -s tests/fixtures/popo-readme.yml",
       "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
     ],
     "phpstan": [

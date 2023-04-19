@@ -5,21 +5,23 @@ declare(strict_types = 1);
 namespace AppTestSuite;
 
 use App\Example\Shared\AnotherFoo;
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractPopoTest;
+use PopoTestSuiteHelper\RemoveGeneratedClassesTrait;
 use UnexpectedValueException;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit
  */
-class BundleAnotherPopoTest extends AbstractPopoTest
+class BundleAnotherPopoTest extends TestCase
 {
+    use RemoveGeneratedClassesTrait;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        self::removeGeneratedFiles();
 
         $facade = new PopoFacade();
 

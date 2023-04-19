@@ -4,13 +4,11 @@ declare(strict_types = 1);
 
 namespace PopoTestSuiteHelper;
 
-use PHPUnit\Framework\TestCase;
+use const Popo\POPO_TESTS_DIR;
 
-use const \Popo\POPO_TESTS_DIR;
-
-abstract class AbstractGenerateTest extends TestCase
+trait RemoveGeneratedClassesTrait
 {
-    protected function setup(): void
+    private static function removeGeneratedFiles(): void
     {
         echo shell_exec(sprintf(
             'rm -rf %s',
@@ -27,4 +25,5 @@ abstract class AbstractGenerateTest extends TestCase
             POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/',
         ));
     }
+
 }

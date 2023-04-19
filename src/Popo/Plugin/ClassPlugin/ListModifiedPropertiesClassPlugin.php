@@ -12,8 +12,8 @@ class ListModifiedPropertiesClassPlugin implements ClassPluginInterface
     public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
-\$sorted = \array_keys(\$this->updateMap);
-sort(\$sorted, \SORT_STRING);
+\$sorted = array_keys(\$this->updateMap);
+sort(\$sorted, SORT_STRING);
 return \$sorted;
 EOF;
 

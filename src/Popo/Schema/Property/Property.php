@@ -8,17 +8,6 @@ use Popo\PopoDefinesInterface;
 
 class Property
 {
-    protected const EXPECTED_TYPE_VALUES = [
-        'array',
-        'bool',
-        'float',
-        'int',
-        'string',
-        '',
-        'const',
-        'popo',
-    ];
-
     protected string $name;
     protected string $type = PopoDefinesInterface::PROPERTY_TYPE_STRING;
     protected ?string $comment = null;
@@ -28,9 +17,14 @@ class Property
     protected $default = null;
     /** @var mixed|string|null */
     protected $extra = null;
+    /**
+     * @var array<string>
+     */
+    protected array $mappingPolicy = ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'];
+    protected ?string $mappingPolicyValue = null;
 
     /**
-     * @return array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null}
+     * @return array<string, mixed> [name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array, mappingPolicyValue: string]
      */
     public function toArray(): array
     {
@@ -42,11 +36,13 @@ class Property
             'itemName' => $this->itemName,
             'default' => $this->default,
             'extra' => $this->extra,
+            'mappingPolicy' => $this->mappingPolicy,
+            'mappingPolicyValue' => $this->mappingPolicyValue,
         ];
     }
 
     /**
-     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null} $data
+     * @param array<string, mixed> $data [name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array, mappingPolicyValue: string]
      *
      * @return $this
      */
@@ -64,6 +60,8 @@ class Property
         $this->itemName = $data['itemName'];
         $this->default = $data['default'];
         $this->extra = $data['extra'];
+        $this->mappingPolicy = $data['mappingPolicy'];
+        $this->mappingPolicyValue = $data['mappingPolicyValue'];
 
         return $this;
     }
@@ -164,6 +162,36 @@ class Property
     public function setExtra($extra): self
     {
         $this->extra = $extra;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMappingPolicy(): array
+    {
+        return $this->mappingPolicy;
+    }
+
+    /**
+     * @param string[] $mappingPolicy
+     */
+    public function setMappingPolicy(array $mappingPolicy): self
+    {
+        $this->mappingPolicy = $mappingPolicy;
+
+        return $this;
+    }
+
+    public function getMappingPolicyValue(): ?string
+    {
+        return $this->mappingPolicyValue;
+    }
+
+    public function setMappingPolicyValue(?string $mappingPolicyValue): self
+    {
+        $this->mappingPolicyValue = $mappingPolicyValue;
 
         return $this;
     }

@@ -47,6 +47,8 @@ class PropertyTest extends TestCase
                 'itemName' => null,
                 'default' => null,
                 'extra' => null,
+                'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
+                'mappingPolicyValue' => null,
 
             ],
             $property->toArray()
@@ -66,6 +68,8 @@ class PropertyTest extends TestCase
                 'itemName' => 'record',
                 'default' => [],
                 'extra' => null,
+                'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
+                'mappingPolicyValue' => null,
             ]
         );
 
@@ -78,6 +82,8 @@ class PropertyTest extends TestCase
                 'itemName' => 'record',
                 'default' => [],
                 'extra' => null,
+                'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
+                'mappingPolicyValue' => null,
 
             ],
             $property->toArray()

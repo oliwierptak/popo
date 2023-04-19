@@ -13,11 +13,10 @@ Popo:
         - \Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin::class
         - \Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin::class
       namespacePluginCollection:
-        - \Popo\Plugin\NamespacePlugin\UseUnexpectedValueExceptionPlugin::class
+        - \Popo\Plugin\NamespacePlugin\UseStatementPlugin::class
       classPluginCollection:
         - \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class
-        - \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class
         - \Popo\Plugin\ClassPlugin\IsNewClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin::class
@@ -25,8 +24,15 @@ Popo:
         - \Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin::class
         - \Popo\Plugin\ClassPlugin\PopoMethodClassPlugin::class
         - \Popo\Plugin\ClassPlugin\RequireAllClassPlugin::class
-        - \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class
         - \Popo\Plugin\ClassPlugin\UpdateMapClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\FromMappedArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ToMappedArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayLowercasePlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class
       propertyPluginCollection:
         - \Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin::class
         - \Popo\Plugin\PropertyPlugin\DefinePropertyPlugin::class
@@ -34,6 +40,12 @@ Popo:
         - \Popo\Plugin\PropertyPlugin\HasPropertyMethodPlugin::class
         - \Popo\Plugin\PropertyPlugin\RequirePropertyMethodPlugin::class
         - \Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin::class
+      mappingPolicyPluginCollection:
+        none: \Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::class
+        lower: \Popo\Plugin\MappingPolicy\LowerMappingPolicyPlugin::class
+        upper: \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::class
+        snake-to-camel: \Popo\Plugin\MappingPolicy\SnakeToCamelMappingPolicyPlugin::class
+        camel-to-snake: \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::class
     property: [
       {name: schemaPath}
       {name: namespace}
@@ -43,6 +55,7 @@ Popo:
       {name: namespacePluginCollection, type: array, itemType: string, itemName: namespacePluginClass}
       {name: classPluginCollection, type: array, itemType: string, itemName: classPluginClass}
       {name: propertyPluginCollection, type: array, itemType: string, itemName: propertyPluginClass}
+      {name: mappingPolicyPluginCollection, type: array, itemType: string, itemName: mappingPolicyPluginClass}
       {name: schemaConfigFilename}
       {name: schemaPathFilter}
       {name: schemaFilenameMask, default: '*.popo.yml'}

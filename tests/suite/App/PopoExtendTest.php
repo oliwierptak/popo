@@ -7,21 +7,26 @@ namespace AppTestSuite;
 use App\Example\Extend\FooBarFirst;
 use App\Example\Extend\FooBarSecond;
 use App\Example\Extend\FooBarThird;
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractPopoTest;
+use PopoTestSuiteHelper\RemoveGeneratedClassesTrait;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit
  */
-class PopoExtendTest extends AbstractPopoTest
+class PopoExtendTest extends TestCase
 {
+    use RemoveGeneratedClassesTrait;
+
     protected PopoFacade $facade;
 
     public function setUp(): void
     {
         parent::setUp();
+
+        self::removeGeneratedFiles();
 
         $this->facade = new PopoFacade();
     }

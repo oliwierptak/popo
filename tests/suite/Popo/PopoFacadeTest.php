@@ -4,16 +4,21 @@ declare(strict_types = 1);
 
 namespace PopoTestSuite;
 
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractGenerateTest;
+use Popo\PopoFactory;
+use PopoTestSuiteHelper\SetupTrait;
+use ReflectionClass;
+use ReflectionProperty;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group functional
  */
-class FacadeTest extends AbstractGenerateTest
+class PopoFacadeTest extends TestCase
 {
+    use SetupTrait;
 
     public function test_generate_bundles(): void
     {
@@ -121,5 +126,24 @@ class FacadeTest extends AbstractGenerateTest
         $facade->generate($configurator);
 
         $this->assertFileExists(POPO_TESTS_DIR . 'App/Example/Inheritance/FooBar.php');
+    }
+
+    public function test_set_factory(): void
+    {
+        $facade = new PopoFacade();
+        $facade->setFactory(new PopoFactory());
+
+        $property = $this->getProtectedProperty(PopoFacade::class, 'factory');
+
+        $this->assertInstanceOf(PopoFactory::class, $property->getValue($facade));
+    }
+
+    private function getProtectedProperty($class, $name): ReflectionProperty
+    {
+        $Reflection = new ReflectionClass($class);
+        $property = $Reflection->getProperty($name);
+        $property->setAccessible(true);
+
+        return $property;
     }
 }

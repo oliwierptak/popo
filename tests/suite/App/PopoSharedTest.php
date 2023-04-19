@@ -8,20 +8,23 @@ use App\Example\Shared\Bar;
 use App\Example\Shared\Buzz\Buzz;
 use App\Example\Shared\Foo;
 use App\ExampleInterface;
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractPopoTest;
+use PopoTestSuiteHelper\RemoveGeneratedClassesTrait;
 use UnexpectedValueException;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit
  */
-class PopoSharedTest extends AbstractPopoTest
+class PopoSharedTest extends TestCase
 {
-    protected function setUp(): void
+    use RemoveGeneratedClassesTrait;
+
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        self::removeGeneratedFiles();
 
         $facade = new PopoFacade();
 

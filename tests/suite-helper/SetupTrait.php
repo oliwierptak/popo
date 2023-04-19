@@ -4,13 +4,11 @@ declare(strict_types = 1);
 
 namespace PopoTestSuiteHelper;
 
-use const \Popo\POPO_TESTS_DIR;
+use const Popo\POPO_TESTS_DIR;
 
-use PHPUnit\Framework\TestCase;
-
-abstract class AbstractPopoTest extends TestCase
+trait SetupTrait
 {
-    public static function setUpBeforeClass(): void
+    protected function setup(): void
     {
         echo shell_exec(sprintf(
             'rm -rf %s',
@@ -27,5 +25,4 @@ abstract class AbstractPopoTest extends TestCase
             POPO_TESTS_DIR . 'AppWithNamespaceRoot/Example/',
         ));
     }
-
 }

@@ -61,4 +61,18 @@ interface PluginContainerInterface
      * @throws \LogicException In case plugin class could not be found
      */
     public function createPropertyPlugins(): array;
+
+    /**
+     * Plugins responsible for transforming schema key names
+     *
+     * Specification:
+     * - Iterate over mapping policy plugin collection
+     * - Create specified plugin classes
+     * - Throw exception in case plugin class could not be found
+     * - Return collection of classes implementing \Popo\Plugin\MappingPolicyPluginInterface
+     *
+     * @return array<\Popo\Plugin\MappingPolicyPluginInterface>
+     * @throws \LogicException In case plugin class could not be found
+     */
+    public function createMappingPolicyPlugins(): array;
 }

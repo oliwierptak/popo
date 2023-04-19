@@ -9,6 +9,7 @@ use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Popo\Schema\Generator\SchemaGeneratorInterface;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
+use Popo\Schema\Mapper\SchemaMapperInterface;
 use Popo\Schema\Schema;
 
 interface BuilderPluginInterface
@@ -24,4 +25,6 @@ interface BuilderPluginInterface
     public function getSchemaInspector(): SchemaInspectorInterface;
 
     public function getSchemaGenerator(): SchemaGeneratorInterface;
+
+    public function getSchemaMapper(): SchemaMapperInterface;
 }

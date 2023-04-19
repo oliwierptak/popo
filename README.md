@@ -5,13 +5,13 @@ POPO - "Plain Old Php Object" was inspired by "Plain Old Java Object" (POJO) con
 POPO generator can also locate, load, validate, and combine POPO schemas to create PHP source code files, representing
 Data Structures / Data Transfer Objects.
 
-The schema supports inheritance, collections and encapsulation of other POPO objects.
+The schema supports key mapping, inheritance, collections and encapsulation of other POPO objects.
 
 ### Example
 
 Simple schema in YAML format, describing properties and relations of POPO objects.
 
-In this case, `Foo` defines `Bar` as its property, and they are both defined under `Example` schema name.
+In this case, `Foo` uses `Bar` as its dependency, and they are both defined under `Example` schema name.
 
 ```yaml
 $:
@@ -32,7 +32,7 @@ Example:
     ]
 ```
 
-#### Instantiate hierarchy of objects from an array.
+#### Instantiate data structure from an array.
 
 ```php
 use App\Example\Readme\Foo;
@@ -235,7 +235,7 @@ _Run `bin/popo report -s tests/fixtures/popo-readme.yml` or `docker-popo report 
 ## POPO Schema
 
 ```yaml
-$: # file-config, shared configuration for all POPO objects in current schema file
+$: # schema-file-config, shared configuration for all POPO objects in current schema file
   config:
     namespace: string
     outputPath: string
@@ -266,7 +266,8 @@ SchemaName: # schema-config
       default: mixed, # default value
       itemType: string|null, # collection item type
       itemName: string|null, # collection item singular name
-      extra: {timezone: ..., format: ...} #for datetime property
+      extra: {timezone: ..., format: ...}, #for datetime property
+      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
     }]
 
   PopoName: # popo-config
@@ -288,34 +289,35 @@ SchemaName: # schema-config
       default: mixed,
       itemType: string|null,
       itemName: string|null,
-      extra: {timezone: ..., format: ...} #for datetime property
+      extra: {timezone: ..., format: ...}, #for datetime property
+      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
     }]
 ```
 
 POPO Schema can be defined and extended on few levels, and it can be defined in multiple files.
 
-The `popo-config` values override `schema-config` values, and `schema-config` values overwrite `file-config` values.
+The `popo-config` values override `schema-file-config` values, and `schema-file-config` values overwrite `schema-config` values.
 
 On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
 
-<img src="doc/popo_schema.png" width="400" />
-
-#### `file-config` 
-
-The configuration was defined as a `SchemaFile` property.
-It will be used by all POPO objects in _current_ file.
-
+<img src="doc/popo_schema.png" width="400" alt="POPO Schema" />
 
 #### `schema-config`
 
 The configuration was defined as a `Schema` property.
-It will be used by all POPO objects in _all_ files, under given schema.
+It will be used by **_all_** POPO objects in **_all_** files, under given schema.
+
+
+#### `schema-file-config` 
+
+The configuration was defined as a `SchemaFile` property.
+It will be used by **_all_** POPO objects in **_current_** file.
 
 
 #### `popo-config`
 
-The configuration was defined as a POPO property.
-It will be used by one specific POPO objects in _current_ file, under given schema.
+The configuration was defined as a `POPO` property.
+It will be used by one **_specific_** POPO objects in **_current_** file.
 
 
 See [tests/fixtures](tests/fixtures/) for schema examples.
@@ -337,28 +339,201 @@ See [tests/fixtures](tests/fixtures/) for schema examples.
 Use property's `itemType` and `itemName` to create properties with collection item type support. For example
 using `Buzz::class` as itemType and `buzz` for the itemName, would generate: `addBuzz(Buzz $item)`.
 
+## Data Mapping
+
+`mappingPolicy` and `mappingPolicyValue` options can be used in case where schema keys have to be remapped. 
+
+For example, consider the following schema, where each of the properties have specific mapping policy types:
+
+- `BLOG_TITLE`: snake case + upper case
+- `blog_data`: snake case
+- `commentThread`: no mapping
+
+```yaml
+$:
+  config:
+    namespace: App\Example\MappingPolicy
+    outputPath: tests/
+
+MappingPolicy:
+  Blog:
+    property:
+      -
+        name: blogTitle
+        mappingPolicy:
+          - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
+          - \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::MAPPING_POLICY_NAME
+
+      -
+        name: blogData
+        type: popo
+        default: BlogData::class
+        mappingPolicy:
+          - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
+
+      -
+        name: commentThread
+        default: ['one','two','three']
+        type: array
+
+  BlogData:
+    property:
+      -
+        name: someValue
+
+  DocumentData:
+    property:
+      -
+        name: someTitle
+        default: Lorem Ipsum
+        mappingPolicyValue: some_title
+
+      -
+        name: someValue
+        default: 123
+        type: int
+        mappingPolicyValue: SOME_VALUE
+```
+
+#### Static mapping
+
+The `mappingPolicyValue` can be used to map specific schema key to different value.
+See `DocumentData` above in schema example.
+
+#### Dynamic mapping
+
+Dynamic mapping might be useful, for example, in cases where schema files are generated automatically,
+and the schema keys have to be remapped.
+See `Blog` above in schema example.
+
+_Note:_ Regardless of mapping type, there is no runtime performance difference when using generated POPO classes.
+
+```php
+print_r((new Blog())->toArray());
+```
+
+```
+[
+  'BLOG_TITLE' => null,
+  'blog_data' => [
+      'someValue' => null,
+  ],
+  'commentThread' => ['one','two','three'],
+]
+```
+
+
+### Extra mapping methods
+
+There are various methods to help execute runtime mapping by POPO classes.
+
+_Note:_ New mapping policies can be provided by additional plugins.
+
+Default array mapping methods:
+
+- `fromMappedArray`
+- `toMappedArray`
+- `toArrayCamelToSnake`
+- `toArrayLower`
+- `toArraySnakeToCamel`
+- `toArrayUpper`
+
+
+For example:
+
+```php
+$documentData = (new DocumentData())
+    ->setSomeTitle('a title')
+    ->setSomeValue(111);
+```    
+
+```php
+print_r($documentData->toArray());
+```
+```
+[
+  'some_title' => 'a title',
+  'SOME_VALUE' => 111,
+]
+```
+
+```php
+print_r($documentData->toArraySnakeToCamel());
+```
+
+```
+[
+    'someTitle' => 'a title',
+    'someValue' => 111,
+]
+```
+
+### toMappedArray(...) / fromMappedArray(...)
+
+_Note:_ You can skip this step, if you install POPO library as part of production code dependencies.
+
+When using `fromMappedArray(...)`and `toMappedArray(...)` , it's recommended,
+to redefine the constant values used for mapping types on the project level and use these values.
+
+For example:
+
+```php
+namespace MyProject
+
+class MyConfig
+{
+  public const POPO_MAPPING_POLICY_CAMEL_TO_SNAKE = 'camel-to-snake';
+  public const POPO_MAPPING_POLICY_LOWER = 'lower';
+  public const POPO_MAPPING_POLICY_NONE = 'none';
+  public const POPO_MAPPING_POLICY_SNAKE_TO_CAMEL = 'snake-to-camel';
+  public const POPO_MAPPING_POLICY_UPPER = 'upper';
+}
+```
+
+```php
+$documentData = (new DocumentData())
+    ->setSomeTitle('a title')
+    ->setSomeValue(111);
+    
+print_r($documentData->toMappedArray(MyConfig::POPO_MAPPING_POLICY_UPPER));
+```
+
+```
+[
+  'SOME_TITLE' => 'a title'
+  'SOME_VALUE' => 111
+]
+```
+
+For more info, see plugins implementing `Popo\Plugin\MappingPolicy\MappingPolicyPluginInterface`.
 
 ## Additional functionality with plugins
 
 Apart from the typical setters and getters POPO objects have additional helper methods which ease access to, and offer
 more insight about the data that they represent.
 
-The following methods are supported by `class` plugins:
+Some of the methods supported by `class` plugins:
 
 - `isNew`
 - `fromArray`
+- `fromMappedArray`
 - `toArray`
+- `toMappedArray`
+- `toArrayCamelToSnake`
+- `toArraySnakeToCamel`
 - `modifiedToArray`
 - `requireAll`
 - `listModifiedProperties`
+- ...
 
-The following methods are supported by `property` plugins:
+Some of the methods supported by `property` plugins:
 
 - `set`
 - `get`
 - `require`
 - `has`
 - `addCollectionItem`
+- ...
 
 _Note:_ Plugins can be disabled wth:
 
@@ -370,7 +545,7 @@ $configurator = (new \Popo\PopoConfigurator)
 
 ## Generating Code with Plugins
 
-POPO generation process is split into four parts:
+POPO generation process is split into few parts:
 
 - PHP file header code generation
 - Namespace code generation
@@ -417,6 +592,17 @@ Each part has corresponding set of plugins.
         public function run(BuilderPluginInterface $builder, Property $property): void;
     }
     ```
+  
+### Mapping policy plugins
+
+The plugins responsible for code related to schema key mapping, e.g. transforming `foo_id` to `fooId`.
+
+```php
+interface Popo\Plugin\MappingPolicyPluginInterface
+{
+    public function run(string $key): string;
+}
+```
 
 #### Example of plugin setup:
 
@@ -445,6 +631,7 @@ See [fixtures](tests/fixtures/popo.yml) and [tests](tests/suite/App/PopoTest.php
 - POPO `v3.x` - PHP 7.4+
 - POPO `v4.x` - PHP 7.4+
 - POPO `v5.x` - PHP 7.4+, PHP 8
+- POPO `v6.x` - PHP 8
 
 ## Composer script
 
@@ -483,3 +670,9 @@ docker-popo report -s tests/fixtures/popo.yml
 ``` 
 
 See also: [bin/docker-popo](bin/docker-popo).
+
+## Fun fact!
+
+[PopoConfigurator](src/Popo/PopoConfigurator.php) class which is required by POPO library to run,
+was generated by POPO library, and it even has its own [popo schema](popo.yml).
+

@@ -19,7 +19,6 @@ class DefinePropertyPlugin implements PropertyPluginInterface
 
         $builder->getClass()
             ->addProperty($property->getName(), $value)
-            ->setComment($property->getComment())
             ->setProtected()
             ->setNullable($isNullable)
             ->setType($type)

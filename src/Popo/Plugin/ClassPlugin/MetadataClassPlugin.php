@@ -32,22 +32,28 @@ class MetadataClassPlugin implements ClassPluginInterface
         $metadata = [];
 
         foreach ($builder->getSchema()->getPropertyCollection() as $property) {
-            $metadata[$property->getName()] = [
+            $propertyName = $property->getName();
+
+            $metadata[$propertyName] = [
                 PopoDefinesInterface::SCHEMA_PROPERTY_TYPE => $property->getType(),
                 PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT => $property->getDefault(),
+                PopoDefinesInterface::SCHEMA_PROPERTY_MAPPING_POLICY => $property->getMappingPolicy(),
+                PopoDefinesInterface::SCHEMA_PROPERTY_MAPPING_POLICY_VALUE =>
+                    $property->getMappingPolicyValue() ?? $builder->getSchemaMapper()
+                        ->mapKeyName($property->getMappingPolicy(), $propertyName),
             ];
 
             if ($builder->getSchemaInspector()->hasExtra($property)) {
                 if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
                     $extra = new PropertyExtraTimezone((array)$property->getExtra());
-                    $metadata[$property->getName()][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
+                    $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
 
                     if ($extra->hasTimezone()) {
-                        $metadata[$property->getName()][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
+                        $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
                     }
                 }
                 else {
-                    $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_EXTRA] = $property->getExtra();
+                    $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_EXTRA] = $property->getExtra();
                 }
             }
 
@@ -60,7 +66,7 @@ class MetadataClassPlugin implements ClassPluginInterface
                     )
                 );
 
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
                 continue;
             }
 
@@ -75,24 +81,24 @@ class MetadataClassPlugin implements ClassPluginInterface
                     $values[$key] = $defaultValue;
                 }
 
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $values;
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $values;
                 continue;
             }
 
             if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault();
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $property->getDefault();
                 continue;
             }
 
             if ($builder->getSchemaInspector()->isBool($property->getType())) {
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = (bool) $property->getDefault();
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = (bool) $property->getDefault();
                 continue;
             }
 
             if ($builder->getSchemaInspector()->isLiteral($property->getDefault())) {
                 $literalValue = new Literal($property->getDefault());
 
-                $metadata[$property->getName()][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $literalValue;
             }
         }
 

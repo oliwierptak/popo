@@ -20,7 +20,7 @@ EOF;
 
         if ($builder->getSchemaInspector()->isArray($property->getType())) {
             $name = $property->getItemName() ?? $property->getName();
-            $name = $name . 'Collection';
+            $name .= 'Collection';
 
             $body = <<<EOF
 return !empty(\$this->${name});

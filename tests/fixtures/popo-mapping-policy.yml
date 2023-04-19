@@ -1,0 +1,43 @@
+$:
+  config:
+    namespace: App\Example\MappingPolicy
+    outputPath: tests/
+
+MappingPolicy:
+  Blog:
+    property:
+      -
+        name: blogTitle
+        mappingPolicy:
+          - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
+          - \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::MAPPING_POLICY_NAME
+
+      -
+        name: blogData
+        type: popo
+        default: BlogData::class
+        mappingPolicy:
+          - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
+
+      -
+        name: commentThread
+        default: ['one','two','three']
+        type: array
+
+  BlogData:
+    property:
+      -
+        name: someValue
+
+  DocumentData:
+    property:
+      -
+        name: someTitle
+        default: Lorem Ipsum
+        mappingPolicyValue: some_title
+
+      -
+        name: someValue
+        default: 123
+        type: int
+        mappingPolicyValue: SOME_VALUE

@@ -18,10 +18,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
         $this->schemaInspector = $schemaInspector;
     }
 
-    /**
-     * @return mixed
-     */
-    public function generateDefaultTypeValue(Property $property)
+    public function generateDefaultTypeValue(Property $property): mixed
     {
         $value = $property->getDefault();
         if ($this->schemaInspector->isPopoProperty($property->getType()) ||

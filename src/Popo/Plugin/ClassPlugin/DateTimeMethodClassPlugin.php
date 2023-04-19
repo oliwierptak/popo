@@ -14,11 +14,11 @@ class DateTimeMethodClassPlugin implements ClassPluginInterface
         $body = <<<EOF
 if (static::METADATA[\$propertyName]['type'] === 'datetime' && \$this->\$propertyName === null) {
     \$value = static::METADATA[\$propertyName]['default'];
-    \$datetime = new \DateTime(\$value);
+    \$datetime = new DateTime(\$value);
     \$timezone = static::METADATA[\$propertyName]['timezone'] ?? null;
     if (\$timezone !== null) {
-        \$timezone = new \DateTimeZone(\$timezone);
-        \$datetime = new \DateTime(\$value, \$timezone);
+        \$timezone = new DateTimeZone(\$timezone);
+        \$datetime = new DateTime(\$value, \$timezone);
     }    
     \$this->\$propertyName = \$datetime;
 }

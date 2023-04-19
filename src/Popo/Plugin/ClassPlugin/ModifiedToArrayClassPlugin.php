@@ -15,9 +15,9 @@ class ModifiedToArrayClassPlugin implements ClassPluginInterface
 \$data = \$this->toArray();
 \$modifiedProperties = \$this->listModifiedProperties();
 
-return \array_filter(\$data, function (\$key) use (\$modifiedProperties) {
-    return \in_array(\$key, \$modifiedProperties);
-}, \ARRAY_FILTER_USE_KEY);
+return array_filter(\$data, function (\$key) use (\$modifiedProperties) {
+    return in_array(\$key, \$modifiedProperties);
+}, ARRAY_FILTER_USE_KEY);
 EOF;
 
         $builder->getClass()

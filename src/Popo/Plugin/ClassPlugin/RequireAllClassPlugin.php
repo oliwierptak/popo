@@ -29,7 +29,7 @@ EOF;
 try {
     \$this->require%s();
 }
-catch (\Throwable \$throwable) {
+catch (Throwable \$throwable) {
     \$errors['%s'] = \$throwable->getMessage();
 }
 

@@ -5,19 +5,22 @@ declare(strict_types = 1);
 namespace AppTestSuite;
 
 use App\Example\Readme\Foo;
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractPopoTest;
+use PopoTestSuiteHelper\RemoveGeneratedClassesTrait;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit
  */
-class PopoReadmeTest extends AbstractPopoTest
+class PopoReadmeTest extends TestCase
 {
-    protected function setUp(): void
+    use RemoveGeneratedClassesTrait;
+
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        self::removeGeneratedFiles();
 
         $facade = new PopoFacade();
 

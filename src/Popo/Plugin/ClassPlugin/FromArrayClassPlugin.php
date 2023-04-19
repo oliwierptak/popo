@@ -11,9 +11,21 @@ class FromArrayClassPlugin implements ClassPluginInterface
 {
     public function run(BuilderPluginInterface $builder): void
     {
-        $body = <<<EOF
-foreach (static::METADATA as \$name => \$meta) {
-    \$value = \$data[\$name] ?? \$this->\$name ?? null;
+        $body = "\$metadata = [\n";
+        foreach ($builder->getSchema()->getPropertyCollection() as $property) {
+            $body .= sprintf(
+                "\t'%s' => '%s',\n",
+                $property->getName(),
+                $builder->getSchemaMapper()->mapKeyName($property->getMappingPolicy(), $property->getName()),
+            );
+        }
+
+        $body .= <<<EOF
+];
+
+foreach (\$metadata as \$name => \$mappedName) {
+    \$meta = static::METADATA[\$name];
+    \$value = \$data[\$mappedName] ?? \$this->\$name ?? null;
     \$popoValue = \$meta['default'];
 
     if (\$popoValue !== null && \$meta['type'] === 'popo') {
@@ -22,24 +34,24 @@ foreach (static::METADATA as \$name => \$meta) {
         if (is_array(\$value)) {
             \$popo->fromArray(\$value);
         }
-        
+
         \$value = \$popo;
     }
-    
+
     if (\$meta['type'] === 'datetime') {
-        if ((\$value instanceof \DateTime) === false) {
-            \$datetime = new \DateTime(\$data[\$name] ?? \$meta['default']);
+        if ((\$value instanceof DateTime) === false) {
+            \$datetime = new DateTime(\$data[\$name] ?? \$meta['default']);
             \$timezone = \$meta['timezone'] ?? null;
             if (\$timezone !== null) {
-                \$timezone = new \DateTimeZone(\$timezone);
-                \$datetime = new \DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'], \$timezone);
+                \$timezone = new DateTimeZone(\$timezone);
+                \$datetime = new DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'], \$timezone);
             }
             \$value = \$datetime;
         }
     }
 
     \$this->\$name = \$value;
-    if (\array_key_exists(\$name, \$data)) {
+    if (array_key_exists(\$mappedName, \$data)) {
         \$this->updateMap[\$name] = true;
     }
 }

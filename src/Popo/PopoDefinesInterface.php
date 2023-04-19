@@ -30,7 +30,10 @@ class PopoDefinesInterface
 
     public const SCHEMA_PROPERTY_EXTRA = 'extra';
 
-    //property types
+    public const SCHEMA_PROPERTY_MAPPING_POLICY = 'mappingPolicy';
+
+    public const SCHEMA_PROPERTY_MAPPING_POLICY_VALUE = 'mappingPolicyValue';
+
     public const PROPERTY_TYPE_ARRAY = 'array';
 
     public const PROPERTY_TYPE_BOOL = 'bool';
@@ -53,6 +56,8 @@ class PopoDefinesInterface
 
     public const PROPERTY_TYPE_EXTRA_FORMAT = 'format';
 
+
+
     public const SCHEMA_KEYS = [
         PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG,
         PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT,
@@ -72,6 +77,8 @@ class PopoDefinesInterface
         'extend' => null,
         'implement' => null,
         'comment' => null,
+        'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
+        'mappingPolicyValue' => null,
     ];
 
     /**
@@ -85,5 +92,7 @@ class PopoDefinesInterface
         'itemName' => null,
         'default' => null,
         'extra' => null,
+        'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
+        'mappingPolicyValue' => null,
     ];
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
+use Nette\PhpGenerator\Literal;
 use Popo\Loader\SchemaLoader;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
@@ -112,7 +113,7 @@ class SchemaBuilder
 
     /**
      * @param \Popo\Schema\Schema $schema
-     * @param array<array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null}> $propertyCollection
+     * @param array<array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array<string>, mappingPolicyValue: string}> $propertyCollection
      *
      * @return \Popo\Schema\Schema
      */
@@ -130,7 +131,7 @@ class SchemaBuilder
 
     /**
      * @param \Popo\Schema\Schema $schema
-     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null} $propertyData
+     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array<string>, mappingPolicyValue: string} $propertyData
      *
      * @return \Popo\Schema\Property\Property
      */
@@ -144,6 +145,13 @@ class SchemaBuilder
             null;
 
         $property->setDefault($default);
+
+        $mappingPolicyValues = [];
+        foreach ($property->getMappingPolicy() as $mappingPolicyName) {
+            $mappingPolicyValues[] = constant((string)new Literal($mappingPolicyName));
+        }
+
+        $property->setMappingPolicy($mappingPolicyValues);
 
         return $property;
     }

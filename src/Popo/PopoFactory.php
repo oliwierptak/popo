@@ -20,6 +20,7 @@ use Popo\Schema\Generator\SchemaGenerator;
 use Popo\Schema\Generator\SchemaGeneratorInterface;
 use Popo\Schema\Inspector\SchemaInspector;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
+use Popo\Schema\Mapper\SchemaMapper;
 use Symfony\Component\Finder\Finder;
 
 class PopoFactory
@@ -55,6 +56,13 @@ class PopoFactory
         );
     }
 
+    protected function createSchemaMapper(PopoConfigurator $configurator): SchemaMapper
+    {
+        return new SchemaMapper(
+            $this->createPluginContainer($configurator)->createMappingPolicyPlugins()
+        );
+    }
+
     protected function createPopoGenerator(PopoConfigurator $configurator): PopoGenerator
     {
         return new PopoGenerator(
@@ -68,6 +76,7 @@ class PopoFactory
         return new PopoBuilder(
             $this->createSchemaInspector(),
             $this->createSchemaGenerator(),
+            $this->createSchemaMapper($configurator),
             $this->createPluginContainer($configurator),
         );
     }

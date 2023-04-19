@@ -11,6 +11,7 @@
         <exclude>
             <file>src/Popo/PopoConfigurator.php</file>
             <file>src/Popo/Command/CreateSchemaCommand.php</file>
+            <directory>tests/suite/Arrayable/Performance/</directory>
         </exclude>
         <report>
             <clover outputFile="./tests/logs/coverage.xml"/>
@@ -26,10 +27,18 @@
         </exclude>
     </groups>
     <testsuites>
-        <testsuite name="AppTestSuite">
+        <testsuite name="App">
             <directory>./tests/suite/App</directory>
         </testsuite>
-        <testsuite name="PopoTestSuite">
+        <testsuite name="Arrayable">
+            <directory>./tests/suite/Arrayable</directory>
+        </testsuite>
+        <testsuite name="Performance">
+            <directory>./tests/suite/Performance</directory>
+            <exclude>./tests/suite/Performance/ToArray/BasicTest.php</exclude>
+            <exclude>./tests/suite/Performance/ToArray/ToArrayPerformanceTest.php</exclude>
+        </testsuite>
+        <testsuite name="Popo">
             <directory>./tests/suite/Popo</directory>
         </testsuite>
     </testsuites>

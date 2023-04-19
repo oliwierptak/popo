@@ -4,8 +4,9 @@ declare(strict_types = 1);
 
 namespace PopoTestSuite\Command;
 
+use PHPUnit\Framework\TestCase;
 use Popo\Command\GenerateCommand;
-use PopoTestSuiteHelper\AbstractGenerateTest;
+use PopoTestSuiteHelper\SetupTrait;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use const Popo\POPO_TESTS_DIR;
@@ -13,8 +14,10 @@ use const Popo\POPO_TESTS_DIR;
 /**
  * @group functional
  */
-class GenerateCommandTest extends AbstractGenerateTest
+class GenerateCommandTest extends TestCase
 {
+    use SetupTrait;
+
     protected function getCommandTester(): CommandTester
     {
         $command = new GenerateCommand();

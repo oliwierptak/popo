@@ -4,24 +4,28 @@ declare(strict_types = 1);
 
 namespace AppTestSuite;
 
+use App\Example\Popo\AnotherFoo;
 use App\Example\Popo\Bar;
 use App\Example\Popo\Buzz\Buzz;
 use App\Example\Popo\Foo;
 use App\ExampleInterface;
+use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
-use PopoTestSuiteHelper\AbstractPopoTest;
+use PopoTestSuiteHelper\RemoveGeneratedClassesTrait;
 use UnexpectedValueException;
 use const Popo\POPO_TESTS_DIR;
 
 /**
  * @group unit
  */
-class PopoTest extends AbstractPopoTest
+class PopoTest extends TestCase
 {
-    protected function setUp(): void
+    use RemoveGeneratedClassesTrait;
+
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        self::removeGeneratedFiles();
 
         $facade = new PopoFacade();
 
@@ -242,7 +246,11 @@ class PopoTest extends AbstractPopoTest
             ],
         );
 
-        $this->assertEquals(['idFromExampleSchema', 'isTest', 'title'], $foo->listModifiedProperties());
+        $this->assertEquals([
+            'idFromExampleSchema',
+            'isTest',
+            'title',
+        ], $foo->listModifiedProperties());
     }
 
     public function test_default_bool_value(): void
@@ -253,11 +261,138 @@ class PopoTest extends AbstractPopoTest
         $this->assertFalse($foo->isTestWithoutDefault());
     }
 
-    public function test_default_array_value(): void
+    public function test_empty_default_array_value(): void
     {
         $bar = (new Bar);
 
         $this->assertIsArray($bar->getBuzzCollection());
         $this->assertEmpty($bar->getBuzzCollection());
+    }
+
+    public function test_defined_default_array_value(): void
+    {
+        $bar = (new AnotherFoo());
+
+        $this->assertIsArray($bar->getItems());
+        $this->assertEquals([123], $bar->getItems());
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function test_toArrayCamelToSnake(array $data): void
+    {
+        $foo = (new Foo)->fromArray($data);
+
+        $this->assertEquals([
+            'foo_id' => null,
+            'title' => 'Example Foo Hakuna Matata',
+            'value' => ExampleInterface::TEST_BUZZ,
+            'bar' => [
+                'title' => 'Lorem Ipsum',
+                'buzz' => [
+                    'value' => 'Buzzzzz',
+                    'id_for_all' => 20,
+                    'id_from_example_schema' => 20,
+                ],
+                'buzz_collection' => [],
+                'id_for_all' => 40,
+                'id_from_example_schema' => 20,
+            ],
+            'id_for_all' => 30,
+            'id_from_example_schema' => 20,
+            'is_test' => true,
+            'is_test_without_default' => false,
+        ],
+            $foo->toArrayCamelToSnake()
+        );
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function test_toArrayLower(array $data): void
+    {
+        $foo = (new Foo)->fromArray($data);
+
+        $this->assertEquals([
+            'fooid' => null,
+            'title' => 'Example Foo Hakuna Matata',
+            'value' => ExampleInterface::TEST_BUZZ,
+            'bar' => [
+                'title' => 'Lorem Ipsum',
+                'buzz' => [
+                    'value' => 'Buzzzzz',
+                    'idforall' => 20,
+                    'idfromexampleschema' => 20,
+                ],
+                'buzzcollection' => [],
+                'idforall' => 40,
+                'idfromexampleschema' => 20,
+            ],
+            'istest' => true,
+            'istestwithoutdefault' => false,
+            'idforall' => 30,
+            'idfromexampleschema' => 20,
+        ],
+            $foo->toArrayLower()
+        );
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function test_toArrayUpper(array $data): void
+    {
+        $foo = (new Foo)->fromArray($data);
+
+        $this->assertEquals([
+            'FOOID' => null,
+            'TITLE' => 'Example Foo Hakuna Matata',
+            'VALUE' => ExampleInterface::TEST_BUZZ,
+            'BAR' => [
+                'TITLE' => 'Lorem Ipsum',
+                'BUZZ' => [
+                    'VALUE' => 'Buzzzzz',
+                    'IDFORALL' => 20,
+                    'IDFROMEXAMPLESCHEMA' => 20,
+                ],
+                'BUZZCOLLECTION' => [],
+                'IDFORALL' => 40,
+                'IDFROMEXAMPLESCHEMA' => 20,
+            ],
+            'ISTEST' => true,
+            'ISTESTWITHOUTDEFAULT' => false,
+            'IDFORALL' => 30,
+            'IDFROMEXAMPLESCHEMA' => 20,
+        ],
+            $foo->toArrayUpper()
+        );
+    }
+
+    public function dataProvider(): array
+    {
+        return [[
+            [
+                'fooId' => null,
+                'title' => 'Example Foo Hakuna Matata',
+                'value' => ExampleInterface::TEST_BUZZ,
+                'bar' => [
+                    'title' => 'Lorem Ipsum',
+                    'buzz' => [
+                        'value' => 'Buzzzzz',
+                        'idForAll' => 20,
+                        'idFromExampleSchema' => 20,
+                    ],
+                    'buzzCollection' => [],
+                    'idForAll' => 40,
+                    'idFromExampleSchema' => 20,
+                ],
+                'isTest' => true,
+                'isTestWithoutDefault' => false,
+                'idForAll' => 30,
+                'idFromExampleSchema' => 20,
+            ]
+        ]];
     }
 }

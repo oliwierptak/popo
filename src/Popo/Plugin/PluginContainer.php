@@ -48,6 +48,11 @@ class PluginContainer implements PluginContainerInterface
         return $this->createPluginCollection($this->configurator->getPropertyPluginCollection());
     }
 
+    public function createMappingPolicyPlugins(): array
+    {
+        return $this->createPluginCollection($this->configurator->getMappingPolicyPluginCollection());
+    }
+
     /**
      * @param array<string> $pluginClassNames
      *
@@ -57,12 +62,12 @@ class PluginContainer implements PluginContainerInterface
     protected function createPluginCollection(array $pluginClassNames): array
     {
         $result = [];
-        foreach ($pluginClassNames as $pluginClassName) {
+        foreach ($pluginClassNames as $index => $pluginClassName) {
             if (!class_exists($pluginClassName)) {
                 throw new LogicException('Invalid plugin class name: ' . $pluginClassName);
             }
 
-            $result[] = new $pluginClassName();
+            $result[$index] = new $pluginClassName();
         }
 
         return $result;

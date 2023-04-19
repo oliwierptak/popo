@@ -7,6 +7,7 @@ namespace Popo\Builder;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PsrPrinter;
 use Popo\Schema\Schema;
+use RuntimeException;
 
 class FileWriter
 {
@@ -16,11 +17,14 @@ class FileWriter
         try {
             $filename = $this->generateFilename($schema);
 
-            @mkdir(pathinfo($filename, PATHINFO_DIRNAME), 0775, true);
+            $directory = pathinfo($filename, PATHINFO_DIRNAME);
+            if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+                throw new RuntimeException(sprintf('Popo output directory "%s" could not be created', $directory));
+            }
 
-            $handle = fopen($filename, 'w');
+            $handle = fopen($filename, 'wb');
             if ($handle === false) {
-                throw new \RuntimeException('Could not open file: "' . $filename . '" for writing');
+                throw new RuntimeException('Could not open file: "' . $filename . '" for writing');
             }
             fwrite($handle, $this->print($file));
         }

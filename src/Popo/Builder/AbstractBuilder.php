@@ -12,6 +12,7 @@ use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\PluginContainerInterface;
 use Popo\Schema\Generator\SchemaGeneratorInterface;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
+use Popo\Schema\Mapper\SchemaMapperInterface;
 use Popo\Schema\Schema;
 
 abstract class AbstractBuilder implements BuilderPluginInterface
@@ -24,14 +25,17 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     protected SchemaInspectorInterface $schemaInspector;
     protected SchemaGeneratorInterface $schemaGenerator;
     protected PluginContainerInterface $pluginContainer;
+    protected SchemaMapperInterface $schemaMapper;
 
     public function __construct(
         SchemaInspectorInterface $schemaInspector,
         SchemaGeneratorInterface $schemaGenerator,
+        SchemaMapperInterface $schemaMapper,
         PluginContainerInterface $pluginContainer
     ) {
         $this->schemaInspector = $schemaInspector;
         $this->schemaGenerator = $schemaGenerator;
+        $this->schemaMapper = $schemaMapper;
         $this->pluginContainer = $pluginContainer;
     }
 
@@ -126,5 +130,10 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     public function getSchemaGenerator(): SchemaGeneratorInterface
     {
         return $this->schemaGenerator;
+    }
+
+    public function getSchemaMapper(): SchemaMapperInterface
+    {
+        return $this->schemaMapper;
     }
 }
