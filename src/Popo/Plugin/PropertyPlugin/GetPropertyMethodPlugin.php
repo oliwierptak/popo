@@ -17,7 +17,7 @@ class GetPropertyMethodPlugin implements PropertyPluginInterface
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name};
+return \$this->$name;
 EOF;
 
         $name = $builder->getSchemaInspector()->isBool($property->getType()) ?

@@ -20,9 +20,9 @@ class AddItemPropertyMethodPlugin implements PropertyPluginInterface
         $name = $property->getName();
 
         $body = <<<EOF
-\$this->${name}[] = \$item;
+\$this->{$name}[] = \$item;
 
-\$this->updateMap['${name}'] = true;
+\$this->updateMap['$name'] = true;
 
 return \$this;
 EOF;

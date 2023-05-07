@@ -70,7 +70,7 @@ class DateTimeTest extends TestCase
     {
         $timestamp = time() - 2000;
 
-        $expectedModified = new DateTime("@${timestamp}");
+        $expectedModified = new DateTime("@$timestamp");
         $expectedModified->setTimezone(new DateTimeZone('Europe/Paris'));
 
         $foo = new Foo;

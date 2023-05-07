@@ -15,18 +15,18 @@ class RequirePropertyMethodPlugin implements PropertyPluginInterface
         $name = $property->getName();
 
         $body = <<<EOF
-\$this->setupPopoProperty('${name}');
-\$this->setupDateTimeProperty('${name}');
+\$this->setupPopoProperty('$name');
+\$this->setupDateTimeProperty('$name');
 
 if (%s) {
-    throw new UnexpectedValueException('Required value of "${name}" has not been set');
+    throw new UnexpectedValueException('Required value of "$name" has not been set');
 }
-return \$this->${name};
+return \$this->$name;
 EOF;
 
         $condition = $builder->getSchemaInspector()->isArray($property->getType())
-            ? "empty(\$this->${name})"
-            : "\$this->${name} === null";
+            ? "empty(\$this->$name)"
+            : "\$this->$name === null";
 
         $body = sprintf($body, $condition);
 

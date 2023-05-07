@@ -15,7 +15,7 @@ class HasPropertyMethodPlugin implements PropertyPluginInterface
         $name = $property->getName();
 
         $body = <<<EOF
-return \$this->${name} !== null;
+return \$this->$name !== null;
 EOF;
 
         if ($builder->getSchemaInspector()->isArray($property->getType())) {
@@ -23,7 +23,7 @@ EOF;
             $name .= 'Collection';
 
             $body = <<<EOF
-return !empty(\$this->${name});
+return !empty(\$this->$name);
 EOF;
         }
 

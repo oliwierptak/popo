@@ -91,7 +91,7 @@ EOF;
 static \$mappingPolicy = [];
 
 if (empty(\$mappingPolicy)) {
-    ${mappingPolicyBody}
+    {$mappingPolicyBody}
 }
 
 foreach (\$mappings as \$mappingIndex => \$mappingType) {
