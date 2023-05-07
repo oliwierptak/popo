@@ -653,13 +653,13 @@ Add popo scrip to composer and run `composer popo` in a project.
 With docker you can generate files without installing `POPO` as dependency in the project.
 
 ```
-docker container run -it --rm  -v "$(pwd):/popo/" -w/popo oliwierptak/popo /popo-app/bin/popo
+docker container run -it --rm oliwierptak/popo /popo-app/bin/popo
 ```
 
 You can either run the command directly, or create an alias, e.g.:
 
 ```
-alias docker-popo='docker container run -it --rm  -v "$(pwd):/popo/" -w/popo oliwierptak/popo /popo-app/bin/popo ${@}'
+alias docker-popo='docker container run -it --rm oliwierptak/popo /popo-app/bin/popo ${@}'
 ```
 
 For example:
