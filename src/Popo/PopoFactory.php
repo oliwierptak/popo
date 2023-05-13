@@ -13,6 +13,7 @@ use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\Model\Generate\GenerateModel;
 use Popo\Model\Report\ReportModel;
+use Popo\Plugin\ExternalPluginContainer;
 use Popo\Plugin\PluginContainer;
 use Popo\Plugin\PluginContainerInterface;
 use Popo\Schema\Config\ConfigMerger;
@@ -38,6 +39,11 @@ class PopoFactory
         return new ReportModel(
             $this->createSchemaLoader()
         );
+    }
+
+    public function createExternalPluginContainer(): ExternalPluginContainer
+    {
+        return new ExternalPluginContainer();
     }
 
     protected function createSchemaBuilder(): SchemaBuilder

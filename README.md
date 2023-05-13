@@ -133,6 +133,11 @@ Options:
   -ns, --namespace[=NAMESPACE]                                          Namespace of generated POPO files. Overrides schema settings when set.
   -nr, --namespaceRoot[=NAMESPACEROOT]                                  Remaps namespace and outputPath
   -ig, --ignoreNonExistingSchemaFolder[=IGNORENONEXISTINGSCHEMAFOLDER]  When set, an exception will not be thrown in case missing schemaPath folder [default: false]
+  -clp, --classPluginCollection[=CLASSPLUGINCOLLECTION]                 Collection of class names for plugins implementing \Popo\Plugin\ClassPluginInterface
+  -mpp, --mappingPolicyPluginCollection[=MAPPINGPOLICYPLUGINCOLLECTION] Collection of class names for plugins implementing \Popo\Plugin\MappingPolicyPluginInterface
+  -nsp, --namespacePluginCollection[=NAMESPACEPLUGINCOLLECTION]         Collection of class names for plugins implementing \Popo\Plugin\NamespacePluginInterface
+  -pfp, --phpFilePluginCollection[=PHPFILEPLUGINCOLLECTION]             Collection of class names for plugins implementing \Popo\Plugin\PhpFilePluginInterface
+  -ppp, --propertyPluginCollection[=PROPERTYPLUGINCOLLECTION]           Collection of class names for plugins implementing \Popo\Plugin\PropertyPluginInterface
 ```
 
 
@@ -208,6 +213,42 @@ Default is `*.popo.yml`.
 Set to true, to ignore errors related to missing schema directories when passing multiple paths with `<schema-path>`, separated by a comma. 
 
 Default is `false`.
+
+
+#### `--classPluginCollection`
+
+Collection of class names for plugins implementing `\Popo\Plugin\ClassPluginInterface`. 
+
+Default is `[]`.
+
+
+#### `--mappingPolicyPluginCollection`
+
+Collection of class names for plugins implementing `\Popo\Plugin\MappingPolicyPluginInterface`. 
+
+Default is `[]`.
+
+
+#### `--namespacePluginCollection`
+
+Collection of class names for plugins implementing `\Popo\Plugin\NamespacePluginInterface`. 
+
+Default is `[]`.
+
+
+#### `--phpFilePluginCollection`
+
+Collection of class names for plugins implementing `\Popo\Plugin\PhpFilePluginInterface`. 
+
+Default is `[]`.
+
+
+#### `--propertyPluginCollection`
+
+Collection of class names for plugins implementing `\Popo\Plugin\PropertyPluginInterface`. 
+
+Default is `[]`.
+
 
 ### Report Command
 
@@ -535,7 +576,7 @@ Some of the methods supported by `property` plugins:
 - `addCollectionItem`
 - ...
 
-_Note:_ Plugins can be disabled wth:
+_Note:_ Plugins can be disabled with:
 
 ```php
 $configurator = (new \Popo\PopoConfigurator)

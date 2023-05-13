@@ -17,10 +17,9 @@ RUN composer self-update
 
 
 ADD ./ /popo-app/
-RUN rm -rf /popo-app/tests/logs/coverage/
-RUN rm -rf /popo-app/tests/logs/coverage.xml
-RUN rm -rf /popo-app/tests/App/Example/
-RUN rm -rf /popo-app/tests/AppRedefinedNamespace/Example/
-RUN rm -rf /popo-app/tests/AppWithNamespaceRoot/Example/
+RUN rm /popo-app/popo.sh
+RUN rm /popo-app/Dockerfile
+RUN rm -rf /popo-app/tests/
+RUN rm -rf /popo-app/doc/
 
 WORKDIR /popo-app/

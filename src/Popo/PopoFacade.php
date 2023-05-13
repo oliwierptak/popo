@@ -34,6 +34,58 @@ class PopoFacade implements PopoFacadeInterface
             ->generate($configurator);
     }
 
+    public function addClassPluginClassName(string $classPluginClassName): self
+    {
+        $this->getFactory()
+            ->createExternalPluginContainer()
+            ->addClassPluginClassName($classPluginClassName);
+
+        return $this;
+    }
+
+    public function addMappingPolicyPluginClassName(string $mappingPolicyPluginClassName): self
+    {
+        $this->getFactory()
+            ->createExternalPluginContainer()
+            ->addMappingPolicyPluginClassName($mappingPolicyPluginClassName);
+
+        return $this;
+    }
+
+    public function addNamespacePluginClassName(string $namespacePluginClassName): self
+    {
+        $this->getFactory()
+            ->createExternalPluginContainer()
+            ->addNamespacePluginClassName($namespacePluginClassName);
+
+        return $this;
+    }
+
+    public function addPhpFilePluginClassName(string $phpFilePluginClassName): self
+    {
+        $this->getFactory()
+            ->createExternalPluginContainer()
+            ->addPhpFlePluginClassName($phpFilePluginClassName);
+
+        return $this;
+    }
+
+    public function addPropertyPluginClassName(string $propertyPluginClassName): self
+    {
+        $this->getFactory()
+            ->createExternalPluginContainer()
+            ->addPropertyPluginClassName($propertyPluginClassName);
+
+        return $this;
+    }
+
+    public function reconfigure(PopoConfigurator $configurator): PopoConfigurator
+    {
+        return $this->getFactory()
+            ->createExternalPluginContainer()
+            ->reconfigure($configurator);
+    }
+
     public function report(PopoConfigurator $configurator): ReportResult
     {
         return $this->getFactory()

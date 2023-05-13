@@ -5,3 +5,4 @@ vendor
 .DS_Store
 phpunit.xml
 composer.lock
+.phpunit.result.cache

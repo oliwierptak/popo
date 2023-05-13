@@ -5,12 +5,18 @@ declare(strict_types = 1);
 namespace PopoTestSuite;
 
 use PHPUnit\Framework\TestCase;
+use Popo\Plugin\ClassPluginInterface;
+use Popo\Plugin\MappingPolicyPluginInterface;
+use Popo\Plugin\NamespacePluginInterface;
+use Popo\Plugin\PhpFilePluginInterface;
+use Popo\Plugin\PropertyPluginInterface;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
 use Popo\PopoFactory;
 use PopoTestSuiteHelper\SetupTrait;
 use ReflectionClass;
 use ReflectionProperty;
+use function get_class;
 use const Popo\POPO_TESTS_DIR;
 
 /**
@@ -136,6 +142,50 @@ class PopoFacadeTest extends TestCase
         $property = $this->getProtectedProperty(PopoFacade::class, 'factory');
 
         $this->assertInstanceOf(PopoFactory::class, $property->getValue($facade));
+    }
+
+    public function test_reconfigure(): void
+    {
+        $configurator = (new PopoConfigurator())
+            ->setSchemaPath(POPO_TESTS_DIR . 'fixtures/popo-readme.yml')
+            ->setOutputPath(POPO_TESTS_DIR);
+
+        $classPluginClassName = get_class($this->createMock(ClassPluginInterface::class));
+        $mappingPolicyPluginClassName = get_class($this->createMock(MappingPolicyPluginInterface::class));
+        $namespacePluginClassName = get_class($this->createMock(NamespacePluginInterface::class));
+        $phpFilePluginClassName = get_class($this->createMock(PhpFilePluginInterface::class));
+        $propertyPluginNock = get_class($this->createMock(PropertyPluginInterface::class));
+
+        (new PopoFacade())
+            ->addClassPluginClassName($classPluginClassName)
+            ->addMappingPolicyPluginClassName($mappingPolicyPluginClassName)
+            ->addNamespacePluginClassName($namespacePluginClassName)
+            ->addPhpFilePluginClassName($phpFilePluginClassName)
+            ->addPropertyPluginClassName($propertyPluginNock);
+
+        $configurator = (new PopoFacade())
+            ->reconfigure($configurator);
+
+        $this->assertContains(
+            $classPluginClassName,
+            $configurator->getClassPluginCollection(),
+        );
+        $this->assertContains(
+            $mappingPolicyPluginClassName,
+            $configurator->getMappingPolicyPluginCollection(),
+        );
+        $this->assertContains(
+            $namespacePluginClassName,
+            $configurator->getNamespacePluginCollection(),
+        );
+        $this->assertContains(
+            $phpFilePluginClassName,
+            $configurator->getPhpFilePluginCollection(),
+        );
+        $this->assertContains(
+            $propertyPluginNock,
+            $configurator->getPropertyPluginCollection(),
+        );
     }
 
     private function getProtectedProperty($class, $name): ReflectionProperty

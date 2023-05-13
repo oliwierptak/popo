@@ -31,6 +31,16 @@ class GenerateCommand extends AbstractCommand
 
     public const OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER = 'ignoreNonExistingSchemaFolder';
 
+    public const OPTION_CLASS_PLUGIN_COLLECTION = 'classPluginCollection';
+
+    public const OPTION_MAPPING_POLICY_PLUGIN_COLLECTION = 'mappingPolicyPluginCollection';
+
+    public const OPTION_NAMESPACE_PLUGIN_COLLECTION = 'namespacePluginCollection';
+
+    public const OPTION_PHP_FILE_PLUGIN_COLLECTION = 'phpFilePluginCollection';
+
+    public const OPTION_PROPERTY_PLUGIN_COLLECTION = 'propertyPluginCollection';
+
     protected function configure(): void
     {
         $this
@@ -94,6 +104,41 @@ class GenerateCommand extends AbstractCommand
                         'When set, an exception will not be thrown in case missing schemaPath folder',
                         false
                     ),
+                    new InputOption(
+                        static::OPTION_CLASS_PLUGIN_COLLECTION,
+                        'clp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Collection of class names for plugins implementing \Popo\Plugin\ClassPluginInterface',
+                        []
+                    ),
+                    new InputOption(
+                        static::OPTION_MAPPING_POLICY_PLUGIN_COLLECTION,
+                        'mpp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Collection of class names for plugins implementing \Popo\Plugin\MappingPolicyPluginInterface',
+                        []
+                    ),
+                    new InputOption(
+                        static::OPTION_NAMESPACE_PLUGIN_COLLECTION,
+                        'nsp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Collection of class names for plugins implementing \Popo\Plugin\NamespacePluginInterface',
+                        []
+                    ),
+                    new InputOption(
+                        static::OPTION_PHP_FILE_PLUGIN_COLLECTION,
+                        'pfp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Collection of class names for plugins implementing \Popo\Plugin\PhpFilePluginInterface',
+                        []
+                    ),
+                    new InputOption(
+                        static::OPTION_PROPERTY_PLUGIN_COLLECTION,
+                        'ppp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Collection of class names for plugins implementing \Popo\Plugin\PropertyPluginInterface',
+                        []
+                    ),
                 ]
             );
     }
@@ -123,7 +168,7 @@ class GenerateCommand extends AbstractCommand
 
     protected function buildConfigurator(InputInterface $input): PopoConfigurator
     {
-        return (new PopoConfigurator())
+        $configurator = (new PopoConfigurator())
             ->setOutputPath(
                 $input->hasOption(static::OPTION_OUTPUT_PATH) ? $input->getOption(static::OPTION_OUTPUT_PATH) : null
             )
@@ -156,5 +201,37 @@ class GenerateCommand extends AbstractCommand
                     static::OPTION_IGNORE_NON_EXISTING_SCHEMA_FOLDER
                 ) : false)
             );
+
+        $pluginCollection = $input->hasOption(static::OPTION_CLASS_PLUGIN_COLLECTION)
+            ? $input->getOption(static::OPTION_CLASS_PLUGIN_COLLECTION) : [];
+        foreach ($pluginCollection as $pluginClassName) {
+            $this->facade->addClassPluginClassName($pluginClassName);
+        }
+
+        $pluginCollection = $input->hasOption(static::OPTION_MAPPING_POLICY_PLUGIN_COLLECTION)
+            ? $input->getOption(static::OPTION_MAPPING_POLICY_PLUGIN_COLLECTION) : [];
+        foreach ($pluginCollection as $classPluginClassName) {
+            $this->facade->addMappingPolicyPluginClassName($classPluginClassName);
+        }
+
+        $pluginCollection = $input->hasOption(static::OPTION_NAMESPACE_PLUGIN_COLLECTION)
+            ? $input->getOption(static::OPTION_NAMESPACE_PLUGIN_COLLECTION) : [];
+        foreach ($pluginCollection as $classPluginClassName) {
+            $this->facade->addNamespacePluginClassName($classPluginClassName);
+        }
+
+        $pluginCollection = $input->hasOption(static::OPTION_PHP_FILE_PLUGIN_COLLECTION)
+            ? $input->getOption(static::OPTION_PHP_FILE_PLUGIN_COLLECTION) : [];
+        foreach ($pluginCollection as $classPluginClassName) {
+            $this->facade->addPhpFilePluginClassName($classPluginClassName);
+        }
+
+        $pluginCollection = $input->hasOption(static::OPTION_PROPERTY_PLUGIN_COLLECTION)
+            ? $input->getOption(static::OPTION_PROPERTY_PLUGIN_COLLECTION) : [];
+        foreach ($pluginCollection as $classPluginClassName) {
+            $this->facade->addPropertyPluginClassName($classPluginClassName);
+        }
+
+        return $this->facade->reconfigure($configurator);
     }
 }
