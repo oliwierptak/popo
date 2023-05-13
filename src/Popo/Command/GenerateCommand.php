@@ -107,35 +107,35 @@ class GenerateCommand extends AbstractCommand
                     new InputOption(
                         static::OPTION_CLASS_PLUGIN_COLLECTION,
                         'clp',
-                        InputOption::VALUE_OPTIONAL,
+                        InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                         'Collection of class names for plugins implementing \Popo\Plugin\ClassPluginInterface',
                         []
                     ),
                     new InputOption(
                         static::OPTION_MAPPING_POLICY_PLUGIN_COLLECTION,
                         'mpp',
-                        InputOption::VALUE_OPTIONAL,
+                        InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                         'Collection of class names for plugins implementing \Popo\Plugin\MappingPolicyPluginInterface',
                         []
                     ),
                     new InputOption(
                         static::OPTION_NAMESPACE_PLUGIN_COLLECTION,
                         'nsp',
-                        InputOption::VALUE_OPTIONAL,
+                        InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                         'Collection of class names for plugins implementing \Popo\Plugin\NamespacePluginInterface',
                         []
                     ),
                     new InputOption(
                         static::OPTION_PHP_FILE_PLUGIN_COLLECTION,
                         'pfp',
-                        InputOption::VALUE_OPTIONAL,
+                        InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                         'Collection of class names for plugins implementing \Popo\Plugin\PhpFilePluginInterface',
                         []
                     ),
                     new InputOption(
                         static::OPTION_PROPERTY_PLUGIN_COLLECTION,
                         'ppp',
-                        InputOption::VALUE_OPTIONAL,
+                        InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                         'Collection of class names for plugins implementing \Popo\Plugin\PropertyPluginInterface',
                         []
                     ),
