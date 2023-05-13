@@ -52,7 +52,7 @@ class PopoMappingPolicyTest extends TestCase
     {
         $blog = (new Blog())
             ->fromArray([
-                'BLOG_TITLE' => 'Blog title',
+                'BLOG_TITLE' => 'Lorem Ipsum',
                 'blog_data' => [
                     'someValue' => 'some value data',
                 ],
@@ -61,7 +61,7 @@ class PopoMappingPolicyTest extends TestCase
 
         $this->assertEquals(
             [
-                'BLOG_TITLE' => 'Blog title',
+                'BLOG_TITLE' => 'Lorem Ipsum',
                 'blog_data' => [
                     'someValue' => 'some value data',
                 ],
@@ -96,8 +96,10 @@ class PopoMappingPolicyTest extends TestCase
     public function test_toArraySnakeToCamel(): void
     {
         $documentData = (new DocumentData())
-            ->setSomeTitle('a title')
-            ->setSomeValue(111);
+            ->fromArray([
+                'some_title' => 'a title',
+                'SOME_VALUE' => 111,
+            ]);
 
         $this->assertEquals([
             'someTitle' => 'a title',
@@ -105,7 +107,5 @@ class PopoMappingPolicyTest extends TestCase
         ],
             $documentData->toArraySnakeToCamel()
         );
-
-
     }
 }

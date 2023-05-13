@@ -16,7 +16,8 @@ class FromArrayClassPlugin implements ClassPluginInterface
             $body .= sprintf(
                 "\t'%s' => '%s',\n",
                 $property->getName(),
-                $builder->getSchemaMapper()->mapKeyName($property->getMappingPolicy(), $property->getName()),
+                $property->getMappingPolicyValue() ?? $builder->getSchemaMapper()
+                    ->mapKeyName($property->getMappingPolicy(), $property->getName()),
             );
         }
 
