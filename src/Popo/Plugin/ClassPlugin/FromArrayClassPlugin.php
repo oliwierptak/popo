@@ -21,11 +21,22 @@ class FromArrayClassPlugin implements ClassPluginInterface
             );
         }
 
+        $parentCallString = '';
+        $hasParent = $builder->getSchema()->getConfig()->getExtend() !== null;
+        if ($hasParent) {
+            $parentCallString = <<<EOF
+if (method_exists(get_parent_class(\$this), 'toArray')) {
+    parent::fromArray(\$data);
+}
+EOF;
+        }
         $body .= <<<EOF
 ];
 
+$parentCallString
+
 foreach (\$metadata as \$name => \$mappedName) {
-    \$meta = static::METADATA[\$name];
+    \$meta = self::METADATA[\$name];
     \$value = \$data[\$mappedName] ?? \$this->\$name ?? null;
     \$popoValue = \$meta['default'];
 
@@ -45,7 +56,7 @@ foreach (\$metadata as \$name => \$mappedName) {
             \$timezone = \$meta['timezone'] ?? null;
             if (\$timezone !== null) {
                 \$timezone = new DateTimeZone(\$timezone);
-                \$datetime = new DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'] ?: 'now', \$timezone);
+                \$datetime = new DateTime(\$data[\$name] ?? self::METADATA[\$name]['default'] ?: 'now', \$timezone);
             }
             \$value = \$datetime;
         }

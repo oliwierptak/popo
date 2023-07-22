@@ -13,4 +13,6 @@ Example:
     ]
 
   FooBarSecond:
-    property: []
+    property: [
+      {name: second, type: int, default: 2}
+    ]

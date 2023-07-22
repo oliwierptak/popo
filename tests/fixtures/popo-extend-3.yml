@@ -14,5 +14,6 @@ Example:
 
   FooBarThird:
     property: [
-      {name: idForAll, type: int, default: 3, comment: This id is for all}
+      {name: idForAll, type: int, default: 3, comment: This id is for all},
+      {name: third, type: int, default: 3},
     ]

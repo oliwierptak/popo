@@ -8,4 +8,6 @@ $:
 
 Example:
   FooBarFirst:
-    property: []
+    property: [
+      {name: first, type: int, default: 1}
+    ]

@@ -19,6 +19,7 @@ class UseStatementPlugin implements NamespacePluginInterface
         $namespace->addUseFunction('array_filter');
         $namespace->addUseFunction('array_key_exists');
         $namespace->addUseFunction('array_keys');
+        $namespace->addUseFunction('array_replace_recursive');
         $namespace->addUseFunction('in_array');
         $namespace->addUseFunction('sort');
         $namespace->addUseConstant('SORT_STRING');

@@ -38,11 +38,11 @@ EOF;
     {
         $body = <<<EOF
 \$result = [];
-foreach (static::METADATA as \$name => \$propertyMetadata) {
+foreach (self::METADATA as \$name => \$propertyMetadata) {
     \$value = \$data[\$propertyMetadata['mappingPolicyValue']];
 
-    if (static::METADATA[\$name]['type'] === 'popo') {
-        \$popo = static::METADATA[\$name]['default'];
+    if (self::METADATA[\$name]['type'] === 'popo') {
+        \$popo = self::METADATA[\$name]['default'];
         \$value = \$this->\$name !== null ? \$this->\$name->toMappedArray(...\$mappings) : (new \$popo)->toMappedArray(...\$mappings);
     }
 

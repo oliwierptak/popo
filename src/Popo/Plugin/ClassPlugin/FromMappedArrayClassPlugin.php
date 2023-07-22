@@ -13,13 +13,13 @@ class FromMappedArrayClassPlugin implements ClassPluginInterface
     {
         $body = <<<EOF
 \$result = [];
-foreach (static::METADATA as \$name => \$propertyMetadata) {
+foreach (self::METADATA as \$name => \$propertyMetadata) {
     \$mappingPolicyValue = \$propertyMetadata['mappingPolicyValue'];
     \$inputKey = \$this->mapKeyName(\$mappings, \$mappingPolicyValue);
     \$value = \$data[\$inputKey] ?? null;
 
-    if (static::METADATA[\$name]['type'] === 'popo') {
-        \$popo = static::METADATA[\$name]['default'];
+    if (self::METADATA[\$name]['type'] === 'popo') {
+        \$popo = self::METADATA[\$name]['default'];
         \$value = \$this->\$name !== null
             ? \$this->\$name->fromMappedArray(\$value ?? [], ...\$mappings)
             : (new \$popo)->fromMappedArray(\$value ?? [], ...\$mappings);

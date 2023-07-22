@@ -67,6 +67,8 @@
       "XDEBUG_MODE=off bin/popo generate -s popo.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-1.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-2.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-3.yml",

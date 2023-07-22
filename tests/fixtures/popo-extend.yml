@@ -1,0 +1,24 @@
+$:
+  config:
+    namespace: App\Example\ExtendFromPopo
+    outputPath: tests/
+
+Example:
+  FooBarFirst:
+    property: [
+      {name: first, type: int, default: 1}
+    ]
+
+  FooBarSecond:
+    config:
+      extend: \App\Example\ExtendFromPopo\FooBarFirst::class
+    property: [
+      {name: second, type: int, default: 2}
+    ]
+
+  FooBarThird:
+    config:
+      extend: \App\Example\ExtendFromPopo\FooBarSecond::class
+    property: [
+      {name: third, type: int, default: 3},
+    ]

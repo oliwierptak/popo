@@ -20,34 +20,49 @@ class ToArrayClassPlugin implements ClassPluginInterface
                     ->mapKeyName($property->getMappingPolicy(), $property->getName()),
             );
         }
+
+        $dataParentCall = '';
+        $hasParent = $builder->getSchema()->getConfig()->getExtend() !== null;
+        if ($hasParent) {
+            $dataParentCall = <<<EOF
+if (method_exists(get_parent_class(\$this), 'toArray')) {
+    \$data = array_replace_recursive(parent::toArray(), \$data);
+}
+EOF;
+
+        }
+
         $body .= <<<EOF
 ];
 
 \$data = [];
+
 foreach (\$metadata as \$name => \$mappedName) {
     \$value = \$this->\$name;
 
-    if (static::METADATA[\$name]['type'] === 'popo') {
-        \$popo = static::METADATA[\$name]['default'];
+    if (self::METADATA[\$name]['type'] === 'popo') {
+        \$popo = self::METADATA[\$name]['default'];
         \$value = \$this->\$name !== null ? \$this->\$name->toArray() : (new \$popo)->toArray();
     }
 
-    if (static::METADATA[\$name]['type'] === 'datetime') {
+    if (self::METADATA[\$name]['type'] === 'datetime') {
         if ((\$value instanceof DateTime) === false) {
-            \$datetime = new DateTime(static::METADATA[\$name]['default'] ?: 'now');
-            \$timezone = static::METADATA[\$name]['timezone'] ?? null;
+            \$datetime = new DateTime(self::METADATA[\$name]['default'] ?: 'now');
+            \$timezone = self::METADATA[\$name]['timezone'] ?? null;
             if (\$timezone !== null) {
                 \$timezone = new DateTimeZone(\$timezone);
-                \$datetime = new DateTime(\$this->\$name ?? static::METADATA[\$name]['default'] ?: 'now', \$timezone);
+                \$datetime = new DateTime(\$this->\$name ?? self::METADATA[\$name]['default'] ?: 'now', \$timezone);
             }
             \$value = \$datetime;
         }
 
-        \$value = \$value->format(static::METADATA[\$name]['format']);
+        \$value = \$value->format(self::METADATA[\$name]['format']);
     }
 
     \$data[\$mappedName] = \$value;
 }
+
+$dataParentCall
 
 return \$data;
 EOF;

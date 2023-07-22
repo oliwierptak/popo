@@ -17,6 +17,7 @@ use UnexpectedValueException;
 use function array_filter;
 use function array_key_exists;
 use function array_keys;
+use function array_replace_recursive;
 use function in_array;
 use function sort;
 
@@ -199,10 +200,10 @@ class PopoConfigurator
 
     protected function setupDateTimeProperty($propertyName): void
     {
-        if (static::METADATA[$propertyName]['type'] === 'datetime' && $this->$propertyName === null) {
-            $value = static::METADATA[$propertyName]['default'] ?: 'now';
+        if (self::METADATA[$propertyName]['type'] === 'datetime' && $this->$propertyName === null) {
+            $value = self::METADATA[$propertyName]['default'] ?: 'now';
             $datetime = new DateTime($value);
-            $timezone = static::METADATA[$propertyName]['timezone'] ?? null;
+            $timezone = self::METADATA[$propertyName]['timezone'] ?? null;
             if ($timezone !== null) {
                 $timezone = new DateTimeZone($timezone);
                 $datetime = new DateTime($value, $timezone);
@@ -235,8 +236,8 @@ class PopoConfigurator
 
     protected function setupPopoProperty($propertyName): void
     {
-        if (static::METADATA[$propertyName]['type'] === 'popo' && $this->$propertyName === null) {
-            $popo = static::METADATA[$propertyName]['default'];
+        if (self::METADATA[$propertyName]['type'] === 'popo' && $this->$propertyName === null) {
+            $popo = self::METADATA[$propertyName]['default'];
             $this->$propertyName = new $popo;
         }
     }
@@ -351,8 +352,10 @@ class PopoConfigurator
             'shouldIgnoreNonExistingSchemaFolder' => 'shouldIgnoreNonExistingSchemaFolder',
         ];
 
+
+
         foreach ($metadata as $name => $mappedName) {
-            $meta = static::METADATA[$name];
+            $meta = self::METADATA[$name];
             $value = $data[$mappedName] ?? $this->$name ?? null;
             $popoValue = $meta['default'];
 
@@ -372,7 +375,7 @@ class PopoConfigurator
                     $timezone = $meta['timezone'] ?? null;
                     if ($timezone !== null) {
                         $timezone = new DateTimeZone($timezone);
-                        $datetime = new DateTime($data[$name] ?? static::METADATA[$name]['default'] ?: 'now', $timezone);
+                        $datetime = new DateTime($data[$name] ?? self::METADATA[$name]['default'] ?: 'now', $timezone);
                     }
                     $value = $datetime;
                 }
@@ -390,13 +393,13 @@ class PopoConfigurator
     public function fromMappedArray(array $data, ...$mappings): self
     {
         $result = [];
-        foreach (static::METADATA as $name => $propertyMetadata) {
+        foreach (self::METADATA as $name => $propertyMetadata) {
             $mappingPolicyValue = $propertyMetadata['mappingPolicyValue'];
             $inputKey = $this->mapKeyName($mappings, $mappingPolicyValue);
             $value = $data[$inputKey] ?? null;
 
-            if (static::METADATA[$name]['type'] === 'popo') {
-                $popo = static::METADATA[$name]['default'];
+            if (self::METADATA[$name]['type'] === 'popo') {
+                $popo = self::METADATA[$name]['default'];
                 $value = $this->$name !== null
                     ? $this->$name->fromMappedArray($value ?? [], ...$mappings)
                     : (new $popo)->fromMappedArray($value ?? [], ...$mappings);
@@ -430,30 +433,33 @@ class PopoConfigurator
         ];
 
         $data = [];
+
         foreach ($metadata as $name => $mappedName) {
             $value = $this->$name;
 
-            if (static::METADATA[$name]['type'] === 'popo') {
-                $popo = static::METADATA[$name]['default'];
+            if (self::METADATA[$name]['type'] === 'popo') {
+                $popo = self::METADATA[$name]['default'];
                 $value = $this->$name !== null ? $this->$name->toArray() : (new $popo)->toArray();
             }
 
-            if (static::METADATA[$name]['type'] === 'datetime') {
+            if (self::METADATA[$name]['type'] === 'datetime') {
                 if (($value instanceof DateTime) === false) {
-                    $datetime = new DateTime(static::METADATA[$name]['default'] ?: 'now');
-                    $timezone = static::METADATA[$name]['timezone'] ?? null;
+                    $datetime = new DateTime(self::METADATA[$name]['default'] ?: 'now');
+                    $timezone = self::METADATA[$name]['timezone'] ?? null;
                     if ($timezone !== null) {
                         $timezone = new DateTimeZone($timezone);
-                        $datetime = new DateTime($this->$name ?? static::METADATA[$name]['default'] ?: 'now', $timezone);
+                        $datetime = new DateTime($this->$name ?? self::METADATA[$name]['default'] ?: 'now', $timezone);
                     }
                     $value = $datetime;
                 }
 
-                $value = $value->format(static::METADATA[$name]['format']);
+                $value = $value->format(self::METADATA[$name]['format']);
             }
 
             $data[$mappedName] = $value;
         }
+
+
 
         return $data;
     }
@@ -466,11 +472,11 @@ class PopoConfigurator
     protected function map(array $data, array $mappings): array
     {
         $result = [];
-        foreach (static::METADATA as $name => $propertyMetadata) {
+        foreach (self::METADATA as $name => $propertyMetadata) {
             $value = $data[$propertyMetadata['mappingPolicyValue']];
 
-            if (static::METADATA[$name]['type'] === 'popo') {
-                $popo = static::METADATA[$name]['default'];
+            if (self::METADATA[$name]['type'] === 'popo') {
+                $popo = self::METADATA[$name]['default'];
                 $value = $this->$name !== null ? $this->$name->toMappedArray(...$mappings) : (new $popo)->toMappedArray(...$mappings);
             }
 

@@ -12,8 +12,8 @@ class PopoMethodClassPlugin implements ClassPluginInterface
     public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
-if (static::METADATA[\$propertyName]['type'] === 'popo' && \$this->\$propertyName === null) {
-    \$popo = static::METADATA[\$propertyName]['default'];
+if (self::METADATA[\$propertyName]['type'] === 'popo' && \$this->\$propertyName === null) {
+    \$popo = self::METADATA[\$propertyName]['default'];
     \$this->\$propertyName = new \$popo;
 }
 EOF;

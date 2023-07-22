@@ -12,10 +12,10 @@ class DateTimeMethodClassPlugin implements ClassPluginInterface
     public function run(BuilderPluginInterface $builder): void
     {
         $body = <<<EOF
-if (static::METADATA[\$propertyName]['type'] === 'datetime' && \$this->\$propertyName === null) {
-    \$value = static::METADATA[\$propertyName]['default'] ?: 'now';
+if (self::METADATA[\$propertyName]['type'] === 'datetime' && \$this->\$propertyName === null) {
+    \$value = self::METADATA[\$propertyName]['default'] ?: 'now';
     \$datetime = new DateTime(\$value);
-    \$timezone = static::METADATA[\$propertyName]['timezone'] ?? null;
+    \$timezone = self::METADATA[\$propertyName]['timezone'] ?? null;
     if (\$timezone !== null) {
         \$timezone = new DateTimeZone(\$timezone);
         \$datetime = new DateTime(\$value, \$timezone);
