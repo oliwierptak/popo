@@ -18,7 +18,9 @@ class ConfigTest extends TestCase
             ->setNamespace('Foo\\Bar')
             ->setOutputPath('/tmp/test')
             ->setComment('Lorem Ipsum')
+            ->setPhpComment('Lorem Ipsum PHP')
             ->setImplement('Foo\\FooInterface');
+
 
         $this->assertEquals(
             [
@@ -28,6 +30,7 @@ class ConfigTest extends TestCase
                 'extend' => null,
                 'implement' => 'Foo\\FooInterface',
                 'comment' => 'Lorem Ipsum',
+                'phpComment' => 'Lorem Ipsum PHP',
             ],
             $config->toArray()
         );
@@ -42,6 +45,7 @@ class ConfigTest extends TestCase
             'extend' => 'Foo\\Buzz',
             'implement' => 'Foo\\FooInterface',
             'comment' => 'This is a comment',
+            'phpComment' => 'This is a PHP comment',
         ]);
 
         $this->assertEquals(
@@ -52,6 +56,7 @@ class ConfigTest extends TestCase
                 'extend' => 'Foo\\Buzz',
                 'implement' => 'Foo\\FooInterface',
                 'comment' => 'This is a comment',
+                'phpComment' => 'This is a PHP comment',
             ],
             $config->toArray()
         );

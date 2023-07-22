@@ -276,7 +276,7 @@ _Run `bin/popo report -s tests/fixtures/popo-readme.yml` or `docker-popo report 
 ## POPO Schema
 
 ```yaml
-$: # schema-file-config, shared configuration for all POPO objects in current schema file
+$: # file-config, shared configuration for all POPO objects in current schema file
   config:
     namespace: string
     outputPath: string
@@ -284,6 +284,7 @@ $: # schema-file-config, shared configuration for all POPO objects in current sc
     extend: string|null # which class POPO objects should extend from
     implement: string|null # which interface POPO objects should implement
     comment: string|null # Class docblock comment
+    phpComment: string|null # Generated PHP File docblock comment
   default: array # default values
   property: array #shared properties
 
@@ -296,14 +297,15 @@ SchemaName: # schema-config
       extend: string|null
       implement: string|null
       comment: string|null
+      phpComment: string|null
     default: array
     property: [{
       name: string,
       type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
-        comment: string|null, # Property docblock comment
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime'],
+      comment: string|null, # Property docblock comment
       default: mixed, # default value
       itemType: string|null, # collection item type
       itemName: string|null, # collection item singular name
@@ -319,14 +321,15 @@ SchemaName: # schema-config
       extend: string|null
       implement: string|null
       comment: string|null
+      phpComment: string|null
     default: array
     property: [{
       name: string,
       type:
         type: string
         default: string
-        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime']
-        comment: string|null,
+        supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime'],
+      comment: string|null,
       default: mixed,
       itemType: string|null,
       itemName: string|null,
@@ -694,13 +697,13 @@ Add popo scrip to composer and run `composer popo` in a project.
 With docker you can generate files without installing `POPO` as dependency in the project.
 
 ```
-docker container run -it --rm oliwierptak/popo /popo-app/bin/popo
+docker container run -it --rm oliwierptak/popo /app/bin/popo
 ```
 
 You can either run the command directly, or create an alias, e.g.:
 
 ```
-alias docker-popo='docker container run -it --rm oliwierptak/popo /popo-app/bin/popo ${@}'
+alias docker-popo='docker container run -it --rm oliwierptak/popo /app/bin/popo ${@}'
 ```
 
 For example:

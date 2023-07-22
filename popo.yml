@@ -2,7 +2,7 @@ $:
   config:
     namespace: Popo
     outputPath: src/
-    comment: |
+    phpComment: |
       @SuppressWarnings(PHPMD)
       @phpcs:ignoreFile
 
@@ -15,6 +15,7 @@ Popo:
       namespacePluginCollection:
         - \Popo\Plugin\NamespacePlugin\UseStatementPlugin::class
       classPluginCollection:
+        - \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class
         - \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class

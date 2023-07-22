@@ -13,6 +13,7 @@ class Config
         'extend' => "null|string",
         'implement' => "null|string",
         'comment' => "null|string",
+        'phpComment' => "null|string",
     ];
 
     protected string $namespace;
@@ -21,6 +22,7 @@ class Config
     protected ?string $extend = null;
     protected ?string $implement = null;
     protected ?string $comment = null;
+    protected ?string $phpComment = null;
 
     public function getNamespace(): string
     {
@@ -94,8 +96,19 @@ class Config
         return $this;
     }
 
+    public function getPhpComment(): ?string
+    {
+        return $this->phpComment;
+    }
+
+    public function setPhpComment(?string $phpComment): self
+    {
+        $this->phpComment = $phpComment;
+        return $this;
+    }
+
     /**
-     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null} $data
+     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null} $data
      *
      * @return $this
      */
@@ -108,6 +121,7 @@ class Config
                 'extend' => null,
                 'implement' => null,
                 'comment' => null,
+                'phpComment' => null,
             ],
             $data
         );
@@ -118,12 +132,13 @@ class Config
         $this->extend = $data['extend'];
         $this->implement = $data['implement'];
         $this->comment = $data['comment'];
+        $this->phpComment = $data['phpComment'];
 
         return $this;
     }
 
     /**
-     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null}
+     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null}
      */
     public function toArray(): array
     {
@@ -134,6 +149,7 @@ class Config
             'extend' => $this->extend,
             'implement' => $this->implement,
             'comment' => $this->comment,
+            'phpComment' => $this->phpComment,
         ];
     }
 }

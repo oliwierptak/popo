@@ -6,6 +6,7 @@ $: # file-config, shared configuration for all POPO objects in current schema fi
     extend: string|null # which class POPO objects should extend from
     implement: string|null # which interface POPO objects should implement
     comment: string|null # Class docblock comment
+    phpComment: string|null # Generated PHP File docblock comment
   default: array # default values
   property: array #shared properties
 
@@ -18,6 +19,7 @@ SchemaName: # schema-config
       extend: string|null
       implement: string|null
       comment: string|null
+      phpComment: string|null
     default: array
     property: [{
       name: string,
@@ -41,6 +43,7 @@ SchemaName: # schema-config
       extend: string|null
       implement: string|null
       comment: string|null
+      phpComment: string|null
     default: array
     property: [{
       name: string,

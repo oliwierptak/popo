@@ -77,6 +77,7 @@ class PopoDefinesInterface
         'extend' => null,
         'implement' => null,
         'comment' => null,
+        'phpComment' => null,
         'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
         'mappingPolicyValue' => null,
     ];

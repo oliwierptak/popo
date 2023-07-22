@@ -11,8 +11,8 @@ class CommentPhpFilePlugin
 {
     public function run(PhpFile $file, Schema $schema): PhpFile
     {
-        if ($schema->getConfig()->getComment() !== null) {
-            $file->addComment($schema->getConfig()->getComment());
+        if ($schema->getConfig()->getPhpComment() !== null) {
+            $file->addComment($schema->getConfig()->getPhpComment());
         }
 
         return $file;

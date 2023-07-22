@@ -69,6 +69,7 @@ class PopoConfigurator
         'classPluginCollection' => [
             'type' => 'array',
             'default' => [
+                \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class,
                 \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,
@@ -156,6 +157,7 @@ class PopoConfigurator
     protected array $namespacePluginCollection = [\Popo\Plugin\NamespacePlugin\UseStatementPlugin::class];
 
     protected array $classPluginCollection = [
+        \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class,
         \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,
