@@ -1,11 +1,19 @@
-FROM php:8.0-cli
+FROM php:8.2-cli-alpine
 
-RUN apt-get upgrade -y && apt-get update \
-    && apt-get install -y \
-      wget \
-      zip \
-      unzip
+RUN apk add --no-cache --virtual build-essentials --update \
+    linux-headers \
+    icu-dev icu-libs \
+    zlib-dev g++ make automake autoconf libzip-dev
 
+RUN apk add --no-cache \
+    ncurses \
+    bash \
+    wget \
+    zip \
+    unzip \
+    vim
+
+RUN pecl install xdebug-3.2.1 && docker-php-ext-enable xdebug
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
@@ -15,11 +23,4 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 RUN composer self-update
 
-
-ADD ./ /popo-app/
-RUN rm /popo-app/popo.sh
-RUN rm /popo-app/Dockerfile
-RUN rm -rf /popo-app/tests/
-RUN rm -rf /popo-app/doc/
-
-WORKDIR /popo-app/
+WORKDIR /app

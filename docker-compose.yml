@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  popo:
+    build:
+      context: .
+      dockerfile: docker/build/popo/Dockerfile
+    init: true
+    networks:
+      - localdev
+    working_dir: /app/
+    volumes:
+      - ./:/app/
+    environment:
+      - TERM=xterm-256color
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: /bin/bash
+
+  cli:
+    build:
+      context: .
+      dockerfile: docker/build/php/Dockerfile
+    profiles: ['cli']
+    container_name: php-cli
+    #image: php:8.2-cli
+    init: true
+    networks:
+      - localdev
+    working_dir: /app/
+    volumes:
+      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/config/php/conf.d/extension.ini:/usr/local/etc/php/conf.d/extension.ini
+      - ./docker/config/bash/bashrc-docker:/root/.bashrc
+      - ./:/app/
+    environment:
+      - TERM=xterm-256color
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: /bin/bash
+
+networks:
+  localdev:
+    driver: bridge

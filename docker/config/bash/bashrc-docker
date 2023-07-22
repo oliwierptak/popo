@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+tty -s
+
+# Text color variables
+txtund=$(tput sgr 0 1)    # Underline
+txtbld=$(tput bold)       # Bold
+txtred=$(tput setaf 1)    # Red
+txtgrn=$(tput setaf 2)    # Green
+txtylw=$(tput setaf 3)    # Yellow
+txtblu=$(tput setaf 4)    # Blue
+txtpur=$(tput setaf 5)    # Purple
+txtcyn=$(tput setaf 6)    # Cyan
+txtwht=$(tput setaf 7)    # White
+txtrst=$(tput sgr0)       # Text reset
+
+
+function parse_git_dirty {
+    [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
+}
+
+function parse_git_branch {
+    branch=`git rev-parse --symbolic-full-name --abbrev-ref HEAD 2> /dev/null`
+    dirty=$(parse_git_dirty)
+
+    if [ "z$branch" != "z" ]; then
+        if [ "$branch" == "main" ] || [ "$branch" == "main*" ] || [ "$branch" == "master" ] || [ "$branch" == "master*" ]; then
+            echo "${txtwht}(${branch}${dirty})${txtrst}"
+        else
+            echo "(${branch}${dirty})"
+        fi
+    fi
+}
+
+export PHP_IDE_CONFIG="serverName=cli-box"
+export XDEBUG_CONFIG="idekey=PHPSTORM"
+export COMPOSER_HOME="/.composer/"
+export COMPOSER_MEMORY_LIMIT=-1
+alias l="ls -laH --color"
+alias ..="cd .."
+alias gts="git tag --sort=v:refname"
+alias composer='XDEBUG_MODE=off \composer'
+
+
+#PS1="\n▶ ${txtgrn}${PHP_VERSION}${txtrst} ${txtblu}\h:${txtrst} ${txtcyn}\w${txtrst} ${txtund}\n\$(parse_git_branch)${txtrst} "
+PS1="\n▶ ${txtgrn}${PHP_VERSION}${txtrst} ${txtblu}\h:${txtrst} ${txtcyn}\w${txtrst} ${txtund}\n\${txtrst}"

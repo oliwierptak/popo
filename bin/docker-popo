@@ -1,1 +1,1 @@
-docker container run -it --rm oliwierptak/popo /popo-app/bin/popo ${@}
+docker container run -it --rm oliwierptak/popo /app/bin/popo ${@}
