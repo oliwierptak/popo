@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tty -s
+#tty -s
 
 # Text color variables
 txtund=$(tput sgr 0 1)    # Underline
