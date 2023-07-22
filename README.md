@@ -285,6 +285,7 @@ $: # file-config, shared configuration for all POPO objects in current schema fi
     implement: string|null # which interface POPO objects should implement
     comment: string|null # Class docblock comment
     phpComment: string|null # Generated PHP File docblock comment
+    use: array<string>|[] # Import block in generated PHP file
   default: array # default values
   property: array #shared properties
 
@@ -298,6 +299,7 @@ SchemaName: # schema-config
       implement: string|null
       comment: string|null
       phpComment: string|null
+      use: array<string>|[]
     default: array
     property: [{
       name: string,
@@ -305,11 +307,11 @@ SchemaName: # schema-config
         type: string
         default: string
         supportedTypes: ['array','bool','float','int','string','mixed','const','popo', 'datetime'],
-      comment: string|null, # Property docblock comment
-      default: mixed, # default value
-      itemType: string|null, # collection item type
-      itemName: string|null, # collection item singular name
-      extra: {timezone: ..., format: ...}, #for datetime property
+      comment: string|null,
+      default: mixed,
+      itemType: string|null,
+      itemName: string|null,
+      extra: {timezone: ..., format: ...},
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
     }]
 
@@ -322,6 +324,7 @@ SchemaName: # schema-config
       implement: string|null
       comment: string|null
       phpComment: string|null
+      use: array<string>|[]
     default: array
     property: [{
       name: string,
@@ -333,7 +336,7 @@ SchemaName: # schema-config
       default: mixed,
       itemType: string|null,
       itemName: string|null,
-      extra: {timezone: ..., format: ...}, #for datetime property
+      extra: {timezone: ..., format: ...},
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
     }]
 ```
