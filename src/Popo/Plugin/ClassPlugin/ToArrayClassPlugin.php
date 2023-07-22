@@ -34,11 +34,11 @@ foreach (\$metadata as \$name => \$mappedName) {
 
     if (static::METADATA[\$name]['type'] === 'datetime') {
         if ((\$value instanceof DateTime) === false) {
-            \$datetime = new DateTime(static::METADATA[\$name]['default']);
+            \$datetime = new DateTime(static::METADATA[\$name]['default'] ?: 'now');
             \$timezone = static::METADATA[\$name]['timezone'] ?? null;
             if (\$timezone !== null) {
                 \$timezone = new DateTimeZone(\$timezone);
-                \$datetime = new DateTime(\$this->\$name ?? static::METADATA[\$name]['default'], \$timezone);
+                \$datetime = new DateTime(\$this->\$name ?? static::METADATA[\$name]['default'] ?: 'now', \$timezone);
             }
             \$value = \$datetime;
         }

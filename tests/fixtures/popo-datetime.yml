@@ -12,5 +12,6 @@ Example:
 
   Bar:
     property: [
+      {name: created, type: datetime, extra: {timezone: "Europe/Paris", format: "D, d M y H:i:s O"}}
       {name: modified, type: datetime, default: "2022-01-01 15:22:17", extra: {timezone: "Europe/Paris", format: "D, d M y H:i:s O"}}
     ]

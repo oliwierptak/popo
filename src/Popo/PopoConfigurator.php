@@ -200,7 +200,7 @@ class PopoConfigurator
     protected function setupDateTimeProperty($propertyName): void
     {
         if (static::METADATA[$propertyName]['type'] === 'datetime' && $this->$propertyName === null) {
-            $value = static::METADATA[$propertyName]['default'];
+            $value = static::METADATA[$propertyName]['default'] ?: 'now';
             $datetime = new DateTime($value);
             $timezone = static::METADATA[$propertyName]['timezone'] ?? null;
             if ($timezone !== null) {
@@ -368,11 +368,11 @@ class PopoConfigurator
 
             if ($meta['type'] === 'datetime') {
                 if (($value instanceof DateTime) === false) {
-                    $datetime = new DateTime($data[$name] ?? $meta['default']);
+                    $datetime = new DateTime($data[$name] ?? $meta['default'] ?: 'now');
                     $timezone = $meta['timezone'] ?? null;
                     if ($timezone !== null) {
                         $timezone = new DateTimeZone($timezone);
-                        $datetime = new DateTime($data[$name] ?? static::METADATA[$name]['default'], $timezone);
+                        $datetime = new DateTime($data[$name] ?? static::METADATA[$name]['default'] ?: 'now', $timezone);
                     }
                     $value = $datetime;
                 }
@@ -440,11 +440,11 @@ class PopoConfigurator
 
             if (static::METADATA[$name]['type'] === 'datetime') {
                 if (($value instanceof DateTime) === false) {
-                    $datetime = new DateTime(static::METADATA[$name]['default']);
+                    $datetime = new DateTime(static::METADATA[$name]['default'] ?: 'now');
                     $timezone = static::METADATA[$name]['timezone'] ?? null;
                     if ($timezone !== null) {
                         $timezone = new DateTimeZone($timezone);
-                        $datetime = new DateTime($this->$name ?? static::METADATA[$name]['default'], $timezone);
+                        $datetime = new DateTime($this->$name ?? static::METADATA[$name]['default'] ?: 'now', $timezone);
                     }
                     $value = $datetime;
                 }

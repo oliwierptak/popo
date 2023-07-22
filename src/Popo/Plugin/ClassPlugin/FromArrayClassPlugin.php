@@ -41,11 +41,11 @@ foreach (\$metadata as \$name => \$mappedName) {
 
     if (\$meta['type'] === 'datetime') {
         if ((\$value instanceof DateTime) === false) {
-            \$datetime = new DateTime(\$data[\$name] ?? \$meta['default']);
+            \$datetime = new DateTime(\$data[\$name] ?? \$meta['default'] ?: 'now');
             \$timezone = \$meta['timezone'] ?? null;
             if (\$timezone !== null) {
                 \$timezone = new DateTimeZone(\$timezone);
-                \$datetime = new DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'], \$timezone);
+                \$datetime = new DateTime(\$data[\$name] ?? static::METADATA[\$name]['default'] ?: 'now', \$timezone);
             }
             \$value = \$datetime;
         }

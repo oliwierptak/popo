@@ -56,36 +56,38 @@
       "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox --group unit,functional"
     ],
     "report": [
-      "bin/popo report -s tests/popo.yml",
-      "bin/popo report -s tests/fixtures/popo.yml",
-      "bin/popo report -s tests/fixtures/popo-namespace-root.yml",
-      "bin/popo report -s tests/fixtures/popo-readme.yml",
-      "bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
+      "XDEBUG_MODE=off bin/popo report -s tests/popo.yml",
+      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo.yml",
+      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-namespace-root.yml",
+      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-readme.yml",
+      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-nested-from-array.yml",
+      "XDEBUG_MODE=off bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
     ],
     "popo": [
-      "bin/popo generate -s popo.yml",
-      "bin/popo generate -s tests/fixtures/popo.yml",
-      "bin/popo generate -s tests/fixtures/popo-datetime.yml",
-      "bin/popo generate -s tests/fixtures/popo-extend-1.yml",
-      "bin/popo generate -s tests/fixtures/popo-extend-2.yml",
-      "bin/popo generate -s tests/fixtures/popo-extend-3.yml",
-      "bin/popo generate -s tests/fixtures/popo-inheritance.yml",
-      "bin/popo generate -s tests/fixtures/popo-mapping-policy.yml",
-      "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
-      "bin/popo generate -s tests/fixtures/popo-readme.yml",
-      "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
+      "XDEBUG_MODE=off bin/popo generate -s popo.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-1.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-2.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-3.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-inheritance.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-mapping-policy.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-nested-from-array.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-readme.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
     ],
     "phpstan": [
-      "vendor/bin/phpstan analyse -c phpstan.neon"
+      "XDEBUG_MODE=off vendor/bin/phpstan analyse -c phpstan.neon"
     ],
     "cs-fix": [
-      "vendor/bin/phpcbf -q --standard=.phpcs.xml ${1-src}"
+      "XDEBUG_MODE=off vendor/bin/phpcbf -q --standard=.phpcs.xml ${1-src}"
     ],
     "cs-check": [
-      "vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=.phpcs.xml ${1-src}"
+      "XDEBUG_MODE=off vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=.phpcs.xml ${1-src}"
     ],
     "cs-list": [
-      "vendor/bin/phpcs -e --standard=.phpcs.xml"
+      "XDEBUG_MODE=off vendor/bin/phpcs -e --standard=.phpcs.xml"
     ]
   },
   "scripts-descriptions": {
@@ -95,5 +97,10 @@
   "bin": [
     "bin/popo",
     "bin/docker-popo"
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }

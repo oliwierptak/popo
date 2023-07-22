@@ -85,6 +85,7 @@ class DateTimeTest extends TestCase
             [
                 'title' => 'Example Foo Hakuna Matata',
                 'bar' => [
+                    'created' => $foo->getBar()->requireCreated()->format('D, d M y H:i:s O'),
                     'modified' => $expectedModified->format('D, d M y H:i:s O'),
                 ],
             ],
@@ -100,6 +101,7 @@ class DateTimeTest extends TestCase
             [
                 'title' => 'Example Foo Hakuna Matata',
                 'bar' => [
+                    'created' => $foo->requireBar()->requireCreated()->format('D, d M y H:i:s O'),
                     'modified' => 'Sat, 01 Jan 22 15:22:17 +0100',
                 ],
             ],
@@ -123,6 +125,7 @@ class DateTimeTest extends TestCase
         $expected = [
             'title' => 'Example Foo Hakuna Matata',
             'bar' => [
+                'created' => $foo->requireBar()->requireCreated()->format('D, d M y H:i:s O'),
                 'modified' => $expectedModified->format('D, d M y H:i:s O'),
             ],
         ];
@@ -139,6 +142,7 @@ class DateTimeTest extends TestCase
         $expected = [
             'title' => 'Example Foo Hakuna Matata',
             'bar' => [
+                'created' => $foo->requireBar()->requireCreated()->format('D, d M y H:i:s O'),
                 'modified' => 'Sat, 01 Jan 22 15:22:17 +0100',
             ],
         ];

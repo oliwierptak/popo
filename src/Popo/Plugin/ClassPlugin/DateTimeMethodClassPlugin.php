@@ -13,7 +13,7 @@ class DateTimeMethodClassPlugin implements ClassPluginInterface
     {
         $body = <<<EOF
 if (static::METADATA[\$propertyName]['type'] === 'datetime' && \$this->\$propertyName === null) {
-    \$value = static::METADATA[\$propertyName]['default'];
+    \$value = static::METADATA[\$propertyName]['default'] ?: 'now';
     \$datetime = new DateTime(\$value);
     \$timezone = static::METADATA[\$propertyName]['timezone'] ?? null;
     if (\$timezone !== null) {
