@@ -2,9 +2,9 @@ $:
   config:
     namespace: App\Example\Popo
     outputPath: tests/
-    #extend: App\AbstractExample::class
-    #implement: App\ExampleInterface::class
-    comment: |
+    use:
+      - SORT_ASC
+    phpComment: |
       @SuppressWarnings(PHPMD)
       @phpcs:ignoreFile
       

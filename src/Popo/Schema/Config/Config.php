@@ -14,6 +14,7 @@ class Config
         'implement' => "null|string",
         'comment' => "null|string",
         'phpComment' => "null|string",
+        'use' => "array<string>|[]]",
     ];
 
     protected string $namespace;
@@ -23,6 +24,7 @@ class Config
     protected ?string $implement = null;
     protected ?string $comment = null;
     protected ?string $phpComment = null;
+    protected array $use = [];
 
     public function getNamespace(): string
     {
@@ -108,13 +110,34 @@ class Config
     }
 
     /**
-     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null} $data
+     * @return array
+     */
+    public function getUse(): array
+    {
+        return $this->use;
+    }
+
+    /**
+     * @param array $use
+     *
+     * @return Config
+     */
+    public function setUse(array $use): Config
+    {
+        $this->use = $use;
+        return $this;
+    }
+
+
+    /**
+     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array} $data
      *
      * @return $this
      */
     public function fromArray(
-        array $data
-    ): self {
+        array $data,
+    ): self
+    {
         $data = array_merge(
             [
                 'namespaceRoot' => null,
@@ -122,23 +145,25 @@ class Config
                 'implement' => null,
                 'comment' => null,
                 'phpComment' => null,
+                'use' => [],
             ],
-            $data
+            $data,
         );
 
-        $this->namespace = (string) $data['namespace'];
+        $this->namespace = (string)$data['namespace'];
         $this->namespaceRoot = $data['namespaceRoot'];
-        $this->outputPath = (string) $data['outputPath'];
+        $this->outputPath = (string)$data['outputPath'];
         $this->extend = $data['extend'];
         $this->implement = $data['implement'];
         $this->comment = $data['comment'];
         $this->phpComment = $data['phpComment'];
+        $this->use = $data['use'];
 
         return $this;
     }
 
     /**
-     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null}
+     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array}
      */
     public function toArray(): array
     {
@@ -150,6 +175,7 @@ class Config
             'implement' => $this->implement,
             'comment' => $this->comment,
             'phpComment' => $this->phpComment,
+            'use' => $this->use,
         ];
     }
 }

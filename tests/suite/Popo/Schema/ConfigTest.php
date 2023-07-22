@@ -19,8 +19,12 @@ class ConfigTest extends TestCase
             ->setOutputPath('/tmp/test')
             ->setComment('Lorem Ipsum')
             ->setPhpComment('Lorem Ipsum PHP')
-            ->setImplement('Foo\\FooInterface');
-
+            ->setImplement('Foo\\FooInterface')
+            ->setUse([
+                'Some\BundleA\ClassA',
+                'Some\BundleB\ClassB',
+                'Some\BundleB\Interface',
+            ]);
 
         $this->assertEquals(
             [
@@ -31,8 +35,13 @@ class ConfigTest extends TestCase
                 'implement' => 'Foo\\FooInterface',
                 'comment' => 'Lorem Ipsum',
                 'phpComment' => 'Lorem Ipsum PHP',
+                'use' => [
+                    'Some\BundleA\ClassA',
+                    'Some\BundleB\ClassB',
+                    'Some\BundleB\Interface',
+                ],
             ],
-            $config->toArray()
+            $config->toArray(),
         );
     }
 
@@ -46,6 +55,7 @@ class ConfigTest extends TestCase
             'implement' => 'Foo\\FooInterface',
             'comment' => 'This is a comment',
             'phpComment' => 'This is a PHP comment',
+            'use' => ['A\B\Class', 'function foo'],
         ]);
 
         $this->assertEquals(
@@ -57,8 +67,9 @@ class ConfigTest extends TestCase
                 'implement' => 'Foo\\FooInterface',
                 'comment' => 'This is a comment',
                 'phpComment' => 'This is a PHP comment',
+                'use' => ['A\B\Class', 'function foo'],
             ],
-            $config->toArray()
+            $config->toArray(),
         );
     }
 }

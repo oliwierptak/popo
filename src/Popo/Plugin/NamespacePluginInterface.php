@@ -8,5 +8,5 @@ use Nette\PhpGenerator\PhpNamespace;
 
 interface NamespacePluginInterface
 {
-    public function run(PhpNamespace $namespace): PhpNamespace;
+    public function run(BuilderPluginInterface $builder, PhpNamespace $namespace): PhpNamespace;
 }

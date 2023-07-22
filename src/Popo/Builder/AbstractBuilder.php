@@ -76,7 +76,7 @@ abstract class AbstractBuilder implements BuilderPluginInterface
     protected function runNamespacePlugins(): self
     {
         foreach ($this->pluginContainer->createNamespacePlugin() as $plugin) {
-            $this->namespace = $plugin->run($this->namespace);
+            $this->namespace = $plugin->run($this, $this->namespace);
         }
 
         return $this;

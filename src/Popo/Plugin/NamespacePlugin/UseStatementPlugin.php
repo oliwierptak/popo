@@ -4,13 +4,15 @@ declare(strict_types = 1);
 
 namespace Popo\Plugin\NamespacePlugin;
 
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
+use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\NamespacePluginInterface;
 
 class UseStatementPlugin implements NamespacePluginInterface
 {
 
-    public function run(PhpNamespace $namespace): PhpNamespace
+    public function run(BuilderPluginInterface $builder, PhpNamespace $namespace): PhpNamespace
     {
         $namespace->addUse('UnexpectedValueException');
         $namespace->addUse('DateTime');
@@ -25,6 +27,10 @@ class UseStatementPlugin implements NamespacePluginInterface
         $namespace->addUseConstant('SORT_STRING');
         $namespace->addUseConstant('ARRAY_FILTER_USE_KEY');
         $namespace->addUseConstant('ARRAY_FILTER_USE_KEY');
+
+        foreach ($builder->getSchema()->getConfig()->getUse() as $use) {
+            $namespace->addUse((string)(new Literal($use)));
+        }
 
         return $namespace;
     }
