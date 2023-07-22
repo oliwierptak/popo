@@ -26,7 +26,6 @@ class UseStatementPlugin implements NamespacePluginInterface
         $namespace->addUseFunction('sort');
         $namespace->addUseConstant('SORT_STRING');
         $namespace->addUseConstant('ARRAY_FILTER_USE_KEY');
-        $namespace->addUseConstant('ARRAY_FILTER_USE_KEY');
 
         foreach ($builder->getSchema()->getConfig()->getUse() as $use) {
             $namespace->addUse((string)(new Literal($use)));
