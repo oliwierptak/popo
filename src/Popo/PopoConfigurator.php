@@ -26,6 +26,20 @@ use const SORT_STRING;
 
 class PopoConfigurator
 {
+    public const SCHEMA_PATH = 'schemaPath';
+    public const NAMESPACE = 'namespace';
+    public const NAMESPACE_ROOT = 'namespaceRoot';
+    public const OUTPUT_PATH = 'outputPath';
+    public const PHP_FILE_PLUGIN_COLLECTION = 'phpFilePluginCollection';
+    public const NAMESPACE_PLUGIN_COLLECTION = 'namespacePluginCollection';
+    public const CLASS_PLUGIN_COLLECTION = 'classPluginCollection';
+    public const PROPERTY_PLUGIN_COLLECTION = 'propertyPluginCollection';
+    public const MAPPING_POLICY_PLUGIN_COLLECTION = 'mappingPolicyPluginCollection';
+    public const SCHEMA_CONFIG_FILENAME = 'schemaConfigFilename';
+    public const SCHEMA_PATH_FILTER = 'schemaPathFilter';
+    public const SCHEMA_FILENAME_MASK = 'schemaFilenameMask';
+    public const SHOULD_IGNORE_NON_EXISTING_SCHEMA_FOLDER = 'shouldIgnoreNonExistingSchemaFolder';
+
     protected const METADATA = [
         'schemaPath' => [
             'type' => 'string',
@@ -70,6 +84,7 @@ class PopoConfigurator
             'type' => 'array',
             'default' => [
                 \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class,
+                \Popo\Plugin\ClassPlugin\ConstPropertyClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
                 \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,
@@ -158,6 +173,7 @@ class PopoConfigurator
 
     protected array $classPluginCollection = [
         \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class,
+        \Popo\Plugin\ClassPlugin\ConstPropertyClassPlugin::class,
         \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class,
         \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class,

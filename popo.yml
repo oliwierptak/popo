@@ -16,6 +16,7 @@ Popo:
         - \Popo\Plugin\NamespacePlugin\UseStatementPlugin::class
       classPluginCollection:
         - \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class
+        - \Popo\Plugin\ClassPlugin\ConstPropertyClassPlugin::class
         - \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class
         - \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class
