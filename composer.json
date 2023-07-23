@@ -67,6 +67,7 @@
       "XDEBUG_MODE=off bin/popo generate -s popo.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-doctrine-odm.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
       "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-1.yml",
@@ -83,13 +84,13 @@
       "XDEBUG_MODE=off vendor/bin/phpstan analyse -c phpstan.neon"
     ],
     "cs-fix": [
-      "XDEBUG_MODE=off vendor/bin/phpcbf -q --standard=.phpcs.xml ${1-src}"
+      "XDEBUG_MODE=off vendor/bin/phpcbf -q --standard=phpcs.xml.dist ${1-src}"
     ],
     "cs-check": [
-      "XDEBUG_MODE=off vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=.phpcs.xml ${1-src}"
+      "XDEBUG_MODE=off vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=phpcs.xml.dist ${1-src}"
     ],
     "cs-list": [
-      "XDEBUG_MODE=off vendor/bin/phpcs -e --standard=.phpcs.xml"
+      "XDEBUG_MODE=off vendor/bin/phpcs -e --standard=phpcs.xml.dist"
     ]
   },
   "scripts-descriptions": {

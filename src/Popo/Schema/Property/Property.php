@@ -13,10 +13,14 @@ class Property
     protected ?string $comment = null;
     protected ?string $itemType = null;
     protected ?string $itemName = null;
-    /** @var mixed|string|null */
-    protected $default = null;
-    /** @var mixed|string|null */
-    protected $extra = null;
+    protected mixed $default = null;
+    protected mixed $extra = null;
+    protected ?string $attribute = null;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $attributes = [];
     /**
      * @var array<string>
      */
@@ -24,7 +28,7 @@ class Property
     protected ?string $mappingPolicyValue = null;
 
     /**
-     * @return array<string, mixed> [name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array, mappingPolicyValue: string]
+     * @return array{name: string, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed, extra: mixed|null, attribute: string|null, attributes: array, mappingPolicy: array, mappingPolicyValue: string|null}
      */
     public function toArray(): array
     {
@@ -36,13 +40,15 @@ class Property
             'itemName' => $this->itemName,
             'default' => $this->default,
             'extra' => $this->extra,
+            'attribute' => $this->attribute,
+            'attributes' => $this->attributes,
             'mappingPolicy' => $this->mappingPolicy,
             'mappingPolicyValue' => $this->mappingPolicyValue,
         ];
     }
 
     /**
-     * @param array<string, mixed> $data [name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array, mappingPolicyValue: string]
+     * @param array{name: string, type: string|null, comment: string|null, itemType: string|null, itemName: string|null, default: mixed, extra: mixed, attribute: string|null, attributes: array, mappingPolicy: array, mappingPolicyValue: string|null} $data
      *
      * @return $this
      */
@@ -60,6 +66,8 @@ class Property
         $this->itemName = $data['itemName'];
         $this->default = $data['default'];
         $this->extra = $data['extra'];
+        $this->attribute = $data['attribute'];
+        $this->attributes = $data['attributes'] ?? [];
         $this->mappingPolicy = $data['mappingPolicy'];
         $this->mappingPolicyValue = $data['mappingPolicyValue'];
 
@@ -102,20 +110,12 @@ class Property
         return $this;
     }
 
-    /**
-     * @return mixed|string|null
-     */
-    public function getDefault()
+    public function getDefault(): mixed
     {
         return $this->default;
     }
 
-    /**
-     * @param mixed|null $default
-     *
-     * @return $this
-     */
-    public function setDefault($default): self
+    public function setDefault(mixed $default): self
     {
         $this->default = $default;
 
@@ -146,22 +146,37 @@ class Property
         return $this;
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function getExtra()
+    public function getExtra(): mixed
     {
         return $this->extra;
     }
 
-    /**
-     * @param mixed|null $extra
-     *
-     * @return $this
-     */
-    public function setExtra($extra): self
+    public function setExtra(mixed $extra): self
     {
         $this->extra = $extra;
+
+        return $this;
+    }
+
+    public function getAttribute(): ?string
+    {
+        return $this->attribute;
+    }
+
+    public function setAttribute(?string $attribute): self
+    {
+        $this->attribute = $attribute;
+        return $this;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes): self
+    {
+        $this->attributes = $attributes;
 
         return $this;
     }

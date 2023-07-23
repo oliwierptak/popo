@@ -25,7 +25,7 @@ class ConstPropertyClassPlugin implements ClassPluginInterface
 
     protected function generateConstantName(string $name): string
     {
-        static $plugins;
+        static $plugins = [];
 
         if (empty($plugins)) {
             $plugins[] = new CamelToSnakeMappingPolicyPlugin();

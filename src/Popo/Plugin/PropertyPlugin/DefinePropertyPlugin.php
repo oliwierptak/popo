@@ -22,6 +22,9 @@ class DefinePropertyPlugin implements PropertyPluginInterface
             ->setProtected()
             ->setNullable($isNullable)
             ->setType($type)
-            ->setComment($property->getComment());
+            ->setComment($property->getComment())
+            ->setAttributes(
+                $builder->getSchemaGenerator()->parseAttributes($property->getAttribute(), $property->getAttributes())
+            );
     }
 }

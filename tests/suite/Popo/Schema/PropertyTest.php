@@ -19,13 +19,17 @@ class PropertyTest extends TestCase
             ->setType('bool')
             ->setItemType('Buzz::class')
             ->setItemName('BuzzItem')
-            ->setComment('Lorem ipsum');
+            ->setComment('Lorem ipsum')
+            ->setExtra(['ext' => 'tra'])
+            ->setAttributes(['#foo']);
 
         $this->assertEquals('FooBar', $property->getName());
         $this->assertEquals('bool', $property->getType());
         $this->assertEquals('Lorem ipsum', $property->getComment());
         $this->assertEquals('Buzz::class', $property->getItemType());
         $this->assertEquals('BuzzItem', $property->getItemName());
+        $this->assertEquals(['ext' => 'tra'], $property->getExtra());
+        $this->assertEquals(['#foo'], $property->getAttributes());
     }
 
     public function test_array_partial(): void
@@ -47,6 +51,8 @@ class PropertyTest extends TestCase
                 'itemName' => null,
                 'default' => null,
                 'extra' => null,
+                'attribute' => null,
+                'attributes' => [],
                 'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
                 'mappingPolicyValue' => null,
 
@@ -68,6 +74,8 @@ class PropertyTest extends TestCase
                 'itemName' => 'record',
                 'default' => [],
                 'extra' => null,
+                'attribute' => '#[Foo(value)]',
+                'attributes' => ['Foo' => 'value'],
                 'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
                 'mappingPolicyValue' => null,
             ]
@@ -82,6 +90,8 @@ class PropertyTest extends TestCase
                 'itemName' => 'record',
                 'default' => [],
                 'extra' => null,
+                'attribute' => '#[Foo(value)]',
+                'attributes' => ['Foo' => 'value'],
                 'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
                 'mappingPolicyValue' => null,
 

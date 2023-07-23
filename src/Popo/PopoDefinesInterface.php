@@ -30,6 +30,8 @@ class PopoDefinesInterface
 
     public const SCHEMA_PROPERTY_EXTRA = 'extra';
 
+    public const SCHEMA_PROPERTY_ATTRIBUTE = 'attribute';
+
     public const SCHEMA_PROPERTY_MAPPING_POLICY = 'mappingPolicy';
 
     public const SCHEMA_PROPERTY_MAPPING_POLICY_VALUE = 'mappingPolicyValue';
@@ -56,8 +58,6 @@ class PopoDefinesInterface
 
     public const PROPERTY_TYPE_EXTRA_FORMAT = 'format';
 
-
-
     public const SCHEMA_KEYS = [
         PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG,
         PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT,
@@ -70,6 +70,9 @@ class PopoDefinesInterface
         'property' => [],
     ];
 
+    /**
+     * @var array{namespace: string, outputPath: string, namespaceRoot: string|null, extend: string|null, implement: string|null, comment:string|null, phpComment: string|null, attribute: string|null, attributes: array}
+     */
     public const SCHEMA_CONFIGURATION_DEFAULT_DATA = [
         'namespace' => 'Popo',
         'outputPath' => null,
@@ -78,12 +81,12 @@ class PopoDefinesInterface
         'implement' => null,
         'comment' => null,
         'phpComment' => null,
-        'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
-        'mappingPolicyValue' => null,
+        'attribute' => null,
+        'attributes' => [],
     ];
 
     /**
-     * @var array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|null, extra: mixed|null}
+     * @var array{name: string, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed, extra: mixed, attribute: string|null, attributes: array, mappingPolicy: array, mappingPolicyValue: string|null}
      */
     public const SCHEMA_PROPERTY_DEFAULT_DATA = [
         'name' => null,
@@ -93,6 +96,8 @@ class PopoDefinesInterface
         'itemName' => null,
         'default' => null,
         'extra' => null,
+        'attribute' => null,
+        'attributes' => [],
         'mappingPolicy' => ['\Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::MAPPING_POLICY_NAME'],
         'mappingPolicyValue' => null,
     ];

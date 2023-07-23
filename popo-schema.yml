@@ -7,9 +7,11 @@ $: # file-config, shared configuration for all POPO objects in current schema fi
     implement: string|null # which interface POPO objects should implement
     comment: string|null # Class docblock comment
     phpComment: string|null # Generated PHP File docblock comment
-    use: array<string>|[] # Import block in generated PHP file
+    use: array<string>|[] # Import block in generated PHP class
+    attribute: string|null # Class attributes as string
+    attributes: array<key, value> # Class attributes as key value pairs
   default: array # default values
-  property: array #shared properties
+  property: array # shared properties
 
 SchemaName: # schema-config
   $: # shared configuration for all POPO objects in SchemaName, in all schema files
@@ -22,6 +24,8 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
+      attribute: string|null, # Class attributes as string
+      attributes: array<key, value> # Class attributes as key value pairs
     default: array
     property: [{
       name: string,
@@ -34,7 +38,10 @@ SchemaName: # schema-config
       itemType: string|null,
       itemName: string|null,
       extra: {timezone: ..., format: ...},
-      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
+      attribute: string|null, # Property attributes as string
+      attributes: array<key, value> # Property attributes as key value pairs
+      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
+      mappingPolicyValue: string|null
     }]
 
   PopoName: # popo-config
@@ -47,6 +54,8 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
+      attribute: string|null, # Class attributes as string
+      attributes: array<key, value> # Class attributes as key value pairs
     default: array
     property: [{
       name: string,
@@ -59,5 +68,8 @@ SchemaName: # schema-config
       itemType: string|null,
       itemName: string|null,
       extra: {timezone: ..., format: ...},
-      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel']
+      attribute: string|null, # Property attributes as string
+      attributes: array<key, value> # Property attributes as key value pairs
+      mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
+      mappingPolicyValue: string|null
     }]

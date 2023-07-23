@@ -28,7 +28,14 @@ class UseStatementPlugin implements NamespacePluginInterface
         $namespace->addUseConstant('ARRAY_FILTER_USE_KEY');
 
         foreach ($builder->getSchema()->getConfig()->getUse() as $use) {
-            $namespace->addUse((string)(new Literal($use)));
+            $use = str_replace(';', '', $use);
+
+            $tokens = [];
+            preg_match('/(.*) as (.*)/', $use, $tokens);
+            $constName = $tokens[1] ?? $use;
+            $alias = $tokens[2] ?? null;
+            
+            $namespace->addUse((string)(new Literal($constName)), $alias, PhpNamespace::NameNormal);
         }
 
         return $namespace;

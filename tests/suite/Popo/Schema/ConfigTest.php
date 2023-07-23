@@ -24,7 +24,9 @@ class ConfigTest extends TestCase
                 'Some\BundleA\ClassA',
                 'Some\BundleB\ClassB',
                 'Some\BundleB\Interface',
-            ]);
+            ])
+            ->setAttribute('#[Foo(value)]')
+            ->setAttributes(['Foo' => 'value']);
 
         $this->assertEquals(
             [
@@ -40,6 +42,8 @@ class ConfigTest extends TestCase
                     'Some\BundleB\ClassB',
                     'Some\BundleB\Interface',
                 ],
+                'attribute' => '#[Foo(value)]',
+                'attributes' => ['Foo' => 'value'],
             ],
             $config->toArray(),
         );
@@ -56,6 +60,8 @@ class ConfigTest extends TestCase
             'comment' => 'This is a comment',
             'phpComment' => 'This is a PHP comment',
             'use' => ['A\B\Class', 'function foo'],
+            'attribute' => '#[Foo(value)]',
+            'attributes' => ['Foo' => 'value'],
         ]);
 
         $this->assertEquals(
@@ -68,6 +74,8 @@ class ConfigTest extends TestCase
                 'comment' => 'This is a comment',
                 'phpComment' => 'This is a PHP comment',
                 'use' => ['A\B\Class', 'function foo'],
+                'attribute' => '#[Foo(value)]',
+                'attributes' => ['Foo' => 'value'],
             ],
             $config->toArray(),
         );

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Popo\Schema\Generator;
 
+use Nette\PhpGenerator\Attribute;
 use Nette\PhpGenerator\Literal;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Popo\Schema\Property\Property;
@@ -101,6 +102,39 @@ class SchemaGenerator implements SchemaGeneratorInterface
         }
 
         return (string) $property->getItemType();
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     *
+     * @return array<Attribute>
+     */
+    public function parseAttributes(?string $attribute, array $attributes): array
+    {
+        $result = [];
+        if ($attribute) {
+            $attributeValue = trim($attribute);
+            $attributeValue = preg_replace('@[\[\];#]@i','', $attributeValue);
+
+            $tokens = preg_split('/\n/', (string)$attributeValue);
+            foreach ($tokens as $token) {
+                preg_match('@^([^(]+)\(([^)]+)\)$@im', $token, $attributeToken);
+                if (empty($attributeToken)) {
+                    $result[] = new Attribute($token, []);
+                }
+                else {
+                    $result[] = new Attribute($attributeToken[1], [$attributeToken[2] ?? []] );
+                }
+            }
+        }
+
+        foreach ($attributes as  $attributeData) {
+            $attributeName = $attributeData['name'];
+            $attributeValue = $attributeData['value'] ?? null;
+            $result[] = new Attribute($attributeName, $attributeValue ?? []);
+        }
+
+        return $result;
     }
 
     protected function expandNamespaceForParameter(Schema $schema): string

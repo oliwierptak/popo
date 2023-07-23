@@ -113,7 +113,7 @@ class SchemaBuilder
 
     /**
      * @param \Popo\Schema\Schema $schema
-     * @param array<array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array<string>, mappingPolicyValue: string}> $propertyCollection
+     * @param array<string, array{name: string, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed, extra: mixed, attribute: string|null, attributes: array, mappingPolicy: array, mappingPolicyValue: string|null}> $propertyCollection
      *
      * @return \Popo\Schema\Schema
      */
@@ -131,7 +131,7 @@ class SchemaBuilder
 
     /**
      * @param \Popo\Schema\Schema $schema
-     * @param array{name: string|null, type: string, comment: string|null, itemType: string|null, itemName: string|null, default: mixed|string|null, extra: mixed|null, mappingPolicy: array<string>, mappingPolicyValue: string} $propertyData
+     * @param array{name: string, type: string|null, comment: string|null, itemType: string|null, itemName: string|null, default: mixed, extra: mixed, attribute: string|null, attributes: array, mappingPolicy: array, mappingPolicyValue: string|null} $propertyData
      *
      * @return \Popo\Schema\Property\Property
      */

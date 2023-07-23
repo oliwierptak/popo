@@ -14,7 +14,9 @@ class Config
         'implement' => "null|string",
         'comment' => "null|string",
         'phpComment' => "null|string",
-        'use' => "array<string>|[]]",
+        'use' => "array<string>|[]",
+        'attribute' => "string|null",
+        'attributes' => "array<string,mixed>|[]",
     ];
 
     protected string $namespace;
@@ -24,7 +26,16 @@ class Config
     protected ?string $implement = null;
     protected ?string $comment = null;
     protected ?string $phpComment = null;
+    /**
+     * @var array<string>
+     */
     protected array $use = [];
+    protected ?string $attribute = null;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $attributes = [];
 
     public function getNamespace(): string
     {
@@ -106,31 +117,55 @@ class Config
     public function setPhpComment(?string $phpComment): self
     {
         $this->phpComment = $phpComment;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getUse(): array
     {
         return $this->use;
     }
 
-    /**
-     * @param array $use
-     *
-     * @return Config
-     */
-    public function setUse(array $use): Config
+    public function setUse(array $use): self
     {
         $this->use = $use;
+
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getAttribute(): ?string
+    {
+        return $this->attribute;
+    }
+
+    public function setAttribute(?string $attribute): self
+    {
+        $this->attribute = $attribute;
+        return $this;
+    }
 
     /**
-     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array} $data
+     * @return array<string, mixed>
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    public function setAttributes(array $attributes): self
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    /**
+     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, attribute: string|null, attributes: array} $data
      *
      * @return $this
      */
@@ -146,6 +181,8 @@ class Config
                 'comment' => null,
                 'phpComment' => null,
                 'use' => [],
+                'attribute' => null,
+                'attributes' => [],
             ],
             $data,
         );
@@ -158,12 +195,14 @@ class Config
         $this->comment = $data['comment'];
         $this->phpComment = $data['phpComment'];
         $this->use = $data['use'];
+        $this->attribute = $data['attribute'];
+        $this->attributes = $data['attributes'];
 
         return $this;
     }
 
     /**
-     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array}
+     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, attribute: string|null, attributes: array}
      */
     public function toArray(): array
     {
@@ -176,6 +215,8 @@ class Config
             'comment' => $this->comment,
             'phpComment' => $this->phpComment,
             'use' => $this->use,
+            'attribute' => $this->attribute,
+            'attributes' => $this->attributes,
         ];
     }
 }

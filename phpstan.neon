@@ -2,7 +2,8 @@ parameters:
 	level: 8
 	paths:
 		- src
-		- tests
+		- tests/suite
+		- tests/suite-helper
 	bootstrapFiles:
 		- tests/bootstrap.php
 	excludePaths:
