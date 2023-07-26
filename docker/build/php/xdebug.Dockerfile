@@ -13,6 +13,8 @@ RUN apk add --no-cache \
     unzip \
     vim
 
+RUN pecl install xdebug-3.2.1 && docker-php-ext-enable xdebug
+
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && cd /tmp && wget -c https://github.com/phrase/phraseapp-client/releases/download/1.13.0/phraseapp_linux_386 \
@@ -23,4 +25,4 @@ RUN composer self-update
 
 WORKDIR /app
 
-ENV SHELL_MODE=""
+ENV SHELL_MODE="x"

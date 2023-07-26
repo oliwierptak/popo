@@ -50,47 +50,47 @@
       "chmod +x bin/docker-popo"
     ],
     "test": [
-      "XDEBUG_MODE=off vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
+      "vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
     ],
     "test-c": [
       "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox --group unit,functional"
     ],
     "report": [
-      "XDEBUG_MODE=off bin/popo report -s tests/popo.yml",
-      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo.yml",
-      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-namespace-root.yml",
-      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-readme.yml",
-      "XDEBUG_MODE=off bin/popo report -s tests/fixtures/popo-nested-from-array.yml",
-      "XDEBUG_MODE=off bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
+      "bin/popo report -s tests/popo.yml",
+      "bin/popo report -s tests/fixtures/popo.yml",
+      "bin/popo report -s tests/fixtures/popo-namespace-root.yml",
+      "bin/popo report -s tests/fixtures/popo-readme.yml",
+      "bin/popo report -s tests/fixtures/popo-nested-from-array.yml",
+      "bin/popo report -c tests/fixtures/bundles/project.config.yml -s tests/fixtures/bundles/"
     ],
     "popo": [
-      "XDEBUG_MODE=off bin/popo generate -s popo.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-datetime.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-doctrine-odm.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-1.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-2.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-extend-3.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-inheritance.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-mapping-policy.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-nested-from-array.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/popo-readme.yml",
-      "XDEBUG_MODE=off bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
+      "bin/popo generate -s popo.yml",
+      "bin/popo generate -s tests/fixtures/popo.yml",
+      "bin/popo generate -s tests/fixtures/popo-datetime.yml",
+      "bin/popo generate -s tests/fixtures/popo-doctrine-odm.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-1.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-2.yml",
+      "bin/popo generate -s tests/fixtures/popo-extend-3.yml",
+      "bin/popo generate -s tests/fixtures/popo-inheritance.yml",
+      "bin/popo generate -s tests/fixtures/popo-mapping-policy.yml",
+      "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
+      "bin/popo generate -s tests/fixtures/popo-nested-from-array.yml",
+      "bin/popo generate -s tests/fixtures/popo-readme.yml",
+      "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
     ],
     "phpstan": [
-      "XDEBUG_MODE=off vendor/bin/phpstan analyse -c phpstan.neon"
+      "vendor/bin/phpstan analyse -c phpstan.neon"
     ],
     "cs-fix": [
-      "XDEBUG_MODE=off vendor/bin/phpcbf -q --standard=phpcs.xml.dist ${1-src}"
+      "vendor/bin/phpcbf -q --standard=phpcs.xml.dist ${1-src}"
     ],
     "cs-check": [
-      "XDEBUG_MODE=off vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=phpcs.xml.dist ${1-src}"
+      "vendor/bin/phpcs --colors -p -s --report-width=120 --extensions=php --standard=phpcs.xml.dist ${1-src}"
     ],
     "cs-list": [
-      "XDEBUG_MODE=off vendor/bin/phpcs -e --standard=phpcs.xml.dist"
+      "vendor/bin/phpcs -e --standard=phpcs.xml.dist"
     ]
   },
   "scripts-descriptions": {

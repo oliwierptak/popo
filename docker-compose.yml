@@ -23,7 +23,6 @@ services:
       dockerfile: docker/build/php/Dockerfile
     profiles: ['cli']
     container_name: php-cli
-    #image: php:8.2-cli
     init: true
     networks:
       - localdev
@@ -32,6 +31,29 @@ services:
       - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
       - ./docker/config/php/conf.d/extension.ini:/usr/local/etc/php/conf.d/extension.ini
       - ./docker/config/bash/bashrc-docker:/root/.bashrc
+      - ./docker/config/bash/bash_history:/root/.bash_history
+      - ./:/app/
+    environment:
+      - TERM=xterm-256color
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: /bin/bash
+
+  clix:
+    build:
+      context: .
+      dockerfile: docker/build/php/xdebug.Dockerfile
+    profiles: ['clix']
+    container_name: php-clix
+    init: true
+    networks:
+      - localdev
+    working_dir: /app/
+    volumes:
+      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/config/php/conf.d/extension.ini:/usr/local/etc/php/conf.d/extension.ini
+      - ./docker/config/bash/bashrc-docker:/root/.bashrc
+      - ./docker/config/bash/bash_history:/root/.bash_history
       - ./:/app/
     environment:
       - TERM=xterm-256color

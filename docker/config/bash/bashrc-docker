@@ -43,4 +43,4 @@ alias composer='XDEBUG_MODE=off \composer'
 
 
 #PS1="\n▶ ${txtgrn}${PHP_VERSION}${txtrst} ${txtblu}\h:${txtrst} ${txtcyn}\w${txtrst} ${txtund}\n\$(parse_git_branch)${txtrst} "
-PS1="\n▶ ${txtgrn}${PHP_VERSION}${txtrst} ${txtblu}\h:${txtrst} ${txtcyn}\w${txtrst} ${txtund}${txtrst}\n"
+PS1="\n▶ ${txtgrn}${PHP_VERSION}${SHELL_MODE}${txtrst} ${txtblu}\h:${txtrst} ${txtcyn}\w${txtrst} ${txtund}${txtrst}\n"
