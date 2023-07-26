@@ -61,6 +61,20 @@ foreach (\$metadata as \$name => \$mappedName) {
             \$value = \$datetime;
         }
     }
+    
+    if (\$meta['type'] === 'array' && isset(\$meta['itemIsPopo']) && \$meta['itemIsPopo']) {
+        \$className = \$meta['itemType'];
+
+        \$valueCollection = [];
+        foreach (\$value as \$popoKey => \$popoValue) {
+            \$popo = new \$className;
+            \$popo->fromArray(\$popoValue);
+
+            \$valueCollection[] = \$popo;
+        }
+
+        \$value = \$valueCollection;
+    }
 
     \$this->\$name = \$value;
     if (array_key_exists(\$mappedName, \$data)) {

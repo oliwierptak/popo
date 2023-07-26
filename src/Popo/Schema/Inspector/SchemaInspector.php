@@ -51,7 +51,7 @@ class SchemaInspector implements SchemaInspectorInterface
         return true;
     }
 
-    public function isLiteral($value): bool
+    public function isLiteral(mixed $value): bool
     {
         if (is_string($value) === false) {
             return false;
@@ -61,7 +61,7 @@ class SchemaInspector implements SchemaInspectorInterface
             return false;
         }
 
-        return strpos($value, '::') !== false || $value[0] === '\\';
+        return str_contains($value, '::') || $value[0] === '\\';
     }
 
     public function hasExtra(Property $property): bool

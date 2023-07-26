@@ -58,6 +58,15 @@ foreach (\$metadata as \$name => \$mappedName) {
 
         \$value = \$value->format(self::METADATA[\$name]['format']);
     }
+    
+    if (self::METADATA[\$name]['type'] === 'array' && isset(self::METADATA[\$name]['itemIsPopo']) && self::METADATA[\$name]['itemIsPopo']) {
+        \$valueCollection = [];
+        foreach (\$value as \$popo) {
+            \$valueCollection[] = \$popo->toArray();
+        }
+
+        \$value = \$valueCollection;
+    }
 
     \$data[\$mappedName] = \$value;
 }

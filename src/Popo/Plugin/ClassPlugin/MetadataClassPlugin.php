@@ -8,6 +8,7 @@ use Nette\PhpGenerator\Literal;
 use Popo\Plugin\BuilderPluginInterface;
 use Popo\Plugin\ClassPluginInterface;
 use Popo\PopoDefinesInterface;
+use Popo\Schema\Property\Property;
 use Popo\Schema\Property\PropertyExtraTimezone;
 
 class MetadataClassPlugin implements ClassPluginInterface
@@ -17,7 +18,7 @@ class MetadataClassPlugin implements ClassPluginInterface
         $builder->getClass()
             ->addConstant(
                 'METADATA',
-                $this->generateMetadataProperties($builder)
+                $this->generateMetadataProperties($builder),
             )
             ->setProtected();
     }
@@ -49,7 +50,8 @@ class MetadataClassPlugin implements ClassPluginInterface
                     $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_FORMAT] = $extra->getFormat();
 
                     if ($extra->hasTimezone()) {
-                        $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone();
+                        $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_EXTRA_TIMEZONE] = $extra->getTimezone(
+                        );
                     }
                 }
                 else {
@@ -62,7 +64,7 @@ class MetadataClassPlugin implements ClassPluginInterface
                     $builder->getSchemaGenerator()->generatePopoType(
                         $builder->getSchema(),
                         $property,
-                        false
+                        false,
                     )
                 );
 
@@ -82,7 +84,29 @@ class MetadataClassPlugin implements ClassPluginInterface
                 }
 
                 $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $values;
-                continue;
+
+                if ($property->getItemName()) {
+                    $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_ITEM_NAME] = $property->getItemName();
+                    $itemType = $property->getItemType();
+                    if ($itemType) {
+                        $itemTypeProperty = (new Property())
+                            ->setName($property->getItemName())
+                            ->setType('popo')
+                            ->setDefault($itemType);
+
+                        $itemTypeLiteral = new Literal(
+                            $builder->getSchemaGenerator()->generatePopoType(
+                                $builder->getSchema(),
+                                $itemTypeProperty,
+                                false,
+                            )
+                        );
+
+                        $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_ITEM_TYPE] = $itemTypeLiteral;
+                        $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_ITEM_IS_POPO] = true;
+                    }
+                    continue;
+                }
             }
 
             if ($builder->getSchemaInspector()->isDateTimeProperty($property->getType())) {
@@ -91,7 +115,7 @@ class MetadataClassPlugin implements ClassPluginInterface
             }
 
             if ($builder->getSchemaInspector()->isBool($property->getType())) {
-                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = (bool) $property->getDefault();
+                $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = (bool)$property->getDefault();
                 continue;
             }
 

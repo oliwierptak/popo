@@ -20,12 +20,7 @@ interface SchemaInspectorInterface
 
     public function isPropertyNullable(Property $property): bool;
 
-    /**
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isLiteral($value): bool;
+    public function isLiteral(mixed $value): bool;
 
     public function hasExtra(Property $property): bool;
 }

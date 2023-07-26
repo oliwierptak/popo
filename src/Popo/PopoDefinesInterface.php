@@ -58,6 +58,12 @@ class PopoDefinesInterface
 
     public const PROPERTY_TYPE_EXTRA_FORMAT = 'format';
 
+    public const PROPERTY_TYPE_ITEM_NAME = 'itemName';
+
+    public const PROPERTY_TYPE_ITEM_TYPE = 'itemType';
+
+    public const PROPERTY_TYPE_ITEM_IS_POPO = 'itemIsPopo';
+
     public const SCHEMA_KEYS = [
         PopoDefinesInterface::CONFIGURATION_SCHEMA_CONFIG,
         PopoDefinesInterface::CONFIGURATION_SCHEMA_DEFAULT,

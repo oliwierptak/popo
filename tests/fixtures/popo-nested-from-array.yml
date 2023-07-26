@@ -1,0 +1,22 @@
+$:
+  config:
+    namespace: App\Example\Nested
+    outputPath: tests/
+
+Nested:
+  Foo:
+    property: [
+      {name: title}
+      {name: bars, type: array, itemName: bar, itemType: Bar::class},
+    ]}}
+
+  Bar:
+    property: [
+      {name: value}
+      {name: buzz, type: popo, default: Buzz::class}
+    ]
+
+  Buzz:
+    property: [
+      {name: email}
+    ]
