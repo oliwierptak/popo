@@ -67,7 +67,7 @@
       "bin/popo generate -s popo.yml",
       "bin/popo generate -s tests/fixtures/popo.yml",
       "bin/popo generate -s tests/fixtures/popo-datetime.yml",
-      "bin/popo generate -s tests/fixtures/popo-doctrine-odm.yml",
+      "bin/popo generate -s tests/fixtures/popo-doctrine.yml",
       "bin/popo generate -s tests/fixtures/popo-extend.yml",
       "bin/popo generate -s tests/fixtures/popo-extend.yml",
       "bin/popo generate -s tests/fixtures/popo-extend-1.yml",

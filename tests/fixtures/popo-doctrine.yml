@@ -1,46 +1,17 @@
 $:
   config:
-    namespace: App\Example\Document
     outputPath: tests/
     phpComment: |
       Auto-generated.      
 
-Document:
-  LogEvent:
-    config:
-      use:
-        - Doctrine\ODM\MongoDB\Mapping\Annotations\Document
-        - Doctrine\ODM\MongoDB\Mapping\Annotations\Field
-        - Doctrine\ODM\MongoDB\Mapping\Annotations\Id
-      comment: |
-        @Document(collection="events")
-    property:
-      - name: id
-        comment: '@Id'
-
-      - name: service
-        comment: '@Field(type="string")'
-
-      - name: statusCode
-        type: int
-        comment: '@Field(type="int")'
-
-      - name: logDate
-        type: datetime
-        comment: '@Field(type="date")'
-        extra:
-          - timezone: Europe/Berlin
-            format: Y-m-d\TH:i:sP
-
+# Doctrine ORM Entity example mapping
 Entity:
-  $:
+  LogEvent:
     config:
       namespace: App\Example\Entity
       use:
         - App\Repository\LogEventRepository
         - Doctrine\DBAL\Types\Types
-  LogEvent:
-    config:
       attribute: |
         #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
     property:
@@ -64,6 +35,35 @@ Entity:
         type: datetime
         attribute: |
           #[Doctrine\ORM\Mapping\Column(type: Types::DATETIME)]
+        extra:
+          - timezone: Europe/Berlin
+            format: Y-m-d\TH:i:sP
+
+# Doctrine ODM Document example mapping
+Document:
+  LogEvent:
+    config:
+      namespace: App\Example\Document
+      use:
+        - Doctrine\ODM\MongoDB\Mapping\Annotations\Document
+        - Doctrine\ODM\MongoDB\Mapping\Annotations\Field
+        - Doctrine\ODM\MongoDB\Mapping\Annotations\Id
+      comment: |
+        @Document(collection="events")
+    property:
+      - name: id
+        comment: '@Id'
+
+      - name: service
+        comment: '@Field(type="string")'
+
+      - name: statusCode
+        type: int
+        comment: '@Field(type="int")'
+
+      - name: logDate
+        type: datetime
+        comment: '@Field(type="date")'
         extra:
           - timezone: Europe/Berlin
             format: Y-m-d\TH:i:sP

@@ -82,98 +82,6 @@ Output:
 _Run `bin/popo generate -s tests/fixtures/popo-readme.yml` or `docker-popo generate -s tests/fixtures/popo-readme.yml` to generate files from this example._
 
 
-## Doctrine Support
-
-
-### Doctrine ORM
-
-Example of Doctrine ORM Entity mapping:
-
-```yaml
-Entity:
-  $:
-    config:
-      namespace: App\Example\Entity
-      use:
-        - App\Repository\LogEventRepository
-        - Doctrine\DBAL\Types\Types
-  LogEvent:
-    config:
-      attribute: |
-        #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
-    property:
-      - name: id
-        attributes:
-          - name: Doctrine\ORM\Mapping\Id
-          - name: Doctrine\ORM\Mapping\GeneratedValue
-          - name: Doctrine\ORM\Mapping\ORM\Column
-
-      - name: service
-        attributes:
-          - name: Doctrine\ORM\Mapping\Column
-            value: ['length: 255']
-
-      - name: statusCode
-        type: int
-        attribute: |
-          #[Doctrine\ORM\Mapping\Column(type: Types::INTEGER)]
-
-      - name: logDate
-        type: datetime
-        attribute: |
-          #[Doctrine\ORM\Mapping\Column(type: Types::DATETIME)]
-        extra:
-          - timezone: Europe/Berlin
-            format: Y-m-d\TH:i:sP
-```
-
-### MongoDB ODM
-
-Example of MongoDB ODM Document mapping:
-
-```yaml
-Document:
-  LogEvent:
-    config:
-      comment: |
-        @Document(collection="events")
-    property:
-      - name: id
-        comment: '@Id'
-
-      - name: service
-        comment: '@Field(type="string")'
-
-      - name: statusCode
-        type: int
-        comment: '@Field(type="int")'
-
-      - name: logDate
-        type: datetime
-        comment: '@Field(type="date")'
-        extra:
-          - timezone: Europe/Berlin
-            format: Y-m-d\TH:i:sP
-```
-
-
-Usage with Doctrine:
-
-```php
-use App\Example\Entity\LogEvent;
-
-$document = new LogEvent();
-$document->service('service-name');
-$document->setStatusCode(201);
-$document->setLogDate(new DateTime());
-
-$em->persist($document);
-$em->flush();
-```
-
-See [popo-doctrine-odm.yml](tests%2Ffixtures%2Fpopo-doctrine-odm.yml)  for full schema example.
-
-
 ## Installation
 
 ```sh
@@ -207,6 +115,36 @@ _For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo gen
 POPO Schema can be defined and extended on few levels, and it can be defined in multiple files.
 
 The schema supports key mapping, inheritance, collections and encapsulation of other POPO objects.
+
+### Schema structure
+
+The `popo-config` values override `schema-file-config` values, and `schema-file-config` values overwrite `schema-config` values.
+
+On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
+
+<img src="doc/popo_schema.png" width="400" alt="POPO Schema" />
+
+#### `schema-config`
+
+The configuration was defined as a `Schema` property.
+It will be used by **_all_** POPO objects in **_all_** files, under given schema.
+
+
+#### `schema-file-config` 
+
+The configuration was defined as a `SchemaFile` property.
+It will be used by **_all_** POPO objects in **_current_** file.
+
+
+#### `popo-config`
+
+The configuration was defined as a `POPO` property.
+It will be used by one **_specific_** POPO objects in **_current_** file.
+
+
+See [tests/fixtures](tests/fixtures/) for schema examples.
+
+### Schema Definition
 
 ```yaml
 $: # file-config, shared configuration for all POPO objects in current schema file
@@ -286,6 +224,7 @@ SchemaName: # schema-config
     }]
 ```
 
+
 ### Schema configuration options
 
 - `namespace`
@@ -294,7 +233,7 @@ SchemaName: # schema-config
 - `extend`
 - `implement`
 - `comment`
-- `phpComment` 
+- `phpComment`
 - `use`
 - `attribute`
 - `attributes`
@@ -313,39 +252,12 @@ SchemaName: # schema-config
 
 
 
-## Schema structure
-
-The `popo-config` values override `schema-file-config` values, and `schema-file-config` values overwrite `schema-config` values.
-
-On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
-
-<img src="doc/popo_schema.png" width="400" alt="POPO Schema" />
-
-#### `schema-config`
-
-The configuration was defined as a `Schema` property.
-It will be used by **_all_** POPO objects in **_all_** files, under given schema.
-
-
-#### `schema-file-config` 
-
-The configuration was defined as a `SchemaFile` property.
-It will be used by **_all_** POPO objects in **_current_** file.
-
-
-#### `popo-config`
-
-The configuration was defined as a `POPO` property.
-It will be used by one **_specific_** POPO objects in **_current_** file.
-
-
-See [tests/fixtures](tests/fixtures/) for schema examples.
-
 ## Property name remapping
 
 POPO can remap property keys names, for example change `foo_id` into `fooId`.
 
 See [Property Name Remapping](README_PROPERTY_NAME_REMAPPING.md) doc.
+
 
 ## Pluggable architecture
 
@@ -353,9 +265,16 @@ New functionality can be provided on the command line, or via configuration.
 
 See [Plugins](README_PLUGINS.md) doc.
 
+
+## Doctrine Support
+
+See [Doctrine Support](README_DOCTRINE.md) doc.
+
+
 ## Command line options
 
 See [Command Line Options](README_COMMAND_LINE.md) doc.
+
 
 
 ## More Examples

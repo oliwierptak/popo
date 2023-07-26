@@ -85,14 +85,17 @@ class MetadataClassPlugin implements ClassPluginInterface
 
                 $metadata[$propertyName][PopoDefinesInterface::SCHEMA_PROPERTY_DEFAULT] = $values;
 
-                if ($property->getItemName()) {
+                if (
+                    $property->getItemName()
+                    && $property->getItemType()
+                    && $builder->getSchemaInspector()->isLiteral($property->getItemType())
+                ) {
                     $metadata[$propertyName][PopoDefinesInterface::PROPERTY_TYPE_ITEM_NAME] = $property->getItemName();
-                    $itemType = $property->getItemType();
-                    if ($itemType) {
+                    if ($property->getItemType()) {
                         $itemTypeProperty = (new Property())
                             ->setName($property->getItemName())
                             ->setType('popo')
-                            ->setDefault($itemType);
+                            ->setDefault($property->getItemType());
 
                         $itemTypeLiteral = new Literal(
                             $builder->getSchemaGenerator()->generatePopoType(

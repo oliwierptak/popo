@@ -401,6 +401,20 @@ class PopoConfigurator
                 }
             }
 
+            if ($meta['type'] === 'array' && isset($meta['itemIsPopo']) && $meta['itemIsPopo']) {
+                $className = $meta['itemType'];
+
+                $valueCollection = [];
+                foreach ($value as $popoKey => $popoValue) {
+                    $popo = new $className;
+                    $popo->fromArray($popoValue);
+
+                    $valueCollection[] = $popo;
+                }
+
+                $value = $valueCollection;
+            }
+
             $this->$name = $value;
             if (array_key_exists($mappedName, $data)) {
                 $this->updateMap[$name] = true;
@@ -474,6 +488,15 @@ class PopoConfigurator
                 }
 
                 $value = $value->format(self::METADATA[$name]['format']);
+            }
+
+            if (self::METADATA[$name]['type'] === 'array' && isset(self::METADATA[$name]['itemIsPopo']) && self::METADATA[$name]['itemIsPopo']) {
+                $valueCollection = [];
+                foreach ($value as $popo) {
+                    $valueCollection[] = $popo->toArray();
+                }
+
+                $value = $valueCollection;
             }
 
             $data[$mappedName] = $value;
