@@ -12,6 +12,9 @@ Entity:
       use:
         - App\Repository\LogEventRepository
         - Doctrine\DBAL\Types\Types
+        - Doctrine\ORM\Mapping\Id
+        - Doctrine\ORM\Mapping\GeneratedValue
+        - Doctrine\ORM\Mapping\Column
       attribute: |
         #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
     property:
