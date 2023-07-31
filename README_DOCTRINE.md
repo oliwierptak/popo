@@ -3,7 +3,7 @@
 ### Doctrine ORM
 
 
-The example below generates `Doctrine ODM Document` compatible classes.
+The example below generates `Doctrine ODM Document` compatible class.
 
 
 ```yaml
@@ -47,14 +47,14 @@ Document:
 Usage with Doctrine:
 
 ```php
-use App\Example\Entity\LogEvent;
+use App\Example\Document\LogEvent;
 
 $document = new LogEvent();
 $document->service('service-name');
 $document->setStatusCode(201);
 $document->setLogDate(new DateTime());
 
-$em->persist($document);
-$em->flush();
+$dm->persist($document);
+$dm->flush();
 ```
 
