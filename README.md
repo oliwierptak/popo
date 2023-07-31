@@ -353,7 +353,7 @@ Dynamically remaps property names, for example, `fooId` => `FOO_ID`. Supported v
 
 ```yaml
 property:
-  - name: blogTitle
+  - name: fooId
     mappingPolicy:
       - camel-to-snake
       - upper
