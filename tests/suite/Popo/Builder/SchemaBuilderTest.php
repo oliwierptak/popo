@@ -11,6 +11,11 @@ use Popo\Loader\SchemaLoader;
 use Popo\Loader\Yaml\YamlLoader;
 use Popo\PopoConfigurator;
 use Popo\Schema\Config\ConfigMerger;
+use Popo\Schema\Inspector\SchemaInspector;
+use Popo\Schema\Validator\Definition\ConfigDefinition;
+use Popo\Schema\Validator\Definition\DefaultDefinition;
+use Popo\Schema\Validator\Definition\PropertyDefinition;
+use Popo\Schema\Validator\Validator;
 use Symfony\Component\Finder\Finder;
 use const Popo\POPO_TESTS_DIR;
 
@@ -23,7 +28,14 @@ class SchemaBuilderTest extends TestCase
     {
         $builder = new SchemaBuilder(
             new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader()),
-            new ConfigMerger()
+            new ConfigMerger(),
+            new Validator([
+                DefaultDefinition::ALIAS => new DefaultDefinition(),
+                ConfigDefinition::ALIAS => new ConfigDefinition(),
+                PropertyDefinition::ALIAS => new PropertyDefinition(
+                    new SchemaInspector()
+                ),
+            ]),
         );
 
         $configurator = (new PopoConfigurator())
@@ -42,7 +54,14 @@ class SchemaBuilderTest extends TestCase
     {
         $builder = new SchemaBuilder(
             new SchemaLoader(new FileLocator(Finder::create()), new YamlLoader()),
-            new ConfigMerger()
+            new ConfigMerger(),
+            new Validator([
+                DefaultDefinition::ALIAS => new DefaultDefinition(),
+                ConfigDefinition::ALIAS => new ConfigDefinition(),
+                PropertyDefinition::ALIAS => new PropertyDefinition(
+                    new SchemaInspector()
+                ),
+            ]),
         );
 
         $configurator = (new PopoConfigurator())

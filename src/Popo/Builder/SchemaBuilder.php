@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Popo\Builder;
 
-use Nette\PhpGenerator\Literal;
 use Popo\Loader\SchemaLoader;
 use Popo\PopoConfigurator;
 use Popo\PopoDefinesInterface;
@@ -13,16 +12,19 @@ use Popo\Schema\Config\ConfigMerger;
 use Popo\Schema\File\SchemaFile;
 use Popo\Schema\Property\Property;
 use Popo\Schema\Schema;
+use Popo\Schema\Validator\Validator;
 
 class SchemaBuilder
 {
     protected SchemaLoader $loader;
     protected ConfigMerger $configMerger;
+    private Validator $validator;
 
-    public function __construct(SchemaLoader $loader, ConfigMerger $configMerger)
+    public function __construct(SchemaLoader $loader, ConfigMerger $configMerger, Validator $validator)
     {
         $this->loader = $loader;
         $this->configMerger = $configMerger;
+        $this->validator = $validator;
     }
 
     /**
@@ -39,6 +41,8 @@ class SchemaBuilder
 
         foreach ($tree as $schemaName => $popoCollection) {
             foreach ($popoCollection as $popoName => $popoData) {
+                $popoData = $this->validator->validate($popoData);
+                
                 $popoSchema = (new Schema)
                     ->setName($popoName)
                     ->setSchemaName($schemaName)
@@ -148,7 +152,7 @@ class SchemaBuilder
 
         $mappingPolicyValues = [];
         foreach ($property->getMappingPolicy() as $mappingPolicyName) {
-            $mappingPolicyValues[] = constant((string)new Literal($mappingPolicyName));
+            $mappingPolicyValues[] = $mappingPolicyName;
         }
 
         $property->setMappingPolicy($mappingPolicyValues);

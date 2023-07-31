@@ -22,6 +22,11 @@ use Popo\Schema\Generator\SchemaGeneratorInterface;
 use Popo\Schema\Inspector\SchemaInspector;
 use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Popo\Schema\Mapper\SchemaMapper;
+use Popo\Schema\Validator\Definition\ConfigDefinition;
+use Popo\Schema\Validator\Definition\DefaultDefinition;
+use Popo\Schema\Validator\Definition\PropertyDefinition;
+use Popo\Schema\Validator\Validator;
+use Symfony\Component\Config\Definition\ConfigurableInterface;
 use Symfony\Component\Finder\Finder;
 
 class PopoFactory
@@ -50,7 +55,8 @@ class PopoFactory
     {
         return new SchemaBuilder(
             $this->createSchemaLoader(),
-            $this->createConfigMerger()
+            $this->createConfigMerger(),
+            $this->createValidator(),
         );
     }
 
@@ -122,5 +128,24 @@ class PopoFactory
     protected function createPluginContainer(PopoConfigurator $configurator): PluginContainerInterface
     {
         return new PluginContainer($configurator);
+    }
+
+    protected function createValidator(): Validator
+    {
+        return new Validator($this->creatValidatorPlugins());
+    }
+
+    /**
+     * @return array<ConfigurableInterface>
+     */
+    private function creatValidatorPlugins(): array
+    {
+        return [
+            DefaultDefinition::ALIAS => new DefaultDefinition(),
+            ConfigDefinition::ALIAS => new ConfigDefinition(),
+            PropertyDefinition::ALIAS => new PropertyDefinition(
+                $this->createSchemaInspector()
+            ),
+        ];
     }
 }
