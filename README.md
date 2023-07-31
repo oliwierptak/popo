@@ -112,37 +112,9 @@ _For example: `bin/popo generate -s tests/fixtures/popo.yml` or `docker-popo gen
 
 ## POPO Schema
 
-POPO Schema can be defined and extended on few levels, and it can be defined in multiple files.
+POPO Schema can be defined and extended on few levels- and it can be defined in multiple files.
 
-The schema supports key mapping, inheritance, collections and encapsulation of other POPO objects.
-
-### Schema structure
-
-The `popo-config` values override `schema-file-config` values, and `schema-file-config` values overwrite `schema-config` values.
-
-On top of that, there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
-
-<img src="doc/popo_schema.png" width="400" alt="POPO Schema" />
-
-#### `schema-config`
-
-The configuration was defined as a `Schema` property.
-It will be used by **_all_** POPO objects in **_all_** files, under given schema.
-
-
-#### `schema-file-config` 
-
-The configuration was defined as a `SchemaFile` property.
-It will be used by **_all_** POPO objects in **_current_** file.
-
-
-#### `popo-config`
-
-The configuration was defined as a `POPO` property.
-It will be used by one **_specific_** POPO objects in **_current_** file.
-
-
-See [tests/fixtures](tests/fixtures/) for schema examples.
+The schema supports key mapping- inheritance- collections and encapsulation of other POPO objects.
 
 ### Schema Definition
 
@@ -238,7 +210,23 @@ SchemaName: # schema-config
 - `attribute`
 - `attributes`
 
-### Property type list
+### Property configuration options
+
+### `name`
+    
+The name of the property. The property related methods will be generated based on this value. For example `getFooBar()`.
+This is required parameter.
+
+```yaml
+property: 
+  - name: title
+    ...
+```
+
+
+### `type`
+
+Property data type, supported are:
 
 - `array`
 - `bool`
@@ -249,7 +237,167 @@ SchemaName: # schema-config
 - `const`
 - `popo`
 - `datetime`
+  
+Default property type is `string`.
 
+```yaml
+property: 
+  - name: precision
+    type: float
+    ...
+```
+
+### `comment`
+
+Docblock value for property and methods.
+
+```yaml
+property: 
+  - name: title
+    comment: Lorem ipsum
+    ...
+```
+
+### `default: mixed`
+
+Default value.
+
+```yaml
+property: 
+  - name: items
+    default: \App\ExampleInterface::TEST_BUZZ
+    ...
+```
+
+### `extra: array`
+
+Used by `datetime` data type. Supported values:
+
+  - `format`
+  - `timezone`
+
+```yaml
+property: 
+    - name: created
+      type: datetime
+      extra: 
+          timezone: Europe/Paris
+          format: D, d M y H:i:s O
+    ...
+```
+
+### `itemType`
+
+Used by `array` data type. Describes type of single array element.
+
+```yaml
+property:
+    - name: products
+      type: array
+      itemType: Product::class
+    ...
+```
+
+### `itemName`
+
+Used by `array` data type. Describes name of single array element.
+
+```yaml
+property:
+    - name: products
+      type: array
+      itemName: product
+    ...
+```
+
+### `attribute`
+
+Attribute value.
+
+```yaml
+property:
+    - name: price
+      attribute: |
+      #[Doctrine\ORM\Mapping\Column(type: Types::INTEGER)]
+    ...
+```
+
+
+### `attributes`: `array`
+
+Attribute value as collection. Supported values:
+
+- `name`
+- `value`: `mixed`
+
+
+```yaml
+property:
+    - name: id
+      attributes:
+        - name: Doctrine\ORM\Mapping\Column
+          value: ['length: 255']
+    ...
+```
+
+
+### `mappingPolicy: array`
+
+Dynamically remaps property names, for example, `fooId` => `FOO_ID`. Supported values:
+
+- `none`
+- `lower`
+- `upper`
+- `camel-to-snake`
+- `snake-to-camel`
+
+```yaml
+property:
+  - name: blogTitle
+    mappingPolicy:
+      - camel-to-snake
+      - upper
+    ...
+```
+
+### `mappingPolicyValue`
+
+Statically remaps property names, for example, `fooId` => `FOO_ID`.
+
+```yaml
+      - name: fooId
+        mappingPolicyValue: FOO_ID
+```
+
+
+
+### Schema Inheritance
+
+The `popo-config` values override `schema-file-config` values- and `schema-file-config` values overwrite `schema-config` values.
+
+On top of that there is a `global-config` that is defined when using `--schemaConfigFilename` parameter.
+
+<img src="doc/popo_schema.png" width="400" alt="POPO Schema" />
+
+#### `schema-config`
+
+The configuration was defined as a `Schema` property.
+It will be used by **_all_** POPO objects in **_all_** files under given schema.
+
+
+#### `schema-file-config`
+
+The configuration was defined as a `SchemaFile` property.
+It will be used by **_all_** POPO objects in **_current_** file.
+
+
+#### `popo-config`
+
+The configuration was defined as a `POPO` property.
+It will be used by one **_specific_** POPO objects in **_current_** file.
+
+
+See [tests/fixtures](tests/fixtures/) for schema examples.
 
 
 ## Property name remapping
@@ -326,12 +474,80 @@ See also: [bin/docker-popo](bin/docker-popo).
 - POPO `v2.x` - PHP 7.2+
 - POPO `v3.x` - PHP 7.4+
 - POPO `v4.x` - PHP 7.4+
-- POPO `v5.x` - PHP 7.4+, PHP 8
-- POPO `v6.x` - PHP 8
+- POPO `v5.x` - PHP 7.4+
+- POPO `v6.x` - PHP 8+
 
 
-## Fun fact!
+## POPO schema example
 
-[PopoConfigurator](src/Popo/PopoConfigurator.php) class which is required by POPO library to run,
-was generated by POPO library, and it even has its own [popo schema](popo.yml).
+Schema example that produces generated [PopoConfigurator](src/Popo/PopoConfigurator.php) class. 
+
+```yaml
+$:
+  config:
+    namespace: Popo
+    outputPath: src/
+    phpComment: |
+      @SuppressWarnings(PHPMD)
+      @phpcs:ignoreFile
+
+Popo:
+  PopoConfigurator:
+    default:
+      phpFilePluginCollection:
+        - \Popo\Plugin\PhpFilePlugin\StrictTypesPhpFilePlugin::class
+        - \Popo\Plugin\PhpFilePlugin\CommentPhpFilePlugin::class
+      namespacePluginCollection:
+        - \Popo\Plugin\NamespacePlugin\UseStatementPlugin::class
+      classPluginCollection:
+        - \Popo\Plugin\ClassPlugin\ClassAttributePlugin::class
+        - \Popo\Plugin\ClassPlugin\ClassCommentPlugin::class
+        - \Popo\Plugin\ClassPlugin\ConstPropertyClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\DateTimeMethodClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ExtendClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ImplementClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\IsNewClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ListModifiedPropertiesClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\MetadataClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ModifiedToArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\PopoMethodClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\RequireAllClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\UpdateMapClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\FromArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\FromMappedArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ToArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\ToMappedArrayClassPlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayLowercasePlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class
+        - \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class
+      propertyPluginCollection:
+        - \Popo\Plugin\PropertyPlugin\AddItemPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\DefinePropertyPlugin::class
+        - \Popo\Plugin\PropertyPlugin\GetPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\HasPropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\RequirePropertyMethodPlugin::class
+        - \Popo\Plugin\PropertyPlugin\SetPropertyMethodPlugin::class
+      mappingPolicyPluginCollection:
+        none: \Popo\Plugin\MappingPolicy\NoneMappingPolicyPlugin::class
+        lower: \Popo\Plugin\MappingPolicy\LowerMappingPolicyPlugin::class
+        upper: \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::class
+        snake-to-camel: \Popo\Plugin\MappingPolicy\SnakeToCamelMappingPolicyPlugin::class
+        camel-to-snake: \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::class
+    property: [
+      {name: schemaPath}
+      {name: namespace}
+      {name: namespaceRoot}
+      {name: outputPath}
+      {name: phpFilePluginCollection, type: array, itemType: string, itemName: phpFilePluginClass}
+      {name: namespacePluginCollection, type: array, itemType: string, itemName: namespacePluginClass}
+      {name: classPluginCollection, type: array, itemType: string, itemName: classPluginClass}
+      {name: propertyPluginCollection, type: array, itemType: string, itemName: propertyPluginClass}
+      {name: mappingPolicyPluginCollection, type: array, itemType: string, itemName: mappingPolicyPluginClass}
+      {name: schemaConfigFilename}
+      {name: schemaPathFilter}
+      {name: schemaFilenameMask, default: '*.popo.yml'}
+      {name: shouldIgnoreNonExistingSchemaFolder, type: bool}
+    ]}}
+```
 
