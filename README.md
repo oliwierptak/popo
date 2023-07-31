@@ -288,7 +288,7 @@ property:
 
 ### `itemType`
 
-Used by `array` data type. Describes type of single array element.
+Used by `array` data type together with `itemName` element. Describes type of single array element.
 
 ```yaml
 property:
@@ -300,7 +300,7 @@ property:
 
 ### `itemName`
 
-Used by `array` data type. Describes name of single array element.
+Used by `array` data type. Describes name of single array element. For example: `setProducts(array $products)`, `addProduct(Product $item)`.
 
 ```yaml
 property:
@@ -365,8 +365,10 @@ property:
 Statically remaps property names, for example, `fooId` => `FOO_ID`.
 
 ```yaml
-      - name: fooId
-        mappingPolicyValue: FOO_ID
+property:
+  - name: fooId
+    mappingPolicyValue: FOO_ID
+  ...
 ```
 
 
