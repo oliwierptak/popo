@@ -6,38 +6,32 @@ $:
 MappingPolicy:
   Blog:
     property:
-      -
-        name: blogTitle
+      - name: blogTitle
         mappingPolicy:
           - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
           - \Popo\Plugin\MappingPolicy\UpperMappingPolicyPlugin::MAPPING_POLICY_NAME
 
-      -
-        name: blogData
+      - name: blogData
         type: popo
         default: BlogData::class
         mappingPolicy:
           - \Popo\Plugin\MappingPolicy\CamelToSnakeMappingPolicyPlugin::MAPPING_POLICY_NAME
 
-      -
-        name: commentThread
+      - name: commentThread
         default: ['one','two','three']
         type: array
 
   BlogData:
     property:
-      -
-        name: someValue
+      - name: someValue
 
   DocumentData:
     property:
-      -
-        name: someTitle
+      - name: someTitle
         default: Lorem Ipsum
         mappingPolicyValue: some_title
 
-      -
-        name: someValue
+      - name: someValue
         default: 123
         type: int
         mappingPolicyValue: SOME_VALUE
