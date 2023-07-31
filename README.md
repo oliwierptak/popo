@@ -123,16 +123,16 @@ $: # file-config, shared configuration for all POPO objects in current schema fi
   config:
     namespace: string
     outputPath: string
-    namespaceRoot: string|null # if set remaps namespace and outputPath
-    extend: string|null # which class POPO objects should extend from
-    implement: string|null # which interface POPO objects should implement
-    comment: string|null # Class docblock comment
-    phpComment: string|null # Generated PHP File docblock comment
-    use: array<string>|[] # Import block in generated PHP class
-    attribute: string|null # Class attributes as string
-    attributes: array<key, value> # Class attributes as key value pairs
-  default: array # default values
-  property: array # shared properties
+    namespaceRoot: string|null
+    extend: string|null
+    implement: string|null
+    comment: string|null
+    phpComment: string|null
+    use: array<string>|[]
+    attribute: string|null
+    attributes: array<key, value>
+  default: array
+  property: array
 
 SchemaName: # schema-config
   $: # shared configuration for all POPO objects in SchemaName, in all schema files
@@ -145,8 +145,8 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
-      attribute: string|null, # Class attributes as string
-      attributes: array<key, value> # Class attributes as key value pairs
+      attribute: string|null,
+      attributes: array<key, value>
     default: array
     property: [{
       name: string,
@@ -159,8 +159,8 @@ SchemaName: # schema-config
       itemType: string|null,
       itemName: string|null,
       extra: {timezone: ..., format: ...},
-      attribute: string|null, # Property attributes as string
-      attributes: array<key, value> # Property attributes as key value pairs
+      attribute: string|null,
+      attributes: array<key, value>
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
       mappingPolicyValue: string|null
     }]
@@ -175,8 +175,8 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
-      attribute: string|null, # Class attributes as string
-      attributes: array<key, value> # Class attributes as key value pairs
+      attribute: string|null,
+      attributes: array<key, value>
     default: array
     property: [{
       name: string,
@@ -189,8 +189,8 @@ SchemaName: # schema-config
       itemType: string|null,
       itemName: string|null,
       extra: {timezone: ..., format: ...},
-      attribute: string|null, # Property attributes as string
-      attributes: array<key, value> # Property attributes as key value pairs
+      attribute: string|null,
+      attributes: array<key, value>
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
       mappingPolicyValue: string|null
     }]
@@ -199,16 +199,125 @@ SchemaName: # schema-config
 
 ### Schema configuration options
 
-- `namespace`
-- `outputPath`
-- `namespaceRoot`
-- `extend`
-- `implement`
-- `comment`
-- `phpComment`
-- `use`
-- `attribute`
-- `attributes`
+### `namespace`
+
+Defines generated class namespace.
+
+```yaml
+config:
+  namespace: App\Example
+  ...
+```
+
+### `outputPath`
+
+Defines output directory.
+
+```yaml
+config:
+  outputPath: src/
+  ...
+```
+
+### `namespaceRoot`
+
+Defines the begging of `outputPath` that should be removed.
+For example to generated files under `src/Example` with `App\Example` namespace.
+
+```yaml
+config:
+  namespace: App\Example
+  outputPath: src/
+  namespaceRoot: App\
+  ...
+```
+
+### `extend`
+
+Which class should the generated class extend from. Must start with **\\** or contain `::class`.
+
+```yaml
+config:
+  extend: \App\Example\AbstractDto::class
+  ...
+```
+
+### `implement`
+
+Which interface should the generated class implement. Must start with **\\** or contain `::class`.
+
+```yaml
+config:
+  implement: \App\Example\DtoInterface::class
+   ...
+```
+
+
+### `comment`
+
+Class comment.
+
+```yaml
+config:
+  comment: |
+    @Document(collection="events")
+...
+```
+
+### `phpComment`
+
+Generated PHP file comment.
+
+```yaml
+config:
+  phpComment: |
+    Auto generated.
+    @SuppressWarnings(PHPMD)
+    @phpcs:ignoreFile
+...
+```
+
+### `use`
+
+Import statements.
+
+```yaml
+  config:
+    use:
+      - Doctrine\ODM\MongoDB\Mapping\Annotations\Document
+      - Doctrine\ODM\MongoDB\Mapping\Annotations\Field
+      - Doctrine\ODM\MongoDB\Mapping\Annotations\Id
+    ...
+```
+
+### `attribute`
+
+Class attributes value.
+
+```yaml
+  config:
+    attribute: |
+      #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
+    ...
+```
+
+
+### `attributes`: `array`
+
+Attribute value as collection. Supported values:
+
+- `name`
+- `value`: `mixed`
+
+
+```yaml
+  config:
+    attributes:
+      - name: Doctrine\ORM\Mapping\Entity
+        value: {repositoryClass: LogEventRepository::class}
+    ...
+```
+
 
 ### Property configuration options
 
