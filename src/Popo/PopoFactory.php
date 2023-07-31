@@ -130,7 +130,7 @@ class PopoFactory
         return new PluginContainer($configurator);
     }
 
-    protected function createValidator(): Validator
+    public function createValidator(): Validator
     {
         return new Validator($this->creatValidatorPlugins());
     }
@@ -138,7 +138,7 @@ class PopoFactory
     /**
      * @return array<ConfigurableInterface>
      */
-    private function creatValidatorPlugins(): array
+    protected function creatValidatorPlugins(): array
     {
         return [
             DefaultDefinition::ALIAS => new DefaultDefinition(),

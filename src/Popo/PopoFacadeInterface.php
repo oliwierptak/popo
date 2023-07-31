@@ -14,7 +14,7 @@ interface PopoFacadeInterface
      * - Generate POPO files based on schema.
      * - Create target directories based on output path and namespace.
      * - Save POPO files under location based on output path and namespace.
-     * - Return instance of GenerateResult
+     * - Return instance of GenerateResult.
      *
      * @param \Popo\PopoConfigurator $configurator
      *
@@ -22,6 +22,18 @@ interface PopoFacadeInterface
      * @throws \InvalidArgumentException
      */
     public function generate(PopoConfigurator $configurator): GenerateResult;
+
+    /**
+     * Specification:
+     * - Validate config and property values, throw exception in case of error.
+     * - Return validated schema data.
+     *
+     * @param array<string, mixed> $schemaData ['config' => ..., 'default' => ..., 'property' => ....]
+     *
+     * @return array<string, mixed>
+     * @throws \Popo\Schema\Validator\Exception\SchemaValidationException
+     */
+    public function validate(array $schemaData): array;
 
     /**
      * Specification:

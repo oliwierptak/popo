@@ -3,7 +3,7 @@
 namespace Popo\Schema\Validator\Definition;
 
 use Popo\PopoDefinesInterface;
-use Popo\Schema\Inspector\SchemaInspector;
+use Popo\Schema\Inspector\SchemaInspectorInterface;
 use Symfony\Component\Config\Definition\ConfigurableInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
@@ -11,7 +11,7 @@ class PropertyDefinition implements ConfigurableInterface
 {
     public const ALIAS = PopoDefinesInterface::CONFIGURATION_SCHEMA_PROPERTY;
 
-    public function __construct(private SchemaInspector $schemaInspector) {}
+    public function __construct(private SchemaInspectorInterface $schemaInspector) {}
 
     public function configure(DefinitionConfigurator $definition):void
     {

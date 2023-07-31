@@ -34,6 +34,13 @@ class PopoFacade implements PopoFacadeInterface
             ->generate($configurator);
     }
 
+    public function validate(array $schemaData): array
+    {
+        return $this->getFactory()
+            ->createValidator()
+            ->validate($schemaData);
+    }
+
     public function addClassPluginClassName(string $classPluginClassName): self
     {
         $this->getFactory()

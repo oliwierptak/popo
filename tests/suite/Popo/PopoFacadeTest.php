@@ -13,6 +13,7 @@ use Popo\Plugin\PropertyPluginInterface;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
 use Popo\PopoFactory;
+use Popo\Schema\Validator\Exception\SchemaValidationException;
 use PopoTestSuiteHelper\SetupTrait;
 use ReflectionClass;
 use ReflectionProperty;
@@ -186,6 +187,20 @@ class PopoFacadeTest extends TestCase
             $propertyPluginNock,
             $configurator->getPropertyPluginCollection(),
         );
+    }
+
+    public function test_validate_required(): void
+    {
+        $this->expectException(SchemaValidationException::class);
+        $this->expectExceptionMessage('The child config "namespace" under "config" must be configured.');
+
+        $facade = new PopoFacade();
+
+        $facade->validate([
+            'config' => [
+                'attribute' => 'a'
+            ]
+        ]);
     }
 
     private function getProtectedProperty($class, $name): ReflectionProperty
