@@ -662,3 +662,6 @@ Popo:
     ]}}
 ```
 
+[link-packagist]: https://packagist.org/packages/popo/generator
+[link-travis]: https://travis-ci.org/popo/generator
+[link-author]: https://github.com/oliwierptak/popo

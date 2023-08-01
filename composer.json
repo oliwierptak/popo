@@ -50,10 +50,10 @@
       "chmod +x bin/popo",
       "chmod +x bin/docker-popo"
     ],
-    "test": [
+    "tests": [
       "vendor/bin/phpunit --no-coverage --testdox --group unit,functional"
     ],
-    "test-c": [
+    "tests-c": [
       "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox --group unit,functional"
     ],
     "report": [
