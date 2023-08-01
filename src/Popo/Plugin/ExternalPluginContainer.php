@@ -35,35 +35,35 @@ class ExternalPluginContainer
 
     public function addClassPluginClassName(string $classPluginClassName): self
     {
-        static::$classPluginClassNames[] = $classPluginClassName;
+        static::$classPluginClassNames[$classPluginClassName] = $classPluginClassName;
 
         return $this;
     }
 
     public function addMappingPolicyPluginClassName(string $mappingPolicyPluginClassName): self
     {
-        static::$mappingPolicyPluginClassNames[] = $mappingPolicyPluginClassName;
+        static::$mappingPolicyPluginClassNames[$mappingPolicyPluginClassName] = $mappingPolicyPluginClassName;
 
         return $this;
     }
 
     public function addNamespacePluginClassName(string $namespacePluginClassName): self
     {
-        static::$namespacePluginClassNames[] = $namespacePluginClassName;
+        static::$namespacePluginClassNames[$namespacePluginClassName] = $namespacePluginClassName;
 
         return $this;
     }
 
     public function addPhpFlePluginClassName(string $phpFilePluginClassName): self
     {
-        static::$phpFilePluginClassNames[] = $phpFilePluginClassName;
+        static::$phpFilePluginClassNames[$phpFilePluginClassName] = $phpFilePluginClassName;
 
         return $this;
     }
 
     public function addPropertyPluginClassName(string $propertyPluginClassName): self
     {
-        static::$propertyPluginClassNames[] = $propertyPluginClassName;
+        static::$propertyPluginClassNames[$propertyPluginClassName] = $propertyPluginClassName;
 
         return $this;
     }
