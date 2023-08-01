@@ -1,5 +1,7 @@
 # POPO
 
+[![Build and run tests](https://github.com/oliwierptak/popo/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/oliwierptak/popo/actions/workflows/main.yml)
+
 **POPO** - "Plain Old Php Object" was inspired by "Plain Old Java Object" (POJO) concept.
 
 POPO generator can also locate, load, validate, and combine schemas to create PHP source code files, representing
