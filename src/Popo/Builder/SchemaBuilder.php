@@ -149,13 +149,7 @@ class SchemaBuilder
             null;
 
         $property->setDefault($default);
-
-        $mappingPolicyValues = [];
-        foreach ($property->getMappingPolicy() as $mappingPolicyName) {
-            $mappingPolicyValues[] = $mappingPolicyName;
-        }
-
-        $property->setMappingPolicy($mappingPolicyValues);
+        $property->setMappingPolicy($property->getMappingPolicy());
 
         return $property;
     }

@@ -25,7 +25,7 @@ class FromArrayClassPlugin implements ClassPluginInterface
         $hasParent = $builder->getSchema()->getConfig()->getExtend() !== null;
         if ($hasParent) {
             $parentCallString = <<<EOF
-if (method_exists(get_parent_class(\$this), 'toArray')) {
+if (method_exists(get_parent_class(\$this), 'fromArray')) {
     parent::fromArray(\$data);
 }
 EOF;
