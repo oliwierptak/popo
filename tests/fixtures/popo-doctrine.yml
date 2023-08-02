@@ -14,6 +14,7 @@ Entity:
         - Doctrine\DBAL\Types\Types
         - Doctrine\ORM\Mapping\Id
         - Doctrine\ORM\Mapping\GeneratedValue
+        - Doctrine\ORM\Mapping\UniqueConstraint
         - Doctrine\ORM\Mapping\Column
       attribute: |
         #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
@@ -22,12 +23,14 @@ Entity:
         attributes:
           - name: Doctrine\ORM\Mapping\Id
           - name: Doctrine\ORM\Mapping\GeneratedValue
-          - name: Doctrine\ORM\Mapping\ORM\Column
+          - name: Doctrine\ORM\Mapping\Column
 
       - name: service
         attributes:
           - name: Doctrine\ORM\Mapping\Column
-            value: ['length: 255']
+            value: { length: 255 }
+          - name: Doctrine\ORM\Mapping\UniqueConstraint
+            value: { name: 'service', columns: ['service'] }
 
       - name: statusCode
         type: int
@@ -39,7 +42,7 @@ Entity:
         attribute: |
           #[Doctrine\ORM\Mapping\Column(type: Types::DATETIME)]
         extra:
-          - timezone: Europe/Berlin
+            timezone: Europe/Berlin
             format: Y-m-d\TH:i:sP
 
 # Doctrine ODM Document example mapping
@@ -68,5 +71,5 @@ Document:
         type: datetime
         comment: '@Field(type="date")'
         extra:
-          - timezone: Europe/Berlin
+            timezone: Europe/Berlin
             format: Y-m-d\TH:i:sP

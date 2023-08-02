@@ -37,7 +37,7 @@ class PropertyDefinition implements ConfigurableInterface
                         ->arrayPrototype()
                             ->children()
                                 ->scalarNode('name')->isRequired()->end()
-                                ->scalarNode('value')->end()
+                                ->variableNode('value')->end()
                             ->end()
                         ->end()
                     ->end()

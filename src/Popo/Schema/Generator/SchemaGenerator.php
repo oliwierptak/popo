@@ -22,8 +22,10 @@ class SchemaGenerator implements SchemaGeneratorInterface
     public function generateDefaultTypeValue(Property $property): mixed
     {
         $value = $property->getDefault();
-        if ($this->schemaInspector->isPopoProperty($property->getType()) ||
-            $this->schemaInspector->isDateTimeProperty($property->getType())) {
+        if (
+            $this->schemaInspector->isPopoProperty($property->getType()) ||
+            $this->schemaInspector->isDateTimeProperty($property->getType())
+        ) {
             $value = null;
         }
         else {
@@ -33,7 +35,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
         }
 
         if ($this->schemaInspector->isBool($property->getType())) {
-            $value = (bool) $value;
+            $value = (bool)$value;
         }
 
         if ($this->schemaInspector->isArray($property->getType())) {
@@ -58,14 +60,14 @@ class SchemaGenerator implements SchemaGeneratorInterface
             $value = (string)$property->getDefault();
             $class = sprintf(
                 '%s',
-                $stripClass ? str_replace('::class', '', $value) : $value
+                $stripClass ? str_replace('::class', '', $value) : $value,
             );
 
             if ($value[0] !== '\\') {
                 $class = sprintf(
                     '%s\\%s',
                     $namespace,
-                    $stripClass ? str_replace('::class', '', $value) : $value
+                    $stripClass ? str_replace('::class', '', $value) : $value,
                 );
             }
 
@@ -84,24 +86,24 @@ class SchemaGenerator implements SchemaGeneratorInterface
         if ($this->schemaInspector->isLiteral($property->getItemType())) {
             $namespace = $this->expandNamespaceForParameter($schema);
 
-            $value = (string) $property->getItemType();
+            $value = (string)$property->getItemType();
             $class = sprintf(
                 '%s',
-                str_replace('::class', '', $value)
+                str_replace('::class', '', $value),
             );
 
             if ($value[0] !== '\\') {
                 $class = sprintf(
                     '%s\\%s',
                     $namespace,
-                    str_replace('::class', '', $value)
+                    str_replace('::class', '', $value),
                 );
             }
 
             return $class;
         }
 
-        return (string) $property->getItemType();
+        return (string)$property->getItemType();
     }
 
     /**
@@ -114,7 +116,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
         $result = [];
         if ($attribute) {
             $attributeValue = trim($attribute);
-            $attributeValue = preg_replace('@[\[\];#]@i','', $attributeValue);
+            $attributeValue = preg_replace('@[\[\];#]@i', '', $attributeValue);
 
             $tokens = preg_split('/\n/', (string)$attributeValue);
             foreach ($tokens as $token) {
@@ -123,15 +125,27 @@ class SchemaGenerator implements SchemaGeneratorInterface
                     $result[] = new Attribute($token, []);
                 }
                 else {
-                    $result[] = new Attribute($attributeToken[1], [$attributeToken[2] ?? []] );
+                    $attributeValue = $attributeToken[2] ?? [];
+                    $attributeValue = new Literal($attributeValue);
+                    $result[] = new Attribute($attributeToken[1], [$attributeValue]);
                 }
             }
         }
 
-        foreach ($attributes as  $attributeData) {
+        foreach ($attributes as $attributeData) {
             $attributeName = $attributeData['name'];
-            $attributeValue = $attributeData['value'] ?? null;
-            $result[] = new Attribute($attributeName, $attributeValue ?? []);
+            $values = $attributeData['value'] ?? [];
+
+            $attributeValue = [];
+            foreach ($values as $name => $value) {
+                if ($value === null) {
+                    continue;
+                }
+
+                $attributeValue[] = new Literal($name . ": ?", [$value]);
+            }
+
+            $result[] = new Attribute($attributeName, $attributeValue);
         }
 
         return $result;
@@ -141,7 +155,7 @@ class SchemaGenerator implements SchemaGeneratorInterface
     {
         return sprintf(
             '\\%s',
-            ltrim($schema->getConfig()->getNamespace(), '\\')
+            ltrim($schema->getConfig()->getNamespace(), '\\'),
         );
     }
 }

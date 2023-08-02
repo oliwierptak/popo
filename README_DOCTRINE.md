@@ -3,7 +3,7 @@
 ### Doctrine ORM
 
 
-The example below generates `Doctrine ODM Document` compatible class.
+The example below generates `Doctrine ORM Entity` and `Doctrine ODM Document` compatible class.
 
 
 ```yaml
@@ -12,6 +12,47 @@ $:
     outputPath: tests/
     phpComment: |
       Auto-generated.      
+
+# Doctrine ORM Entity example mapping
+Entity:
+  LogEvent:
+    config:
+      namespace: App\Example\Entity
+      use:
+        - App\Repository\LogEventRepository
+        - Doctrine\DBAL\Types\Types
+        - Doctrine\ORM\Mapping\Id
+        - Doctrine\ORM\Mapping\GeneratedValue
+        - Doctrine\ORM\Mapping\UniqueConstraint
+        - Doctrine\ORM\Mapping\Column
+      attribute: |
+        #[Doctrine\ORM\Mapping\Entity(repositoryClass: LogEventRepository::class)]
+    property:
+      - name: id
+        attributes:
+          - name: Doctrine\ORM\Mapping\Id
+          - name: Doctrine\ORM\Mapping\GeneratedValue
+          - name: Doctrine\ORM\Mapping\Column
+
+      - name: service
+        attributes:
+          - name: Doctrine\ORM\Mapping\Column
+            value: { length: 255 }
+          - name: Doctrine\ORM\Mapping\UniqueConstraint
+            value: { name: 'service', columns: ['service'] }
+
+      - name: statusCode
+        type: int
+        attribute: |
+          #[Doctrine\ORM\Mapping\Column(type: Types::INTEGER)]
+
+      - name: logDate
+        type: datetime
+        attribute: |
+          #[Doctrine\ORM\Mapping\Column(type: Types::DATETIME)]
+        extra:
+          timezone: Europe/Berlin
+          format: Y-m-d\TH:i:sP
 
 # Doctrine ODM Document example mapping
 Document:
@@ -39,8 +80,8 @@ Document:
         type: datetime
         comment: '@Field(type="date")'
         extra:
-          - timezone: Europe/Berlin
-            format: Y-m-d\TH:i:sP
+          timezone: Europe/Berlin
+          format: Y-m-d\TH:i:sP
 ```
 
 
