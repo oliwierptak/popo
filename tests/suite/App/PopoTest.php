@@ -370,7 +370,7 @@ class PopoTest extends TestCase
         );
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [[
             [
