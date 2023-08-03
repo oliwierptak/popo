@@ -36,11 +36,17 @@ class ValidatorTest extends TestCase
                 'comment' => 'comment',
                 'phpComment' => 'phpComment',
                 'use' => ['use'],
+                'trait' => ['trait'],
                 'attribute' => 'attribute',
                 'attributes' => [[
                     'name' => 'name',
                     'value' => 'value',
                 ]],
+                'classPluginCollection' => [],
+                'phpFilePluginCollection' => [],
+                'namespacePluginCollection' => [],
+                'propertyPluginCollection' => [],
+                'mappingPolicyPluginCollection' => [],
             ],
             'property' => [[
                 'name' => 'name',

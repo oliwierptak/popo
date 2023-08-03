@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Popo\Plugin;
 
 use LogicException;
+use Nette\PhpGenerator\Literal;
 use Popo\PopoConfigurator;
 
 class PluginContainer implements PluginContainerInterface
@@ -16,41 +17,64 @@ class PluginContainer implements PluginContainerInterface
         $this->configurator = $configurator;
     }
 
-    /**
-     * @return array<\Popo\Plugin\PhpFilePluginInterface>
-     */
-    public function createPhpFilePlugin(): array
+    public function createPhpFilePlugin(array $collection = []): array
     {
-        return $this->createPluginCollection($this->configurator->getPhpFilePluginCollection());
+        $pluginCollection = $this->normalizePluginClassNames($collection);
+
+        return $this->createPluginCollection(
+            array_merge(
+                $this->configurator->getPhpFilePluginCollection(),
+                $pluginCollection,
+            ),
+        );
     }
 
-    /**
-     * @return array<\Popo\Plugin\NamespacePluginInterface>
-     */
-    public function createNamespacePlugin(): array
+    public function createNamespacePlugin(array $collection = []): array
     {
-        return $this->createPluginCollection($this->configurator->getNamespacePluginCollection());
+        $pluginCollection = $this->normalizePluginClassNames($collection);
+
+        return $this->createPluginCollection(
+            array_merge(
+                $this->configurator->getNamespacePluginCollection(),
+                $pluginCollection,
+            ),
+        );
     }
 
-    /**
-     * @return array<\Popo\Plugin\ClassPluginInterface>
-     */
-    public function createClassPlugins(): array
+    public function createClassPlugins(array $collection = []): array
     {
-        return $this->createPluginCollection($this->configurator->getClassPluginCollection());
+        $pluginCollection = $this->normalizePluginClassNames($collection);
+
+        return $this->createPluginCollection(
+            array_merge(
+                $this->configurator->getClassPluginCollection(),
+                $pluginCollection,
+            ),
+        );
     }
 
-    /**
-     * @return array<\Popo\Plugin\PropertyPluginInterface>
-     */
-    public function createPropertyPlugins(): array
+    public function createPropertyPlugins(array $collection = []): array
     {
-        return $this->createPluginCollection($this->configurator->getPropertyPluginCollection());
+        $pluginCollection = $this->normalizePluginClassNames($collection);
+
+        return $this->createPluginCollection(
+            array_merge(
+                $this->configurator->getPropertyPluginCollection(),
+                $pluginCollection,
+            ),
+        );
     }
 
-    public function createMappingPolicyPlugins(): array
+    public function createMappingPolicyPlugins(array $collection = []): array
     {
-        return $this->createPluginCollection($this->configurator->getMappingPolicyPluginCollection());
+        $pluginCollection = $this->normalizePluginClassNames($collection);
+
+        return $this->createPluginCollection(
+            array_merge(
+                $this->configurator->getMappingPolicyPluginCollection(),
+                $pluginCollection,
+            ),
+        );
     }
 
     /**
@@ -71,5 +95,18 @@ class PluginContainer implements PluginContainerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param array<string> $collection
+     *
+     * @return array<string>
+     */
+    public function normalizePluginClassNames(array $collection): array
+    {
+        return array_map(function (string $pluginClassName) {
+            $pluginClassName = str_replace('::class', '', $pluginClassName);
+            return (string)new Literal($pluginClassName);
+        }, $collection);
     }
 }

@@ -99,6 +99,7 @@ class PopoConfigurator
                 \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class,
                 \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class,
                 \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class,
+                \Popo\Plugin\ClassPlugin\TraitPlugin::class,
             ],
             'mappingPolicy' => [],
             'mappingPolicyValue' => 'classPluginCollection',
@@ -189,6 +190,7 @@ class PopoConfigurator
         \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayUppercasePlugin::class,
         \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArraySnakeToCamelPlugin::class,
         \Popo\Plugin\ClassPlugin\MappingPolicyMethod\ToArrayCamelToSnakePlugin::class,
+        \Popo\Plugin\ClassPlugin\TraitPlugin::class,
     ];
 
     protected array $propertyPluginCollection = [

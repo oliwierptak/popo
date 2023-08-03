@@ -5,12 +5,12 @@ $:
 
 Example:
   Foo:
-    property: [
-      {name: title}
-      {name: bar, type: popo, default: Bar::class}
-    ]}}
+    property:
+      - name: title
+      - name: bar
+        type: popo
+        default: Bar::class
 
   Bar:
-    property: [
-      {name: title}
-    ]
+    property:
+      - name: title

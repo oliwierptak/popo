@@ -31,8 +31,9 @@ abstract class AbstractBuilder implements BuilderPluginInterface
         SchemaInspectorInterface $schemaInspector,
         SchemaGeneratorInterface $schemaGenerator,
         SchemaMapperInterface $schemaMapper,
-        PluginContainerInterface $pluginContainer
-    ) {
+        PluginContainerInterface $pluginContainer,
+    )
+    {
         $this->schemaInspector = $schemaInspector;
         $this->schemaGenerator = $schemaGenerator;
         $this->schemaMapper = $schemaMapper;
@@ -66,7 +67,11 @@ abstract class AbstractBuilder implements BuilderPluginInterface
 
     protected function runPhpFilePlugins(): self
     {
-        foreach ($this->pluginContainer->createPhpFilePlugin() as $plugin) {
+        $plugins =  $this->pluginContainer->createPhpFilePlugin(
+            $this->schema->getConfig()->getPhpFilePluginCollection()
+        );
+
+        foreach ($plugins as $plugin) {
             $this->file = $plugin->run($this->file, $this->schema);
         }
 
@@ -75,7 +80,11 @@ abstract class AbstractBuilder implements BuilderPluginInterface
 
     protected function runNamespacePlugins(): self
     {
-        foreach ($this->pluginContainer->createNamespacePlugin() as $plugin) {
+        $plugins =  $this->pluginContainer->createNamespacePlugin(
+            $this->schema->getConfig()->getNamespacePluginCollection()
+        );
+
+        foreach ($plugins as $plugin) {
             $this->namespace = $plugin->run($this, $this->namespace);
         }
 
@@ -84,7 +93,11 @@ abstract class AbstractBuilder implements BuilderPluginInterface
 
     protected function runClassPlugins(): self
     {
-        foreach ($this->pluginContainer->createClassPlugins() as $plugin) {
+        $plugins =  $this->pluginContainer->createClassPlugins(
+            $this->schema->getConfig()->getClassPluginCollection()
+        );
+
+        foreach ($plugins as $plugin) {
             $plugin->run($this);
         }
 

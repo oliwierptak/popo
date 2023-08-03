@@ -1,0 +1,16 @@
+$:
+  config:
+    namespace: App\Example\UseTrait
+    outputPath: tests/
+    use:
+      - App\ExampleInterface
+    trait:
+      - App\UseTrait\TraitExample
+    classPluginCollection:
+      - \App\UseTrait\UseTraitExamplePlugin::class
+
+Example:
+  Foo:
+    property:
+      - name: title
+

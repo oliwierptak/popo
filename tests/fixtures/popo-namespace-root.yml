@@ -13,6 +13,5 @@ Example:
     ]}}
 
   Bar:
-    property: [
-      {name: title}
-    ]
+    property:
+      - name: title

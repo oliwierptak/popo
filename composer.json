@@ -80,7 +80,8 @@
       "bin/popo generate -s tests/fixtures/popo-namespace-root.yml",
       "bin/popo generate -s tests/fixtures/popo-nested-from-array.yml",
       "bin/popo generate -s tests/fixtures/popo-readme.yml",
-      "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml"
+      "bin/popo generate -s tests/fixtures/bundles/ -c tests/fixtures/bundles/project.config.yml",
+      "bin/popo generate -s tests/fixtures/popo-trait-use.yml"
     ],
     "phpstan": [
       "vendor/bin/phpstan analyse -c phpstan.neon"

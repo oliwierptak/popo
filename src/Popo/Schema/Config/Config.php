@@ -15,8 +15,14 @@ class Config
         'comment' => "null|string",
         'phpComment' => "null|string",
         'use' => "array<string>|[]",
+        'trait' => "array<string>|[]",
         'attribute' => "string|null",
         'attributes' => "array<string,mixed>|[]",
+        'classPluginCollection' => "array<string,mixed>|[]",
+        'phpFilePluginCollection' => "array<string,mixed>|[]",
+        'namespacePluginCollection' => "array<string,mixed>|[]",
+        'propertyPluginCollection' => "array<string,mixed>|[]",
+        'mappingPolicyPluginCollection' => "array<string,mixed>|[]",
     ];
 
     protected string $namespace;
@@ -30,12 +36,35 @@ class Config
      * @var array<string>
      */
     protected array $use = [];
+    /**
+     * @var array<string>
+     */
+    protected array $trait = [];
     protected ?string $attribute = null;
-
     /**
      * @var array<string, mixed>
      */
     protected array $attributes = [];
+    /**
+     * @var array<string>
+     */
+    protected array $classPluginCollection = [];
+    /**
+     * @var array<string>
+     */
+    protected array $phpFilePluginCollection = [];
+    /**
+     * @var array<string>
+     */
+    protected array $namespacePluginCollection = [];
+    /**
+     * @var array<string>
+     */
+    protected array $propertyPluginCollection = [];
+    /**
+     * @var array<string>
+     */
+    protected array $mappingPolicyPluginCollection = [];
 
     public function getNamespace(): string
     {
@@ -121,14 +150,38 @@ class Config
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getUse(): array
     {
         return $this->use;
     }
 
+    /**
+     * @param array<string> $use
+     */
     public function setUse(array $use): self
     {
         $this->use = $use;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getTrait(): array
+    {
+        return $this->trait;
+    }
+
+    /**
+     * @param array<string> $trait
+     */
+    public function setTrait(array $trait): self
+    {
+        $this->trait = $trait;
 
         return $this;
     }
@@ -144,6 +197,7 @@ class Config
     public function setAttribute(?string $attribute): self
     {
         $this->attribute = $attribute;
+
         return $this;
     }
 
@@ -161,11 +215,102 @@ class Config
     public function setAttributes(array $attributes): self
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
     /**
-     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, attribute: string|null, attributes: array} $data
+     * @return array<string>
+     */
+    public function getClassPluginCollection(): array
+    {
+        return $this->classPluginCollection;
+    }
+
+    /**
+     * @param array<string> $classPluginCollection
+     */
+    public function setClassPluginCollection(array $classPluginCollection): self
+    {
+        $this->classPluginCollection = $classPluginCollection;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPhpFilePluginCollection(): array
+    {
+        return $this->phpFilePluginCollection;
+    }
+
+    /**
+     * @param array<string> $phpFilePluginCollection
+     */
+    public function setPhpFilePluginCollection(array $phpFilePluginCollection): self
+    {
+        $this->phpFilePluginCollection = $phpFilePluginCollection;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getNamespacePluginCollection(): array
+    {
+        return $this->namespacePluginCollection;
+    }
+
+    /**
+     * @param array<string> $namespacePluginCollection
+     */
+    public function setNamespacePluginCollection(array $namespacePluginCollection): self
+    {
+        $this->namespacePluginCollection = $namespacePluginCollection;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPropertyPluginCollection(): array
+    {
+        return $this->propertyPluginCollection;
+    }
+
+    /**
+     * @param array<string> $propertyPluginCollection
+     */
+    public function setPropertyPluginCollection(array $propertyPluginCollection): self
+    {
+        $this->propertyPluginCollection = $propertyPluginCollection;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getMappingPolicyPluginCollection(): array
+    {
+        return $this->mappingPolicyPluginCollection;
+    }
+
+    /**
+     * @param array<string> $mappingPolicyPluginCollection
+     */
+    public function setMappingPolicyPluginCollection(array $mappingPolicyPluginCollection): self
+    {
+        $this->mappingPolicyPluginCollection = $mappingPolicyPluginCollection;
+
+        return $this;
+    }
+
+    /**
+     * @param array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, trait: array, attribute: string|null, attributes: array, classPluginCollection: array, phpFilePluginCollection: array, namespacePluginCollection: array, propertyPluginCollection: array, mappingPolicyPluginCollection:array} $data
      *
      * @return $this
      */
@@ -181,8 +326,14 @@ class Config
                 'comment' => null,
                 'phpComment' => null,
                 'use' => [],
+                'trait' => [],
                 'attribute' => null,
                 'attributes' => [],
+                'classPluginCollection' => [],
+                'phpFilePluginCollection' => [],
+                'namespacePluginCollection' => [],
+                'propertyPluginCollection' => [],
+                'mappingPolicyPluginCollection' => [],
             ],
             $data,
         );
@@ -195,14 +346,20 @@ class Config
         $this->comment = $data['comment'];
         $this->phpComment = $data['phpComment'];
         $this->use = $data['use'];
+        $this->trait = $data['trait'];
         $this->attribute = $data['attribute'];
         $this->attributes = $data['attributes'];
+        $this->classPluginCollection = $data['classPluginCollection'];
+        $this->phpFilePluginCollection = $data['phpFilePluginCollection'];
+        $this->namespacePluginCollection = $data['namespacePluginCollection'];
+        $this->propertyPluginCollection = $data['propertyPluginCollection'];
+        $this->mappingPolicyPluginCollection = $data['mappingPolicyPluginCollection'];
 
         return $this;
     }
 
     /**
-     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, attribute: string|null, attributes: array}
+     * @return array{namespace: string, namespaceRoot: string|null, outputPath: string, extend: string|null, implement: string|null, comment: string|null, phpComment: string|null, use: array, trait: array, attribute: string|null, attributes: array, classPluginCollection: array, phpFilePluginCollection: array, namespacePluginCollection: array, propertyPluginCollection: array, mappingPolicyPluginCollection:array}
      */
     public function toArray(): array
     {
@@ -215,8 +372,14 @@ class Config
             'comment' => $this->comment,
             'phpComment' => $this->phpComment,
             'use' => $this->use,
+            'trait' => $this->trait,
             'attribute' => $this->attribute,
             'attributes' => $this->attributes,
+            'classPluginCollection' => $this->classPluginCollection,
+            'phpFilePluginCollection' => $this->phpFilePluginCollection,
+            'namespacePluginCollection' => $this->namespacePluginCollection,
+            'propertyPluginCollection' => $this->propertyPluginCollection,
+            'mappingPolicyPluginCollection' => $this->mappingPolicyPluginCollection,
         ];
     }
 }

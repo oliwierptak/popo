@@ -118,6 +118,7 @@ POPO Schema can be defined and extended on few levels- and it can be defined in 
 
 The schema supports key mapping- inheritance- collections and encapsulation of other POPO objects.
 
+
 ### Schema Definition
 
 ```yaml
@@ -125,16 +126,22 @@ $: # file-config, shared configuration for all POPO objects in current schema fi
   config:
     namespace: string
     outputPath: string
-    namespaceRoot: string|null
-    extend: string|null
-    implement: string|null
-    comment: string|null
-    phpComment: string|null
-    use: array<string>|[]
-    attribute: string|null
-    attributes: array<key, value>
-  default: array
-  property: array
+    namespaceRoot: string|null # if set remaps namespace and outputPath
+    extend: string|null # which class POPO objects should extend from
+    implement: string|null # which interface POPO objects should implement
+    comment: string|null # Class docblock comment
+    phpComment: string|null # Generated PHP File docblock comment
+    use: array<string>|[] # Import block in generated PHP class
+    trait: array<string>|[] # Traits to be used with generated class
+    attribute: string|null # Class attributes as string
+    attributes: array<key, value>|[] # Class attributes as key value pairs
+    classPluginCollection: array<string>|[]
+    phpFilePluginCollection: array<string>|[]
+    namespacePluginCollection: array<string>|[]
+    propertyPluginCollection: array<string>|[]
+    mappingPolicyPluginCollection: array<string>|[]
+  default: array # default values
+  property: array # shared properties
 
 SchemaName: # schema-config
   $: # shared configuration for all POPO objects in SchemaName, in all schema files
@@ -147,8 +154,14 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
+      trait: array<string>|[]
       attribute: string|null,
-      attributes: array<key, value>
+      attributes: array<key, value>|[]
+      classPluginCollection: array<string>|[]
+      phpFilePluginCollection: array<string>|[]
+      namespacePluginCollection: array<string>|[]
+      propertyPluginCollection: array<string>|[]
+      mappingPolicyPluginCollection: array<string>|[]
     default: array
     property: [{
       name: string,
@@ -162,7 +175,7 @@ SchemaName: # schema-config
       itemName: string|null,
       extra: {timezone: ..., format: ...},
       attribute: string|null,
-      attributes: array<key, value>
+      attributes: array<key, value>|[]
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
       mappingPolicyValue: string|null
     }]
@@ -177,8 +190,14 @@ SchemaName: # schema-config
       comment: string|null
       phpComment: string|null
       use: array<string>|[]
+      trait: array<string>|[]
       attribute: string|null,
-      attributes: array<key, value>
+      attributes: array<key, value>|[]
+      classPluginCollection: array<string>|[]
+      phpFilePluginCollection: array<string>|[]
+      namespacePluginCollection: array<string>|[]
+      propertyPluginCollection: array<string>|[]
+      mappingPolicyPluginCollection: array<string>|[]
     default: array
     property: [{
       name: string,
@@ -192,7 +211,7 @@ SchemaName: # schema-config
       itemName: string|null,
       extra: {timezone: ..., format: ...},
       attribute: string|null,
-      attributes: array<key, value>
+      attributes: array<key, value>|[]
       mappingPolicy: ['none', 'lower', 'upper', 'camel-to-snake', 'snake-to-camel'],
       mappingPolicyValue: string|null
     }]

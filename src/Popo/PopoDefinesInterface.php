@@ -84,6 +84,8 @@ class PopoDefinesInterface
         'outputPath' => null,
         'namespaceRoot' => null,
         'extend' => null,
+        'use' => [],
+        'trait' => [],
         'implement' => null,
         'comment' => null,
         'phpComment' => null,
