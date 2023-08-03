@@ -11,11 +11,12 @@ POPO Schema can be defined and extended on few levels, and it can be defined in 
 
 ### Examples
 
+#### Single schema file
+
 Simple schema in YAML format, describing properties and relations of POPO objects.
 
-In this case, `Foo` uses `Bar` as its dependency, and they are both defined under `Example` schema name.
-
 ```yaml
+#example.popo.yml
 $:
   config:
     namespace: App\Example\Readme
@@ -33,6 +34,39 @@ Example:
       {name: title}
     ]
 ```
+
+#### Multiple schema files
+
+The same example can be split into multiple files. In this example, it's the `Bar` that modifies the `Foo` definition.
+
+```yaml
+#foo.popo.yml
+Example:
+  Foo:
+    property: [
+      {name: title}
+    ]
+```
+
+```yaml
+#bar.popo.yml
+Example:
+  Foo:
+    property: [
+      {name: bar, type: popo, default: Bar::class}
+    ]
+
+  Bar:
+    property: [
+      {name: title}
+    ]
+```
+
+The generated code is the same, but the schema dependencies are inverted.
+
+In both cases, `Foo` object uses `Bar` object as its dependency, and they are both defined under `Example` schema name.
+
+### Generated code usage examples
 
 #### Instantiate data structure from an array.
 
