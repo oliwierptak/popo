@@ -14,10 +14,10 @@ $:
     classPluginCollection:
       - \App\Plugin\ExampleMethodPopoPlugin::class
     
-    mappingPolicyPluginCollection: []
     namespacePluginCollection: []
     phpFilePluginCollection: []
     propertyPluginCollection: []
+    mappingPolicyPluginCollection: []
 
 Example:
   Foo:

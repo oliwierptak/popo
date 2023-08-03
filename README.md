@@ -220,7 +220,7 @@ SchemaName: # schema-config
 
 ### Schema configuration options
 
-### `namespace`
+#### `namespace`
 
 Defines generated class namespace.
 
@@ -230,7 +230,7 @@ config:
   ...
 ```
 
-### `outputPath`
+#### `outputPath`
 
 Defines output directory.
 
@@ -240,7 +240,7 @@ config:
   ...
 ```
 
-### `namespaceRoot`
+#### `namespaceRoot`
 
 Defines the begging of `outputPath` that should be removed.
 For example to generated files under `src/Example` with `App\Example` namespace.
@@ -253,7 +253,7 @@ config:
   ...
 ```
 
-### `extend`
+#### `extend`
 
 Which class should the generated class extend from. Must start with **\\** or contain `::class`.
 
@@ -263,7 +263,7 @@ config:
   ...
 ```
 
-### `implement`
+#### `implement`
 
 Which interface should the generated class implement. Must start with **\\** or contain `::class`.
 
@@ -274,7 +274,7 @@ config:
 ```
 
 
-### `comment`
+#### `comment`
 
 Class comment.
 
@@ -285,7 +285,7 @@ config:
 ...
 ```
 
-### `phpComment`
+#### `phpComment`
 
 Generated PHP file comment.
 
@@ -298,7 +298,7 @@ config:
 ...
 ```
 
-### `use`
+#### `use`
 
 Import statements.
 
@@ -311,7 +311,7 @@ Import statements.
     ...
 ```
 
-### `trait`
+#### `trait`
 
 Traits statements.
 
@@ -322,7 +322,7 @@ Traits statements.
     ...
 ```
 
-### `attribute`
+#### `attribute`
 
 Class attributes value.
 
@@ -334,7 +334,7 @@ Class attributes value.
 ```
 
 
-### `attributes`: `array`
+#### `attributes`: `array`
 
 Attribute value as collection. Supported values:
 
@@ -350,10 +350,56 @@ Attribute value as collection. Supported values:
     ...
 ```
 
+#### `classPluginCollection`: `array`
+
+Additional plugins used to generate methods.
+
+```yaml
+  config:
+    classPluginCollection:
+      - \App\Plugin\ExampleMethodPopoPlugin::class
+    ...
+```
+
+#### `namespacePluginCollection`: `array`
+
+Additional plugins used to generate namespace block.
+
+```yaml
+  config:
+    namespacePluginCollection:
+      - \App\Plugin\ExampleNamespacePopoPlugin::class
+    ...
+```
+
+
+#### `propertyPluginCollection`: `array`
+
+Additional plugins used to generate properties.
+
+```yaml
+  config:
+    propertyPluginCollection:
+      - \App\Plugin\ExamplePropertyPopoPlugin::class
+    ...
+```
+
+
+#### `mappingPolicyPluginCollection`: `array`
+
+Set of plugins used to map property names, e.g. `fooId` => `FOO_ID`.
+
+```yaml
+  config:
+    mappingPolicyPluginCollection:
+      - \App\Plugin\SpecialCaseMappingPopoPlugin::class
+    ...
+```
+
 
 ### Property configuration options
 
-### `name`
+#### `name`
     
 The name of the property. The property related methods will be generated based on this value. For example `getFooBar()`.
 This is required parameter.
@@ -365,7 +411,7 @@ property:
 ```
 
 
-### `type`
+#### `type`
 
 Property data type, supported are:
 
@@ -388,7 +434,7 @@ property:
     ...
 ```
 
-### `comment`
+#### `comment`
 
 Docblock value for property and methods.
 
@@ -399,7 +445,7 @@ property:
     ...
 ```
 
-### `default: mixed`
+#### `default: mixed`
 
 Default value.
 
@@ -410,7 +456,7 @@ property:
     ...
 ```
 
-### `extra: array`
+#### `extra: array`
 
 Used by `datetime` data type. Supported values:
 
@@ -427,7 +473,7 @@ property:
     ...
 ```
 
-### `itemType`
+#### `itemType`
 
 Used by `array` data type together with `itemName` element. Describes type of single array element.
 
@@ -439,7 +485,7 @@ property:
     ...
 ```
 
-### `itemName`
+#### `itemName`
 
 Used by `array` data type. Describes name of single array element. For example: `setProducts(array $products)`, `addProduct(Product $item)`.
 
@@ -451,7 +497,7 @@ property:
     ...
 ```
 
-### `attribute`
+#### `attribute`
 
 Attribute value.
 
@@ -464,7 +510,7 @@ property:
 ```
 
 
-### `attributes`: `array`
+#### `attributes`: `array`
 
 Attribute value as collection. Supported values:
 
@@ -482,7 +528,7 @@ property:
 ```
 
 
-### `mappingPolicy: array`
+#### `mappingPolicy: array`
 
 Dynamically remaps property names, for example, `fooId` => `FOO_ID`. Supported values:
 
@@ -501,7 +547,7 @@ property:
     ...
 ```
 
-### `mappingPolicyValue`
+#### `mappingPolicyValue`
 
 Statically remaps property names, for example, `fooId` => `FOO_ID`.
 
