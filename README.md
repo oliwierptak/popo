@@ -37,7 +37,7 @@ Example:
 
 #### Multiple schema files
 
-The same example can be split into multiple files. In this example, it's the `Bar` that modifies the `Foo` definition.
+The same example can be split into multiple files. However, this time, it's the `Bar` that modifies the `Foo` definition.
 
 ```yaml
 #foo.popo.yml
