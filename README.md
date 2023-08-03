@@ -311,6 +311,17 @@ Import statements.
     ...
 ```
 
+### `trait`
+
+Traits statements.
+
+```yaml
+  config:
+    trait:
+      - App\Example\MyTrait
+    ...
+```
+
 ### `attribute`
 
 Class attributes value.
