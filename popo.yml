@@ -64,4 +64,4 @@ Popo:
       {name: schemaPathFilter}
       {name: schemaFilenameMask, default: '*.popo.yml'}
       {name: shouldIgnoreNonExistingSchemaFolder, type: bool}
-    ]}}
+    ]

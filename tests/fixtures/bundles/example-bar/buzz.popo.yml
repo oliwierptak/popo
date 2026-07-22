@@ -6,4 +6,4 @@ Example:
   Buzz:
     property: [
       {name: value, default: Buzzzzz}
-    ]}}
+    ]

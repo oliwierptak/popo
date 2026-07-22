@@ -8,7 +8,7 @@ Nested:
     property: [
       {name: title}
       {name: bars, type: array, itemName: bar, itemType: Bar::class},
-    ]}}
+    ]
 
   Bar:
     property: [

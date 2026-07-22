@@ -9,6 +9,7 @@ use App\Example\Popo\Bar;
 use App\Example\Popo\Buzz\Buzz;
 use App\Example\Popo\Foo;
 use App\ExampleInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Popo\PopoConfigurator;
 use Popo\PopoFacade;
@@ -277,9 +278,7 @@ class PopoTest extends TestCase
         $this->assertEquals([123], $bar->getItems());
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[DataProvider('dataProvider')]
     public function test_toArrayCamelToSnake(array $data): void
     {
         $foo = (new Foo)->fromArray($data);
@@ -308,9 +307,7 @@ class PopoTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[DataProvider('dataProvider')]
     public function test_toArrayLower(array $data): void
     {
         $foo = (new Foo)->fromArray($data);
@@ -339,9 +336,7 @@ class PopoTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[DataProvider('dataProvider')]
     public function test_toArrayUpper(array $data): void
     {
         $foo = (new Foo)->fromArray($data);

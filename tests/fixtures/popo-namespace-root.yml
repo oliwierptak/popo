@@ -10,7 +10,7 @@ Example:
       {name: title}
       {name: bar, type: popo, default: Bar::class}
       {name: shouldExecute, type: bool, default: false}
-    ]}}
+    ]
 
   Bar:
     property:

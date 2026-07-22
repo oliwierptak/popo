@@ -7,7 +7,7 @@ $:
     title: Hakuna Matata
   property: [
     {name: idForAll, type: int, default: 0, comment: This id is for all}
-  ]}}
+  ]
 
 Example:
   $:
@@ -18,7 +18,7 @@ Example:
       sharedExampleId: 123
     property: [
       {name: sharedExampleId, type: int}
-    ]}}
+    ]
 
 AnotherExample:
   $:
@@ -26,4 +26,4 @@ AnotherExample:
       anotherExampleSharedId: 100
     property: [
       {name: anotherExampleSharedId, type: int}
-    ]}}
+    ]

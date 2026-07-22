@@ -10,7 +10,7 @@ Example:
       {name: value, type: int, default: \App\ExampleInterface::TEST_BUZZ}
       {name: bar, type: popo}
       {name: test}
-    ]}}
+    ]
 
 AnotherExample:
   $:
@@ -24,5 +24,4 @@ AnotherExample:
   AnotherFoo:
     property: [
       {name: title}
-    ]}}
-
+    ]

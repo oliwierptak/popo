@@ -22,7 +22,7 @@ class GenerateCommandTest extends TestCase
     {
         $command = new GenerateCommand();
         $application = new Application();
-        $application->add($command);
+        $application->addCommand($command);
         $command = $application->find(GenerateCommand::COMMAND_NAME);
 
         return new CommandTester($command);

@@ -699,6 +699,8 @@ See also: [bin/docker-popo](bin/docker-popo).
 - POPO `v4.x` - PHP 7.4+
 - POPO `v5.x` - PHP 7.4+
 - POPO `v6.x` - PHP 8+
+- POPO `v7.x` - PHP 8+, Symfony 8+
+
 
 
 ## POPO schema example

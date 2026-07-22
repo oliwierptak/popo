@@ -7,7 +7,7 @@ Example:
       {name: title}
       {name: buzz, type: popo}
       {name: buzzCollection, type: array, itemType: \App\Example\Shared\Buzz\Buzz::class, itemName: buzz}
-    ]}}
+    ]
 
 AnotherExample:
   AnotherFoo:
@@ -15,4 +15,4 @@ AnotherExample:
       description: Another Lorem Ipsum
     property: [
       {name: description}
-    ]}}
+    ]

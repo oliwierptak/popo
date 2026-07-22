@@ -22,7 +22,7 @@ class ReportCommandTest extends TestCase
     {
         $command = new ReportCommand();
         $application = new Application();
-        $application->add($command);
+        $application->addCommand($command);
         $command = $application->find(ReportCommand::COMMAND_NAME);
 
         return new CommandTester($command);
